@@ -1,13 +1,6 @@
 buildscript {
     repositories {
         mavenLocal()
-        maven {
-            url 'https://artifactory.kasikornbank.com:8443/artifactory/central_lib'
-            credentials {
-                username System.getenv('artifactory_usernarme')
-                password System.getenv('artifactory_password')
-            }
-        }
         mavenCentral()
         dependencies {
             classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootPluginVersion")
