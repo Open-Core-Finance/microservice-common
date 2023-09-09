@@ -1,0 +1,128 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        maven {
+            url 'https://artifactory.kasikornbank.com:8443/artifactory/central_lib'
+            credentials {
+                username System.getenv('artifactory_usernarme')
+                password System.getenv('artifactory_password')
+            }
+        }
+        mavenCentral()
+        dependencies {
+            classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootPluginVersion")
+        }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootPluginVersion")
+        classpath "io.spring.gradle:dependency-management-plugin:$springDependenciesManagementVersion"
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:latest.release"
+        classpath "io.freefair.gradle:lombok-plugin:latest.release"
+    }
+}
+
+plugins {
+	id 'java'
+    id 'java-library'
+	id 'org.springframework.boot' version "$springBootPluginVersion"
+	id 'io.spring.dependency-management' version "$springDependenciesManagementVersion"
+    id 'jacoco'
+    id "io.freefair.lombok" version "${lombokPluginVersion}"
+    id "org.sonarqube" version "${sonarqubePluginVersion}"
+}
+
+group = 'com.finance.core'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = "${javaSourceCompatibility}"
+targetCompatibility = "${javaSourceCompatibility}"
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:$springBootPluginVersion"
+        mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+    }
+}
+
+bootJar {
+    enabled = false
+}
+
+dependencies {
+    // Spring
+    api 'org.springframework.boot:spring-boot-starter'
+    api "org.springframework.boot:spring-boot-starter-tomcat"
+    api('org.springframework.boot:spring-boot-starter-validation')
+    api group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+    api group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
+    api group: 'org.springframework.data', name: 'spring-data-commons'
+    api group: 'org.springframework.boot', name: 'spring-boot-starter-security'
+    // Spring doc
+    api group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: "$springDocApiVersion"
+    // Common
+    api group: 'commons-beanutils', name: 'commons-beanutils', version: "${beanutilsVersion}"
+    api group: 'com.github.ulisesbocchio', name: 'jasypt-spring-boot-starter', version: "${jasyptVersion}"
+    api group: 'org.mapstruct', name: 'mapstruct', version: "${mapstructVersion}"
+    // security
+    api group: 'com.auth0', name: 'java-jwt', version: "$javaJwtVersion"
+
+    // Test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: "${powerMockitoVersion}"
+}
+
+
+jacoco {
+    toolVersion = "${jacocoToolVersion}"
+    reportsDirectory = file("$buildDir/jacoco")
+}
+
+test {
+
+    useJUnitPlatform()
+
+    // report is always generated after tests run
+    finalizedBy jacocoTestReport
+
+    jacoco {
+        classDumpDir = file("$buildDir/jacoco/classpathdumps")
+        enabled = true
+        destinationFile = file("$buildDir/jacoco/${name}.exec")
+        includes = []
+        excludes = []
+        excludeClassLoaders = []
+        includeNoLocationClasses = false
+        sessionId = UUID.randomUUID().toString()
+        dumpOnExit = true
+        classDumpDir = null
+        output = JacocoTaskExtension.Output.FILE
+        address = "localhost"
+        port = 6300
+        jmx = false
+    }
+}
+
+jacocoTestReport {
+    // tests are required to run before generating the report
+    dependsOn test
+    mustRunAfter test
+
+    reports {
+        html.required = true
+        xml.required = true
+        csv.required = true
+        html.destination file("${buildDir}/jacoco/html")
+        xml.destination file("${buildDir}/jacoco/jacoco-report.xml")
+        csv.destination file("${buildDir}/jacoco/jacoco-report.csv")
+    }
+
+    afterEvaluate {
+        getClassDirectories().setFrom(classDirectories.files.collect {
+            fileTree(dir: it, exclude: ['**/ex/*', '**/pojo'])
+        })
+    }
+}
