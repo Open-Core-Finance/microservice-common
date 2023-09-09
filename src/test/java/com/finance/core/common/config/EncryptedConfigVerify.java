@@ -20,7 +20,7 @@ import java.util.LinkedList;
 @SpringBootTest(classes = TestCommonApplication.class)
 @AutoConfigureMockMvc
 @ActiveProfiles({"common", "default", "unittest"})
-@ComponentScan(basePackages = {"com.kbtg.core"})
+@ComponentScan(basePackages = {"com.finance.core.core"})
 public class EncryptedConfigVerify {
 
     @Autowired

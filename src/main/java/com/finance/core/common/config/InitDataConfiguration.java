@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties(prefix = "kbtg.initial")
+@ConfigurationProperties(prefix = "com.finance.core.initial")
 @Data
 public class InitDataConfiguration {
     private String nameSeparator;

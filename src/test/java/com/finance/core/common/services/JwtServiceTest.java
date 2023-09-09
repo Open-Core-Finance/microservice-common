@@ -45,7 +45,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(classes = TestCommonApplication.class)
 @AutoConfigureMockMvc
 @ActiveProfiles({"common", "default", "unittest"})
-@ComponentScan(basePackages = {"com.kbtg.core"})
+@ComponentScan(basePackages = {"com.finance.core.core"})
 public class JwtServiceTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtServiceTest.class);

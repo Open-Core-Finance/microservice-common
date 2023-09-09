@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Aspect
 @Component
-@ConditionalOnProperty(name = "kbtg.log.enabled.services", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(name = "com.finance.core.log.enabled.services", havingValue = "true", matchIfMissing = true)
 public class ServiceLogging extends MethodDataLoging {
 
     @Override

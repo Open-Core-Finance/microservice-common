@@ -27,7 +27,7 @@ import java.util.*;
 @SpringBootTest(classes = TestCommonApplication.class)
 @AutoConfigureMockMvc
 @ActiveProfiles({"common", "default", "unittest"})
-@ComponentScan(basePackages = {"com.kbtg.core.kuniv"})
+@ComponentScan(basePackages = {"com.finance.core.core.kuniv"})
 public class UtilIntegrationTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilIntegrationTest.class);

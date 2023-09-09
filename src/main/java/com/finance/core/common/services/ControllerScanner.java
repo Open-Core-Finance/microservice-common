@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 @Component
-@ConditionalOnProperty(prefix = "kbtg.security", name = "scan-controllers-actions", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(prefix = "com.finance.core.security", name = "scan-controllers-actions", havingValue = "true", matchIfMissing = true)
 public class ControllerScanner {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

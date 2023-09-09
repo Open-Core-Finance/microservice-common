@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Configuration
-@ConditionalOnProperty(prefix = "kbtg.common.enabled", name = "context", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(prefix = "com.finance.core.common.enabled", name = "context", havingValue = "true", matchIfMissing = true)
 public class CommonAutoConfiguration {
 
     @Autowired
@@ -56,7 +56,7 @@ public class CommonAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(SimpleVersionComparator.class)
-    @ConditionalOnProperty(prefix = "kbtg.common.enabled", name = "simple-version", havingValue = "true")
+    @ConditionalOnProperty(prefix = "com.finance.core.common.enabled", name = "simple-version", havingValue = "true")
     public SimpleVersionComparator simpleVersionComparator() {
         return new SimpleVersionComparator();
     }

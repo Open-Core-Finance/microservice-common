@@ -10,9 +10,9 @@ import java.io.IOException;
 import java.util.List;
 
 @Component
-@ConditionalOnProperty(prefix = "kbtg.common.enabled", name = "auto-response-encoding")
+@ConditionalOnProperty(prefix = "com.finance.core.common.enabled", name = "auto-response-encoding")
 public class EncodingHeaderFilter implements Filter {
-    @Value("${kbtg.common.enabled.auto-response-encoding}")
+    @Value("${com.finance.core.common.enabled.auto-response-encoding}")
     private String charset;
     private static final List<String> TEXT_CONTENT_TYPES = List.of(
             MediaType.TEXT_HTML_VALUE,

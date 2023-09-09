@@ -33,7 +33,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-@ConditionalOnProperty(prefix = "kbtg.security", name = "public-key")
+@ConditionalOnProperty(prefix = "com.finance.core.security", name = "public-key")
 @Component
 public class SessionAuthenticationFilter extends OncePerRequestFilter implements Ordered {
 
@@ -41,7 +41,7 @@ public class SessionAuthenticationFilter extends OncePerRequestFilter implements
 
     @Autowired
     private JwtService jwtService;
-    @Value("${kbtg.common.filter-ordered.authen-filter:0}")
+    @Value("${com.finance.core.common.filter-ordered.authen-filter:0}")
     private int ordered;
 
     @Override

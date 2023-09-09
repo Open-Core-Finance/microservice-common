@@ -38,9 +38,9 @@ public abstract class AbstractPermissionService<T extends Permission, C extends 
     private ObjectMapper objectMapper;
     @Autowired
     private Validator validator;
-    @Value(("${kbtg.initial.permission-file}"))
+    @Value(("${com.finance.core.initial.permission-file}"))
     private String permissionFileRegex;
-    @Value(("${kbtg.initial.internal-api-file}"))
+    @Value(("${com.finance.core.initial.internal-api-file}"))
     private String internalApiFileRegex;
 
     @Override

@@ -16,7 +16,7 @@ import java.util.Collections;
 
 @Aspect
 @Component
-@ConditionalOnProperty(name = "kbtg.log.enabled.api", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(name = "com.finance.core.log.enabled.api", havingValue = "true", matchIfMissing = true)
 public class ApiLogging extends MethodDataLoging {
 
     private static final String EXECUTION_FEIGN_CLIENT = "execution(* *Client(..))";

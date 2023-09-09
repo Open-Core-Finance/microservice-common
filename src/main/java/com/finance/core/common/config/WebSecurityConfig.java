@@ -20,7 +20,7 @@ public class WebSecurityConfig {
     private ServiceSecurityConfig serviceSecurityConfig;
 
     @Bean
-    @ConditionalOnProperty(prefix = "kbtg.security", name = "public-key")
+    @ConditionalOnProperty(prefix = "com.finance.core.security", name = "public-key")
     public SecurityFilterChain filterChain(HttpSecurity http, SessionAuthenticationFilter sessionAuthenticationFilter) throws Exception {
         return http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> serviceSecurityConfig.getNoAuthenUrls().stream().forEach(url -> auth

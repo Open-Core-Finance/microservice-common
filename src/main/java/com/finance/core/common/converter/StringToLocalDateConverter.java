@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Component
-@ConditionalOnProperty(name = "kbtg.app.mongodb.converter.localDate", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(name = "com.finance.core.app.mongodb.converter.localDate", havingValue = "true", matchIfMissing = true)
 @ReadingConverter
 public class StringToLocalDateConverter implements MongoConversionSupport<String, LocalDate>, GenericConverter {
 

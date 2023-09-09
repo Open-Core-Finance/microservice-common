@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConditionalOnProperty(prefix = "kbtg.common.enabled", name = "property-encryption", havingValue = "true",
+@ConditionalOnProperty(prefix = "com.finance.core.common.enabled", name = "property-encryption", havingValue = "true",
         matchIfMissing = true)
 public class JasyptConfig {
 

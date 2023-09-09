@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Component
-@ConditionalOnProperty(name = "kbtg.app.mongodb.converter.zonedDateTime", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(name = "com.finance.core.app.mongodb.converter.zonedDateTime", havingValue = "true", matchIfMissing = true)
 @WritingConverter
 public class ZonedDateTimeToLocalDateTimeConverter implements MongoConversionSupport<ZonedDateTime, LocalDateTime>,
         GenericConverter {

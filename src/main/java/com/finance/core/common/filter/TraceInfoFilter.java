@@ -19,7 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @Component
-@ConditionalOnProperty(prefix = "kbtg.common.enabled", name = "trace-id-filter", havingValue = "true",
+@ConditionalOnProperty(prefix = "com.finance.core.common.enabled", name = "trace-id-filter", havingValue = "true",
         matchIfMissing = true)
 public class TraceInfoFilter implements Filter, Ordered {
 

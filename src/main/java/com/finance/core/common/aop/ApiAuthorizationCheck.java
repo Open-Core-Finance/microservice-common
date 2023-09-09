@@ -39,7 +39,7 @@ import java.util.Set;
 
 @Aspect
 @Component
-@ConditionalOnProperty(prefix = "kbtg.security", name = "authorize-check", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(prefix = "com.finance.core.security", name = "authorize-check", havingValue = "true", matchIfMissing = true)
 public class ApiAuthorizationCheck {
 
     private static final String EXECUTION_FEIGN_CLIENT = "execution(* com.finance.core.rest.client.*Client.*(..))";
@@ -65,7 +65,7 @@ public class ApiAuthorizationCheck {
     @Autowired(required = false)
     private List<InternalApiVerify> internalApiVerifiers;
 
-    @Value("${kbtg.security.permission.default-control}")
+    @Value("${com.finance.core.security.permission.default-control}")
     private AccessControl permissionDefaultControl;
 
     @Around("@annotation(org.springframework.web.bind.annotation.GetMapping) && " + EXECUTION_EXCLUDED)

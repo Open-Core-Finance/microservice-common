@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Configuration
-@ConfigurationProperties(prefix = "kbtg.security")
+@ConfigurationProperties(prefix = "com.finance.core.security")
 @Data
 public class ServiceSecurityConfig {
 

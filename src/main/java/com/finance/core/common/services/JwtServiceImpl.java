@@ -44,7 +44,7 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 @Service
-@ConditionalOnProperty(prefix = "kbtg.security.jwt.enabled", name = "common", matchIfMissing = true,
+@ConditionalOnProperty(prefix = "com.finance.core.security.jwt.enabled", name = "common", matchIfMissing = true,
         havingValue = "true")
 public class JwtServiceImpl implements JwtService {
 
@@ -63,8 +63,8 @@ public class JwtServiceImpl implements JwtService {
     @Autowired(required = false)
     private List<JwtVerifyAddOn> jwtVerifyAddOns;
 
-    public JwtServiceImpl(@Value("${kbtg.security.public-key}") String publicKey,
-                          @Value("${kbtg.security.private-key:}") String privateKey,
+    public JwtServiceImpl(@Value("${com.finance.core.security.public-key}") String publicKey,
+                          @Value("${com.finance.core.security.private-key:}") String privateKey,
                           @Autowired ResourceLoader resourceLoader)
             throws GeneralSecurityException, IOException {
         LOGGER.debug("Creating JwtServiceImpl with key algorithm [{}]", KEY_ALGORITHM);
