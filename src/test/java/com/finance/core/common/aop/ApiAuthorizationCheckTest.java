@@ -1,14 +1,14 @@
 package com.finance.core.common.aop;
 
 import com.finance.core.common.context.JwtContext;
-import com.finance.core.common.controllers.CommonController;
+import com.finance.core.common.controller.CommonController;
 import com.finance.core.common.dto.GeneralApiResponse;
 import com.finance.core.common.dto.JwtTokenDto;
 import com.finance.core.common.dto.UserRoleDto;
 import com.finance.core.common.enums.AccessControl;
 import com.finance.core.common.model.Permission;
 import com.finance.core.common.repository.PermissionRepository;
-import com.finance.core.common.services.ResourceOwnerVerifier;
+import com.finance.core.common.service.ResourceOwnerVerifier;
 import com.finance.core.common.test.support.controllers.AnotherTestController;
 import com.finance.core.common.test.support.controllers.TestController;
 import com.finance.core.common.test.support.model.UserTest;

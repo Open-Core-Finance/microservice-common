@@ -12,6 +12,8 @@ import com.finance.core.common.enums.AppPlatform;
 import com.finance.core.common.enums.CommonConstants;
 import com.finance.core.common.model.AppVersion;
 import com.finance.core.common.repository.ResourceActionRepository;
+import com.finance.core.common.service.JwtService;
+import com.finance.core.common.service.JwtServiceImpl;
 import com.finance.core.common.test.support.app.TestCommonApplication;
 import com.finance.core.common.test.support.pojo.JwtTokenDtoWithNonSerializable;
 import com.finance.core.common.test.support.pojo.JwtTokenDtoWithStaticFinal;

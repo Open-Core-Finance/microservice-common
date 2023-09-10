@@ -7,7 +7,7 @@ import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import com.finance.core.common.services.RepositoryUniqueValidator;
+import com.finance.core.common.service.RepositoryUniqueValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

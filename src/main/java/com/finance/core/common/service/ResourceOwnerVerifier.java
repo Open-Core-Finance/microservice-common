@@ -1,4 +1,4 @@
-package com.finance.core.common.services;
+package com.finance.core.common.service;
 
 import com.finance.core.common.dto.JwtTokenDto;
 import com.finance.core.common.dto.UserRoleDto;

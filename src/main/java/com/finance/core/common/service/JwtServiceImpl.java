@@ -1,4 +1,4 @@
-package com.finance.core.common.services;
+package com.finance.core.common.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator.Builder;

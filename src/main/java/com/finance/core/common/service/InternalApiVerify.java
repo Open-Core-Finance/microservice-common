@@ -1,4 +1,4 @@
-package com.finance.core.common.services;
+package com.finance.core.common.service;
 
 import jakarta.servlet.http.HttpServletRequest;
 

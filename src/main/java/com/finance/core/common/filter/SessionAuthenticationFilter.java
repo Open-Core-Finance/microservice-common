@@ -3,7 +3,7 @@ package com.finance.core.common.filter;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.finance.core.common.dto.JwtTokenDto;
 import com.finance.core.common.context.JwtContext;
-import com.finance.core.common.services.JwtService;
+import com.finance.core.common.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

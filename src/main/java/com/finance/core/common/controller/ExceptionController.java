@@ -1,4 +1,4 @@
-package com.finance.core.common.controllers;
+package com.finance.core.common.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.finance.core.common.dto.GeneralApiResponse;

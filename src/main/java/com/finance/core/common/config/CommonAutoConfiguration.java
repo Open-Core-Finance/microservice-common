@@ -5,7 +5,7 @@ import com.finance.core.common.dto.SimpleVersionComparator;
 import com.finance.core.common.context.ApplicationContextHolder;
 import com.finance.core.common.context.JwtContext;
 import com.finance.core.common.context.StatelessLocaleResolver;
-import com.finance.core.common.services.JwtService;
+import com.finance.core.common.service.JwtService;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

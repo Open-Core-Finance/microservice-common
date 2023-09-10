@@ -1,9 +1,11 @@
 package com.finance.core.common.services;
 
 import com.finance.core.common.config.ServiceSecurityConfig;
-import com.finance.core.common.controllers.CommonController;
+import com.finance.core.common.controller.CommonController;
 import com.finance.core.common.model.ResourceAction;
 import com.finance.core.common.repository.ResourceActionRepository;
+import com.finance.core.common.service.ControllerScanner;
+import com.finance.core.common.service.PermissionService;
 import com.finance.core.common.test.support.controllers.AnotherTestController;
 import com.finance.core.common.test.support.controllers.TestController;
 import com.finance.core.common.util.Util;

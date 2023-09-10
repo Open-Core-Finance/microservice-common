@@ -1,6 +1,5 @@
-package com.finance.core.common.services;
+package com.finance.core.common.service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.finance.core.common.config.InitDataConfiguration;
 import com.finance.core.common.dto.PermissionInitializeDto;
@@ -19,7 +18,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

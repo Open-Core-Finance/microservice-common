@@ -1,4 +1,4 @@
-package com.finance.core.common.controllers;
+package com.finance.core.common.controller;
 
 import com.finance.core.common.annotation.ControllerManagedResource;
 import com.finance.core.common.annotation.PermissionAction;
@@ -7,7 +7,7 @@ import com.finance.core.common.dto.PageDto;
 import com.finance.core.common.dto.PermissionInitializeDto;
 import com.finance.core.common.model.Permission;
 import com.finance.core.common.model.ResourceAction;
-import com.finance.core.common.services.PermissionService;
+import com.finance.core.common.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;

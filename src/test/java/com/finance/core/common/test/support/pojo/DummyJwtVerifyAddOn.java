@@ -1,7 +1,7 @@
 package com.finance.core.common.test.support.pojo;
 
 import com.finance.core.common.dto.JwtTokenDto;
-import com.finance.core.common.services.JwtVerifyAddOn;
+import com.finance.core.common.service.JwtVerifyAddOn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

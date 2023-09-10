@@ -49,6 +49,7 @@ com:
         encoded: ENC(O5MFWIMMOz+V3iItOVY60g==)
       initial:
         permission-file: classpath:initial/*permissions*.json
+        internal-api-file: classpath:initial/*internal_api*.json
 export:
   format:
     date: yyyy/MM/dd
