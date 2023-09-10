@@ -2,7 +2,7 @@ package com.finance.core.common.service;
 
 import com.finance.core.common.context.JwtContext;
 import com.finance.core.common.enums.CommonConstants;
-import com.finance.core.common.model.InternalServiceConfig;
+import com.finance.core.common.model.AbstractInternalServiceConfig;
 import com.finance.core.common.annotation.InternalApi;
 import com.finance.core.common.repository.InternalServiceConfigRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,7 +38,7 @@ public class InternalApiVerifyImpl implements InternalApiVerify {
             if (!StringUtils.hasText(internalApi)) {
                 throw new AccessDeniedException("no_internal_key_found");
             }
-            Optional<InternalServiceConfig> internalServiceConfigOptional = internalServiceConfigRepository.findFirstByApiKeyAndActivatedOrderByLastModifiedDateDesc(internalApi, true);
+            Optional<AbstractInternalServiceConfig> internalServiceConfigOptional = internalServiceConfigRepository.findFirstByApiKeyAndActivatedOrderByLastModifiedDateDesc(internalApi, true);
             var config = internalServiceConfigOptional.orElseThrow(() -> new AccessDeniedException("invalid_internal_api_key"));
             logger.debug("Received call from service [{}]", config);
         }

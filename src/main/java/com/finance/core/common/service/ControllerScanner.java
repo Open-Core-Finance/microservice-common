@@ -2,7 +2,7 @@ package com.finance.core.common.service;
 
 import com.finance.core.common.config.ServiceSecurityConfig;
 import com.finance.core.common.enums.AccessControl;
-import com.finance.core.common.model.Permission;
+import com.finance.core.common.model.AbstractPermission;
 import com.finance.core.common.model.ResourceAction;
 import com.finance.core.common.util.Util;
 import com.finance.core.common.annotation.ControllerManagedResource;
@@ -112,10 +112,10 @@ public class ControllerScanner {
     private void saveManualCheckPermissions(String resourceType, String action, Iterable<String> urls, Iterable<RequestMethod> requestMethods) {
         for (String url : urls) {
             for (RequestMethod requestMethod : requestMethods) {
-                var permission = new Permission();
+                var permission = new AbstractPermission();
                 permission.setControl(AccessControl.MANUAL_CHECK);
                 permission.setUrl(url);
-                permission.setRoleId(Permission.ANY_ROLE_APPLIED_VALUE);
+                permission.setRoleId(AbstractPermission.ANY_ROLE_APPLIED_VALUE);
                 permission.setResourceType(resourceType);
                 permission.setAction(action);
                 permission.setRequestMethod(requestMethod);

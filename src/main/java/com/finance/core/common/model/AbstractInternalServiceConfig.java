@@ -9,7 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.time.ZonedDateTime;
 
 @Data
-public class InternalServiceConfig implements GenericModel<String> {
+public abstract class AbstractInternalServiceConfig implements GenericModel<String> {
     @Id
     private String id;
     @NotNull

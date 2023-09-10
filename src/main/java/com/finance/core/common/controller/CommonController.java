@@ -5,7 +5,7 @@ import com.finance.core.common.annotation.PermissionAction;
 import com.finance.core.common.dto.GeneralApiResponse;
 import com.finance.core.common.dto.PageDto;
 import com.finance.core.common.dto.PermissionInitializeDto;
-import com.finance.core.common.model.Permission;
+import com.finance.core.common.model.AbstractPermission;
 import com.finance.core.common.model.ResourceAction;
 import com.finance.core.common.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,15 +33,16 @@ public class CommonController {
         return new GeneralApiResponse<>(permissionService.deleteRecord(permisstionId));
     }
     @PostMapping(value = "/create-update-permission")
-    public GeneralApiResponse<Permission> createOrUpdatePermission(@RequestBody Permission permission) throws IOException {
-        return new GeneralApiResponse<>(permissionService.createOrUpdatePermission(permission));
+    public GeneralApiResponse<AbstractPermission> createOrUpdatePermission(@RequestBody
+                                                                           AbstractPermission abstractPermission) throws IOException {
+        return new GeneralApiResponse<>(permissionService.createOrUpdatePermission(abstractPermission));
     }
 
     @PostMapping(value = "/load-permission")
-    public PageDto<Permission> loadPermission(@RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize,
-                                              @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex,
-                                              @RequestParam(value = "orders", required = false, defaultValue = "[]") List<Sort.Order> orders,
-                                              @RequestParam(value = "searchText", required = false, defaultValue = "") String searchText){
+    public PageDto<AbstractPermission> loadPermission(@RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize,
+                                                      @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex,
+                                                      @RequestParam(value = "orders", required = false, defaultValue = "[]") List<Sort.Order> orders,
+                                                      @RequestParam(value = "searchText", required = false, defaultValue = "") String searchText){
         return PageDto.createSuccessResponse(permissionService.loadPermission(searchText, pageSize, pageIndex, orders));
     }
 }

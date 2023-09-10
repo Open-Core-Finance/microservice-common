@@ -7,7 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Data
-public class Permission implements GenericModel<String> {
+public abstract class AbstractPermission implements GenericModel<String> {
     public static final String ANY_ROLE_APPLIED_VALUE = "ANY";
     @Id
     private String id;

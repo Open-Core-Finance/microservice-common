@@ -3,8 +3,8 @@ package com.finance.core.common.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.finance.core.common.config.InitDataConfiguration;
 import com.finance.core.common.dto.PermissionInitializeDto;
-import com.finance.core.common.model.InternalServiceConfig;
-import com.finance.core.common.model.Permission;
+import com.finance.core.common.model.AbstractInternalServiceConfig;
+import com.finance.core.common.model.AbstractPermission;
 import com.finance.core.common.util.Util;
 import com.finance.core.common.repository.InternalServiceConfigRepository;
 import com.finance.core.common.repository.PermissionRepository;
@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class AbstractPermissionService<T extends Permission, C extends InternalServiceConfig>
+public abstract class AbstractPermissionService<T extends AbstractPermission, C extends AbstractInternalServiceConfig>
         implements PermissionService<T, C> {
 
     @Autowired

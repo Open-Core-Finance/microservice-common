@@ -1,8 +1,8 @@
 package com.finance.core.common.service;
 
 import com.finance.core.common.dto.PermissionInitializeDto;
-import com.finance.core.common.model.InternalServiceConfig;
-import com.finance.core.common.model.Permission;
+import com.finance.core.common.model.AbstractInternalServiceConfig;
+import com.finance.core.common.model.AbstractPermission;
 import com.finance.core.common.repository.PermissionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -10,7 +10,7 @@ import org.springframework.data.domain.Sort;
 import java.io.IOException;
 import java.util.List;
 
-public interface PermissionService<T extends Permission, C extends InternalServiceConfig> extends CommonService<String, T, PermissionRepository<T>>{
+public interface PermissionService<T extends AbstractPermission, C extends AbstractInternalServiceConfig> extends CommonService<String, T, PermissionRepository<T>>{
 
     PermissionInitializeDto initializationDefaultData() throws IOException;
 

@@ -7,7 +7,7 @@ import com.finance.core.common.context.JwtContext;
 import com.finance.core.common.dto.JwtTokenDto;
 import com.finance.core.common.dto.UserRoleDto;
 import com.finance.core.common.enums.AccessControl;
-import com.finance.core.common.model.Permission;
+import com.finance.core.common.model.AbstractPermission;
 import com.finance.core.common.repository.PermissionRepository;
 import com.finance.core.common.service.InternalApiVerify;
 import com.finance.core.common.service.ResourceOwnerVerifier;
@@ -187,12 +187,12 @@ public class ApiAuthorizationCheck {
     private boolean verifyRole(JwtTokenDto jwtTokenDto, UserRoleDto userRole, String action, String url,
                                RequestMethod requestMethod, String resourceType, ProceedingJoinPoint joinPoint) {
         var sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "action"), new Sort.Order(Sort.Direction.ASC, "url"));
-        List<? extends Permission> permissions = permissionRepository.findAllByRoleIdAndResourceType(userRole.getRoleId(), resourceType, sort);
+        List<? extends AbstractPermission> permissions = permissionRepository.findAllByRoleIdAndResourceType(userRole.getRoleId(), resourceType, sort);
         var foundMatched = false;
         for (var permission : permissions) {
-            var matchedAction = Permission.ANY_ROLE_APPLIED_VALUE.equalsIgnoreCase(permission.getAction()) ||
+            var matchedAction = AbstractPermission.ANY_ROLE_APPLIED_VALUE.equalsIgnoreCase(permission.getAction()) ||
                     action.equalsIgnoreCase(permission.getAction());
-            var matchUrl = Permission.ANY_ROLE_APPLIED_VALUE.equalsIgnoreCase(permission.getUrl()) ||
+            var matchUrl = AbstractPermission.ANY_ROLE_APPLIED_VALUE.equalsIgnoreCase(permission.getUrl()) ||
                     url.equalsIgnoreCase(permission.getUrl());
             var matchedRequestMethod =
                     permission.getRequestMethod() == null || permission.getRequestMethod() == requestMethod;
@@ -237,36 +237,36 @@ public class ApiAuthorizationCheck {
     }
 
     private boolean checkResourceOwnership(JwtTokenDto jwtTokenDto, String resourceType, Object resourceId,
-                                           Permission permission, UserRoleDto userRole) {
+                                           AbstractPermission abstractPermission, UserRoleDto userRole) {
         var result = false;
         for (var verifier : resourceOwnerVerifiers) {
             if (verifier.isSupportedResource(resourceType)) {
-                result = verifier.verifyOwner(jwtTokenDto, resourceType, resourceId, permission, userRole);
+                result = verifier.verifyOwner(jwtTokenDto, resourceType, resourceId, abstractPermission, userRole);
                 break;
             }
         }
         return result;
     }
 
-    private void checkPermissionControl(JwtTokenDto jwtTokenDto, Permission permission, ProceedingJoinPoint joinPoint,
+    private void checkPermissionControl(JwtTokenDto jwtTokenDto, AbstractPermission abstractPermission, ProceedingJoinPoint joinPoint,
                                         UserRoleDto userRole) {
-        var control = permission.getControl();
+        var control = abstractPermission.getControl();
         switch (control) {
-            case DENIED -> throw new AccessDeniedException("access_denied_" + permission.getId());
+            case DENIED -> throw new AccessDeniedException("access_denied_" + abstractPermission.getId());
             case ALLOWED_SPECIFIC_RESOURCES -> {
                 var resourceInfo = resolveResourceId(joinPoint);
                 var matched = checkResourceOwnership(jwtTokenDto, resourceInfo.resourceType, resourceInfo.resourceId,
-                        permission, userRole);
+                        abstractPermission, userRole);
                 if (!matched) {
-                    throw new AccessDeniedException("access_denied_" + permission.getId());
+                    throw new AccessDeniedException("access_denied_" + abstractPermission.getId());
                 }
             }
             case DENIED_SPECIFIC_RESOURCES -> {
                 var resourceInfo = resolveResourceId(joinPoint);
                 var matched = checkResourceOwnership(jwtTokenDto, resourceInfo.resourceType, resourceInfo.resourceId,
-                        permission, userRole);
+                        abstractPermission, userRole);
                 if (matched) {
-                    throw new AccessDeniedException("access_denied_" + permission.getId());
+                    throw new AccessDeniedException("access_denied_" + abstractPermission.getId());
                 }
             }
         }

@@ -1,6 +1,6 @@
 package com.finance.core.common.repository;
 
-import com.finance.core.common.model.Permission;
+import com.finance.core.common.model.AbstractPermission;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PermissionRepository<T extends Permission> extends CommonResourceRepository<T, String> {
+public interface PermissionRepository<T extends AbstractPermission> extends CommonResourceRepository<T, String> {
 
     Optional<T> findFirstByRoleIdAndResourceTypeAndActionAndUrlAndRequestMethod(String roleId, String resourceType, String action, String url, RequestMethod requestMethod);
 
