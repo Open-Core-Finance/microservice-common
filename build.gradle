@@ -27,16 +27,25 @@ plugins {
 }
 
 group = 'tech.corefinance'
-version = '0.0.1'
+version = '0.0.2-SNAPSHOT'
 
 java {
     sourceCompatibility = "${javaSourceCompatibility}"
     targetCompatibility = "${javaSourceCompatibility}"
 }
 
+apply from: 'artifact-credential.gradle'
 repositories {
 	mavenLocal()
 	mavenCentral()
+    maven {
+        url = "${artifactSnapshotUrl}"
+        credentials {
+            username = "${artifactUsername}"
+            password = "${artifactPassword}"
+        }
+        allowInsecureProtocol = true
+    }
 }
 
 dependencyManagement {
@@ -45,8 +54,6 @@ dependencyManagement {
         mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
     }
 }
-
-apply from: 'artifact-credential.gradle'
 
 jar {
     archiveClassifier = ""
