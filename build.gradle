@@ -96,7 +96,7 @@ dependencies {
 
 jacoco {
     toolVersion = "${jacocoToolVersion}"
-    reportsDirectory = file("$buildDir/jacoco")
+    reportsDirectory = layout.buildDirectory.dir("jacoco").get()
 }
 
 test {
@@ -107,9 +107,9 @@ test {
     finalizedBy jacocoTestReport
 
     jacoco {
-        classDumpDir = file("$buildDir/jacoco/classpathdumps")
+        classDumpDir = layout.buildDirectory.file("jacoco/classpathdumps").get().asFile
         enabled = true
-        destinationFile = file("$buildDir/jacoco/${name}.exec")
+        destinationFile = layout.buildDirectory.file("jacoco/${name}.exec").get().asFile
         includes = []
         excludes = []
         excludeClassLoaders = []
@@ -133,9 +133,9 @@ jacocoTestReport {
         html.required = true
         xml.required = true
         csv.required = true
-        html.outputLocation = file("${buildDir}/jacoco/html")
-        xml.outputLocation = file("${buildDir}/jacoco/jacoco-report.xml")
-        csv.outputLocation = file("${buildDir}/jacoco/jacoco-report.csv")
+        html.outputLocation = layout.buildDirectory.dir("jacoco/html").get().asFile
+        xml.outputLocation = layout.buildDirectory.file("jacoco/jacoco-report.xml").get().asFile
+        csv.outputLocation = layout.buildDirectory.file("jacoco/jacoco-report.csv").get().asFile
     }
 
     afterEvaluate {
