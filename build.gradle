@@ -22,12 +22,17 @@ plugins {
     id 'jacoco'
     id "io.freefair.lombok" version "${lombokPluginVersion}"
     id "org.sonarqube" version "${sonarqubePluginVersion}"
+    id 'maven-publish'
+    // id 'signing'
 }
 
 group = 'tech.corefinance'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = "${javaSourceCompatibility}"
-targetCompatibility = "${javaSourceCompatibility}"
+
+java {
+    sourceCompatibility = "${javaSourceCompatibility}"
+    targetCompatibility = "${javaSourceCompatibility}"
+}
 
 repositories {
 	mavenLocal()
@@ -39,6 +44,12 @@ dependencyManagement {
         mavenBom "org.springframework.boot:spring-boot-dependencies:$springBootPluginVersion"
         mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
     }
+}
+
+apply from: 'artifact-credential.gradle'
+
+jar {
+    archiveClassifier = ""
 }
 
 bootJar {
@@ -67,7 +78,6 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: "${powerMockitoVersion}"
 }
-
 
 jacoco {
     toolVersion = "${jacocoToolVersion}"
@@ -108,9 +118,9 @@ jacocoTestReport {
         html.required = true
         xml.required = true
         csv.required = true
-        html.destination file("${buildDir}/jacoco/html")
-        xml.destination file("${buildDir}/jacoco/jacoco-report.xml")
-        csv.destination file("${buildDir}/jacoco/jacoco-report.csv")
+        html.outputLocation = file("${buildDir}/jacoco/html")
+        xml.outputLocation = file("${buildDir}/jacoco/jacoco-report.xml")
+        csv.outputLocation = file("${buildDir}/jacoco/jacoco-report.csv")
     }
 
     afterEvaluate {
@@ -119,3 +129,113 @@ jacocoTestReport {
         })
     }
 }
+
+//task setSigningProperties() {
+//    doLast {
+//        // Secret key file
+//        def propKeyName = "signing.secretKeyRingFile"
+//        def secretKeyFile = System.getProperty(propKeyName)
+//        println "Running signing secretKeyRingFile ${secretKeyFile}"
+//        if (secretKeyFile == null) {
+//            secretKeyFile = "${signingSecretKeyRingFile}"
+//            System.setProperty(propKeyName, secretKeyFile)
+//            println "Setting signing secretKeyRingFile ${secretKeyFile}"
+//        }
+//        // Key ID
+//        propKeyName = "signing.keyId"
+//        def keyId = System.getProperty(propKeyName)
+//        if (keyId == null) {
+//            keyId = "${signingKeyId}"
+//            System.setProperty(propKeyName, keyId)
+//        }
+//        println "Setting ${propKeyName}=${keyId}"
+//        // Key password
+//        propKeyName = "signing.password"
+//        def keyPassword = System.getProperty(propKeyName)
+//        if (keyPassword == null) {
+//            keyPassword = "${signingPassword}"
+//            System.setProperty(propKeyName, keyPassword)
+//        }
+//        println "Setting ${propKeyName}=${keyPassword}"
+//    }
+//}
+
+javadoc {
+    exclude "**/model/**"
+    exclude "**/dto/**"
+}
+
+//task javadocJar (type :Jar, dependsOn: javadoc) {
+//    from javadoc.destinationDir
+//    archiveClassifier='javadocs'
+//    description='Creates a Javadoc Jar'
+//}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    archiveClassifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+//artifacts {
+//    archives javadocJar, sourcesJar
+//}
+
+// signing {
+//    dependsOn setSigningProperties
+//    mustRunAfter setSigningProperties
+    //systemProperty "signing.keyId", "${signingKeyId}"
+    //systemProperty "signing.password", "${signingPassword}"
+    // sign stuffZip
+    // configurations.jar
+//}
+
+publishing {
+    repositories {
+        maven {
+            url = version.endsWith('SNAPSHOT') ? "${artifactSnapshotUrl}" : "${artifactReleaseUrl}"
+            credentials {
+                username = "${artifactUsername}"
+                password = "${artifactPassword}"
+            }
+            allowInsecureProtocol = true
+        }
+    }
+    publications {
+        group = group
+        version = version
+
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            // artifact javadocJar
+
+            pom {
+                name = 'Microservice Common'
+                description = 'Common module for microservices of Open Core Finance project.'
+                url = 'https://corefinance.tech/'
+                properties = [ "lib.name": "microservice-common" ]
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'dbaotrung'
+                        name = 'Trung Doan'
+                        email = 'doanbaotrung@gmail.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:ssh://git@github.com:Open-Core-Finance/microservice-common.git'
+                    developerConnection = 'scm:git:ssh://git@github.com:Open-Core-Finance/microservice-common.git'
+                    url = 'https://github.com/Open-Core-Finance/microservice-common'
+                }
+            }
+        }
+    }
+}
+
+publish.dependsOn(':build')
+publish.mustRunAfter(':build')
