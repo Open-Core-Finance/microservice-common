@@ -46,6 +46,14 @@ repositories {
         }
         allowInsecureProtocol = true
     }
+    maven {
+        url = "${artifactReleaseUrl}"
+        credentials {
+            username = "${artifactUsername}"
+            password = "${artifactPassword}"
+        }
+        allowInsecureProtocol = true
+    }
 }
 
 dependencyManagement {
