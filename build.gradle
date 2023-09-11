@@ -24,7 +24,7 @@ plugins {
     id "org.sonarqube" version "${sonarqubePluginVersion}"
 }
 
-group = 'com.finance.core'
+group = 'tech.corefinance'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = "${javaSourceCompatibility}"
 targetCompatibility = "${javaSourceCompatibility}"
