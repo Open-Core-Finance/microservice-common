@@ -68,7 +68,7 @@ public class ApiAuthorizationCheckTest {
         field.set(apiAuthorizationCheck, mapping);
         // Util
         coreFinanceUtil = new CoreFinanceUtil();
-        field = PowerMockito.field(ApiAuthorizationCheck.class, "util");
+        field = PowerMockito.field(ApiAuthorizationCheck.class, "coreFinanceUtil");
         field.setAccessible(true);
         field.set(apiAuthorizationCheck, coreFinanceUtil);
         // permissionRepository

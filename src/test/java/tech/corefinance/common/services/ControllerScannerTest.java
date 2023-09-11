@@ -66,7 +66,7 @@ public class ControllerScannerTest {
         mappingField.set(controllerScanner, mapping);
         // Util
         coreFinanceUtil = new CoreFinanceUtil();
-        var utilField = PowerMockito.field(ControllerScanner.class, "util");
+        var utilField = PowerMockito.field(ControllerScanner.class, "coreFinanceUtil");
         utilField.setAccessible(true);
         utilField.set(controllerScanner, coreFinanceUtil);
         // Permission service
