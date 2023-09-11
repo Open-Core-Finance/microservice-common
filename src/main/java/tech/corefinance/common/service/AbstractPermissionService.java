@@ -25,24 +25,24 @@ public abstract class AbstractPermissionService<T extends AbstractPermission, C 
         implements PermissionService<T, C> {
 
     @Autowired
-    private PermissionRepository<T> permissionRepository;
+    protected PermissionRepository<T> permissionRepository;
     @Autowired
-    private InternalServiceConfigRepository<C> internalServiceConfigRepository;
+    protected InternalServiceConfigRepository<C> internalServiceConfigRepository;
     @Autowired
-    private InitDataConfiguration initDataConfiguration;
+    protected InitDataConfiguration initDataConfiguration;
     @Autowired
-    private CoreFinanceUtil coreFinanceUtil;
+    protected CoreFinanceUtil coreFinanceUtil;
     @Autowired
-    private ObjectMapper objectMapper;
+    protected ObjectMapper objectMapper;
     @Autowired
-    private Validator validator;
+    protected Validator validator;
     @Value(("${tech.corefinance.initial.permission-file}"))
-    private String permissionFileRegex;
+    protected String permissionFileRegex;
     @Value(("${tech.corefinance.initial.internal-api-file}"))
-    private String internalApiFileRegex;
+    protected String internalApiFileRegex;
 
     @Override
-    public PermissionRepository getRepository() {
+    public PermissionRepository<T> getRepository() {
         return permissionRepository;
     }
 
