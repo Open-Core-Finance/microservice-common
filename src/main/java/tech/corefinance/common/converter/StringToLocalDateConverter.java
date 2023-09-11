@@ -15,7 +15,7 @@ import java.util.Set;
 @Component
 @ConditionalOnProperty(name = "tech.corefinance.app.mongodb.converter.localDate", havingValue = "true", matchIfMissing = true)
 @ReadingConverter
-public class StringToLocalDateConverter implements MongoConversionSupport<String, LocalDate>, GenericConverter {
+public class StringToLocalDateConverter implements GenericConverter, org.springframework.core.convert.converter.Converter<String, LocalDate> {
 
     @Override
     public LocalDate convert(@Nullable String document) {

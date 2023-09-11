@@ -14,7 +14,7 @@ import tech.corefinance.common.test.support.controllers.TestController;
 import tech.corefinance.common.test.support.model.PermissionTest;
 import tech.corefinance.common.test.support.model.UserTest;
 import tech.corefinance.common.test.support.model.UserWrapterTest;
-import tech.corefinance.common.util.Util;
+import tech.corefinance.common.util.CoreFinanceUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,7 +45,7 @@ public class ApiAuthorizationCheckTest {
     private ApiAuthorizationCheck apiAuthorizationCheck;
     private MockHttpServletRequest request;
     private RequestMappingHandlerMapping mapping;
-    private Util util;
+    private CoreFinanceUtil coreFinanceUtil;
     private PermissionRepository permissionRepository;
     private List<ResourceOwnerVerifier> resourceOwnerVerifiers;
     private AccessControl permissionDefaultControl;
@@ -67,10 +67,10 @@ public class ApiAuthorizationCheckTest {
         field.setAccessible(true);
         field.set(apiAuthorizationCheck, mapping);
         // Util
-        util = new Util();
-        field = PowerMockito.field(ApiAuthorizationCheck.class, "util");
+        coreFinanceUtil = new CoreFinanceUtil();
+        field = PowerMockito.field(ApiAuthorizationCheck.class, "coreFinanceUtil");
         field.setAccessible(true);
-        field.set(apiAuthorizationCheck, util);
+        field.set(apiAuthorizationCheck, coreFinanceUtil);
         // permissionRepository
         permissionRepository = PowerMockito.mock(PermissionRepository.class);
         field = PowerMockito.field(ApiAuthorizationCheck.class, "permissionRepository");

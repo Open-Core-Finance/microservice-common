@@ -1,5 +1,6 @@
 package tech.corefinance.common.repository;
 
+import org.springframework.data.repository.NoRepositoryBean;
 import tech.corefinance.common.model.AbstractPermission;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+@NoRepositoryBean
 public interface PermissionRepository<T extends AbstractPermission> extends CommonResourceRepository<T, String> {
 
     Optional<T> findFirstByRoleIdAndResourceTypeAndActionAndUrlAndRequestMethod(String roleId, String resourceType, String action, String url, RequestMethod requestMethod);

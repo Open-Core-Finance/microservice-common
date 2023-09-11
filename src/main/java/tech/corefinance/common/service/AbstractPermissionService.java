@@ -7,7 +7,7 @@ import tech.corefinance.common.model.AbstractInternalServiceConfig;
 import tech.corefinance.common.model.AbstractPermission;
 import tech.corefinance.common.repository.InternalServiceConfigRepository;
 import tech.corefinance.common.repository.PermissionRepository;
-import tech.corefinance.common.util.Util;
+import tech.corefinance.common.util.CoreFinanceUtil;
 import jakarta.validation.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,24 +25,24 @@ public abstract class AbstractPermissionService<T extends AbstractPermission, C 
         implements PermissionService<T, C> {
 
     @Autowired
-    private PermissionRepository<T> permissionRepository;
+    protected PermissionRepository<T> permissionRepository;
     @Autowired
-    private InternalServiceConfigRepository<C> internalServiceConfigRepository;
+    protected InternalServiceConfigRepository<C> internalServiceConfigRepository;
     @Autowired
-    private InitDataConfiguration initDataConfiguration;
+    protected InitDataConfiguration initDataConfiguration;
     @Autowired
-    private Util util;
+    protected CoreFinanceUtil coreFinanceUtil;
     @Autowired
-    private ObjectMapper objectMapper;
+    protected ObjectMapper objectMapper;
     @Autowired
-    private Validator validator;
+    protected Validator validator;
     @Value(("${tech.corefinance.initial.permission-file}"))
-    private String permissionFileRegex;
+    protected String permissionFileRegex;
     @Value(("${tech.corefinance.initial.internal-api-file}"))
-    private String internalApiFileRegex;
+    protected String internalApiFileRegex;
 
     @Override
-    public PermissionRepository getRepository() {
+    public PermissionRepository<T> getRepository() {
         return permissionRepository;
     }
 
@@ -53,10 +53,10 @@ public abstract class AbstractPermissionService<T extends AbstractPermission, C 
         var result = new PermissionInitializeDto();
         // Internal APIs
         result.setInternalServiceConfigs(
-                initialInternalApiConfigs(util.getResources(internalApiFileRegex, nameSeparator, versionSeparator)));
+                initialInternalApiConfigs(coreFinanceUtil.getResources(internalApiFileRegex, nameSeparator, versionSeparator)));
         // Permissions
         result.setPermissions(
-                initialPermissions(util.getResources(permissionFileRegex, nameSeparator, versionSeparator)));
+                initialPermissions(coreFinanceUtil.getResources(permissionFileRegex, nameSeparator, versionSeparator)));
         // Return
         return result;
     }

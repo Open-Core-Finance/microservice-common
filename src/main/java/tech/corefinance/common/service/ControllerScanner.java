@@ -5,11 +5,10 @@ import tech.corefinance.common.annotation.ManualPermissionCheck;
 import tech.corefinance.common.annotation.PermissionAction;
 import tech.corefinance.common.config.ServiceSecurityConfig;
 import tech.corefinance.common.enums.AccessControl;
-import tech.corefinance.common.model.AbstractInternalServiceConfig;
 import tech.corefinance.common.model.AbstractPermission;
 import tech.corefinance.common.model.ResourceAction;
 import tech.corefinance.common.repository.ResourceActionRepository;
-import tech.corefinance.common.util.Util;
+import tech.corefinance.common.util.CoreFinanceUtil;
 import tech.corefinance.common.ex.ReflectiveIncorrectFieldException;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
@@ -44,7 +43,7 @@ public class ControllerScanner {
     @Autowired
     private RequestMappingHandlerMapping mapping;
     @Autowired
-    private Util util;
+    private CoreFinanceUtil coreFinanceUtil;
 
     @Async
     @PostConstruct
@@ -88,8 +87,8 @@ public class ControllerScanner {
                     throw new ReflectiveIncorrectFieldException("no_permission_defined");
                 }
             }
-            var resourceType = util.resolveResourceType(perActAnn, controllerManagedResource);
-            var action = util.resolveResourceAction(perActAnn, key);
+            var resourceType = coreFinanceUtil.resolveResourceType(perActAnn, controllerManagedResource);
+            var action = coreFinanceUtil.resolveResourceAction(perActAnn, key);
             var requestMethods = key.getMethodsCondition().getMethods();
             permissionActions.addAll(buildListActions(resourceType, action, urls, requestMethods));
             if (manualPerCheckAnn != null) {

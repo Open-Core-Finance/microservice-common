@@ -1,5 +1,7 @@
 package tech.corefinance.common.test.support.repository;
 
+import org.springframework.data.domain.Example;
+import org.springframework.data.repository.query.FluentQuery;
 import tech.corefinance.common.repository.PermissionRepository;
 import tech.corefinance.common.test.support.model.PermissionTest;
 import org.springframework.data.domain.Page;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 @Component
 public class TestPermissionRepository
@@ -100,6 +103,41 @@ public class TestPermissionRepository
 
     @Override
     public Page<PermissionTest> findAll(Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public <S extends PermissionTest> Optional<S> findOne(Example<S> example) {
+        return Optional.empty();
+    }
+
+    @Override
+    public <S extends PermissionTest> Iterable<S> findAll(Example<S> example) {
+        return null;
+    }
+
+    @Override
+    public <S extends PermissionTest> Iterable<S> findAll(Example<S> example, Sort sort) {
+        return null;
+    }
+
+    @Override
+    public <S extends PermissionTest> Page<S> findAll(Example<S> example, Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public <S extends PermissionTest> long count(Example<S> example) {
+        return 0;
+    }
+
+    @Override
+    public <S extends PermissionTest> boolean exists(Example<S> example) {
+        return false;
+    }
+
+    @Override
+    public <S extends PermissionTest, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
         return null;
     }
 }

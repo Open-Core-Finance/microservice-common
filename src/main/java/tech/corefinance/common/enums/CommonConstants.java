@@ -42,5 +42,5 @@ public final class CommonConstants {
     public static final String LOGBACK_FILE_PATH_KEY = "logFilePath";
     public static final String LOGBACK_FILE_NAME_KEY = "logFileName";
     public static final String LOGBACK_FILE_PATH_DEFAULT = "logs";
-    public static final String LOGBACK_FILE_NAME_DEFAULT = "kuniv";
+    public static final String LOGBACK_FILE_NAME_DEFAULT = "corefinance";
 }

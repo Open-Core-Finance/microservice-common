@@ -11,7 +11,7 @@ import tech.corefinance.common.model.AbstractPermission;
 import tech.corefinance.common.repository.PermissionRepository;
 import tech.corefinance.common.service.InternalApiVerify;
 import tech.corefinance.common.service.ResourceOwnerVerifier;
-import tech.corefinance.common.util.Util;
+import tech.corefinance.common.util.CoreFinanceUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -56,7 +56,7 @@ public class ApiAuthorizationCheck {
     @Autowired
     private RequestMappingHandlerMapping mapping;
     @Autowired
-    private Util util;
+    private CoreFinanceUtil coreFinanceUtil;
     @Autowired
     private PermissionRepository permissionRepository;
 
@@ -122,9 +122,9 @@ public class ApiAuthorizationCheck {
             String url = resolveUrl(handlerMethodEntry, requestUri);
             LOGGER.debug("Resolved URL [{}] for request URI [{}]", url, requestUri);
             var perActAnn = method.getAnnotation(PermissionAction.class);
-            var action = util.resolveResourceAction(perActAnn, handlerMethodEntry.getKey());
+            var action = coreFinanceUtil.resolveResourceAction(perActAnn, handlerMethodEntry.getKey());
             var controllerManagedResource = controllerClass.getAnnotation(ControllerManagedResource.class);
-            var resourceType = util.resolveResourceType(perActAnn, controllerManagedResource);
+            var resourceType = coreFinanceUtil.resolveResourceType(perActAnn, controllerManagedResource);
             Collection<UserRoleDto> userRoles = jwtTokenDto.getUserRoles();
             var foundMatched = false;
             var isAdmin = false;
@@ -231,7 +231,7 @@ public class ApiAuthorizationCheck {
                 return new ResourceInfoPair(permissionResource.resourceType(), null);
             }
             var fieldPath = permissionResource.idPath();
-            var extractedValue = util.getDeepAttributeValue(parameterValue, fieldPath);
+            var extractedValue = coreFinanceUtil.getDeepAttributeValue(parameterValue, fieldPath);
             return new ResourceInfoPair(permissionResource.resourceType(), extractedValue);
         }
     }

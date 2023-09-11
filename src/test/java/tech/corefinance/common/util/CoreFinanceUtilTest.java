@@ -10,13 +10,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 
-class UtilTest {
+class CoreFinanceUtilTest {
 
-    private Util util;
+    private CoreFinanceUtil coreFinanceUtil;
 
     @BeforeEach
     void setUp() {
-        util = new Util();
+        coreFinanceUtil = new CoreFinanceUtil();
     }
 
     @Test
@@ -24,7 +24,7 @@ class UtilTest {
         var objectMapper = PowerMockito.mock(ObjectMapper.class);
         PowerMockito.when(objectMapper.writeValueAsString(Mockito.anyString())).thenThrow(new StackOverflowError());
         Assertions.assertEquals("Parsing json failure",
-                util.writeValueToJson(objectMapper, "{\"a\": \"b\"}"));
+                coreFinanceUtil.writeValueToJson(objectMapper, "{\"a\": \"b\"}"));
     }
 
     @Test
@@ -33,6 +33,6 @@ class UtilTest {
         PowerMockito.when(objectMapper.writeValueAsString(Mockito.anyString())).thenThrow(
                 ValueInstantiationException.from(null, null,  (JavaType) null));
         Assertions.assertEquals("Parsing json failure",
-                util.writeValueToJson(objectMapper, "{\"a\": \"b\"}"));
+                coreFinanceUtil.writeValueToJson(objectMapper, "{\"a\": \"b\"}"));
     }
 }
