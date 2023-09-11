@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-	<conversionRule conversionWord="traceid" converterClass="com.finance.core.common.converter.log.LogTraceIdConverter"/>
+	<conversionRule conversionWord="traceid" converterClass="tech.corefinance.common.converter.log.LogTraceIdConverter"/>
 
 	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
 	    <File>logs/common-test.log</File>
@@ -31,7 +31,7 @@
 	</appender>
 
 	<!-- Logs for APIs classes -->
-	<logger name="com.finance.core" level="DEBUG" />
+	<logger name="tech.corefinance" level="DEBUG" />
 
 	<!-- Spring framework logs. Should not turn to debug unless you know what you're doing. It's annoyed!!! -->
 	<logger name="org.springframework" level="ERROR" />
