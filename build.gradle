@@ -27,7 +27,7 @@ plugins {
 }
 
 group = 'tech.corefinance'
-version = '0.0.2-SNAPSHOT'
+version = "${projectVersion}"
 
 java {
     sourceCompatibility = "${javaSourceCompatibility}"
