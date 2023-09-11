@@ -9,7 +9,7 @@ public class ServiceProcessingException extends RuntimeException {
     /**
      * Generated.
      */
-    private static final long serialVersionUID = -2963416786594466369L;
+    private static final long serialVersionUID = -2963416786594466469L;
 
     /**
      * Should not use this constructor as general cases. Just use for special case only.

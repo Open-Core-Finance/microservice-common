@@ -1,6 +1,6 @@
 package tech.corefinance.common.aop;
 
-import tech.corefinance.common.util.Util;
+import tech.corefinance.common.util.CoreFinanceUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class MethodDataLoging {
 
     @Autowired
-    protected Util util;
+    protected CoreFinanceUtil coreFinanceUtil;
     @Autowired
     protected ObjectMapper objectMapper;
 
@@ -38,7 +38,7 @@ public abstract class MethodDataLoging {
 
             // Input
             String[] parametersNames = signature.getParameterNames();
-            String input = util.buildMethodInputJsonLog(joinPoint, parametersNames, objectMapper);
+            String input = coreFinanceUtil.buildMethodInputJsonLog(joinPoint, parametersNames, objectMapper);
             LOGGER.info("Input [{}]", input);
             doAdditionalInputLog(joinPoint, objectMapper);
 
@@ -49,7 +49,7 @@ public abstract class MethodDataLoging {
             Object result = joinPoint.proceed();
             end = System.currentTimeMillis();
             if (!void.class.isAssignableFrom(returnType)) {
-                LOGGER.debug("Result: {}", util.writeValueToJson(objectMapper, result));
+                LOGGER.debug("Result: {}", coreFinanceUtil.writeValueToJson(objectMapper, result));
             }
             // Return
             return result;

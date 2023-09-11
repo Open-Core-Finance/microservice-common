@@ -7,7 +7,7 @@ import tech.corefinance.common.model.AbstractInternalServiceConfig;
 import tech.corefinance.common.model.AbstractPermission;
 import tech.corefinance.common.repository.InternalServiceConfigRepository;
 import tech.corefinance.common.repository.PermissionRepository;
-import tech.corefinance.common.util.Util;
+import tech.corefinance.common.util.CoreFinanceUtil;
 import jakarta.validation.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public abstract class AbstractPermissionService<T extends AbstractPermission, C 
     @Autowired
     private InitDataConfiguration initDataConfiguration;
     @Autowired
-    private Util util;
+    private CoreFinanceUtil coreFinanceUtil;
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
@@ -53,10 +53,10 @@ public abstract class AbstractPermissionService<T extends AbstractPermission, C 
         var result = new PermissionInitializeDto();
         // Internal APIs
         result.setInternalServiceConfigs(
-                initialInternalApiConfigs(util.getResources(internalApiFileRegex, nameSeparator, versionSeparator)));
+                initialInternalApiConfigs(coreFinanceUtil.getResources(internalApiFileRegex, nameSeparator, versionSeparator)));
         // Permissions
         result.setPermissions(
-                initialPermissions(util.getResources(permissionFileRegex, nameSeparator, versionSeparator)));
+                initialPermissions(coreFinanceUtil.getResources(permissionFileRegex, nameSeparator, versionSeparator)));
         // Return
         return result;
     }

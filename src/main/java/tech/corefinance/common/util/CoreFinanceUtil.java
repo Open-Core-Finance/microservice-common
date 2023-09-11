@@ -36,7 +36,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Component
-public class Util {
+public class CoreFinanceUtil {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 

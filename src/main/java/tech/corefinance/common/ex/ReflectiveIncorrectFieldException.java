@@ -5,7 +5,7 @@ public class ReflectiveIncorrectFieldException extends RuntimeException {
     /**
      * Generated.
      */
-    private static final long serialVersionUID = -2963416786594345369L;
+    private static final long serialVersionUID = -2963416786594345389L;
 
     /**
      * Should not use this constructor as general cases. Just use for special case only.

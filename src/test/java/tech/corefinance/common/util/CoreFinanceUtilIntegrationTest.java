@@ -28,16 +28,16 @@ import java.util.*;
 @AutoConfigureMockMvc
 @ActiveProfiles({"common", "default", "unittest"})
 @ComponentScan(basePackages = {"tech.corefinance.kuniv"})
-public class UtilIntegrationTest {
+public class CoreFinanceUtilIntegrationTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UtilIntegrationTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CoreFinanceUtilIntegrationTest.class);
 
     @Value("${export.format.date}")
     private String exportDateFormat;
     @Value("${export.format.datetime}")
     private String exportDateTimeFormat;
     @Autowired
-    private Util util;
+    private CoreFinanceUtil coreFinanceUtil;
 
     @MockBean
     private ResourceActionRepository resourceActionRepository;
@@ -51,7 +51,7 @@ public class UtilIntegrationTest {
     void test_checkAndConvertExportData_happyCase() {
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat(exportDateFormat);
-        Object result = util.checkAndConvertExportData(date);
+        Object result = coreFinanceUtil.checkAndConvertExportData(date);
         Assertions.assertEquals(dateFormat.format(date), result);
     }
 
@@ -59,7 +59,7 @@ public class UtilIntegrationTest {
     void test_checkAndConvertExportData_happyCase2() {
         LocalDateTime date = LocalDateTime.now();
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(exportDateTimeFormat);
-        Object result = util.checkAndConvertExportData(date);
+        Object result = coreFinanceUtil.checkAndConvertExportData(date);
         Assertions.assertEquals(dateFormat.format(date), result);
     }
 
@@ -67,20 +67,20 @@ public class UtilIntegrationTest {
     void test_checkAndConvertExportData_happyCase3() {
         Instant date = Instant.now();
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(exportDateTimeFormat).withZone(ZoneId.systemDefault());
-        Object result = util.checkAndConvertExportData(date);
+        Object result = coreFinanceUtil.checkAndConvertExportData(date);
         Assertions.assertEquals(dateFormat.format(date), result);
     }
 
     @Test
     void test_checkAndConvertExportData_nullData() {
-        Object result = util.checkAndConvertExportData(null);
+        Object result = coreFinanceUtil.checkAndConvertExportData(null);
         Assertions.assertNull(result);
     }
 
     @Test
     void test_checkAndConvertExportData_notSupportedObject() {
         Object input = new Object();
-        Object result = util.checkAndConvertExportData(input);
+        Object result = coreFinanceUtil.checkAndConvertExportData(input);
         Assertions.assertEquals(input, result);
     }
 }

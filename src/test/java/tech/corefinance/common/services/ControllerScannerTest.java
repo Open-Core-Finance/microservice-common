@@ -9,7 +9,7 @@ import tech.corefinance.common.service.PermissionService;
 import tech.corefinance.common.test.support.controllers.AnotherTestController;
 import tech.corefinance.common.test.support.controllers.TestController;
 import tech.corefinance.common.test.support.model.PermissionTest;
-import tech.corefinance.common.util.Util;
+import tech.corefinance.common.util.CoreFinanceUtil;
 import tech.corefinance.common.ex.ReflectiveIncorrectFieldException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -39,7 +39,7 @@ public class ControllerScannerTest {
     private List<String> noAuthenUrls;
     private ControllerScanner controllerScanner;
     private RequestMappingHandlerMapping mapping;
-    private Util util;
+    private CoreFinanceUtil coreFinanceUtil;
     private PermissionService permissionService;
 
     @BeforeEach
@@ -65,10 +65,10 @@ public class ControllerScannerTest {
         mappingField.setAccessible(true);
         mappingField.set(controllerScanner, mapping);
         // Util
-        util = new Util();
+        coreFinanceUtil = new CoreFinanceUtil();
         var utilField = PowerMockito.field(ControllerScanner.class, "util");
         utilField.setAccessible(true);
-        utilField.set(controllerScanner, util);
+        utilField.set(controllerScanner, coreFinanceUtil);
         // Permission service
         permissionService = PowerMockito.mock(PermissionService.class);
         var permissionServiceField = PowerMockito.field(ControllerScanner.class, "permissionService");

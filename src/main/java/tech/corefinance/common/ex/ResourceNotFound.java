@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import tech.corefinance.common.dto.GeneralApiResponse;
 
 public class ResourceNotFound extends RuntimeException{
-    private static final long serialVersionUID = -2963416786314466369L;
+    private static final long serialVersionUID = -2963416786314466379L;
     public ResourceNotFound(String message, Throwable origin) {
         super(message, origin);
     }
