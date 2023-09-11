@@ -1,11 +1,11 @@
 package tech.corefinance.common.repository;
 
+import org.springframework.data.repository.NoRepositoryBean;
 import tech.corefinance.common.model.AbstractInternalServiceConfig;
-import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
+@NoRepositoryBean
 public interface InternalServiceConfigRepository<T extends AbstractInternalServiceConfig>
         extends CommonResourceRepository<T, String> {
 

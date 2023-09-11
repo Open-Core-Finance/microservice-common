@@ -16,8 +16,8 @@ import java.util.Set;
 @Component
 @ConditionalOnProperty(name = "tech.corefinance.app.mongodb.converter.zonedDateTime", havingValue = "true", matchIfMissing = true)
 @WritingConverter
-public class ZonedDateTimeToDateConverter implements MongoConversionSupport<ZonedDateTime, Date>,
-        GenericConverter {
+public class ZonedDateTimeToDateConverter implements
+        GenericConverter, org.springframework.core.convert.converter.Converter<ZonedDateTime, Date> {
 
     @Override
     public Date convert(@Nullable ZonedDateTime zonedDateTime) {
