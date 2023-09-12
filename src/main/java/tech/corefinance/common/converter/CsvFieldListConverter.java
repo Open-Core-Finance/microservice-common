@@ -2,6 +2,7 @@ package tech.corefinance.common.converter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import tech.corefinance.common.dto.CsvExportDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import org.springframework.format.Formatter;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Locale;
 
 @Component
@@ -20,25 +22,17 @@ public class CsvFieldListConverter implements Converter<String, CsvExportDefinit
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
+    @SneakyThrows(JsonProcessingException.class)
     @Override
     public CsvExportDefinition[] convert(String value) {
-        try {
-            return objectMapper.readValue(value, CsvExportDefinition[].class);
-        } catch (IOException | IllegalArgumentException e) {
-            logger.error("Error when parse data []", value, e);
-            return null;
-        }
+        return objectMapper.readValue(value, CsvExportDefinition[].class);
     }
 
+    @SneakyThrows(JsonProcessingException.class)
     @Override
     public String print(CsvExportDefinition[] object, Locale locale) {
-        try {
-            logger.info("Calling custom formatter for CsvExportDefinition[] {}! Locale ignored!", (Object) object);
-            return objectMapper.writeValueAsString(object);
-        } catch (JsonProcessingException e) {
-            logger.error("Error", e);
-            return "[]";
-        }
+        logger.info("Calling custom formatter for CsvExportDefinition[] {}! Locale ignored!", (Object) object);
+        return objectMapper.writeValueAsString(object);
     }
 
     @Override

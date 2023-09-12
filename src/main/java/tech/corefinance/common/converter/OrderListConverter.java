@@ -3,6 +3,7 @@ package tech.corefinance.common.converter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.converter.Converter;
@@ -25,37 +26,30 @@ public class OrderListConverter implements Converter<String, List<Order>>, Forma
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
+    @SneakyThrows(JsonProcessingException.class)
     public List<Order> convert(String value) {
         List<Order> orders = new LinkedList<>();
-        try {
-            List<LinkedHashMap<String, String>> orderMap =
-                    objectMapper.readValue(value, new TypeReference<>() {});
-            logger.debug("Order map {}", orderMap);
-            orderMap.forEach(map -> {
-                Order order = null;
-                String property = map.get("property");
-                if ("ASC".equalsIgnoreCase(map.get("direction"))) {
-                    order = Order.asc(property);
-                } else {
-                    order = Order.desc(property);
-                }
-                orders.add(order);
-            });
-        } catch (IOException | IllegalArgumentException e) {
-            logger.error("Error", e);
-        }
+        List<LinkedHashMap<String, String>> orderMap =
+                objectMapper.readValue(value, new TypeReference<>() {});
+        logger.debug("Order map {}", orderMap);
+        orderMap.forEach(map -> {
+            Order order = null;
+            String property = map.get("property");
+            if ("ASC".equalsIgnoreCase(map.get("direction"))) {
+                order = Order.asc(property);
+            } else {
+                order = Order.desc(property);
+            }
+            orders.add(order);
+        });
         return orders;
     }
 
     @Override
+    @SneakyThrows(JsonProcessingException.class)
     public String print(List<Order> object, Locale locale) {
-        try {
-            logger.info("Calling custom formatter for List<Order> {}! Locale ignored!", object);
-            return objectMapper.writeValueAsString(object);
-        } catch (JsonProcessingException e) {
-            logger.error("Error", e);
-            return "[]";
-        }
+        logger.info("Calling custom formatter for List<Order> {}! Locale ignored!", object);
+        return objectMapper.writeValueAsString(object);
     }
 
     @Override
