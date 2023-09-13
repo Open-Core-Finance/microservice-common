@@ -155,7 +155,7 @@ javadoc {
 
 task javadocJar (type :Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
-    archiveClassifier='javadocs'
+    archiveClassifier='javadoc'
     description='Creates a Javadoc Jar'
 }
 
