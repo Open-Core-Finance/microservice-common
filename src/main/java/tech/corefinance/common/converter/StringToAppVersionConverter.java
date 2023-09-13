@@ -1,22 +1,21 @@
 package tech.corefinance.common.converter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import tech.corefinance.common.model.AppVersion;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.converter.GenericConverter;
 import org.springframework.stereotype.Component;
+import tech.corefinance.common.model.AppVersion;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
 @Component
+@Slf4j
 public class StringToAppVersionConverter implements Converter<String, AppVersion>, GenericConverter {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
@@ -36,13 +35,13 @@ public class StringToAppVersionConverter implements Converter<String, AppVersion
             if (source.contains(".")) {
                 String[] values = source.split("\\.");
                 var result = new AppVersion(Short.valueOf(values[0]), Short.valueOf(values[1]), Short.valueOf(values[2]), build);
-                logger.info("Converting app version value {} to object {}", source, result);
+                log.info("Converting app version value {} to object {}", source, result);
                 return result;
             } else {
                 try {
                     return objectMapper.readValue(source, AppVersion.class);
                 } catch (IOException e) {
-                    logger.error("Error", e);
+                    log.error("Error", e);
                     return null;
                 }
             }

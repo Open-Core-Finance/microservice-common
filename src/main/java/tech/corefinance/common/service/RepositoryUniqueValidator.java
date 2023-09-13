@@ -1,23 +1,21 @@
 package tech.corefinance.common.service;
 
-import tech.corefinance.common.annotation.UniqueField;
-import tech.corefinance.common.context.ApplicationContextHolder;
-import tech.corefinance.common.model.GenericModel;
-import tech.corefinance.common.ex.ReflectiveIncorrectFieldException;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.util.ReflectionUtils;
+import tech.corefinance.common.annotation.UniqueField;
+import tech.corefinance.common.context.ApplicationContextHolder;
+import tech.corefinance.common.ex.ReflectiveIncorrectFieldException;
+import tech.corefinance.common.model.GenericModel;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+@Slf4j
 public class RepositoryUniqueValidator implements ConstraintValidator<UniqueField, GenericModel<?>> {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private UniqueField uniqueField;
     private PagingAndSortingRepository<?, ?> repository;
@@ -43,13 +41,13 @@ public class RepositoryUniqueValidator implements ConstraintValidator<UniqueFiel
             if (void.class.equals(idType)) {
                 method = ReflectionUtils.findRequiredMethod(repository.getClass(), uniqueField.repoMethodName(), uniqueField.fieldType());
                 result = !((Boolean) method.invoke(repository, fieldValue));
-                logger.info("Validated [{}] with field [{}]=[{}] and result id [{}]", value.getClass().getName(), uniqueField.fieldName(),
+                log.info("Validated [{}] with field [{}]=[{}] and result id [{}]", value.getClass().getName(), uniqueField.fieldName(),
                         fieldValue, result ? "valid" : "invalid");
             } else {
                 Object idValue = value.getId();
                 method = ReflectionUtils.findRequiredMethod(repository.getClass(), uniqueField.repoMethodName(), uniqueField.fieldType(), idType);
                 result = !((Boolean) method.invoke(repository, fieldValue, idValue));
-                logger.info("Validated [{}] with field [{}]=[{}] and ID=[{}] and result id [{}]", value.getClass().getName(),
+                log.info("Validated [{}] with field [{}]=[{}] and ID=[{}] and result id [{}]", value.getClass().getName(),
                         uniqueField.fieldName(), fieldValue, idValue, result ? "valid" : "invalid");
             }
 
