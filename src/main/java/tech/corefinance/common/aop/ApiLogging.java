@@ -1,6 +1,7 @@
 package tech.corefinance.common.aop;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -17,11 +18,11 @@ import java.util.Collections;
 @Aspect
 @Component
 @ConditionalOnProperty(name = "tech.corefinance.log.enabled.api", havingValue = "true", matchIfMissing = true)
+@Slf4j
 public class ApiLogging extends MethodDataLoging {
 
     private static final String EXECUTION_FEIGN_CLIENT = "execution(* *Client(..))";
     private static final String EXECUTION_FEIGN_CLIENT_EXCLUDED = "!" + EXECUTION_FEIGN_CLIENT;
-    private static final Logger LOGGER = LoggerFactory.getLogger(ApiLogging.class);
 
     @Autowired
     private HttpServletRequest request;
@@ -66,10 +67,10 @@ public class ApiLogging extends MethodDataLoging {
 
     @Override
     protected void doAdditionalInputLog(ProceedingJoinPoint joinPoint, ObjectMapper objectMapper) {
-        LOGGER.debug("== Request header <= START");
-        LOGGER.debug("API: [{}] - [{}]", request.getMethod(), request.getServletPath());
-        Collections.list(request.getHeaderNames()).stream().forEach(h -> LOGGER.debug("Name: [{}] - Value: [{}]", h, request.getHeader(h)));
-        LOGGER.debug("== Request header <=   END");
+        log.debug("== Request header <= START");
+        log.debug("API: [{}] - [{}]", request.getMethod(), request.getServletPath());
+        Collections.list(request.getHeaderNames()).stream().forEach(h -> log.debug("Name: [{}] - Value: [{}]", h, request.getHeader(h)));
+        log.debug("== Request header <=   END");
     }
 
 }

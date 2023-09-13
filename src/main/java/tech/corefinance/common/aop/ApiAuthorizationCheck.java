@@ -1,5 +1,6 @@
 package tech.corefinance.common.aop;
 
+import lombok.extern.slf4j.Slf4j;
 import tech.corefinance.common.annotation.ControllerManagedResource;
 import tech.corefinance.common.annotation.PermissionAction;
 import tech.corefinance.common.annotation.PermissionResource;
@@ -17,8 +18,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -40,6 +39,7 @@ import java.util.Set;
 @Aspect
 @Component
 @ConditionalOnProperty(prefix = "tech.corefinance.security", name = "authorize-check", havingValue = "true", matchIfMissing = true)
+@Slf4j
 public class ApiAuthorizationCheck {
 
     private static final String EXECUTION_FEIGN_CLIENT = "execution(* tech.corefinance.rest.client.*Client.*(..))";
@@ -49,7 +49,6 @@ public class ApiAuthorizationCheck {
             "!@annotation(tech.corefinance.common.annotation.ManualPermissionCheck)";
     private static final String EXECUTION_EXCLUDED =
             EXECUTION_FEIGN_CLIENT_EXCLUDED + " && " + EXECUTION_MANUAL_CHECK_EXCLUDED;
-    private static final Logger LOGGER = LoggerFactory.getLogger(ApiAuthorizationCheck.class);
 
     @Autowired
     private HttpServletRequest request;
@@ -113,14 +112,14 @@ public class ApiAuthorizationCheck {
             MethodSignature signature = (MethodSignature) joinPoint.getSignature();
             Method method = signature.getMethod();
             String requestUri = request.getRequestURI();
-            LOGGER.debug("Verifying method [{}#{}]", controllerClassName, signature.getName());
+            log.debug("Verifying method [{}#{}]", controllerClassName, signature.getName());
             Map.Entry<RequestMappingInfo, HandlerMethod> handlerMethodEntry = resolveHandlerInfo(method);
             if (handlerMethodEntry == null) {
-                LOGGER.error("This error should not happen. If it happens, please check AOP condition.");
+                log.error("This error should not happen. If it happens, please check AOP condition.");
                 throw new IllegalStateException("unknown_method_handler");
             }
             String url = resolveUrl(handlerMethodEntry, requestUri);
-            LOGGER.debug("Resolved URL [{}] for request URI [{}]", url, requestUri);
+            log.debug("Resolved URL [{}] for request URI [{}]", url, requestUri);
             var perActAnn = method.getAnnotation(PermissionAction.class);
             var action = coreFinanceUtil.resolveResourceAction(perActAnn, handlerMethodEntry.getKey());
             var controllerManagedResource = controllerClass.getAnnotation(ControllerManagedResource.class);
@@ -208,7 +207,7 @@ public class ApiAuthorizationCheck {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method method = methodSignature.getMethod();
         var anns = method.getParameterAnnotations();
-        LOGGER.debug("ANN [{}]", new Object[] { anns });
+        log.debug("ANN [{}]", new Object[] { anns });
         PermissionResource permissionResource = null;
         Object parameterValue = null;
         mainloop:

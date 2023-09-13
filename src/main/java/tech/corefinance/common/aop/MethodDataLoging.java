@@ -1,5 +1,6 @@
 package tech.corefinance.common.aop;
 
+import lombok.extern.slf4j.Slf4j;
 import tech.corefinance.common.util.CoreFinanceUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -8,14 +9,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+@Slf4j
 public abstract class MethodDataLoging {
 
     @Autowired
     protected CoreFinanceUtil coreFinanceUtil;
     @Autowired
     protected ObjectMapper objectMapper;
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(MethodDataLoging.class);
 
     protected String getLogingStartMark() {
         return "========================";
@@ -34,22 +34,22 @@ public abstract class MethodDataLoging {
 
         try {
             msg.append("START");
-            LOGGER.info(msg.toString());
+            log.info(msg.toString());
 
             // Input
             String[] parametersNames = signature.getParameterNames();
             String input = coreFinanceUtil.buildMethodInputJsonLog(joinPoint, parametersNames, objectMapper);
-            LOGGER.info("Input [{}]", input);
+            log.info("Input [{}]", input);
             doAdditionalInputLog(joinPoint, objectMapper);
 
             // Process the method.
             start = System.currentTimeMillis();
             Class<?> returnType = signature.getReturnType();
-            LOGGER.info("Return type {}", returnType);
+            log.info("Return type {}", returnType);
             Object result = joinPoint.proceed();
             end = System.currentTimeMillis();
             if (!void.class.isAssignableFrom(returnType)) {
-                LOGGER.debug("Result: {}", coreFinanceUtil.writeValueToJson(objectMapper, result));
+                log.debug("Result: {}", coreFinanceUtil.writeValueToJson(objectMapper, result));
             }
             // Return
             return result;
@@ -60,7 +60,7 @@ public abstract class MethodDataLoging {
             // End mark
             msg.setLength(length);
             msg.append("  END in [").append(end - start).append("] ms.");
-            LOGGER.info(msg.toString());
+            log.info(msg.toString());
         }
     }
 
