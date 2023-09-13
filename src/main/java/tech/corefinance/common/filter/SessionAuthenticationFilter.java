@@ -77,6 +77,7 @@ public class SessionAuthenticationFilter extends OncePerRequestFilter implements
             }
         } finally {
             JwtContext.getInstance().removeJwt();
+            JwtContext.getInstance().removeTokenString();
         }
     }
 

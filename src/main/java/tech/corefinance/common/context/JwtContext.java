@@ -1,12 +1,10 @@
 package tech.corefinance.common.context;
 
+import lombok.extern.slf4j.Slf4j;
 import tech.corefinance.common.dto.JwtTokenDto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+@Slf4j
 public class JwtContext {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private ThreadLocal<JwtTokenDto> tokenThreadLocal = new ThreadLocal<>();
     private ThreadLocal<String> tokenStringThreadLocal = new ThreadLocal<>();
@@ -14,7 +12,7 @@ public class JwtContext {
 
     private JwtContext() {
         // Singleton implement
-        logger.debug("Created PermissionContext [{}]", this);
+        log.debug("Created PermissionContext [{}]", this);
     }
 
     public static JwtContext getInstance() {

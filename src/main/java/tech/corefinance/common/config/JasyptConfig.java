@@ -1,5 +1,6 @@
 package tech.corefinance.common.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
@@ -13,9 +14,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConditionalOnProperty(prefix = "tech.corefinance.common.enabled", name = "property-encryption", havingValue = "true",
         matchIfMissing = true)
+@Slf4j
 public class JasyptConfig {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Bean(name = "jasyptStringEncryptor")
     public StringEncryptor stringEncryptor(
@@ -27,7 +27,7 @@ public class JasyptConfig {
             @Value("${jasypt.encryptor.provider-name}") String providerName,
             @Value("${jasypt.encryptor.string-output-type}") String stringOutputType
     ) {
-        logger.debug("Configured values algorithm [{}], saltGeneratorClassName [{}], keyObtentionIterations [{}]," +
+        log.debug("Configured values algorithm [{}], saltGeneratorClassName [{}], keyObtentionIterations [{}]," +
                         "poolSize [{}], providerName [{}], stringOutputType [{}], encryptPassword [{}]", algorithm,
                 saltGeneratorClassName, keyObtentionIterations, poolSize, providerName, stringOutputType,
                 encryptPassword);

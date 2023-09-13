@@ -1,5 +1,6 @@
 package tech.corefinance.common.context;
 
+import lombok.extern.slf4j.Slf4j;
 import tech.corefinance.common.enums.CommonConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,17 +13,17 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.Locale;
 
+@Slf4j
 public class StatelessLocaleResolver extends AbstractLocaleContextResolver implements LocaleResolver {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public LocaleContext resolveLocaleContext(HttpServletRequest request) {
         var localeKey = request.getHeader(CommonConstants.LANGUAGE_HEADER_KEY);
         if (localeKey == null) {
         	localeKey = CommonConstants.DEFAULT_LANGUAGE_HEADER;
-            logger.debug("No local in header, used to default locale [{}]", localeKey);
+            log.debug("No local in header, used to default locale [{}]", localeKey);
         } else {
-            logger.debug("Resolved local in header [{}]", localeKey);
+            log.debug("Resolved local in header [{}]", localeKey);
         }
         Locale locale = new Locale(localeKey);
         return new SimpleTimeZoneAwareLocaleContext(locale, getDefaultTimeZone());
