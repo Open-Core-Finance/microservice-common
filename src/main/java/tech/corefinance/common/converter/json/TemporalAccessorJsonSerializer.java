@@ -15,8 +15,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.providers.SpringDocProviders;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +29,9 @@ import java.util.Iterator;
 @Data
 @Order
 @EqualsAndHashCode(callSuper=false)
+@Slf4j
 public abstract class TemporalAccessorJsonSerializer<T extends TemporalAccessor> extends JsonSerializer<T> implements
         InitializingBean, ModelConverter {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private String dateTimeFormat;
     @Autowired
@@ -53,14 +51,14 @@ public abstract class TemporalAccessorJsonSerializer<T extends TemporalAccessor>
 
     @Override
     public void serialize(T value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-        logger.debug("Converting value [{}]", value);
+        log.debug("Converting value [{}]", value);
         gen.writeString(dateTimeFormatter.format(value));
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
         var handleClassName = handledType().getSimpleName();
-        logger.debug("Applied {} format: {}", handleClassName, dateTimeFormat);
+        log.debug("Applied {} format: {}", handleClassName, dateTimeFormat);
         dateTimeFormatter = DateTimeFormatter.ofPattern(dateTimeFormat);
         SimpleModule simpleModule = new SimpleModule(handleClassName + "Module",
                 new Version(1, 0, 0, null, "", ""));
@@ -75,7 +73,7 @@ public abstract class TemporalAccessorJsonSerializer<T extends TemporalAccessor>
         JavaType javaType = springDocProviders.jsonMapper().constructType(type.getType());
         Class<?> annotatedTypeClass = javaType.getRawClass();
         var isAssignable = handledType.isAssignableFrom(annotatedTypeClass);
-        logger.debug("handledType [{}], annotatedTypeClass [{}], isAssignable [{}]", handledType, annotatedTypeClass,
+        log.debug("handledType [{}], annotatedTypeClass [{}], isAssignable [{}]", handledType, annotatedTypeClass,
                 isAssignable);
         if (isAssignable) {
             return new TemporalAccessorSchema<T>(dateTimeFormatter, handledType, dateTimeFormat);

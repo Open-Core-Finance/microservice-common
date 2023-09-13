@@ -8,17 +8,11 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import tech.corefinance.common.config.JwtConfiguration;
-import tech.corefinance.common.dto.BasicUserDto;
-import tech.corefinance.common.dto.JwtTokenDto;
-import tech.corefinance.common.enums.CommonConstants;
-import tech.corefinance.common.ex.ServiceProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -26,6 +20,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import tech.corefinance.common.config.JwtConfiguration;
+import tech.corefinance.common.dto.BasicUserDto;
+import tech.corefinance.common.dto.JwtTokenDto;
+import tech.corefinance.common.enums.CommonConstants;
+import tech.corefinance.common.ex.ServiceProcessingException;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -46,9 +45,9 @@ import java.util.stream.Collectors;
 @Service
 @ConditionalOnProperty(prefix = "tech.corefinance.security.jwt.enabled", name = "common", matchIfMissing = true,
         havingValue = "true")
+@Slf4j
 public class JwtServiceImpl implements JwtService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(JwtServiceImpl.class);
     private static final String KEY_ALGORITHM = "RSA";
 
     private RSAPublicKey publicKey;
@@ -67,30 +66,30 @@ public class JwtServiceImpl implements JwtService {
                           @Value("${tech.corefinance.security.private-key:}") String privateKey,
                           @Autowired ResourceLoader resourceLoader)
             throws GeneralSecurityException, IOException {
-        LOGGER.debug("Creating JwtServiceImpl with key algorithm [{}]", KEY_ALGORITHM);
+        log.debug("Creating JwtServiceImpl with key algorithm [{}]", KEY_ALGORITHM);
         KeyFactory kf = KeyFactory.getInstance(KEY_ALGORITHM);
         // Public key
-        LOGGER.debug("Loading public key [{}]", publicKey);
+        log.debug("Loading public key [{}]", publicKey);
         Resource resource = resourceLoader.getResource(publicKey);
         byte[] decodedPublic = resource.getInputStream().readAllBytes();
         X509EncodedKeySpec spec = new X509EncodedKeySpec(decodedPublic);
         this.publicKey = (RSAPublicKey) kf.generatePublic(spec);
         // Private key
         if (!StringUtils.isBlank(privateKey)) {
-            LOGGER.debug("Loading private key [{}]", privateKey);
+            log.debug("Loading private key [{}]", privateKey);
             resource = resourceLoader.getResource(privateKey);
             byte[] decodedPrivate = resource.getInputStream().readAllBytes();
             PKCS8EncodedKeySpec privateSpec = new PKCS8EncodedKeySpec(decodedPrivate);
             this.privateKey = (RSAPrivateKey) kf.generatePrivate(privateSpec);
         } else {
-            LOGGER.debug("Skipped private key!");
+            log.debug("Skipped private key!");
         }
         // Algorithm
         algorithmRS = Algorithm.RSA256(this.publicKey, this.privateKey);
         // Reusable verifier instance
-        LOGGER.debug("Creating JWT verifier...");
+        log.debug("Creating JWT verifier...");
         verifier = JWT.require(this.algorithmRS).withIssuer("auth0").build();
-        LOGGER.debug("Creating JwtServiceImpl done!");
+        log.debug("Creating JwtServiceImpl done!");
     }
 
     public JwtConfiguration getJwtConfiguration() {
@@ -148,13 +147,13 @@ public class JwtServiceImpl implements JwtService {
             }
             builder.withArrayClaim(key, arr);
         } else if (List.class.isAssignableFrom(valueClzz)) {
-            LOGGER.debug("List value to sign {}", value);
+            log.debug("List value to sign {}", value);
             builder.withClaim(key, (List<?>) value);
         } else if (Collection.class.isAssignableFrom(valueClzz)) {
-            LOGGER.debug("Collection value to sign {}", value);
+            log.debug("Collection value to sign {}", value);
             builder.withClaim(key, ((Collection<?>) value).stream().collect(Collectors.toList()));
         } else if (Map.class.isAssignableFrom(valueClzz)) {
-            LOGGER.debug("Map value to sign {}", value);
+            log.debug("Map value to sign {}", value);
             builder.withClaim(key, (Map<String, ?>) value);
         } else if (Enum.class.isAssignableFrom(valueClzz)) {
             builder.withClaim(key, ((Enum<?>) value).name());
@@ -163,9 +162,9 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public DecodedJWT verfiy(String token, String deviceId, String ipaddress) {
-        LOGGER.debug("Verifying token [{}] with device [{}] and IP [{}]", token, deviceId, ipaddress);
+        log.debug("Verifying token [{}] with device [{}] and IP [{}]", token, deviceId, ipaddress);
         DecodedJWT decodedJWT = verifier.verify(token);
-        LOGGER.debug("Decoded JWT [{}]", decodedJWT);
+        log.debug("Decoded JWT [{}]", decodedJWT);
         if (!deviceId.equalsIgnoreCase(decodedJWT.getClaim(CommonConstants.ATTRIBUTE_NAME_DEVICE_ID).asString())) {
             throw new JWTVerificationException("Device ID miss matched in token and request!!");
         }
@@ -189,26 +188,26 @@ public class JwtServiceImpl implements JwtService {
     public Map<String, JwtTokenDto> retreiveTokenFromRequest(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
             throws IOException {
         // Get token and device ID in parameters
-        LOGGER.debug("Retrieving data from request");
+        log.debug("Retrieving data from request");
         String deviceId = httpServletRequest.getHeader(CommonConstants.DEVICE_ID);
         String ipAddress = extractIpAddress(httpServletRequest);
-        LOGGER.debug("Device ID [{}] with ip address [{}]", deviceId, ipAddress);
+        log.debug("Device ID [{}] with ip address [{}]", deviceId, ipAddress);
         String authorizationHeader = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
-        LOGGER.debug("authorization in header [{}]", authorizationHeader);
+        log.debug("authorization in header [{}]", authorizationHeader);
         Map<String, JwtTokenDto> map = new HashMap<>();
         JwtTokenDto jwtTokenDto = null;
         if (authorizationHeader != null) {
             if (authorizationHeader.length() <= CommonConstants.BEARER_PREFIX.length()) {
-                LOGGER.error("Invalid bearer token found!!! [{}]", authorizationHeader);
+                log.error("Invalid bearer token found!!! [{}]", authorizationHeader);
             } else {
                 String token = authorizationHeader.substring(CommonConstants.BEARER_PREFIX.length());
                 DecodedJWT decodedJWT = verfiy(token, deviceId, ipAddress);
                 String json = new String(Base64.getDecoder().decode(decodedJWT.getPayload().getBytes()), StandardCharsets.UTF_8);
                 jwtTokenDto = objectMapper.readValue(json, JwtTokenDto.class);
                 jwtTokenDto.setOriginalToken(token);
-                LOGGER.debug("Decoded token [{}]", jwtTokenDto);
+                log.debug("Decoded token [{}]", jwtTokenDto);
                 additionalJwtVerifyStep(jwtTokenDto, token, deviceId, ipAddress);
-                LOGGER.debug("Completed add on verify!");
+                log.debug("Completed add on verify!");
                 map.put(authorizationHeader, jwtTokenDto);
             }
         }
@@ -217,15 +216,15 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public Map<String, Serializable> buildLoginDataMap(JwtTokenDto jwtTokenDto) throws JsonProcessingException {
-        LOGGER.debug("Building login map data...");
+        log.debug("Building login map data...");
         Map<String, Serializable> jwtData = new HashMap<>();
         Class<?> clzz = jwtTokenDto.getClass();
-        LOGGER.debug("Object class {}", clzz);
+        log.debug("Object class {}", clzz);
         putFieldData(jwtTokenDto, clzz, jwtData);
-        LOGGER.info("Login token before add custom attributes [{}]", jwtData);
+        log.info("Login token before add custom attributes [{}]", jwtData);
         jwtData.put("expiredIn", System.currentTimeMillis() + jwtConfiguration.getExpiration() * 1000);
         jwtData.put(CommonConstants.ATTRIBUTE_NAME_APP_VERSION, objectMapper.writeValueAsString(jwtTokenDto.getAppVersion()));
-        LOGGER.debug("Original role in school {}", jwtTokenDto.getUserRoles());
+        log.debug("Original role in school {}", jwtTokenDto.getUserRoles());
         LinkedList<String> userRoles = new LinkedList<>();
         userRoles.addAll(jwtTokenDto.getUserRoles().stream().map(r -> {
             try {
@@ -235,7 +234,7 @@ public class JwtServiceImpl implements JwtService {
             }
         }).collect(Collectors.toList()));
         jwtData.put("userRoles", userRoles);
-        LOGGER.info("Login token before sign {}", jwtData);
+        log.info("Login token before sign {}", jwtData);
         return jwtData;
     }
 
@@ -243,18 +242,18 @@ public class JwtServiceImpl implements JwtService {
         Field[] fields = clzz.getDeclaredFields();
         for (Field field : fields) {
             String fieldName = field.getName();
-            LOGGER.debug("Checking field [{}] is static [{}]", fieldName,
+            log.debug("Checking field [{}] is static [{}]", fieldName,
                     Modifier.isStatic(field.getModifiers()));
             if (!Modifier.isStatic(field.getModifiers())) {
                 try {
-                    LOGGER.debug("Getting field data....");
+                    log.debug("Getting field data....");
                     Object fieldData = PropertyUtils.getNestedProperty(jwtTokenDto, fieldName);
-                    LOGGER.debug("Field data [{}]", fieldData);
+                    log.debug("Field data [{}]", fieldData);
                     if (fieldData != null && Serializable.class.isAssignableFrom(fieldData.getClass())) {
-                        LOGGER.debug("Put field data to sign map");
+                        log.debug("Put field data to sign map");
                         jwtData.put(fieldName, (Serializable) fieldData);
                     } else {
-                        LOGGER.debug("Field data is not Serializable.");
+                        log.debug("Field data is not Serializable.");
                     }
                 } catch (ReflectiveOperationException e) {
                     throw new ServiceProcessingException("errors.server.invalid_jwt_field", e);
@@ -264,7 +263,7 @@ public class JwtServiceImpl implements JwtService {
         // Check parent class
         clzz = clzz.getSuperclass();
         if (JwtTokenDto.class.isAssignableFrom(clzz)) {
-            LOGGER.debug("Re-check parent fields [{}]", clzz);
+            log.debug("Re-check parent fields [{}]", clzz);
             putFieldData(jwtTokenDto, clzz, jwtData);
         }
     }
@@ -288,7 +287,7 @@ public class JwtServiceImpl implements JwtService {
     protected JwtTokenDto additionalJwtVerifyStep(JwtTokenDto jwtTokenDto, String token, String deviceId,
                                                   String ipaddress) {
         if (jwtVerifyAddOns != null) {
-            LOGGER.debug("Configured JWT verify addon {}", jwtVerifyAddOns);
+            log.debug("Configured JWT verify addon {}", jwtVerifyAddOns);
             for (JwtVerifyAddOn addOn : jwtVerifyAddOns) {
                 jwtTokenDto = addOn.additionalJwtVerify(jwtTokenDto, token, deviceId, ipaddress);
             }

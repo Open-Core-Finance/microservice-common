@@ -5,27 +5,11 @@ import com.auth0.jwt.exceptions.SignatureGenerationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import tech.corefinance.common.config.JwtConfiguration;
-import tech.corefinance.common.dto.JwtTokenDto;
-import tech.corefinance.common.dto.UserRoleDto;
-import tech.corefinance.common.enums.AppPlatform;
-import tech.corefinance.common.enums.CommonConstants;
-import tech.corefinance.common.model.AppVersion;
-import tech.corefinance.common.repository.ResourceActionRepository;
-import tech.corefinance.common.service.JwtService;
-import tech.corefinance.common.service.JwtServiceImpl;
-import tech.corefinance.common.test.support.app.TestCommonApplication;
-import tech.corefinance.common.test.support.pojo.JwtTokenDtoWithNonSerializable;
-import tech.corefinance.common.test.support.pojo.JwtTokenDtoWithStaticFinal;
-import tech.corefinance.common.ex.ServiceProcessingException;
-import tech.corefinance.common.test.support.model.RoleTest;
-import tech.corefinance.common.test.support.model.UserTest;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,6 +20,21 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ActiveProfiles;
+import tech.corefinance.common.config.JwtConfiguration;
+import tech.corefinance.common.dto.JwtTokenDto;
+import tech.corefinance.common.dto.UserRoleDto;
+import tech.corefinance.common.enums.AppPlatform;
+import tech.corefinance.common.enums.CommonConstants;
+import tech.corefinance.common.ex.ServiceProcessingException;
+import tech.corefinance.common.model.AppVersion;
+import tech.corefinance.common.repository.ResourceActionRepository;
+import tech.corefinance.common.service.JwtService;
+import tech.corefinance.common.service.JwtServiceImpl;
+import tech.corefinance.common.test.support.app.TestCommonApplication;
+import tech.corefinance.common.test.support.model.RoleTest;
+import tech.corefinance.common.test.support.model.UserTest;
+import tech.corefinance.common.test.support.pojo.JwtTokenDtoWithNonSerializable;
+import tech.corefinance.common.test.support.pojo.JwtTokenDtoWithStaticFinal;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -48,9 +47,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @AutoConfigureMockMvc
 @ActiveProfiles({"common", "default", "unittest"})
 @ComponentScan(basePackages = {"tech.corefinance"})
+@Slf4j
 public class JwtServiceTest {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(JwtServiceTest.class);
 
     @Autowired
     private JwtService jwtService;
@@ -232,7 +230,7 @@ public class JwtServiceTest {
         loginInfo.setUsername(admin.getUsername());
         String token = jwtService.buildRefreshToken(loginInfo, jwtService.buildLoginToken(loginInfo));
         DecodedJWT decodedJWT = jwtService.verfiy(token, loginInfo.getDeviceId(), loginInfo.getLoginIpAddr());
-        LOGGER.info("Decoded json: [{}]", decodedJWT.getClaims());
+        log.info("Decoded json: [{}]", decodedJWT.getClaims());
         assertEquals(loginInfo.getLoginId().toString(), decodedJWT.getClaim("loginId").asString());
         assertEquals(loginInfo.getUserId(), decodedJWT.getClaim("userId").asString());
     }
@@ -268,9 +266,9 @@ public class JwtServiceTest {
         // Verify token
         DecodedJWT decodedJWT = jwtService.verfiy(token, deviceId, loginInfo.getLoginIpAddr());
         String json = new String(Base64.getDecoder().decode(decodedJWT.getPayload().getBytes()), StandardCharsets.UTF_8);
-        LOGGER.info("Decoded json: [{}]", json);
+        log.info("Decoded json: [{}]", json);
         JwtTokenDto jwtTokenDto = objectMapper.readValue(json, JwtTokenDto.class);
-        LOGGER.info("Deserialized JwtTokenDto: [{}]", jwtTokenDto);
+        log.info("Deserialized JwtTokenDto: [{}]", jwtTokenDto);
         assertNotNull(jwtTokenDto);
         assertEquals(admin.getEmail(), jwtTokenDto.getUserEmail());
         assertTrue(jwtTokenDto.getExpiredIn() - expiredIn < 1000);

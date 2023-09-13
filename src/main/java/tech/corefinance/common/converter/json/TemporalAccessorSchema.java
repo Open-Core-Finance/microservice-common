@@ -3,8 +3,7 @@ package tech.corefinance.common.converter.json;
 import io.swagger.v3.oas.models.media.Schema;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -13,9 +12,9 @@ import java.util.List;
 
 @EqualsAndHashCode(callSuper=false)
 @ToString
+@Slf4j
 public class TemporalAccessorSchema<T extends TemporalAccessor> extends Schema<T> {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
     private DateTimeFormatter dateTimeFormatter;
     private Class<T> handleClass;
 
@@ -25,7 +24,7 @@ public class TemporalAccessorSchema<T extends TemporalAccessor> extends Schema<T
         this.dateTimeFormatter = dateTimeFormatter;
         this.handleClass = handleClass;
         var currentDateAsString = dateTimeFormatter.format(ZonedDateTime.now());
-        logger.debug("Current date formatted [{}]", currentDateAsString);
+        log.debug("Current date formatted [{}]", currentDateAsString);
         setPattern(dateTimeFormat);
         setExample(currentDateAsString);
     }
@@ -54,7 +53,7 @@ public class TemporalAccessorSchema<T extends TemporalAccessor> extends Schema<T
                     return (T) value;
                 }
             } catch (Exception var3) {
-                logger.debug("Error", var3);
+                log.debug("Error", var3);
             }
         }
         return null;

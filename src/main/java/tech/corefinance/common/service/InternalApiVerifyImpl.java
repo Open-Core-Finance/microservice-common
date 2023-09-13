@@ -1,25 +1,23 @@
 package tech.corefinance.common.service;
 
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import tech.corefinance.common.annotation.InternalApi;
 import tech.corefinance.common.context.JwtContext;
 import tech.corefinance.common.enums.CommonConstants;
 import tech.corefinance.common.model.AbstractInternalServiceConfig;
 import tech.corefinance.common.repository.InternalServiceConfigRepository;
-import jakarta.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class InternalApiVerifyImpl implements InternalApiVerify {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private InternalServiceConfigRepository internalServiceConfigRepository;
@@ -40,7 +38,7 @@ public class InternalApiVerifyImpl implements InternalApiVerify {
             }
             Optional<AbstractInternalServiceConfig> internalServiceConfigOptional = internalServiceConfigRepository.findFirstByApiKeyAndActivatedOrderByLastModifiedDateDesc(internalApi, true);
             var config = internalServiceConfigOptional.orElseThrow(() -> new AccessDeniedException("invalid_internal_api_key"));
-            logger.debug("Received call from service [{}]", config);
+            log.debug("Received call from service [{}]", config);
         }
         return true;
     }

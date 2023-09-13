@@ -1,13 +1,12 @@
 package tech.corefinance.common.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.extern.slf4j.Slf4j;
 import tech.corefinance.common.dto.GeneralApiResponse;
 import tech.corefinance.common.ex.ResourceNotFound;
 import tech.corefinance.common.ex.ServiceProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
@@ -20,9 +19,8 @@ import javax.xml.parsers.ParserConfigurationException;
 @ResponseBody
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
+@Slf4j
 public class ExceptionController extends ResponseEntityExceptionHandler {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionController.class);
 
     @ExceptionHandler(value = {ServiceProcessingException.class})
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
@@ -33,21 +31,21 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = {ParserConfigurationException.class, JsonProcessingException.class})
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     public String handleJsonException(Exception e) {
-        LOGGER.error("Parse exception", e);
+        log.error("Parse exception", e);
         return "{\"status\": 1, \"statusCode\": \"invalid_input_or_response\", \"result\": {}}";
     }
 
     @ExceptionHandler({AccessDeniedException.class})
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public GeneralApiResponse<String> accessDenied(AccessDeniedException e) {
-        LOGGER.debug(e.getMessage(), e);
+        log.debug(e.getMessage(), e);
         return new GeneralApiResponse<>("access_denied", 1, e.getMessage());
     }
 
     @ExceptionHandler({IllegalArgumentException.class,ConstraintViolationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public GeneralApiResponse<String> badRequest(Exception e) {
-        LOGGER.debug(e.getMessage(), e);
+        log.debug(e.getMessage(), e);
         if(e instanceof IllegalArgumentException) {
             return new GeneralApiResponse<>("bad_request", 1, e.getMessage());
         }
@@ -59,7 +57,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {Throwable.class})
     public GeneralApiResponse<String> internalServerError(Throwable e) {
-        LOGGER.error("System Exception", e);
+        log.error("System Exception", e);
         return new GeneralApiResponse<>("system_error", 1, e.getMessage());
     }
 
@@ -72,9 +70,9 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     private Object handleGeneralException(HttpServletRequest request, Exception e, int status){
         String message = e.getMessage();
         Throwable cause = e.getCause();
-        LOGGER.error("Return error for user: [{}]", message);
+        log.error("Return error for user: [{}]", message);
         if (cause != null) {
-            LOGGER.error("Exception", cause);
+            log.error("Exception", cause);
         } else {
             cause = e;
         }

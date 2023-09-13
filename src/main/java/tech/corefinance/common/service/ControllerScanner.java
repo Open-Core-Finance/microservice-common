@@ -1,18 +1,7 @@
 package tech.corefinance.common.service;
 
-import tech.corefinance.common.annotation.ControllerManagedResource;
-import tech.corefinance.common.annotation.ManualPermissionCheck;
-import tech.corefinance.common.annotation.PermissionAction;
-import tech.corefinance.common.config.ServiceSecurityConfig;
-import tech.corefinance.common.enums.AccessControl;
-import tech.corefinance.common.model.AbstractPermission;
-import tech.corefinance.common.model.ResourceAction;
-import tech.corefinance.common.repository.ResourceActionRepository;
-import tech.corefinance.common.util.CoreFinanceUtil;
-import tech.corefinance.common.ex.ReflectiveIncorrectFieldException;
 import jakarta.annotation.PostConstruct;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Async;
@@ -21,6 +10,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import tech.corefinance.common.annotation.ControllerManagedResource;
+import tech.corefinance.common.annotation.ManualPermissionCheck;
+import tech.corefinance.common.annotation.PermissionAction;
+import tech.corefinance.common.config.ServiceSecurityConfig;
+import tech.corefinance.common.enums.AccessControl;
+import tech.corefinance.common.ex.ReflectiveIncorrectFieldException;
+import tech.corefinance.common.model.AbstractPermission;
+import tech.corefinance.common.model.ResourceAction;
+import tech.corefinance.common.repository.ResourceActionRepository;
+import tech.corefinance.common.util.CoreFinanceUtil;
 
 import java.lang.reflect.Method;
 import java.util.LinkedList;
@@ -30,9 +29,8 @@ import java.util.regex.Pattern;
 
 @Component
 @ConditionalOnProperty(prefix = "tech.corefinance.security", name = "scan-controllers-actions", havingValue = "true", matchIfMissing = true)
+@Slf4j
 public class ControllerScanner {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private ResourceActionRepository resourceActionRepository;
@@ -58,20 +56,20 @@ public class ControllerScanner {
             Method method = value.getMethod();
             var controllerClass = method.getDeclaringClass();
             String controllerClassName = controllerClass.getName();
-            logger.debug("{}#{}", controllerClassName, method.getName());
+            log.debug("{}#{}", controllerClassName, method.getName());
             for (String ignoreController : serviceSecurityConfig.getIgnoreControllerScan()) {
-                logger.debug("Checking if controller full package contain [{}] or not...", ignoreController);
+                log.debug("Checking if controller full package contain [{}] or not...", ignoreController);
                 if (controllerClassName.contains(ignoreController)) {
-                    logger.debug("Skipped permission scan for {}", controllerClass);
+                    log.debug("Skipped permission scan for {}", controllerClass);
                     continue mainloop;
                 }
             }
             for (String url : urls) {
-                logger.debug("Validating URL [{}]", url);
+                log.debug("Validating URL [{}]", url);
                 for (String noAuthenUrl : serviceSecurityConfig.getNoAuthenUrls()) {
                     Pattern pattern = Pattern.compile(noAuthenUrl.replace("*", ".*"));
                     var matched = pattern.matcher(url).matches();
-                    logger.debug("Checking result with pattern [{}] is [{}]", noAuthenUrl, matched);
+                    log.debug("Checking result with pattern [{}] is [{}]", noAuthenUrl, matched);
                     if (matched) {
                         continue mainloop;
                     }
@@ -82,7 +80,7 @@ public class ControllerScanner {
             var manualPerCheckAnn = method.getAnnotation(ManualPermissionCheck.class);
             if (perActAnn == null) {
                 if (controllerManagedResource == null) {
-                    logger.error("{}={} have no annotation PermissionAction!", controllerClass.getName(),
+                    log.error("{}={} have no annotation PermissionAction!", controllerClass.getName(),
                             method.getName());
                     throw new ReflectiveIncorrectFieldException("no_permission_defined");
                 }
@@ -95,7 +93,7 @@ public class ControllerScanner {
                 saveManualCheckPermissions(resourceType, action, urls, requestMethods);
             }
         }
-        logger.info("{}", permissionActions);
+        log.info("{}", permissionActions);
         resourceActionRepository.saveAll(permissionActions);
     }
 

@@ -1,15 +1,11 @@
 package tech.corefinance.common.filter;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import tech.corefinance.common.dto.JwtTokenDto;
-import tech.corefinance.common.context.JwtContext;
-import tech.corefinance.common.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -23,6 +19,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import tech.corefinance.common.context.JwtContext;
+import tech.corefinance.common.dto.JwtTokenDto;
+import tech.corefinance.common.service.JwtService;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -35,9 +34,8 @@ import java.util.Set;
 
 @ConditionalOnProperty(prefix = "tech.corefinance.security", name = "public-key")
 @Component
+@Slf4j
 public class SessionAuthenticationFilter extends OncePerRequestFilter implements Ordered {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private JwtService jwtService;
@@ -66,7 +64,7 @@ public class SessionAuthenticationFilter extends OncePerRequestFilter implements
             }
             filterChain.doFilter(request, response);
         } catch (BadCredentialsException | JWTVerificationException e) {
-            logger.debug("Error", e);
+            log.debug("Error", e);
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.setContentType(MediaType.TEXT_PLAIN_VALUE);
             String message = e.getMessage();

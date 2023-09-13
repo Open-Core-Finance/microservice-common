@@ -70,9 +70,9 @@ public interface JwtService {
     JwtConfiguration getJwtConfiguration();
 
     default String buildLoginVerifyKey(JwtTokenDto jwtTokenDto) {
-        Logger logger = LoggerFactory.getLogger(getClass());
+        Logger log = LoggerFactory.getLogger(getClass());
         String loginMode = getJwtConfiguration().getLoginMode();
-        logger.debug("Login mode [{}]", loginMode);
+        log.debug("Login mode [{}]", loginMode);
         return switch (loginMode) {
             case CommonConstants.JWT_VERIFY_MODE_SINGLE_LOGIN -> jwtTokenDto.getUserId();
             case CommonConstants.JWT_VERIFY_MODE_SINGLE_LOGIN_PER_APP -> new StringBuilder().append(jwtTokenDto.getUserId())

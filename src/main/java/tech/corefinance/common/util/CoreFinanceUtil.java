@@ -2,21 +2,12 @@ package tech.corefinance.common.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import tech.corefinance.common.annotation.ControllerManagedResource;
-import tech.corefinance.common.annotation.PermissionAction;
-import tech.corefinance.common.dto.SimpleVersion;
-import tech.corefinance.common.dto.SimpleVersionComparator;
-import tech.corefinance.common.context.ApplicationContextHolder;
-import tech.corefinance.common.converter.ExportTypeConverter;
-import tech.corefinance.common.ex.ReflectiveIncorrectFieldException;
-import tech.corefinance.common.model.ResourceAction;
 import jakarta.servlet.Servlet;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,18 +18,28 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
+import tech.corefinance.common.annotation.ControllerManagedResource;
+import tech.corefinance.common.annotation.PermissionAction;
+import tech.corefinance.common.context.ApplicationContextHolder;
+import tech.corefinance.common.converter.ExportTypeConverter;
+import tech.corefinance.common.dto.SimpleVersion;
+import tech.corefinance.common.dto.SimpleVersionComparator;
+import tech.corefinance.common.ex.ReflectiveIncorrectFieldException;
+import tech.corefinance.common.model.ResourceAction;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class CoreFinanceUtil {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private static final String PARSING_JSON_FAILURE = "Parsing json failure";
     private static final String PARSING_JSON_FAILURE_LOG = "Parsing json failure! object: {}, error: {}";
@@ -92,7 +93,7 @@ public class CoreFinanceUtil {
         try {
             return objectMapper.writeValueAsString(object);
         } catch (StackOverflowError | JsonProcessingException e) {
-            logger.info(PARSING_JSON_FAILURE_LOG, object, e);
+            log.info(PARSING_JSON_FAILURE_LOG, object, e);
             return PARSING_JSON_FAILURE;
         }
     }
@@ -105,10 +106,10 @@ public class CoreFinanceUtil {
                     convertVersion(fileName, nameSeparator, versionSeparator);
                     return true;
                 } catch (IndexOutOfBoundsException | NumberFormatException | NullPointerException e) {
-                    logger.error("Error", e);
+                    log.error("Error", e);
                 }
             }
-            logger.debug("Ignore [{}] because file does not meet defined rule!", fileName);
+            log.debug("Ignore [{}] because file does not meet defined rule!", fileName);
             return false;
         };
         Comparator<Resource> fileNameComparator = (r1, r2) -> {
@@ -157,7 +158,7 @@ public class CoreFinanceUtil {
         var resourceType = perActAnn != null ? perActAnn.resourceType() : null;
         if (!StringUtils.hasText(resourceType)) {
             if (managedResource == null) {
-                logger.error("Must define resource type at PermissionAction in method level " +
+                log.error("Must define resource type at PermissionAction in method level " +
                         "or ControllerManagedResource in controller level.");
                 throw new ReflectiveIncorrectFieldException("no_permission_defined");
             }

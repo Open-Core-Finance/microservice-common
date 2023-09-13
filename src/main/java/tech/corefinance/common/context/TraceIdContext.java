@@ -1,18 +1,17 @@
 package tech.corefinance.common.context;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public final class TraceIdContext {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
     private static final TraceIdContext INSTANCE = new TraceIdContext();
 
     private ThreadLocal<String> traceIdThreadLocal = new InheritableThreadLocal<>();
 
     private TraceIdContext() {
         // Singleton
-        logger.debug("Created TraceIdContext [{}]", this);
+        log.debug("Created TraceIdContext [{}]", this);
     }
 
     public static TraceIdContext getInstance() {

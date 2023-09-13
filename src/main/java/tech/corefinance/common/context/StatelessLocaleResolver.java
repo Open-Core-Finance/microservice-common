@@ -1,15 +1,13 @@
 package tech.corefinance.common.context;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import tech.corefinance.common.enums.CommonConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.i18n.LocaleContext;
 import org.springframework.context.i18n.SimpleTimeZoneAwareLocaleContext;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.AbstractLocaleContextResolver;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import tech.corefinance.common.enums.CommonConstants;
 
 import java.util.Locale;
 
