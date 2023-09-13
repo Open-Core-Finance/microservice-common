@@ -23,7 +23,7 @@ plugins {
     id "io.freefair.lombok" version "${lombokPluginVersion}"
     id "org.sonarqube" version "${sonarqubePluginVersion}"
     id 'maven-publish'
-    // id 'signing'
+    id 'signing'
 }
 
 group = 'tech.corefinance'
@@ -148,64 +148,25 @@ jacocoTestReport {
     }
 }
 
-//task setSigningProperties() {
-//    doLast {
-//        // Secret key file
-//        def propKeyName = "signing.secretKeyRingFile"
-//        def secretKeyFile = System.getProperty(propKeyName)
-//        println "Running signing secretKeyRingFile ${secretKeyFile}"
-//        if (secretKeyFile == null) {
-//            secretKeyFile = "${signingSecretKeyRingFile}"
-//            System.setProperty(propKeyName, secretKeyFile)
-//            println "Setting signing secretKeyRingFile ${secretKeyFile}"
-//        }
-//        // Key ID
-//        propKeyName = "signing.keyId"
-//        def keyId = System.getProperty(propKeyName)
-//        if (keyId == null) {
-//            keyId = "${signingKeyId}"
-//            System.setProperty(propKeyName, keyId)
-//        }
-//        println "Setting ${propKeyName}=${keyId}"
-//        // Key password
-//        propKeyName = "signing.password"
-//        def keyPassword = System.getProperty(propKeyName)
-//        if (keyPassword == null) {
-//            keyPassword = "${signingPassword}"
-//            System.setProperty(propKeyName, keyPassword)
-//        }
-//        println "Setting ${propKeyName}=${keyPassword}"
-//    }
-//}
-
 javadoc {
     exclude "**/model/**"
     exclude "**/dto/**"
 }
 
-//task javadocJar (type :Jar, dependsOn: javadoc) {
-//    from javadoc.destinationDir
-//    archiveClassifier='javadocs'
-//    description='Creates a Javadoc Jar'
-//}
+task javadocJar (type :Jar, dependsOn: javadoc) {
+    from javadoc.destinationDir
+    archiveClassifier='javadocs'
+    description='Creates a Javadoc Jar'
+}
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     archiveClassifier = 'sources'
     from sourceSets.main.allSource
 }
 
-//artifacts {
-//    archives javadocJar, sourcesJar
-//}
-
-// signing {
-//    dependsOn setSigningProperties
-//    mustRunAfter setSigningProperties
-    //systemProperty "signing.keyId", "${signingKeyId}"
-    //systemProperty "signing.password", "${signingPassword}"
-    // sign stuffZip
-    // configurations.jar
-//}
+artifacts {
+    archives javadocJar, sourcesJar
+}
 
 publishing {
     repositories {
@@ -225,7 +186,7 @@ publishing {
         mavenJava(MavenPublication) {
             from components.java
             artifact sourcesJar
-            // artifact javadocJar
+            artifact javadocJar
 
             pom {
                 name = 'Microservice Common'
@@ -257,3 +218,7 @@ publishing {
 
 publish.dependsOn(':build')
 publish.mustRunAfter(':build')
+
+signing {
+    sign publishing.publications
+}
