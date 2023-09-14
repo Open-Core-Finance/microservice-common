@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Component
-@ConditionalOnProperty(name = "tech.corefinance.app.mongodb.converter.zonedDateTime", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(name = "tech.corefinance.app.converter.zoned-date-time-to-string", havingValue = "true", matchIfMissing = true)
 @ReadingConverter
 public class DateToZonedDateTimeConverter implements GenericConverter, org.springframework.core.convert.converter.Converter<Date, ZonedDateTime> {
 
