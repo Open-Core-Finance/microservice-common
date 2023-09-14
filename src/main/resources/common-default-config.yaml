@@ -11,7 +11,7 @@ spring:
       write-date-keys-as-timestamps: true
       write-durations-as-timestamps: true
       write-enums-using-to-string: false
-      FAIL_ON_EMPTY_BEANS: false=
+      FAIL_ON_EMPTY_BEANS: false
 
 tech:
   corefinance:
