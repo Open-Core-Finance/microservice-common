@@ -13,7 +13,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConditionalOnProperty(name = "tech.corefinance.app.mongodb.converter.localDateTime", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(name = "tech.corefinance.app.converter.local-date-time-to-string", havingValue = "true", matchIfMissing = true)
 @WritingConverter
 public class ChronoLocalDateTimeToStringConverter implements
         GenericConverter, org.springframework.core.convert.converter.Converter<ChronoLocalDateTime<?>, String> {
