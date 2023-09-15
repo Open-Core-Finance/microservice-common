@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
 public class ControllerScanner {
 
     @Autowired
-    private ResourceActionRepository<AbstractResourceAction> resourceActionRepository;
+    private ResourceActionRepository resourceActionRepository;
     @Autowired
     private ServiceSecurityConfig serviceSecurityConfig;
     @Autowired
