@@ -1,13 +1,11 @@
 package tech.corefinance.common.model;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Data
-@NoArgsConstructor
-public class ResourceAction implements GenericModel<String> {
+public abstract class AbstractResourceAction implements GenericModel<String> {
     public static final String COMMON_ACTION_ADD = "add";
     public static final String COMMON_ACTION_UPDATE = "update";
     public static final String COMMON_ACTION_DELETE = "delete";
@@ -22,7 +20,7 @@ public class ResourceAction implements GenericModel<String> {
     private String url;
     private RequestMethod requestMethod;
 
-    public ResourceAction(String resourceType, String action, String url, RequestMethod requestMethod) {
+    public AbstractResourceAction(String resourceType, String action, String url, RequestMethod requestMethod) {
         this.resourceType = resourceType;
         this.action = action;
         this.url = url;

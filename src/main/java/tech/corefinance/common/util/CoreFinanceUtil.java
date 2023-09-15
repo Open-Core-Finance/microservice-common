@@ -25,7 +25,7 @@ import tech.corefinance.common.converter.ExportTypeConverter;
 import tech.corefinance.common.dto.SimpleVersion;
 import tech.corefinance.common.dto.SimpleVersionComparator;
 import tech.corefinance.common.ex.ReflectiveIncorrectFieldException;
-import tech.corefinance.common.model.ResourceAction;
+import tech.corefinance.common.model.AbstractResourceAction;
 
 import java.io.File;
 import java.io.IOException;
@@ -140,15 +140,15 @@ public class CoreFinanceUtil {
         if (!StringUtils.hasText(resourceType)) {
             var requestMethods = requestMappingInfo.getMethodsCondition().getMethods();
             if (requestMethods.contains(RequestMethod.DELETE)) {
-                resourceType = ResourceAction.COMMON_ACTION_DELETE;
+                resourceType = AbstractResourceAction.COMMON_ACTION_DELETE;
             } else if (requestMethods.contains(RequestMethod.GET)) {
-                resourceType = ResourceAction.COMMON_ACTION_LIST;
+                resourceType = AbstractResourceAction.COMMON_ACTION_LIST;
             } else if (requestMethods.contains(RequestMethod.POST)) {
-                resourceType = ResourceAction.COMMON_ACTION_ADD;
+                resourceType = AbstractResourceAction.COMMON_ACTION_ADD;
             } else if (requestMethods.contains(RequestMethod.PUT) || requestMethods.contains(RequestMethod.PATCH)) {
-                resourceType = ResourceAction.COMMON_ACTION_UPDATE;
+                resourceType = AbstractResourceAction.COMMON_ACTION_UPDATE;
             } else {
-                resourceType = ResourceAction.COMMON_ACTION_VIEW;
+                resourceType = AbstractResourceAction.COMMON_ACTION_VIEW;
             }
         }
         return resourceType;

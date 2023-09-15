@@ -17,7 +17,7 @@ import tech.corefinance.common.config.ServiceSecurityConfig;
 import tech.corefinance.common.enums.AccessControl;
 import tech.corefinance.common.ex.ReflectiveIncorrectFieldException;
 import tech.corefinance.common.model.AbstractPermission;
-import tech.corefinance.common.model.ResourceAction;
+import tech.corefinance.common.model.AbstractResourceAction;
 import tech.corefinance.common.repository.ResourceActionRepository;
 import tech.corefinance.common.util.CoreFinanceUtil;
 
@@ -47,7 +47,7 @@ public class ControllerScanner {
     @PostConstruct
     public void scan() {
         var handlerMethods = mapping.getHandlerMethods();
-        var permissionActions = new LinkedList<ResourceAction>();
+        var permissionActions = new LinkedList<AbstractResourceAction>();
         mainloop:
         for (Map.Entry<RequestMappingInfo, HandlerMethod> entry : handlerMethods.entrySet()) {
             var key = entry.getKey();
@@ -97,11 +97,11 @@ public class ControllerScanner {
         resourceActionRepository.saveAll(permissionActions);
     }
 
-    private List<ResourceAction> buildListActions(String resourceType, String action, Iterable<String> urls, Iterable<RequestMethod> requestMethods) {
-        var permissionActions = new LinkedList<ResourceAction>();
+    private List<AbstractResourceAction> buildListActions(String resourceType, String action, Iterable<String> urls, Iterable<RequestMethod> requestMethods) {
+        var permissionActions = new LinkedList<AbstractResourceAction>();
         for (String url : urls) {
             for (RequestMethod requestMethod : requestMethods) {
-                permissionActions.add(new ResourceAction(resourceType, action, url, requestMethod));
+                permissionActions.add(permissionService.newResourceAction(resourceType, action, url, requestMethod));
             }
         }
         return permissionActions;

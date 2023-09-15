@@ -1,6 +1,6 @@
 package tech.corefinance.common.test.support.controllers;
 
-import tech.corefinance.common.model.ResourceAction;
+import tech.corefinance.common.model.AbstractResourceAction;
 import tech.corefinance.common.test.support.model.UserWrapterTest;
 import tech.corefinance.common.annotation.ControllerManagedResource;
 import tech.corefinance.common.annotation.ManualPermissionCheck;
@@ -32,7 +32,7 @@ public class AnotherTestController {
     }
 
     @PostMapping("/another-normal-2")
-    @PermissionAction(action = ResourceAction.COMMON_ACTION_VIEW)
+    @PermissionAction(action = AbstractResourceAction.COMMON_ACTION_VIEW)
     public void anotherNormal2(
             @RequestParam("resourceId") @PermissionResource(resourceType = "custom-resource-type") String resourceId,
             HttpServletResponse response) throws IOException {
@@ -40,7 +40,7 @@ public class AnotherTestController {
     }
 
     @PostMapping("/request-with-complex-resource")
-    @PermissionAction(action = ResourceAction.COMMON_ACTION_LIST)
+    @PermissionAction(action = AbstractResourceAction.COMMON_ACTION_LIST)
     public void complexResource(HttpServletResponse response,
                                 @RequestBody
                                 @PermissionResource(resourceType = "custom-resource-type", idPath = "user.id")

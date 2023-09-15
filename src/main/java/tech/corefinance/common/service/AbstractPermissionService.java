@@ -5,6 +5,7 @@ import tech.corefinance.common.config.InitDataConfiguration;
 import tech.corefinance.common.dto.PermissionInitializeDto;
 import tech.corefinance.common.model.AbstractInternalServiceConfig;
 import tech.corefinance.common.model.AbstractPermission;
+import tech.corefinance.common.model.AbstractResourceAction;
 import tech.corefinance.common.repository.InternalServiceConfigRepository;
 import tech.corefinance.common.repository.PermissionRepository;
 import tech.corefinance.common.util.CoreFinanceUtil;
@@ -21,8 +22,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class AbstractPermissionService<T extends AbstractPermission, C extends AbstractInternalServiceConfig>
-        implements PermissionService<T, C> {
+public abstract class AbstractPermissionService<T extends AbstractPermission, C extends AbstractInternalServiceConfig,
+        R extends AbstractResourceAction>
+        implements PermissionService<T, C, R> {
 
     @Autowired
     protected PermissionRepository<T> permissionRepository;

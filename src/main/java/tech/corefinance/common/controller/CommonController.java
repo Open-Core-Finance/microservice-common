@@ -6,7 +6,7 @@ import tech.corefinance.common.dto.GeneralApiResponse;
 import tech.corefinance.common.dto.PageDto;
 import tech.corefinance.common.dto.PermissionInitializeDto;
 import tech.corefinance.common.model.AbstractPermission;
-import tech.corefinance.common.model.ResourceAction;
+import tech.corefinance.common.model.AbstractResourceAction;
 import tech.corefinance.common.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -24,7 +24,7 @@ public class CommonController {
     private PermissionService permissionService;
 
     @GetMapping(value = "/initialization-default-permissions-data")
-    @PermissionAction(action = ResourceAction.COMMON_ACTION_INITIAL)
+    @PermissionAction(action = AbstractResourceAction.COMMON_ACTION_INITIAL)
     public GeneralApiResponse<PermissionInitializeDto> initializationDefaultData() throws IOException {
         return new GeneralApiResponse<>(permissionService.initializationDefaultData());
     }
