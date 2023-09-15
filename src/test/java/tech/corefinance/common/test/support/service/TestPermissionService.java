@@ -1,33 +1,18 @@
 package tech.corefinance.common.test.support.service;
 
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMethod;
 import tech.corefinance.common.model.AbstractResourceAction;
 import tech.corefinance.common.service.AbstractPermissionService;
-import tech.corefinance.common.test.support.model.AbstractInternalServiceConfigTest;
+import tech.corefinance.common.test.support.model.InternalServiceConfigTest;
 import tech.corefinance.common.test.support.model.PermissionTest;
-import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Service;
 import tech.corefinance.common.test.support.model.ResourceActionTest;
 
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-
 @Service
-public class TestPermissionService extends AbstractPermissionService<PermissionTest, AbstractInternalServiceConfigTest, AbstractResourceAction> {
-    @Override
-    protected List<PermissionTest> initialPermissions(List<Resource> permissionResources) throws IOException {
-        return new LinkedList<>();
-    }
+public class TestPermissionService extends AbstractPermissionService<PermissionTest, InternalServiceConfigTest, AbstractResourceAction> {
 
     @Override
-    protected List<AbstractInternalServiceConfigTest> initialInternalApiConfigs(List<Resource> configResources)
-            throws IOException {
-        return new LinkedList<>();
-    }
-
-    @Override
-    public PermissionTest newPermission() {
+    public PermissionTest createEntityObject() {
         return new PermissionTest();
     }
 

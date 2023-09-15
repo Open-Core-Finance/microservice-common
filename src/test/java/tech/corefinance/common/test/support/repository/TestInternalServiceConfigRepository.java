@@ -3,7 +3,7 @@ package tech.corefinance.common.test.support.repository;
 import org.springframework.data.domain.Example;
 import org.springframework.data.repository.query.FluentQuery;
 import tech.corefinance.common.repository.InternalServiceConfigRepository;
-import tech.corefinance.common.test.support.model.AbstractInternalServiceConfigTest;
+import tech.corefinance.common.test.support.model.InternalServiceConfigTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -14,30 +14,30 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @Component
-public class TestInternalServiceConfigRepository implements InternalServiceConfigRepository<AbstractInternalServiceConfigTest> {
+public class TestInternalServiceConfigRepository implements InternalServiceConfigRepository<InternalServiceConfigTest> {
     @Override
-    public Optional<AbstractInternalServiceConfigTest> findFirstByApiKeyAndActivatedOrderByLastModifiedDateDesc(String apiKey,
-                                                                                                                boolean activated) {
+    public Optional<InternalServiceConfigTest> findFirstByApiKeyAndActivatedOrderByLastModifiedDateDesc(String apiKey,
+                                                                                                        boolean activated) {
         return Optional.empty();
     }
 
     @Override
-    public Optional<AbstractInternalServiceConfigTest> findFirstByApiKey(String apiKey) {
+    public Optional<InternalServiceConfigTest> findFirstByApiKey(String apiKey) {
         return Optional.empty();
     }
 
     @Override
-    public <S extends AbstractInternalServiceConfigTest> S save(S entity) {
+    public <S extends InternalServiceConfigTest> S save(S entity) {
         return null;
     }
 
     @Override
-    public <S extends AbstractInternalServiceConfigTest> List<S> saveAll(Iterable<S> entities) {
+    public <S extends InternalServiceConfigTest> List<S> saveAll(Iterable<S> entities) {
         return null;
     }
 
     @Override
-    public Optional<AbstractInternalServiceConfigTest> findById(String s) {
+    public Optional<InternalServiceConfigTest> findById(String s) {
         return Optional.empty();
     }
 
@@ -47,12 +47,12 @@ public class TestInternalServiceConfigRepository implements InternalServiceConfi
     }
 
     @Override
-    public List<AbstractInternalServiceConfigTest> findAll() {
+    public List<InternalServiceConfigTest> findAll() {
         return null;
     }
 
     @Override
-    public List<AbstractInternalServiceConfigTest> findAllById(Iterable<String> strings) {
+    public List<InternalServiceConfigTest> findAllById(Iterable<String> strings) {
         return null;
     }
 
@@ -67,7 +67,7 @@ public class TestInternalServiceConfigRepository implements InternalServiceConfi
     }
 
     @Override
-    public void delete(AbstractInternalServiceConfigTest entity) {
+    public void delete(InternalServiceConfigTest entity) {
 
     }
 
@@ -77,7 +77,7 @@ public class TestInternalServiceConfigRepository implements InternalServiceConfi
     }
 
     @Override
-    public void deleteAll(Iterable<? extends AbstractInternalServiceConfigTest> entities) {
+    public void deleteAll(Iterable<? extends InternalServiceConfigTest> entities) {
 
     }
 
@@ -87,47 +87,47 @@ public class TestInternalServiceConfigRepository implements InternalServiceConfi
     }
 
     @Override
-    public List<AbstractInternalServiceConfigTest> findAll(Sort sort) {
+    public List<InternalServiceConfigTest> findAll(Sort sort) {
         return null;
     }
 
     @Override
-    public Page<AbstractInternalServiceConfigTest> findAll(Pageable pageable) {
+    public Page<InternalServiceConfigTest> findAll(Pageable pageable) {
         return null;
     }
 
     @Override
-    public <S extends AbstractInternalServiceConfigTest> Optional<S> findOne(Example<S> example) {
+    public <S extends InternalServiceConfigTest> Optional<S> findOne(Example<S> example) {
         return Optional.empty();
     }
 
     @Override
-    public <S extends AbstractInternalServiceConfigTest> Iterable<S> findAll(Example<S> example) {
+    public <S extends InternalServiceConfigTest> Iterable<S> findAll(Example<S> example) {
         return null;
     }
 
     @Override
-    public <S extends AbstractInternalServiceConfigTest> Iterable<S> findAll(Example<S> example, Sort sort) {
+    public <S extends InternalServiceConfigTest> Iterable<S> findAll(Example<S> example, Sort sort) {
         return null;
     }
 
     @Override
-    public <S extends AbstractInternalServiceConfigTest> Page<S> findAll(Example<S> example, Pageable pageable) {
+    public <S extends InternalServiceConfigTest> Page<S> findAll(Example<S> example, Pageable pageable) {
         return null;
     }
 
     @Override
-    public <S extends AbstractInternalServiceConfigTest> long count(Example<S> example) {
+    public <S extends InternalServiceConfigTest> long count(Example<S> example) {
         return 0;
     }
 
     @Override
-    public <S extends AbstractInternalServiceConfigTest> boolean exists(Example<S> example) {
+    public <S extends InternalServiceConfigTest> boolean exists(Example<S> example) {
         return false;
     }
 
     @Override
-    public <S extends AbstractInternalServiceConfigTest, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
+    public <S extends InternalServiceConfigTest, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
         return null;
     }
 }

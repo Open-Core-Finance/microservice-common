@@ -28,16 +28,17 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 @Component
-@ConditionalOnProperty(prefix = "tech.corefinance.security", name = "scan-controllers-actions", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(prefix = "tech.corefinance.security", name = "scan-controllers-actions", havingValue = "true",
+        matchIfMissing = true)
 @Slf4j
 public class ControllerScanner {
 
     @Autowired
-    private ResourceActionRepository resourceActionRepository;
+    private ResourceActionRepository<AbstractResourceAction> resourceActionRepository;
     @Autowired
     private ServiceSecurityConfig serviceSecurityConfig;
     @Autowired
-    private PermissionService permissionService;
+    private PermissionService<?, ?, ?> permissionService;
     @Autowired
     private RequestMappingHandlerMapping mapping;
     @Autowired
@@ -97,7 +98,8 @@ public class ControllerScanner {
         resourceActionRepository.saveAll(permissionActions);
     }
 
-    private List<AbstractResourceAction> buildListActions(String resourceType, String action, Iterable<String> urls, Iterable<RequestMethod> requestMethods) {
+    private List<AbstractResourceAction> buildListActions(String resourceType, String action, Iterable<String> urls,
+                                                          Iterable<RequestMethod> requestMethods) {
         var permissionActions = new LinkedList<AbstractResourceAction>();
         for (String url : urls) {
             for (RequestMethod requestMethod : requestMethods) {
@@ -107,17 +109,18 @@ public class ControllerScanner {
         return permissionActions;
     }
 
-    private void saveManualCheckPermissions(String resourceType, String action, Iterable<String> urls, Iterable<RequestMethod> requestMethods) {
+    private void saveManualCheckPermissions(String resourceType, String action, Iterable<String> urls,
+                                            Iterable<RequestMethod> requestMethods) {
         for (String url : urls) {
             for (RequestMethod requestMethod : requestMethods) {
-                var permission = permissionService.newPermission();
+                var permission = permissionService.createEntityObject();
                 permission.setControl(AccessControl.MANUAL_CHECK);
                 permission.setUrl(url);
                 permission.setRoleId(AbstractPermission.ANY_ROLE_APPLIED_VALUE);
                 permission.setResourceType(resourceType);
                 permission.setAction(action);
                 permission.setRequestMethod(requestMethod);
-                permissionService.saveOrUpdatePermission(permission);
+                permissionService.createOrUpdateEntity(permission);
             }
         }
     }
