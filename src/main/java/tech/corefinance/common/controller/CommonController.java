@@ -30,7 +30,7 @@ public class CommonController {
     }
     @DeleteMapping(value = "/delete-permission")
     public GeneralApiResponse<Boolean> deletePermissions(@RequestParam("permisstionId") String permisstionId) throws IOException{
-        return new GeneralApiResponse<>(permissionService.deleteRecord(permisstionId));
+        return new GeneralApiResponse<>(permissionService.deleteEntity(permisstionId));
     }
     @PostMapping(value = "/create-update-permission")
     public GeneralApiResponse<AbstractPermission> createOrUpdatePermission(@RequestBody
