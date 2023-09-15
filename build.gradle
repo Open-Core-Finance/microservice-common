@@ -38,6 +38,14 @@ apply from: 'artifact-credential.gradle'
 repositories {
 	mavenLocal()
 	mavenCentral()
+    maven {
+        credentials {
+            username = "${artifactUsername}"
+            password = "${artifactPassword}"
+        }
+        url = "${artifactSnapshotUrl}"
+        allowInsecureProtocol = true
+    }
 }
 
 dependencyManagement {
