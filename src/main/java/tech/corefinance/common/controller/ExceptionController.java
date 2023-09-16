@@ -15,6 +15,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import javax.xml.parsers.ParserConfigurationException;
 
+/**
+ * Handle generic exception.
+ */
 @ControllerAdvice
 @ResponseBody
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)

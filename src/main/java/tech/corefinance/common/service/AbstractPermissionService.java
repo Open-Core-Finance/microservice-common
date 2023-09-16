@@ -1,5 +1,6 @@
 package tech.corefinance.common.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import tech.corefinance.common.model.AbstractInternalServiceConfig;
@@ -9,6 +10,7 @@ import tech.corefinance.common.repository.InternalServiceConfigRepository;
 import tech.corefinance.common.repository.PermissionRepository;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractPermissionService<T extends AbstractPermission, C extends AbstractInternalServiceConfig,
@@ -25,10 +27,28 @@ public abstract class AbstractPermissionService<T extends AbstractPermission, C 
 
     public AbstractPermissionService() {
         listInitialNamesSupported = new LinkedHashMap<>();
-        listInitialNamesSupported.put("permission",
-                (T permission, boolean overrideIfExisted) -> initPermission(permission, overrideIfExisted));
-        listInitialNamesSupported.put("internal-api",
-                (C apiConfig, boolean overrideIfExisted) -> initApiConfig(apiConfig, overrideIfExisted));
+        listInitialNamesSupported.put("permission", new EntityInitializer<T>() {
+            @Override
+            public T initializeEntity(T entity, boolean overrideIfExisted) {
+                return initPermission(entity, overrideIfExisted);
+            }
+
+            @Override
+            public TypeReference<List<T>> getJsonReferenceType() {
+                return getPermissionJsonParseType();
+            }
+        });
+        listInitialNamesSupported.put("internal-api", new EntityInitializer<C>() {
+            @Override
+            public C initializeEntity(C entity, boolean overrideIfExisted) {
+                return initApiConfig(entity, overrideIfExisted);
+            }
+
+            @Override
+            public TypeReference<List<C>> getJsonReferenceType() {
+                return getApiConfigJsonParseType();
+            }
+        });
     }
 
     @Override
@@ -84,4 +104,7 @@ public abstract class AbstractPermissionService<T extends AbstractPermission, C 
     public Map<String, EntityInitializer<? extends Object>> getListInitialNamesSupported() {
         return listInitialNamesSupported;
     }
+
+    protected abstract TypeReference<List<T>> getPermissionJsonParseType();
+    protected abstract TypeReference<List<C>> getApiConfigJsonParseType();
 }

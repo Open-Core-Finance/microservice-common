@@ -10,25 +10,47 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-@FunctionalInterface
+/**
+ * Entity Initializer.
+ * @param <T> Entity type.
+ */
 public interface EntityInitializer<T> {
 
+    /**
+     * Initialie entity from resources.
+     * @param resources Resources
+     * @param overrideIfExisted Override if entity existed in DB.
+     * @return List of entities.
+     * @throws IOException If cannot read from resources.
+     */
     default List<T> initializeEntities(List<Resource> resources, boolean overrideIfExisted) throws IOException {
         var log = LoggerFactory.getLogger(getClass());
         var context = ApplicationContextHolder.getInstance().getApplicationContext();
         var objectMapper = context.getBean(ObjectMapper.class);
         List<T> result = new LinkedList<>();
-        var referenceType = new TypeReference<List<T>>() {};
-        log.info("Parse type [{}]", referenceType);
         for (var resource : resources) {
-            var entities = objectMapper.readValue(resource.getInputStream(), referenceType);
+            var entities = objectMapper.readValue(resource.getInputStream(), getJsonReferenceType());
             for (var entity : entities) {
-                log.info("[{}]", entity);
-                result.add(initializeEntity(entity, overrideIfExisted));
+                log.info("Entity: {}", entity);
+                var initResult = initializeEntity(entity, overrideIfExisted);
+                log.info("Init result: {}", entity);
+                result.add(initResult);
             }
         }
         return result;
     }
 
+    /**
+     * Check and save entity from resource.
+     * @param entity Entity
+     * @param overrideIfExisted Override is existed in DB.
+     * @return Saved entity.
+     */
     T initializeEntity(T entity, boolean overrideIfExisted);
+
+    /**
+     * Get TypeReference for JSON Parsing.
+     * @return TypeReference&lt;List&lt;T&gt;&gt;.
+     */
+    TypeReference<List<T>> getJsonReferenceType();
 }

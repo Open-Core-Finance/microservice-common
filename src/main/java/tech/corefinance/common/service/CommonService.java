@@ -32,6 +32,7 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
      *
      * @param source DTO object
      * @param dest Entity object
+     * @param <D> DTO type
      */
     default <D extends CreateUpdateDto<I>> void copyAdditionalPropertiesFromDtoToEntity(D source, T dest) {
     }
@@ -56,6 +57,7 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
     /**
      * Create or update database entity. Create when dto's ID is null, otherwise call update.
      * @param dto DTO object.
+     * @param <D> DTO type
      * @return Create entity.
      */
     default <D extends CreateUpdateDto<I>> T createOrUpdateEntity(D dto) {
