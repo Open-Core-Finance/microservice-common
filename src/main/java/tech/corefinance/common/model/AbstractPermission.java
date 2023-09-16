@@ -8,7 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Data
-public abstract class AbstractPermission implements CreateUpdateDto<String> {
+public abstract class AbstractPermission implements CreateUpdateDto<String>, GenericModel<String> {
     public static final String ANY_ROLE_APPLIED_VALUE = "ANY";
     @Id
     private String id;
