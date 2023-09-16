@@ -42,7 +42,7 @@ public abstract class AbstractPermissionService<T extends AbstractPermission, C 
      * @param permission Permission to initial.
      * @return Permission saved in DB.
      */
-    public T initPermission(T permission, boolean overrideIfExisted) {
+    private T initPermission(T permission, boolean overrideIfExisted) {
         var optional = permissionRepository.findFirstByRoleIdAndResourceTypeAndActionAndUrlAndRequestMethod(
                 permission.getRoleId(),
                 permission.getResourceType(), permission.getAction(), permission.getUrl(),
@@ -65,7 +65,7 @@ public abstract class AbstractPermissionService<T extends AbstractPermission, C 
      * @param config API Config to initial.
      * @return API Config saved in DB.
      */
-    public C initApiConfig(C config, boolean overrideIfExisted) {
+    private C initApiConfig(C config, boolean overrideIfExisted) {
         var optional = internalServiceConfigRepository.findFirstByApiKey(config.getApiKey());
         if (!optional.isPresent()) {
             return internalServiceConfigRepository.save(config);

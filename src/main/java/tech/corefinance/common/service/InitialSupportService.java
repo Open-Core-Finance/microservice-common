@@ -1,24 +1,16 @@
 package tech.corefinance.common.service;
 
+import org.slf4j.LoggerFactory;
 import tech.corefinance.common.config.InitDataConfigurations;
 import tech.corefinance.common.context.ApplicationContextHolder;
-import tech.corefinance.common.model.GenericModel;
-import tech.corefinance.common.repository.CommonResourceRepository;
 import tech.corefinance.common.util.CoreFinanceUtil;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public interface InitialSupportService<I extends Serializable, T extends GenericModel<I>, R extends CommonResourceRepository<T, I>> {
-
-    /**
-     * Get repository.
-     * @return Repository object that this service manage.
-     */
-    R getRepository();
+public interface InitialSupportService {
 
     /**
      * List initialize data name configured in class InitDataConfigurations#dataRegex.
@@ -27,6 +19,7 @@ public interface InitialSupportService<I extends Serializable, T extends Generic
     Map<String, EntityInitializer<? extends Object>> getListInitialNamesSupported();
 
     default Map<String, Object> initializationDefaultData() throws IOException {
+        var log = LoggerFactory.getLogger(getClass());
         var context = ApplicationContextHolder.getInstance().getApplicationContext();
         var config = context.getBean(InitDataConfigurations.class);
         var coreFinanceUtil = context.getBean(CoreFinanceUtil.class);
@@ -42,6 +35,7 @@ public interface InitialSupportService<I extends Serializable, T extends Generic
                 var supportedName = supportedConfig.getKey();
                 var initializer = supportedConfig.getValue();
                 if (Objects.equals(name, supportedName)) {
+                    log.info("Supported [{}]", name);
                     result.put(name, initializer.initializeEntities(resources, fileNameRegex.isReplaceIfExisted()));
                     break;
                 }

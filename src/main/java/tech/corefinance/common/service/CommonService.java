@@ -33,7 +33,7 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
      * @param source DTO object
      * @param dest Entity object
      */
-    default void copyAdditionalPropertiesFromDtoToEntity(CreateUpdateDto<I> source, T dest) {
+    default <D extends CreateUpdateDto<I>> void copyAdditionalPropertiesFromDtoToEntity(D source, T dest) {
     }
 
     /**
@@ -58,7 +58,7 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
      * @param dto DTO object.
      * @return Create entity.
      */
-    default T createOrUpdateEntity(CreateUpdateDto<I> dto) {
+    default <D extends CreateUpdateDto<I>> T createOrUpdateEntity(D dto) {
         var logger = LoggerFactory.getLogger(getClass());
         logger.info("Entering createOrUpdateEntity...");
         T entity;

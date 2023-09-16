@@ -33,6 +33,7 @@ import java.util.regex.Pattern;
 @Slf4j
 public class ControllerScanner {
 
+    @SuppressWarnings({"rawtypes"})
     @Autowired
     private ResourceActionRepository resourceActionRepository;
     @Autowired
@@ -46,6 +47,7 @@ public class ControllerScanner {
 
     @Async
     @PostConstruct
+    @SuppressWarnings({"unchecked"})
     public void scan() {
         var handlerMethods = mapping.getHandlerMethods();
         var permissionActions = new LinkedList<AbstractResourceAction>();
