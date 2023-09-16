@@ -1,5 +1,6 @@
 package tech.corefinance.common.model;
 
+import org.springframework.data.annotation.Transient;
 import tech.corefinance.common.enums.AccessControl;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -21,4 +22,10 @@ public abstract class AbstractPermission implements CreateUpdateDto<String> {
     @NotNull
     private AccessControl control;
     private RequestMethod requestMethod;
+
+    @Override
+    @Transient
+    public String getEntityId() {
+        return getId();
+    }
 }

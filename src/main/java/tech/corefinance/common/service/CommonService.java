@@ -63,9 +63,9 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
         logger.info("Entering createOrUpdateEntity...");
         T entity;
         var repository = getRepository();
-        if (dto.getId() != null) {
+        if (dto.getEntityId() != null) {
             logger.info("Entity ID not empty! Checking if existed in DB or not...");
-            Optional<T> optional = repository.findById(dto.getId());
+            Optional<T> optional = repository.findById(dto.getEntityId());
             if (optional.isPresent()) {
                 logger.info("Entity found!");
                 entity = optional.get();
