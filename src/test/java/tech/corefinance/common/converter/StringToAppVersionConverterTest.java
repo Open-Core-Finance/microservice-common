@@ -1,5 +1,6 @@
 package tech.corefinance.common.converter;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import tech.corefinance.common.enums.CommonConstants;
 import tech.corefinance.common.model.AppVersion;
 import org.junit.jupiter.api.Assertions;
@@ -17,17 +18,16 @@ class StringToAppVersionConverterTest {
 
     @Test
     void test_convert_happyCase() {
-        AppVersion appVersion = converter.convert("1.2.3.DevBuild");
+        AppVersion appVersion = converter.convert("1.2.3-DevBuild");
         Assertions.assertEquals(1, appVersion.getMajor());
         Assertions.assertEquals(2, appVersion.getMinor());
         Assertions.assertEquals(3, appVersion.getMaintenance());
-        Assertions.assertEquals("DevBuild", appVersion.getBuild());
+        Assertions.assertEquals("-DevBuild", appVersion.getBuild());
     }
 
     @Test
     void test_convert_invalidVersion() {
-        AppVersion appVersion = converter.convert("this is invalid");
-        Assertions.assertNull(appVersion);
+        Assertions.assertThrows(JsonParseException.class, () -> converter.convert("this is invalid"));
     }
 
     @Test
@@ -36,7 +36,7 @@ class StringToAppVersionConverterTest {
         Assertions.assertEquals(1, appVersion.getMajor());
         Assertions.assertEquals(0, appVersion.getMinor());
         Assertions.assertEquals(0, appVersion.getMaintenance());
-        Assertions.assertEquals("0", appVersion.getBuild());
+        Assertions.assertEquals("-ALPHA", appVersion.getBuild());
     }
 
     @Test
