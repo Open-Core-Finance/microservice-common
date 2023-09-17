@@ -16,7 +16,7 @@ import java.util.Set;
 @Component
 @ConditionalOnProperty(name = "tech.corefinance.app.converter.zoned-date-time-to-local-date-time", havingValue = "true", matchIfMissing = true)
 @ReadingConverter
-public class LocalDateTimeToZonedDateTimeConverter implements GenericConverter, org.springframework.core.convert.converter.Converter<LocalDateTime, ZonedDateTime> {
+public class LocalDateTimeToZonedDateTimeConverter implements GenericConverter, CommonCustomConverter<LocalDateTime, ZonedDateTime> {
 
     @Override
     public ZonedDateTime convert(@Nullable LocalDateTime date) {

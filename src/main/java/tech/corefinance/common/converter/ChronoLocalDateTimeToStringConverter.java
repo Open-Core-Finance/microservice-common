@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(name = "tech.corefinance.app.converter.local-date-time-to-string", havingValue = "true", matchIfMissing = true)
 @WritingConverter
 public class ChronoLocalDateTimeToStringConverter implements
-        GenericConverter, org.springframework.core.convert.converter.Converter<ChronoLocalDateTime<?>, String> {
+        GenericConverter, CommonCustomConverter<ChronoLocalDateTime<?>, String> {
 
     @Override
     public String convert(@Nullable ChronoLocalDateTime<?> date) {

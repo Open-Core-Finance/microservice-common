@@ -16,7 +16,7 @@ import java.util.Set;
 @Component
 @ConditionalOnProperty(name = "tech.corefinance.app.converter.zoned-date-time-to-string", havingValue = "true", matchIfMissing = true)
 @ReadingConverter
-public class DateToZonedDateTimeConverter implements GenericConverter, org.springframework.core.convert.converter.Converter<Date, ZonedDateTime> {
+public class DateToZonedDateTimeConverter implements GenericConverter, CommonCustomConverter<Date, ZonedDateTime> {
 
     @Override
     public ZonedDateTime convert(@Nullable Date date) {
