@@ -1,5 +1,6 @@
 package tech.corefinance.common.test.support.repository;
 
+import lombok.Getter;
 import org.springframework.data.domain.Example;
 import org.springframework.data.repository.query.FluentQuery;
 import tech.corefinance.common.repository.InternalServiceConfigRepository;
@@ -9,12 +10,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
 @Component
+@Getter
 public class TestInternalServiceConfigRepository implements InternalServiceConfigRepository<InternalServiceConfigTest> {
+
+    private int saveCount;
+    private List<InternalServiceConfigTest> savedList = new LinkedList<>();
+
     @Override
     public Optional<InternalServiceConfigTest> findFirstByApiKeyAndActivatedOrderByLastModifiedDateDesc(String apiKey,
                                                                                                         boolean activated) {
@@ -28,12 +35,26 @@ public class TestInternalServiceConfigRepository implements InternalServiceConfi
 
     @Override
     public <S extends InternalServiceConfigTest> S save(S entity) {
-        return null;
+        if(!savedList.contains(entity)) {
+            saveCount++;
+            savedList.add(entity);
+        }
+        return entity;
     }
 
     @Override
     public <S extends InternalServiceConfigTest> List<S> saveAll(Iterable<S> entities) {
-        return null;
+        var result = new LinkedList<S>();
+        var iterator = entities.iterator();
+        while(iterator.hasNext()) {
+            var entity = iterator.next();
+            if(!savedList.contains(entity)) {
+                saveCount++;
+                savedList.add(entity);
+            }
+            result.add(entity);
+        }
+        return result;
     }
 
     @Override
@@ -48,12 +69,12 @@ public class TestInternalServiceConfigRepository implements InternalServiceConfi
 
     @Override
     public List<InternalServiceConfigTest> findAll() {
-        return null;
+        return new LinkedList<>();
     }
 
     @Override
     public List<InternalServiceConfigTest> findAllById(Iterable<String> strings) {
-        return null;
+        return new LinkedList<>();
     }
 
     @Override
@@ -88,7 +109,7 @@ public class TestInternalServiceConfigRepository implements InternalServiceConfi
 
     @Override
     public List<InternalServiceConfigTest> findAll(Sort sort) {
-        return null;
+        return new LinkedList<>();
     }
 
     @Override
@@ -103,12 +124,12 @@ public class TestInternalServiceConfigRepository implements InternalServiceConfi
 
     @Override
     public <S extends InternalServiceConfigTest> Iterable<S> findAll(Example<S> example) {
-        return null;
+        return new LinkedList<>();
     }
 
     @Override
     public <S extends InternalServiceConfigTest> Iterable<S> findAll(Example<S> example, Sort sort) {
-        return null;
+        return new LinkedList<>();
     }
 
     @Override

@@ -29,34 +29,6 @@ public abstract class AbstractPermissionService<T extends AbstractPermission, C 
     @Autowired
     protected ObjectMapper objectMapper;
 
-    protected Map<String, EntityInitializer<? extends Object>> listInitialNamesSupported;
-
-    public AbstractPermissionService() {
-        listInitialNamesSupported = new LinkedHashMap<>();
-        listInitialNamesSupported.put("permission", new EntityInitializer<T>() {
-            @Override
-            public T initializeEntity(T entity, boolean overrideIfExisted) {
-                return initPermission(entity, overrideIfExisted);
-            }
-
-            @Override
-            public TypeReference<List<T>> getJsonReferenceType() {
-                return getPermissionJsonParseType();
-            }
-        });
-        listInitialNamesSupported.put("internal-api", new EntityInitializer<C>() {
-            @Override
-            public C initializeEntity(C entity, boolean overrideIfExisted) {
-                return initApiConfig(entity, overrideIfExisted);
-            }
-
-            @Override
-            public TypeReference<List<C>> getJsonReferenceType() {
-                return getApiConfigJsonParseType();
-            }
-        });
-    }
-
     @Override
     public PermissionRepository<T> getRepository() {
         return permissionRepository;
@@ -68,7 +40,7 @@ public abstract class AbstractPermissionService<T extends AbstractPermission, C 
      * @param permission Permission to initial.
      * @return Permission saved in DB.
      */
-    private T initPermission(T permission, boolean overrideIfExisted) {
+    protected T initPermission(T permission, boolean overrideIfExisted) {
         var optional = permissionRepository.findFirstByRoleIdAndResourceTypeAndActionAndUrlAndRequestMethod(
                 permission.getRoleId(),
                 permission.getResourceType(), permission.getAction(), permission.getUrl(),
@@ -91,7 +63,7 @@ public abstract class AbstractPermissionService<T extends AbstractPermission, C 
      * @param config API Config to initial.
      * @return API Config saved in DB.
      */
-    private C initApiConfig(C config, boolean overrideIfExisted) {
+    protected C initApiConfig(C config, boolean overrideIfExisted) {
         var optional = internalServiceConfigRepository.findFirstByApiKey(config.getApiKey());
         if (!optional.isPresent()) {
             return internalServiceConfigRepository.save(config);
@@ -105,12 +77,4 @@ public abstract class AbstractPermissionService<T extends AbstractPermission, C 
             return per;
         }
     }
-
-    @Override
-    public Map<String, EntityInitializer<? extends Object>> getListInitialNamesSupported() {
-        return listInitialNamesSupported;
-    }
-
-    protected abstract TypeReference<List<T>> getPermissionJsonParseType();
-    protected abstract TypeReference<List<C>> getApiConfigJsonParseType();
 }

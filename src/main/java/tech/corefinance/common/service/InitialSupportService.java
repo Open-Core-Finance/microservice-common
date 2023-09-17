@@ -16,7 +16,7 @@ public interface InitialSupportService {
      * List initialize data name configured in class InitDataConfigurations#dataRegex.
      * @return List name supported.
      */
-    Map<String, EntityInitializer<? extends Object>> getListInitialNamesSupported();
+    Map<String, LocalResourceEntityInitializer<? extends Object>> getListInitialNamesSupported();
 
     default Map<String, Object> initializationDefaultData() throws IOException {
         var log = LoggerFactory.getLogger(getClass());

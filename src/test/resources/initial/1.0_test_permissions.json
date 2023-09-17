@@ -1,0 +1,19 @@
+[
+  {
+    "roleId": "Admin",
+    "resourceType": "user", "action": "add", "url": "/user/add-user",
+    "control": "ALLOWED"
+  },
+  {
+    "roleId": "Admin",
+    "resourceType": "authen",
+    "action": "add",
+    "url": "/user-authen/user-unlock",
+    "control": "ALLOWED_SPECIFIC_RESOURCES"
+  },
+  {
+    "roleId": "Admin",
+    "resourceType": "user", "action": "add", "url": "/user/load-users",
+    "control": "ALLOWED_SPECIFIC_RESOURCES"
+  }
+]

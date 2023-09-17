@@ -10,6 +10,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -28,7 +30,7 @@ public class TestPermissionRepository
 
     @Override
     public List<PermissionTest> findAllByRoleIdAndResourceType(String roleId, String resourceType, Sort sort) {
-        return null;
+        return new LinkedList<>();
     }
 
     @Override
@@ -37,13 +39,18 @@ public class TestPermissionRepository
     }
 
     @Override
-    public <S extends PermissionTest> S save(S entity) {
-        return null;
+    public PermissionTest save(PermissionTest entity) {
+        return entity;
     }
 
     @Override
     public <S extends PermissionTest> List<S> saveAll(Iterable<S> entities) {
-        return null;
+        var result = new LinkedList<S>();
+        var iterator = entities.iterator();
+        while(iterator.hasNext()) {
+            result.add(iterator.next());
+        }
+        return result;
     }
 
     @Override
@@ -58,12 +65,12 @@ public class TestPermissionRepository
 
     @Override
     public List<PermissionTest> findAll() {
-        return null;
+        return new LinkedList<>();
     }
 
     @Override
     public List<PermissionTest> findAllById(Iterable<String> strings) {
-        return null;
+        return new LinkedList<>();
     }
 
     @Override
@@ -98,7 +105,7 @@ public class TestPermissionRepository
 
     @Override
     public List<PermissionTest> findAll(Sort sort) {
-        return null;
+        return new LinkedList<>();
     }
 
     @Override
@@ -113,12 +120,12 @@ public class TestPermissionRepository
 
     @Override
     public <S extends PermissionTest> Iterable<S> findAll(Example<S> example) {
-        return null;
+        return new LinkedList<>();
     }
 
     @Override
     public <S extends PermissionTest> Iterable<S> findAll(Example<S> example, Sort sort) {
-        return null;
+        return new LinkedList<>();
     }
 
     @Override
