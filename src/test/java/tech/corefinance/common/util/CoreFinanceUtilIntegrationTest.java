@@ -26,7 +26,7 @@ import java.util.LinkedList;
 @SpringBootTest(classes = TestCommonApplication.class)
 @AutoConfigureMockMvc
 @ActiveProfiles({"common", "default", "unittest"})
-@ComponentScan(basePackages = {"tech.corefinance.kuniv"})
+@ComponentScan(basePackages = {"tech.corefinance.common"})
 public class CoreFinanceUtilIntegrationTest {
 
     @Value("${export.format.date}")
