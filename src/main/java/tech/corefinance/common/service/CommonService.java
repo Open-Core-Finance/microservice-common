@@ -146,4 +146,13 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
     default List<T> searchByTextAndSort(String searchText, Sort sort) {
         throw new UnsupportedOperationException("Not support search by text!");
     }
+
+    /**
+     * Get entity details.
+     * @param entityId Entity ID.
+     * @return Entity object.
+     */
+    default T getEntityDetails(I entityId) {
+        return getRepository().findById(entityId).get();
+    }
 }

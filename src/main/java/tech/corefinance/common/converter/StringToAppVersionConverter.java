@@ -12,7 +12,7 @@ import java.util.Set;
 
 @Component
 @Slf4j
-public class StringToAppVersionConverter implements Converter<String, AppVersion>, GenericConverter {
+public class StringToAppVersionConverter implements CommonCustomConverter<String, AppVersion>, GenericConverter {
 
     @Override
     public AppVersion convert(String source) {

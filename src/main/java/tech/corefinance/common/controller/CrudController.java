@@ -1,10 +1,8 @@
 package tech.corefinance.common.controller;
 
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import tech.corefinance.common.annotation.PermissionAction;
 import tech.corefinance.common.dto.GeneralApiResponse;
 import tech.corefinance.common.dto.PageDto;
@@ -20,19 +18,33 @@ public interface CrudController<I extends Serializable ,T extends GenericModel<I
 
     CommonService<I, T, ?> getHandlingService();
 
+    default Converter<T, ?> getEntityConverter() {
+        return null;
+    }
+
     @PermissionAction(action = AbstractResourceAction.COMMON_ACTION_LIST)
     @PostMapping(value = "/")
-    default PageDto<T> search(@RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize,
+    default PageDto<?> search(@RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize,
                                    @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex,
                                    @RequestParam(value = "orders", required = false, defaultValue = "[]")
                                    List<Sort.Order> orders,
                                    @RequestParam(value = "searchText", required = false, defaultValue = "") String searchText) {
-        return PageDto.createSuccessResponse(getHandlingService().searchData(searchText, pageSize, pageIndex, orders));
+        var converter = getEntityConverter();
+        var result = getHandlingService().searchData(searchText, pageSize, pageIndex, orders);
+        if (converter == null) {
+            return PageDto.createSuccessResponse(result);
+        }
+        return PageDto.createSuccessResponse(result.map(converter::convert));
     }
 
     @PostMapping(value = "/create-or-update")
-    default GeneralApiResponse<T> createOrUpdateRole(@RequestBody D role) {
-        return new GeneralApiResponse<>(getHandlingService().createOrUpdateEntity(role));
+    default GeneralApiResponse<?> createOrUpdateRole(@RequestBody D role) {
+        var converter = getEntityConverter();
+        var result = getHandlingService().createOrUpdateEntity(role);
+        if (converter == null) {
+            return new GeneralApiResponse<>(result);
+        }
+        return new GeneralApiResponse<>(converter.convert(result));
     }
 
     @DeleteMapping(value = "/delete")
@@ -40,4 +52,13 @@ public interface CrudController<I extends Serializable ,T extends GenericModel<I
         return new GeneralApiResponse<>(getHandlingService().deleteEntity(entityId));
     }
 
+    @GetMapping(value = "/{entityId}")
+    default GeneralApiResponse<Object> viewDetails(@PathVariable("entityId") I entityId) {
+        var converter = getEntityConverter();
+        var result = getHandlingService().getEntityDetails(entityId);
+        if (converter == null) {
+            return new GeneralApiResponse<>(result);
+        }
+        return new GeneralApiResponse<>(converter.convert(result));
+    }
 }
