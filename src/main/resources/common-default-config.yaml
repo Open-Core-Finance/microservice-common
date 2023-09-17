@@ -64,8 +64,15 @@ tech:
       plain: test
       encoded: ENC(O5MFWIMMOz+V3iItOVY60g==)
     initial:
-      permission-file: classpath:initial/*permissions*.json
-      internal-api-file: classpath:initial/*internal_api*.json
+      name-separator: _
+      version-separator: .
+      data-regex:
+        permission:
+          file-name-regex: classpath:initial/*permissions*.json
+          replace-if-existed: true
+        internal-api:
+          file-name-regex: classpath:initial/*internal_api*.json
+          replace-if-existed: true
 export:
   format:
     date: yyyy/MM/dd

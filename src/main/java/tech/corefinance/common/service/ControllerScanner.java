@@ -14,6 +14,7 @@ import tech.corefinance.common.annotation.ControllerManagedResource;
 import tech.corefinance.common.annotation.ManualPermissionCheck;
 import tech.corefinance.common.annotation.PermissionAction;
 import tech.corefinance.common.config.ServiceSecurityConfig;
+import tech.corefinance.common.context.ApplicationContextHolder;
 import tech.corefinance.common.enums.AccessControl;
 import tech.corefinance.common.ex.ReflectiveIncorrectFieldException;
 import tech.corefinance.common.model.AbstractPermission;
@@ -28,16 +29,18 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 @Component
-@ConditionalOnProperty(prefix = "tech.corefinance.security", name = "scan-controllers-actions", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(prefix = "tech.corefinance.security", name = "scan-controllers-actions", havingValue = "true",
+        matchIfMissing = true)
 @Slf4j
 public class ControllerScanner {
 
+    @SuppressWarnings({"rawtypes"})
     @Autowired
     private ResourceActionRepository resourceActionRepository;
     @Autowired
     private ServiceSecurityConfig serviceSecurityConfig;
     @Autowired
-    private PermissionService permissionService;
+    private PermissionService<?, ?, ?> permissionService;
     @Autowired
     private RequestMappingHandlerMapping mapping;
     @Autowired
@@ -45,7 +48,9 @@ public class ControllerScanner {
 
     @Async
     @PostConstruct
+    @SuppressWarnings({"unchecked"})
     public void scan() {
+        var context = ApplicationContextHolder.getInstance().getApplicationContext();
         var handlerMethods = mapping.getHandlerMethods();
         var permissionActions = new LinkedList<AbstractResourceAction>();
         mainloop:
@@ -54,13 +59,14 @@ public class ControllerScanner {
             var value = entry.getValue();
             var urls = key.getDirectPaths();
             Method method = value.getMethod();
-            var controllerClass = method.getDeclaringClass();
+            var declaringClass = method.getDeclaringClass();
+            var controllerClass = value.getBeanType();
             String controllerClassName = controllerClass.getName();
             log.debug("{}#{}", controllerClassName, method.getName());
             for (String ignoreController : serviceSecurityConfig.getIgnoreControllerScan()) {
                 log.debug("Checking if controller full package contain [{}] or not...", ignoreController);
                 if (controllerClassName.contains(ignoreController)) {
-                    log.debug("Skipped permission scan for {}", controllerClass);
+                    log.debug("Skipped permission scan for {}", declaringClass);
                     continue mainloop;
                 }
             }
@@ -80,7 +86,7 @@ public class ControllerScanner {
             var manualPerCheckAnn = method.getAnnotation(ManualPermissionCheck.class);
             if (perActAnn == null) {
                 if (controllerManagedResource == null) {
-                    log.error("{}={} have no annotation PermissionAction!", controllerClass.getName(),
+                    log.error("{}={} have no annotation PermissionAction!", declaringClass.getName(),
                             method.getName());
                     throw new ReflectiveIncorrectFieldException("no_permission_defined");
                 }
@@ -97,7 +103,8 @@ public class ControllerScanner {
         resourceActionRepository.saveAll(permissionActions);
     }
 
-    private List<AbstractResourceAction> buildListActions(String resourceType, String action, Iterable<String> urls, Iterable<RequestMethod> requestMethods) {
+    private List<AbstractResourceAction> buildListActions(String resourceType, String action, Iterable<String> urls,
+                                                          Iterable<RequestMethod> requestMethods) {
         var permissionActions = new LinkedList<AbstractResourceAction>();
         for (String url : urls) {
             for (RequestMethod requestMethod : requestMethods) {
@@ -107,17 +114,18 @@ public class ControllerScanner {
         return permissionActions;
     }
 
-    private void saveManualCheckPermissions(String resourceType, String action, Iterable<String> urls, Iterable<RequestMethod> requestMethods) {
+    private void saveManualCheckPermissions(String resourceType, String action, Iterable<String> urls,
+                                            Iterable<RequestMethod> requestMethods) {
         for (String url : urls) {
             for (RequestMethod requestMethod : requestMethods) {
-                var permission = permissionService.newPermission();
+                var permission = permissionService.createEntityObject();
                 permission.setControl(AccessControl.MANUAL_CHECK);
                 permission.setUrl(url);
                 permission.setRoleId(AbstractPermission.ANY_ROLE_APPLIED_VALUE);
                 permission.setResourceType(resourceType);
                 permission.setAction(action);
                 permission.setRequestMethod(requestMethod);
-                permissionService.saveOrUpdatePermission(permission);
+                permissionService.createOrUpdateEntity(permission);
             }
         }
     }

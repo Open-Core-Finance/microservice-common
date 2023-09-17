@@ -14,7 +14,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.util.NoSuchElementException;
 
+/**
+ * Handle generic exception.
+ */
 @ControllerAdvice
 @ResponseBody
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -61,7 +65,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
         return new GeneralApiResponse<>("system_error", 1, e.getMessage());
     }
 
-    @ExceptionHandler(value = {ResourceNotFound.class})
+    @ExceptionHandler(value = {ResourceNotFound.class, NoSuchElementException.class})
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public Object handleResourceNotFound(HttpServletRequest request, Exception e) {
         return handleGeneralException(request, e, 404);

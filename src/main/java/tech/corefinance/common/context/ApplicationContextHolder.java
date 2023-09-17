@@ -1,11 +1,17 @@
 package tech.corefinance.common.context;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+/**
+ * To get Spring ApplicationContext at any place within system.
+ */
 @Slf4j
+@Getter
+@Setter
 public class ApplicationContextHolder implements ApplicationContextAware {
 
     private static ApplicationContextHolder INSTANCE = new ApplicationContextHolder();
@@ -17,15 +23,10 @@ public class ApplicationContextHolder implements ApplicationContextAware {
         log.debug("Created ApplicationContextHolder [{}]", this);
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
-
-    public ApplicationContext getApplicationContext() {
-        return this.applicationContext;
-    }
-
+    /**
+     * Singleton implementation.
+     * @return Single instance within application.
+     */
     public static ApplicationContextHolder getInstance() {
         return INSTANCE;
     }

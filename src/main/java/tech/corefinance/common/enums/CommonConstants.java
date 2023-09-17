@@ -31,12 +31,14 @@ public final class CommonConstants {
     public static final String JWT_VERIFY_MODE_SINGLE_LOGIN_PER_DEVICE = "SINGLE_LOGIN_PER_DEVICE";
     public static final String JWT_VERIFY_MODE_MULTIPLE_LOGIN = "MULTIPLE_LOGIN";
 
-    public static final String DEFAULT_VERSION_JSON = "{\"major\":1,\"minor\":0,\"maintenance\":0,\"build\":\"0\"}";
+    public static final String DEFAULT_VERSION_JSON = "{\"major\":1,\"minor\":0,\"maintenance\":0, \"build\":\"-ALPHA\"}";
     /**
      * Define using string builder to prevent sonar recognize as IP address which is not.
      */
-    public static final String DEFAULT_VERSION_STRING = new StringBuilder("1").append(".0").append(".0")
-            .append(".0").toString();
+    public static final String DEFAULT_VERSION_NUMBER_SEPARATOR = ".";
+    public static final String DEFAULT_VERSION_BUILD_SEPARATOR = "-";
+    public static final String DEFAULT_VERSION_STRING = new StringBuilder("1").append(DEFAULT_VERSION_NUMBER_SEPARATOR).append("0")
+            .append(DEFAULT_VERSION_NUMBER_SEPARATOR).append("0").append(DEFAULT_VERSION_BUILD_SEPARATOR).append("ALPHA").toString();
     public static final String DEFAULT_APP_PLATFORM_STRING = "WEB";
     public static final String DEFAULT_CLIENT_APP_ID = "1";
     public static final String LOGBACK_FILE_PATH_KEY = "logFilePath";

@@ -1,5 +1,6 @@
 package tech.corefinance.common.model;
 
+import org.springframework.data.annotation.Transient;
 import tech.corefinance.common.enums.AccessControl;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -7,7 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Data
-public abstract class AbstractPermission implements GenericModel<String> {
+public abstract class AbstractPermission implements CreateUpdateDto<String>, GenericModel<String> {
     public static final String ANY_ROLE_APPLIED_VALUE = "ANY";
     @Id
     private String id;
@@ -21,4 +22,10 @@ public abstract class AbstractPermission implements GenericModel<String> {
     @NotNull
     private AccessControl control;
     private RequestMethod requestMethod;
+
+    @Override
+    @Transient
+    public String getEntityId() {
+        return getId();
+    }
 }

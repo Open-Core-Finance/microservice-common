@@ -1,33 +1,26 @@
 package tech.corefinance.common.test.support.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import lombok.Getter;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMethod;
 import tech.corefinance.common.model.AbstractResourceAction;
 import tech.corefinance.common.service.AbstractPermissionService;
-import tech.corefinance.common.test.support.model.AbstractInternalServiceConfigTest;
+import tech.corefinance.common.service.LocalResourceEntityInitializer;
+import tech.corefinance.common.test.support.model.InternalServiceConfigTest;
 import tech.corefinance.common.test.support.model.PermissionTest;
-import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Service;
 import tech.corefinance.common.test.support.model.ResourceActionTest;
 
-import java.io.IOException;
-import java.util.LinkedList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
-public class TestPermissionService extends AbstractPermissionService<PermissionTest, AbstractInternalServiceConfigTest, AbstractResourceAction> {
-    @Override
-    protected List<PermissionTest> initialPermissions(List<Resource> permissionResources) throws IOException {
-        return new LinkedList<>();
-    }
+@Getter
+public class TestPermissionService extends AbstractPermissionService<PermissionTest, InternalServiceConfigTest, AbstractResourceAction> {
 
     @Override
-    protected List<AbstractInternalServiceConfigTest> initialInternalApiConfigs(List<Resource> configResources)
-            throws IOException {
-        return new LinkedList<>();
-    }
-
-    @Override
-    public PermissionTest newPermission() {
+    public PermissionTest createEntityObject() {
         return new PermissionTest();
     }
 
@@ -35,5 +28,17 @@ public class TestPermissionService extends AbstractPermissionService<PermissionT
     public AbstractResourceAction newResourceAction(String resourceType, String action, String url,
                                                     RequestMethod requestMethod) {
         return new ResourceActionTest(resourceType, action, url, requestMethod);
+    }
+
+    protected Map<String, LocalResourceEntityInitializer<? extends Object>> listInitialNamesSupported;
+
+    public TestPermissionService() {
+        listInitialNamesSupported = new LinkedHashMap<>();
+        listInitialNamesSupported.put("permission", new LocalResourceEntityInitializer<>(
+                new TypeReference<List<PermissionTest>>() {},
+        (entity, overrideIfExisted) -> initPermission(entity, overrideIfExisted)));
+        listInitialNamesSupported.put("internal-api", new LocalResourceEntityInitializer<>(
+                new TypeReference<List<InternalServiceConfigTest>>() {},
+                (entity, overrideIfExisted) -> initApiConfig(entity, overrideIfExisted)));
     }
 }

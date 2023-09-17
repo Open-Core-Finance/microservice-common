@@ -18,7 +18,7 @@ import java.util.Locale;
 
 @Component
 @Slf4j
-public class OrderListConverter implements Converter<String, List<Order>>, Formatter<List<Order>> {
+public class OrderListConverter implements CommonCustomConverter<String, List<Order>>, Formatter<List<Order>> {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 

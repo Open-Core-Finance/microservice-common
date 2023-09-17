@@ -13,7 +13,7 @@ import java.util.Locale;
 
 @Component
 @Slf4j
-public class CsvFieldListConverter implements Converter<String, CsvExportDefinition[]>,
+public class CsvFieldListConverter implements CommonCustomConverter<String, CsvExportDefinition[]>,
         Formatter<CsvExportDefinition[]> {
 
     private ObjectMapper objectMapper = new ObjectMapper();

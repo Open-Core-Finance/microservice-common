@@ -15,7 +15,7 @@ import java.util.Set;
 @Component
 @ConditionalOnProperty(name = "tech.corefinance.app.converter.local-date-time-to-string", havingValue = "true", matchIfMissing = true)
 @ReadingConverter
-public class StringToLocalDateTimeConverter implements GenericConverter, org.springframework.core.convert.converter.Converter<String, LocalDateTime> {
+public class StringToLocalDateTimeConverter implements GenericConverter, CommonCustomConverter<String, LocalDateTime> {
 
     @Override
     public LocalDateTime convert(@Nullable String document) {

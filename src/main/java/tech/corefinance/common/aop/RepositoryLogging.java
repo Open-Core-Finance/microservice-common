@@ -6,11 +6,18 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
+/**
+ * Logging repository calls.
+ */
 @Aspect
 @Component
 @ConditionalOnProperty(name = "tech.corefinance.log.enabled.repositories", havingValue = "true", matchIfMissing = true)
 public class RepositoryLogging extends MethodDataLoging {
 
+    /**
+     * Mark in the log for reading purpose.
+     * @return Mark in the log for reading purpose.
+     */
     @Override
     protected String getLogingStartMark() {
         return "++++++";

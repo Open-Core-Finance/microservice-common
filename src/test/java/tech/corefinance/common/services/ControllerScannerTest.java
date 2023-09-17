@@ -2,6 +2,8 @@ package tech.corefinance.common.services;
 
 import tech.corefinance.common.config.ServiceSecurityConfig;
 import tech.corefinance.common.controller.CommonController;
+import tech.corefinance.common.model.AbstractInternalServiceConfig;
+import tech.corefinance.common.model.AbstractPermission;
 import tech.corefinance.common.model.AbstractResourceAction;
 import tech.corefinance.common.repository.ResourceActionRepository;
 import tech.corefinance.common.service.ControllerScanner;
@@ -43,7 +45,7 @@ public class ControllerScannerTest {
     private ControllerScanner controllerScanner;
     private RequestMappingHandlerMapping mapping;
     private CoreFinanceUtil coreFinanceUtil;
-    private PermissionService permissionService;
+    private PermissionService<AbstractPermission, AbstractInternalServiceConfig, AbstractResourceAction> permissionService;
 
     @BeforeEach
     public void setUp() throws IllegalAccessException {
@@ -77,7 +79,7 @@ public class ControllerScannerTest {
         var permissionServiceField = PowerMockito.field(ControllerScanner.class, "permissionService");
         permissionServiceField.setAccessible(true);
         permissionServiceField.set(controllerScanner, permissionService);
-        PowerMockito.when(permissionService.newPermission()).thenReturn(new PermissionTest());
+        PowerMockito.when(permissionService.createEntityObject()).thenReturn(new PermissionTest());
         PowerMockito.when(permissionService.newResourceAction(any(), any(), any(), any()))
                 .thenReturn(new ResourceActionTest("", "", "", RequestMethod.GET));
     }
@@ -178,7 +180,7 @@ public class ControllerScannerTest {
         var resourceAction = permissionService.newResourceAction("test-common", "add", url, requestMethod);
         resourceAction.setId("add-test-common-_test_another-normal");
         result.add(resourceAction);
-        verify(permissionService, times(1)).saveOrUpdatePermission(Mockito.any());
+        verify(permissionService, times(1)).createOrUpdateEntity(Mockito.any());
         verify(resourceActionRepository, times(1)).saveAll(result);
     }
 
