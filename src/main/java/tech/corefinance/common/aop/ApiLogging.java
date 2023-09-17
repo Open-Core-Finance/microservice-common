@@ -15,6 +15,9 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Collections;
 
+/**
+ * Logging for APIs (Controllers).
+ */
 @Aspect
 @Component
 @ConditionalOnProperty(name = "tech.corefinance.log.enabled.api", havingValue = "true", matchIfMissing = true)
@@ -27,26 +30,56 @@ public class ApiLogging extends MethodDataLoging {
     @Autowired
     private HttpServletRequest request;
 
+    /**
+     * Generate logs for GET HTTP Methods.
+     * @param joinPoint Method call
+     * @return Method response
+     * @throws Throwable Method exception or error.
+     */
     @Around("@annotation(org.springframework.web.bind.annotation.GetMapping) && " + EXECUTION_FEIGN_CLIENT_EXCLUDED)
     public Object logGetRequest(ProceedingJoinPoint joinPoint) throws Throwable {
         return doLogging(joinPoint);
     }
 
+    /**
+     * Generate logs for POST HTTP Methods.
+     * @param joinPoint Method call
+     * @return Method response
+     * @throws Throwable Method exception or error.
+     */
     @Around("@annotation(org.springframework.web.bind.annotation.PostMapping) && " + EXECUTION_FEIGN_CLIENT_EXCLUDED)
     public Object logPostRequest(ProceedingJoinPoint joinPoint) throws Throwable {
         return doLogging(joinPoint);
     }
 
+    /**
+     * Generate logs for PUT HTTP Methods.
+     * @param joinPoint Method call
+     * @return Method response
+     * @throws Throwable Method exception or error.
+     */
     @Around("@annotation(org.springframework.web.bind.annotation.PutMapping) && " + EXECUTION_FEIGN_CLIENT_EXCLUDED)
     public Object logPutRequest(ProceedingJoinPoint joinPoint) throws Throwable {
         return doLogging(joinPoint);
     }
 
+    /**
+     * Generate logs for PATCH HTTP Methods.
+     * @param joinPoint Method call
+     * @return Method response
+     * @throws Throwable Method exception or error.
+     */
     @Around("@annotation(org.springframework.web.bind.annotation.PatchMapping) && " + EXECUTION_FEIGN_CLIENT_EXCLUDED)
     public Object verifyPatchRequest(ProceedingJoinPoint joinPoint) throws Throwable {
         return doLogging(joinPoint);
     }
 
+    /**
+     * Generate logs for DELETE HTTP Methods.
+     * @param joinPoint Method call
+     * @return Method response
+     * @throws Throwable Method exception or error.
+     */
     @Around("@annotation(org.springframework.web.bind.annotation.DeleteMapping) && " + EXECUTION_FEIGN_CLIENT_EXCLUDED)
     public Object verifyDeleteRequest(ProceedingJoinPoint joinPoint) throws Throwable {
         return doLogging(joinPoint);
@@ -65,6 +98,11 @@ public class ApiLogging extends MethodDataLoging {
         return doLogging(joinPoint);
     }
 
+    /**
+     * Additional log for input if needed.
+     * @param joinPoint Calling method.
+     * @param objectMapper System object mapper.
+     */
     @Override
     protected void doAdditionalInputLog(ProceedingJoinPoint joinPoint, ObjectMapper objectMapper) {
         log.debug("== Request header <= START");

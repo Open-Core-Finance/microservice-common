@@ -36,6 +36,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Framework to verify API permission.
+ */
 @Aspect
 @Component
 @ConditionalOnProperty(prefix = "tech.corefinance.security", name = "authorize-check", havingValue = "true", matchIfMissing = true)
@@ -67,26 +70,56 @@ public class ApiAuthorizationCheck {
     @Value("${tech.corefinance.security.permission.default-control}")
     private AccessControl permissionDefaultControl;
 
+    /**
+     * Verify for GET HTTP Methods.
+     * @param joinPoint Method call
+     * @return Method response
+     * @throws Throwable Method exception or error.
+     */
     @Around("@annotation(org.springframework.web.bind.annotation.GetMapping) && " + EXECUTION_EXCLUDED)
     public Object verifyGetRequest(ProceedingJoinPoint joinPoint) throws Throwable {
         return verifyRequest(joinPoint, RequestMethod.GET);
     }
 
+    /**
+     * Verify for POST HTTP Methods.
+     * @param joinPoint Method call
+     * @return Method response
+     * @throws Throwable Method exception or error.
+     */
     @Around("@annotation(org.springframework.web.bind.annotation.PostMapping) && " + EXECUTION_EXCLUDED)
     public Object verifyPostRequest(ProceedingJoinPoint joinPoint) throws Throwable {
         return verifyRequest(joinPoint, RequestMethod.POST);
     }
 
+    /**
+     * Verify for PUT HTTP Methods.
+     * @param joinPoint Method call
+     * @return Method response
+     * @throws Throwable Method exception or error.
+     */
     @Around("@annotation(org.springframework.web.bind.annotation.PutMapping) && " + EXECUTION_EXCLUDED)
     public Object verifyPutRequest(ProceedingJoinPoint joinPoint) throws Throwable {
         return verifyRequest(joinPoint, RequestMethod.PUT);
     }
 
+    /**
+     * Verify for PATCH HTTP Methods.
+     * @param joinPoint Method call
+     * @return Method response
+     * @throws Throwable Method exception or error.
+     */
     @Around("@annotation(org.springframework.web.bind.annotation.PatchMapping) && " + EXECUTION_EXCLUDED)
     public Object verifyPatchRequest(ProceedingJoinPoint joinPoint) throws Throwable {
         return verifyRequest(joinPoint, RequestMethod.PATCH);
     }
 
+    /**
+     * Verify for DELETE HTTP Methods.
+     * @param joinPoint Method call
+     * @return Method response
+     * @throws Throwable Method exception or error.
+     */
     @Around("@annotation(org.springframework.web.bind.annotation.DeleteMapping) && " + EXECUTION_EXCLUDED)
     public Object verifyDeleteRequest(ProceedingJoinPoint joinPoint) throws Throwable {
         return verifyRequest(joinPoint, RequestMethod.DELETE);
@@ -104,6 +137,13 @@ public class ApiAuthorizationCheck {
         return verifyRequest(joinPoint, RequestMethod.valueOf(request.getMethod()));
     }
 
+    /**
+     * Verify for HTTP Methods.
+     * @param joinPoint Method call
+     * @param requestMethod Runtime HTTP method.
+     * @return Method response
+     * @throws Throwable Method exception or error.
+     */
     public Object verifyRequest(ProceedingJoinPoint joinPoint, RequestMethod requestMethod) throws Throwable {
         JwtTokenDto jwtTokenDto = JwtContext.getInstance().getJwt();
         if (jwtTokenDto != null) {

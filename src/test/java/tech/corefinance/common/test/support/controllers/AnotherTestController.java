@@ -1,6 +1,8 @@
 package tech.corefinance.common.test.support.controllers;
 
+import tech.corefinance.common.controller.CrudController;
 import tech.corefinance.common.model.AbstractResourceAction;
+import tech.corefinance.common.service.CommonService;
 import tech.corefinance.common.test.support.model.UserWrapterTest;
 import tech.corefinance.common.annotation.ControllerManagedResource;
 import tech.corefinance.common.annotation.ManualPermissionCheck;
@@ -17,7 +19,7 @@ import java.io.IOException;
 
 @RestController
 @ControllerManagedResource("test-common")
-public class AnotherTestController {
+public class AnotherTestController implements CrudController {
 
     private void writeTest(HttpServletResponse response) throws IOException {
         try (var writer = response.getWriter()) {
@@ -46,5 +48,10 @@ public class AnotherTestController {
                                 @PermissionResource(resourceType = "custom-resource-type", idPath = "user.id")
                                 UserWrapterTest user) throws IOException {
         writeTest(response);
+    }
+
+    @Override
+    public CommonService getHandlingService() {
+        return null;
     }
 }

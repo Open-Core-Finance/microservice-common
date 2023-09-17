@@ -7,6 +7,9 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import tech.corefinance.common.util.CoreFinanceUtil;
 
+/**
+ * Abstract method call logging.
+ */
 @Slf4j
 public abstract class MethodDataLoging {
 
@@ -15,10 +18,20 @@ public abstract class MethodDataLoging {
     @Autowired
     protected ObjectMapper objectMapper;
 
+    /**
+     * Mark in the log for reading purpose.
+     * @return Mark in the log for reading purpose.
+     */
     protected String getLogingStartMark() {
         return "========================";
     }
 
+    /**
+     * Main logging method.
+     * @param joinPoint Method call.
+     * @return Method response.
+     * @throws Throwable Method execption or error.
+     */
     public Object doLogging(ProceedingJoinPoint joinPoint) throws Throwable {
         // Advice
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
@@ -62,6 +75,11 @@ public abstract class MethodDataLoging {
         }
     }
 
+    /**
+     * Additional log for input if needed.
+     * @param joinPoint Calling method.
+     * @param objectMapper System object mapper.
+     */
     protected void doAdditionalInputLog(ProceedingJoinPoint joinPoint, ObjectMapper objectMapper) {
     }
 

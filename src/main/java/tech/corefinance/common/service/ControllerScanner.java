@@ -14,6 +14,7 @@ import tech.corefinance.common.annotation.ControllerManagedResource;
 import tech.corefinance.common.annotation.ManualPermissionCheck;
 import tech.corefinance.common.annotation.PermissionAction;
 import tech.corefinance.common.config.ServiceSecurityConfig;
+import tech.corefinance.common.context.ApplicationContextHolder;
 import tech.corefinance.common.enums.AccessControl;
 import tech.corefinance.common.ex.ReflectiveIncorrectFieldException;
 import tech.corefinance.common.model.AbstractPermission;
@@ -49,6 +50,7 @@ public class ControllerScanner {
     @PostConstruct
     @SuppressWarnings({"unchecked"})
     public void scan() {
+        var context = ApplicationContextHolder.getInstance().getApplicationContext();
         var handlerMethods = mapping.getHandlerMethods();
         var permissionActions = new LinkedList<AbstractResourceAction>();
         mainloop:
@@ -57,13 +59,14 @@ public class ControllerScanner {
             var value = entry.getValue();
             var urls = key.getDirectPaths();
             Method method = value.getMethod();
-            var controllerClass = method.getDeclaringClass();
+            var declaringClass = method.getDeclaringClass();
+            var controllerClass = value.getBeanType();
             String controllerClassName = controllerClass.getName();
             log.debug("{}#{}", controllerClassName, method.getName());
             for (String ignoreController : serviceSecurityConfig.getIgnoreControllerScan()) {
                 log.debug("Checking if controller full package contain [{}] or not...", ignoreController);
                 if (controllerClassName.contains(ignoreController)) {
-                    log.debug("Skipped permission scan for {}", controllerClass);
+                    log.debug("Skipped permission scan for {}", declaringClass);
                     continue mainloop;
                 }
             }
@@ -83,7 +86,7 @@ public class ControllerScanner {
             var manualPerCheckAnn = method.getAnnotation(ManualPermissionCheck.class);
             if (perActAnn == null) {
                 if (controllerManagedResource == null) {
-                    log.error("{}={} have no annotation PermissionAction!", controllerClass.getName(),
+                    log.error("{}={} have no annotation PermissionAction!", declaringClass.getName(),
                             method.getName());
                     throw new ReflectiveIncorrectFieldException("no_permission_defined");
                 }

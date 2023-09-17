@@ -22,13 +22,25 @@ import java.util.Map;
 public abstract class AbstractPermissionService<T extends AbstractPermission, C extends AbstractInternalServiceConfig,
         R extends AbstractResourceAction> implements PermissionService<T, C, R> {
 
+    /**
+     * Repository to handle Permission.
+     */
     @Autowired
     protected PermissionRepository<T> permissionRepository;
+    /**
+     * Repository to handle InternalServiceConfig.
+     */
     @Autowired
     protected InternalServiceConfigRepository<C> internalServiceConfigRepository;
+    /**
+     * Context.
+     */
     @Autowired
     protected ObjectMapper objectMapper;
 
+    /**
+     * Repository to handle permission entity.
+     */
     @Override
     public PermissionRepository<T> getRepository() {
         return permissionRepository;
@@ -38,6 +50,7 @@ public abstract class AbstractPermissionService<T extends AbstractPermission, C 
      * Init permission info. Replace if existed.
      *
      * @param permission Permission to initial.
+     * @param overrideIfExisted Override if existed in DB.
      * @return Permission saved in DB.
      */
     protected T initPermission(T permission, boolean overrideIfExisted) {
@@ -61,6 +74,7 @@ public abstract class AbstractPermissionService<T extends AbstractPermission, C 
      * Init API Config info. Replace if existed.
      *
      * @param config API Config to initial.
+     * @param overrideIfExisted Override if existed in DB.
      * @return API Config saved in DB.
      */
     protected C initApiConfig(C config, boolean overrideIfExisted) {
