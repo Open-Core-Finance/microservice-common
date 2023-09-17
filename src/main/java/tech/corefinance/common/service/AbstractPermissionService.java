@@ -13,6 +13,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Abstract permission service that support generic permission. Need to have specific implementation for specific database type.
+ * @param <T> Permission type
+ * @param <C> InternalServiceConfig type
+ * @param <R> ResourceAction type
+ */
 public abstract class AbstractPermissionService<T extends AbstractPermission, C extends AbstractInternalServiceConfig,
         R extends AbstractResourceAction> implements PermissionService<T, C, R> {
 
