@@ -34,11 +34,6 @@ public class TestPermissionRepository
     }
 
     @Override
-    public Page<PermissionTest> searchBy(String searchText, Pageable pageRequest) {
-        return null;
-    }
-
-    @Override
     public PermissionTest save(PermissionTest entity) {
         return entity;
     }

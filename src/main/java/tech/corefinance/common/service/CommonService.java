@@ -133,7 +133,7 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
      * @throws UnsupportedOperationException if the service does not support search by text (Mean subclasses does not override this method).
      */
     default Page<T> searchByTextAndPage(String searchText, Pageable pageable) {
-        throw new UnsupportedOperationException("Not support search by text!");
+        throw new UnsupportedOperationException("Not support search by text! Please override searchByTextAndPage and searchByTextAndSort");
     }
 
     /**
@@ -144,7 +144,7 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
      * @throws UnsupportedOperationException if the service does not support search by text (Mean subclasses does not override this method).
      */
     default List<T> searchByTextAndSort(String searchText, Sort sort) {
-        throw new UnsupportedOperationException("Not support search by text!");
+        throw new UnsupportedOperationException("Not support search by text! Please override searchByTextAndPage and searchByTextAndSort");
     }
 
     /**
