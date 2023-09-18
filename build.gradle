@@ -39,12 +39,7 @@ repositories {
 	mavenLocal()
 	mavenCentral()
     maven {
-        credentials {
-            username = "${artifactUsername}"
-            password = "${artifactPassword}"
-        }
-        url = "${artifactSnapshotUrl}"
-        allowInsecureProtocol = true
+        url = "https://s01.oss.sonatype.org/content/groups/public/"
     }
 }
 
