@@ -34,6 +34,7 @@ public class LocalResourceEntityInitializer<T> {
         var objectMapper = context.getBean(ObjectMapper.class);
         List<T> result = new LinkedList<>();
         for (var resource : resources) {
+            log.info("Parsing data from resource file [{}]", resource.getFilename());
             var entities = objectMapper.readValue(resource.getInputStream(), jsonConvertType);
             for (var entity : entities) {
                 log.info("Entity: {}", entity);
