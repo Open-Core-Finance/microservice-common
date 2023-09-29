@@ -23,12 +23,6 @@ public class CommonController {
     @Autowired
     private PermissionService<?, ?, ?> permissionService;
 
-    @GetMapping(value = "/initialization-default-permissions-data")
-    @PermissionAction(action = AbstractResourceAction.COMMON_ACTION_INITIAL)
-    public GeneralApiResponse<Map<String, Object>> initializationDefaultData() throws IOException {
-        return new GeneralApiResponse<>(permissionService.initializationDefaultData());
-    }
-
     @DeleteMapping(value = "/delete-permission")
     public GeneralApiResponse<Boolean> deletePermissions(@RequestParam("permisstionId") String permisstionId) throws IOException{
         return new GeneralApiResponse<>(permissionService.deleteEntity(permisstionId));
