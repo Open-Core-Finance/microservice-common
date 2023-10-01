@@ -13,6 +13,9 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Converter to convert from Date to ZonedDateTime.
+ */
 @Component
 @ConditionalOnProperty(name = "tech.corefinance.app.converter.zoned-date-time-to-string", havingValue = "true", matchIfMissing = true)
 @ReadingConverter

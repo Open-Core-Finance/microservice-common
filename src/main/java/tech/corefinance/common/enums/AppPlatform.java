@@ -3,6 +3,9 @@ package tech.corefinance.common.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * Client Application platform.
+ */
 @Getter
 @AllArgsConstructor
 public enum AppPlatform {
