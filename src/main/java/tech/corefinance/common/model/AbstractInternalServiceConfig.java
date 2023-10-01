@@ -11,7 +11,6 @@ import java.time.ZonedDateTime;
 @Data
 public abstract class AbstractInternalServiceConfig implements GenericModel<String> {
     @Id
-    @jakarta.persistence.Id
     private String id;
     @NotNull
     private String serviceName;

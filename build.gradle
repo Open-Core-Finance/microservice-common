@@ -95,7 +95,6 @@ dependencies {
     api group: 'commons-beanutils', name: 'commons-beanutils', version: "${beanutilsVersion}"
     api group: 'com.github.ulisesbocchio', name: 'jasypt-spring-boot-starter', version: "${jasyptVersion}"
     api group: 'org.mapstruct', name: 'mapstruct', version: "${mapstructVersion}"
-    implementation group: 'jakarta.persistence', name: 'jakarta.persistence-api'
 
     // security
     api group: 'com.auth0', name: 'java-jwt', version: "$javaJwtVersion"

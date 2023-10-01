@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public abstract class AbstractPermission implements CreateUpdateDto<String>, GenericModel<String> {
     public static final String ANY_ROLE_APPLIED_VALUE = "ANY";
     @Id
-    @jakarta.persistence.Id
     private String id;
     @NotNull
     private String roleId;
