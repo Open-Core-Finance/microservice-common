@@ -11,6 +11,9 @@ import tech.corefinance.common.service.RepositoryUniqueValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
+/**
+ * Define unique field for an entity.
+ */
 @Documented
 @Constraint(validatedBy = {RepositoryUniqueValidator.class})
 @Target({TYPE})

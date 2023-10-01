@@ -14,6 +14,7 @@ public abstract class AbstractResourceAction implements GenericModel<String> {
     public static final String COMMON_ACTION_INITIAL = "initial";
 
     @Id
+    @jakarta.persistence.Id
     private String id;
     private String resourceType;
     private String action = COMMON_ACTION_ADD;
