@@ -34,7 +34,12 @@ java {
     targetCompatibility = "${javaSourceCompatibility}"
 }
 
-apply from: 'artifact-credential.gradle'
+if (new File("artifact-credential.gradle").exists()) {
+    apply from: 'artifact-credential.gradle'
+} else {
+    apply from: 'artifact-credential-sample.gradle'
+}
+
 repositories {
 	mavenLocal()
 	mavenCentral()
@@ -161,8 +166,7 @@ jacocoTestReport {
 }
 
 javadoc {
-    exclude "**/model/**"
-    exclude "**/dto/**"
+    options.addStringOption('Xdoclint:none', '-quiet')
 }
 
 task javadocJar (type :Jar, dependsOn: javadoc) {
