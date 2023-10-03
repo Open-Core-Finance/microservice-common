@@ -5,13 +5,17 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.*;
 import org.springframework.util.StringUtils;
 import tech.corefinance.common.context.ApplicationContextHolder;
+import tech.corefinance.common.ex.ServiceProcessingException;
 import tech.corefinance.common.model.CreateUpdateDto;
 import tech.corefinance.common.model.GenericModel;
 import tech.corefinance.common.repository.CommonResourceRepository;
+import tech.corefinance.common.util.CoreFinanceUtil;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public interface CommonService<I extends Serializable, T extends GenericModel<I>, R extends CommonResourceRepository<T, I>> {
@@ -28,7 +32,14 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
      *
      * @return new created entity object
      */
-    T createEntityObject();
+    default T createEntityObject() {
+        try {
+            return findEntityClass().getConstructor().newInstance();
+        } catch (NoSuchMethodException | InvocationTargetException
+                 | InstantiationException | IllegalAccessException e) {
+            throw new ServiceProcessingException(e.getMessage(), e);
+        }
+    }
 
     /**
      * This method support for create or update entity. All properties which are matched name and type already copied. <br />
@@ -141,8 +152,9 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
      * @throws UnsupportedOperationException if the service does not support search by text (Mean subclasses does not override this method).
      */
     default Page<T> searchByTextAndPage(String searchText, Pageable pageable) {
-        var map = ApplicationContextHolder.getInstance().getApplicationContext().getBeansOfType(SimpleSearchSupport.class);
-        Class<?> entityType = (Class<?>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
+        var context = ApplicationContextHolder.getInstance().getApplicationContext();
+        var map = context.getBeansOfType(SimpleSearchSupport.class);
+        Class<?> entityType = findEntityClass();
         for (var entry : map.entrySet()) {
             var searchSupport = entry.getValue();
             if (searchSupport.isSupported(entityType)) {
@@ -161,8 +173,9 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
      * @throws UnsupportedOperationException if the service does not support search by text (Mean subclasses does not override this method).
      */
     default List<T> searchByTextAndSort(String searchText, Sort sort) {
-        var map = ApplicationContextHolder.getInstance().getApplicationContext().getBeansOfType(SimpleSearchSupport.class);
-        Class<?> entityType = (Class<?>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
+        var context = ApplicationContextHolder.getInstance().getApplicationContext();
+        var map = context.getBeansOfType(SimpleSearchSupport.class);
+        Class<?> entityType = findEntityClass();
         for (var entry : map.entrySet()) {
             var searchSupport = entry.getValue();
             if (searchSupport.isSupported(entityType)) {
@@ -180,5 +193,10 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
      */
     default T getEntityDetails(I entityId) {
         return getRepository().findById(entityId).get();
+    }
+
+    default Class<T> findEntityClass() {
+        var context = ApplicationContextHolder.getInstance().getApplicationContext();
+        return (Class<T>) context.getBean(CoreFinanceUtil.class).findEntityTypeFromCommonService(getClass());
     }
 }

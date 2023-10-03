@@ -25,15 +25,17 @@ import tech.corefinance.common.converter.ExportTypeConverter;
 import tech.corefinance.common.dto.SimpleVersion;
 import tech.corefinance.common.dto.SimpleVersionComparator;
 import tech.corefinance.common.ex.ReflectiveIncorrectFieldException;
+import tech.corefinance.common.ex.ServiceProcessingException;
 import tech.corefinance.common.model.AbstractResourceAction;
+import tech.corefinance.common.model.GenericModel;
+import tech.corefinance.common.service.CommonService;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -43,8 +45,9 @@ public class CoreFinanceUtil {
 
     private static final String PARSING_JSON_FAILURE = "Parsing json failure";
     private static final String PARSING_JSON_FAILURE_LOG = "Parsing json failure! object: {}, error: {}";
-    private static final List<Class<?>> LIST_IGNORE_LOGGING = List.of(ServletRequest.class, ServletResponse.class, HttpSession.class,
-            Servlet.class, MultipartFile.class, byte[].class, File.class, InputStream.class);
+    private static final List<Class<?>> LIST_IGNORE_LOGGING =
+            List.of(ServletRequest.class, ServletResponse.class, HttpSession.class,
+                    Servlet.class, MultipartFile.class, byte[].class, File.class, InputStream.class);
 
     @Autowired
     private ResourcePatternResolver resourcePatternResolver;
@@ -57,7 +60,8 @@ public class CoreFinanceUtil {
             return null;
         }
         ApplicationContextHolder contextHolder = ApplicationContextHolder.getInstance();
-        Map<String, ExportTypeConverter> beans = contextHolder.getApplicationContext().getBeansOfType(ExportTypeConverter.class);
+        Map<String, ExportTypeConverter> beans =
+                contextHolder.getApplicationContext().getBeansOfType(ExportTypeConverter.class);
         for (Map.Entry<String, ExportTypeConverter> entry : beans.entrySet()) {
             ExportTypeConverter converter = entry.getValue();
             if (converter.isSupport(data.getClass())) {
@@ -68,7 +72,8 @@ public class CoreFinanceUtil {
         return data;
     }
 
-    public String buildMethodInputJsonLog(ProceedingJoinPoint joinPoint, String[] parametersNames, ObjectMapper objectMapper) {
+    public String buildMethodInputJsonLog(ProceedingJoinPoint joinPoint, String[] parametersNames,
+                                          ObjectMapper objectMapper) {
         // Create AopCustomParam
         Map<String, Object> logs = new LinkedHashMap<>();
         Object[] args = joinPoint.getArgs();
@@ -76,7 +81,8 @@ public class CoreFinanceUtil {
         for (int i = 0; i < parametersNames.length; i++) {
             String name = parametersNames[i];
             Object arg = args[i];
-            boolean shouldIgnore = LIST_IGNORE_LOGGING.stream().anyMatch(clzz -> arg != null && clzz.isAssignableFrom(arg.getClass()));
+            boolean shouldIgnore =
+                    LIST_IGNORE_LOGGING.stream().anyMatch(clzz -> arg != null && clzz.isAssignableFrom(arg.getClass()));
             if (!shouldIgnore && arg != null) {
                 shouldIgnore = arg.getClass().getSimpleName().contains("$");
             }
@@ -121,7 +127,8 @@ public class CoreFinanceUtil {
             }
             return result;
         };
-        return List.of(resourcePatternResolver.getResources(regex)).stream().filter(fileNameFilter).sorted(fileNameComparator)
+        return List.of(resourcePatternResolver.getResources(regex)).stream().filter(fileNameFilter)
+                .sorted(fileNameComparator)
                 .collect(Collectors.toList());
     }
 
@@ -183,5 +190,41 @@ public class CoreFinanceUtil {
         }
 
         return object;
+    }
+
+    public Class<?> findEntityTypeFromCommonService(Class<?> serviceClass) {
+        log.debug("Finding entity type for service [{}]", serviceClass.getName());
+        Type superClass = serviceClass.getGenericSuperclass();
+        log.debug("Supper class [{}]", superClass);
+        if (superClass instanceof ParameterizedType) {
+            return extractGenericEntityType((ParameterizedType) superClass);
+        } else {
+            Type[] interfaces = serviceClass.getGenericInterfaces();
+            log.debug("Continue with support interfaces {}", Arrays.toString(interfaces));
+            for (var type : interfaces) {
+                if (type instanceof Class<?>) {
+                    var tmp = findEntityTypeFromCommonService((Class<?>) type);
+                    if (tmp != null) {
+                        return tmp;
+                    }
+                } else if (type instanceof ParameterizedType) {
+                    if (((ParameterizedType) type).getRawType().equals(CommonService.class)) {
+                        return extractGenericEntityType((ParameterizedType) type);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private Class<?> extractGenericEntityType(ParameterizedType type) {
+        var argumentTypes = type.getActualTypeArguments();
+        log.debug("Actual argument type {}", Arrays.toString(argumentTypes));
+        for (var t : argumentTypes) {
+            if (t instanceof Class<?> && GenericModel.class.isAssignableFrom((Class<?>) t)) {
+                return (Class<?>) t;
+            }
+        }
+        return null;
     }
 }
