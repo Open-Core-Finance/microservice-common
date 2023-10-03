@@ -31,7 +31,7 @@ public interface SimpleSearchSupport<T> {
      * @return Page of items.
      * @throws UnsupportedOperationException if the service does not support search by text (Mean subclasses does not override this method).
      */
-    Page<T> searchByTextAndPage(String searchText, Pageable pageable);
+    Page<T> searchByTextAndPage(Class<? extends T> clzz, String searchText, Pageable pageable);
 
     /**
      * Search by text and Pageable.
@@ -40,5 +40,5 @@ public interface SimpleSearchSupport<T> {
      * @return List of items.
      * @throws UnsupportedOperationException if the service does not support search by text (Mean subclasses does not override this method).
      */
-    List<T> searchByTextAndSort(String searchText, Sort sort);
+    List<T> searchByTextAndSort(Class<? extends T> clzz, String searchText, Sort sort);
 }

@@ -146,7 +146,7 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
         for (var entry : map.entrySet()) {
             var searchSupport = entry.getValue();
             if (searchSupport.isSupported(entityType)) {
-                return searchSupport.searchByTextAndPage(searchText, pageable);
+                return searchSupport.searchByTextAndPage(entityType, searchText, pageable);
             }
         }
         throw new UnsupportedOperationException("Not support search by text! Please override searchByTextAndPage and searchByTextAndSort");
@@ -166,7 +166,7 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
         for (var entry : map.entrySet()) {
             var searchSupport = entry.getValue();
             if (searchSupport.isSupported(entityType)) {
-                return searchSupport.searchByTextAndSort(searchText, sort);
+                return searchSupport.searchByTextAndSort(entityType, searchText, sort);
             }
         }
         throw new UnsupportedOperationException("Not support search by text! Please override searchByTextAndPage and searchByTextAndSort");
