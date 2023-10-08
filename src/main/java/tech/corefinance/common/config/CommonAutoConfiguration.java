@@ -11,6 +11,7 @@ import org.springframework.web.servlet.LocaleResolver;
 import tech.corefinance.common.context.ApplicationContextHolder;
 import tech.corefinance.common.context.JwtContext;
 import tech.corefinance.common.context.StatelessLocaleResolver;
+import tech.corefinance.common.context.TenantContext;
 import tech.corefinance.common.dto.SimpleVersionComparator;
 
 @Configuration
@@ -51,5 +52,12 @@ public class CommonAutoConfiguration {
     public PasswordEncoder getPasswordEncoder() {
         log.info("Creating BCryptPasswordEncoder...");
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "tech.corefinance.common.enabled", name = "tenant", havingValue = "true")
+    public TenantContext tenantContext() {
+        log.info("Creating TenantContext...");
+        return TenantContext.getInstance();
     }
 }

@@ -15,6 +15,32 @@ spring:
 
 tech:
   corefinance:
+    app:
+      converter:
+        local-date-to-string: true
+        local-date-time-to-string: true
+        zoned-date-time-to-string: true
+        zoned-date-time-to-local-date-time: true
+        zoned-date-time-to-date: true
+    common:
+      filter-ordered:
+        authen-filter: 2
+        tenant-id-filter-order: 1
+        trace-info-id-order: 0
+        encoding-response-order: 100
+      enabled:
+        async: true
+        simple-version: true
+        property-encryption: true
+        auto-response-encoding: true
+        trace-id-filter: true
+        tenant: true
+      default-response-charset: utf-8
+    log:
+      enabled:
+        services: true
+        repositories: true
+        api: true
     security:
       internal-api-key: No-key
       # Json Web Token

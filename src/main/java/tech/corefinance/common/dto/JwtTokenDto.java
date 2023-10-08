@@ -5,9 +5,7 @@ import tech.corefinance.common.model.AppVersion;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author Trung Doan
@@ -54,8 +52,14 @@ public class JwtTokenDto {
 
     private Collection<UserRoleDto> userRoles;
 
+    private String tenantId;
+
+    private Map<String, String> additionalInfo;
+
     public JwtTokenDto() {
         this.loginId = UUID.randomUUID().toString();
+        this.userRoles = new LinkedList<>();
+        this.additionalInfo = new HashMap<>();
     }
 
     public JwtTokenDto(String loginId, String userId, String clientAppId, AppPlatform appPlatform,
@@ -68,5 +72,6 @@ public class JwtTokenDto {
         this.deviceId = deviceId;
         this.loginIpAddr = loginIpAddr;
         this.userRoles = new LinkedList<>();
+        this.additionalInfo = new HashMap<>();
     }
 }
