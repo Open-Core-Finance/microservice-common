@@ -1,7 +1,6 @@
 package tech.corefinance.common.services;
 
 import tech.corefinance.common.config.ServiceSecurityConfig;
-import tech.corefinance.common.controller.CommonController;
 import tech.corefinance.common.model.AbstractInternalServiceConfig;
 import tech.corefinance.common.model.AbstractPermission;
 import tech.corefinance.common.model.AbstractResourceAction;
@@ -45,8 +44,7 @@ public class ControllerScannerTest {
     private ControllerScanner controllerScanner;
     private RequestMappingHandlerMapping mapping;
     private CoreFinanceUtil coreFinanceUtil;
-    private PermissionService<AbstractPermission, AbstractInternalServiceConfig, AbstractResourceAction>
-            permissionService;
+    private PermissionService<AbstractPermission, AbstractResourceAction> permissionService;
 
     @BeforeEach
     public void setUp() throws IllegalAccessException {

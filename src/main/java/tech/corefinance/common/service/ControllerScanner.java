@@ -40,7 +40,7 @@ public class ControllerScanner {
     @Autowired
     private ServiceSecurityConfig serviceSecurityConfig;
     @Autowired
-    private PermissionService<?, ?, ?> permissionService;
+    private PermissionService<?, ?> permissionService;
     @Autowired
     private RequestMappingHandlerMapping mapping;
     @Autowired

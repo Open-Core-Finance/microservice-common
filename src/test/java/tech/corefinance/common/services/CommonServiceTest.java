@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class CommonServiceTest {
 
     @Autowired
-    private PermissionService<?, ?, ?> permissionService;
+    private PermissionService<?, ?> permissionService;
     @Autowired
     private InternalServiceConfigTestService internalServiceConfigTestService;
 
