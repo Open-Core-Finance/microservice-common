@@ -202,14 +202,23 @@ public class CoreFinanceUtil {
             Type[] interfaces = serviceClass.getGenericInterfaces();
             log.debug("Continue with support interfaces {}", Arrays.toString(interfaces));
             for (var type : interfaces) {
-                if (type instanceof Class<?>) {
-                    var tmp = findEntityTypeFromCommonService((Class<?>) type);
-                    if (tmp != null) {
-                        return tmp;
-                    }
-                } else if (type instanceof ParameterizedType) {
-                    if (((ParameterizedType) type).getRawType().equals(CommonService.class)) {
+                if (type instanceof ParameterizedType) {
+                    log.debug("Type [{}] is ParameterizedType!", type);
+                    if (CommonService.class.isAssignableFrom((Class<?>) ((ParameterizedType) type).getRawType())) {
+                        log.debug("Extracting entity type...");
                         return extractGenericEntityType((ParameterizedType) type);
+                    } else {
+                        log.debug("Ignored [{}] because it's not CommonService!", type);
+                    }
+                } else {
+                    if (type instanceof Class<?>) {
+                        log.debug("Type [{}] is Class. Continue with findEntityTypeFromCommonService...", type);
+                        var tmp = findEntityTypeFromCommonService((Class<?>) type);
+                        if (tmp != null) {
+                            return tmp;
+                        }
+                    } else {
+                        log.debug("Ignored unknown type [{}]!", type);
                     }
                 }
             }
