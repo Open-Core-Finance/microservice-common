@@ -99,7 +99,6 @@ dependencies {
     // Common
     api group: 'commons-beanutils', name: 'commons-beanutils', version: "${beanutilsVersion}"
     api group: 'com.github.ulisesbocchio', name: 'jasypt-spring-boot-starter', version: "${jasyptVersion}"
-    api group: 'org.mapstruct', name: 'mapstruct', version: "${mapstructVersion}"
 
     // security
     api group: 'com.auth0', name: 'java-jwt', version: "$javaJwtVersion"
