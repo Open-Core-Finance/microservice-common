@@ -15,4 +15,5 @@ public interface PermissionRepository<T extends AbstractPermission> extends Comm
 
     List<T> findAllByRoleIdAndResourceType(String roleId, String resourceType, Sort sort);
 
+    List<T> findByRoleId(String roleId);
 }

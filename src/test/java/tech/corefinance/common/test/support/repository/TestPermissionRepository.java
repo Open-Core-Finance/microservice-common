@@ -34,6 +34,11 @@ public class TestPermissionRepository
     }
 
     @Override
+    public List<PermissionTest> findByRoleId(String roleId) {
+        return new LinkedList<>();
+    }
+
+    @Override
     public PermissionTest save(PermissionTest entity) {
         return entity;
     }

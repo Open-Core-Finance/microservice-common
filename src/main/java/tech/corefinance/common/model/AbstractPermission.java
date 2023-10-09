@@ -9,6 +9,7 @@ import tech.corefinance.common.enums.AccessControl;
 @Data
 public abstract class AbstractPermission implements GenericModel<String> {
     public static final String ANY_ROLE_APPLIED_VALUE = "ANY";
+    public static final String ANONYMOUS_ROLE_VALUE = "ANONYMOUS";
     @Id
     private String id;
     @NotNull
