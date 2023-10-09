@@ -60,6 +60,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value = {Throwable.class})
+
     public GeneralApiResponse<String> internalServerError(Throwable e) {
         log.error("System Exception", e);
         return new GeneralApiResponse<>("system_error", 1, e.getMessage());

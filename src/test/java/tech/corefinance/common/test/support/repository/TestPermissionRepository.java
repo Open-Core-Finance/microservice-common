@@ -34,8 +34,8 @@ public class TestPermissionRepository
     }
 
     @Override
-    public Page<PermissionTest> searchBy(String searchText, Pageable pageRequest) {
-        return null;
+    public List<PermissionTest> findByRoleId(String roleId) {
+        return new LinkedList<>();
     }
 
     @Override

@@ -195,7 +195,7 @@ public class JwtServiceImpl implements JwtService {
         String authorizationHeader = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
         log.debug("authorization in header [{}]", authorizationHeader);
         Map<String, JwtTokenDto> map = new HashMap<>();
-        JwtTokenDto jwtTokenDto = null;
+        JwtTokenDto jwtTokenDto;
         if (authorizationHeader != null) {
             if (authorizationHeader.length() <= CommonConstants.BEARER_PREFIX.length()) {
                 log.error("Invalid bearer token found!!! [{}]", authorizationHeader);
@@ -221,6 +221,9 @@ public class JwtServiceImpl implements JwtService {
         Class<?> clzz = jwtTokenDto.getClass();
         log.debug("Object class {}", clzz);
         putFieldData(jwtTokenDto, clzz, jwtData);
+        // Additional data
+        log.debug("Put addition data to login token");
+        jwtTokenDto.getAdditionalInfo().entrySet().forEach( d -> jwtData.put(d.getKey(), d.getValue()));
         log.info("Login token before add custom attributes [{}]", jwtData);
         jwtData.put("expiredIn", System.currentTimeMillis() + jwtConfiguration.getExpiration() * 1000);
         jwtData.put(CommonConstants.ATTRIBUTE_NAME_APP_VERSION, objectMapper.writeValueAsString(jwtTokenDto.getAppVersion()));
@@ -281,6 +284,8 @@ public class JwtServiceImpl implements JwtService {
         refreshJwtData.put(CommonConstants.ATTRIBUTE_NAME_IP_ADDRESS, jwtTokenDto.getLoginIpAddr());
         refreshJwtData.put(CommonConstants.ATTRIBUTE_NAME_APP_PLATFORM, jwtTokenDto.getAppPlatform().name());
         refreshJwtData.put(CommonConstants.ATTRIBUTE_NAME_APP_VERSION, objectMapper.writeValueAsString(jwtTokenDto.getAppVersion()));
+        log.debug("Put addition data to refresh token");
+        jwtTokenDto.getAdditionalInfo().entrySet().forEach( d -> refreshJwtData.put(d.getKey(), d.getValue()));
         return refreshJwtData;
     }
 

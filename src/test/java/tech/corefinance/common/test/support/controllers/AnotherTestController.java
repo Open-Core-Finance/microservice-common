@@ -41,6 +41,12 @@ public class AnotherTestController implements CrudController {
         writeTest(response);
     }
 
+    @PostMapping("/another-normal-3")
+    @PermissionAction(action = AbstractResourceAction.COMMON_ACTION_VIEW)
+    public void anotherNormal3(HttpServletResponse response) throws IOException {
+        writeTest(response);
+    }
+
     @PostMapping("/request-with-complex-resource")
     @PermissionAction(action = AbstractResourceAction.COMMON_ACTION_LIST)
     public void complexResource(HttpServletResponse response,

@@ -12,6 +12,7 @@ public final class CommonConstants {
     public static final String DEFAULT_LANGUAGE_HEADER = "en";
 
     public static final String HEADER_KEY_TRACE_ID = "x-trace-id";
+    public static final String HEADER_KEY_TENANT_ID = "x-tenant-id";
     public static final String HEADER_KEY_CLIENT_APP_ID = "x-client-id";
     public static final String HEADER_KEY_APP_PLATFORM = "x-app-platform";
     public static final String HEADER_KEY_APP_VERSION = "x-app-version";

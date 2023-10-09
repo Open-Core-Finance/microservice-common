@@ -1,10 +1,12 @@
 package tech.corefinance.common.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Data
+@NoArgsConstructor
 public abstract class AbstractResourceAction implements GenericModel<String> {
     public static final String COMMON_ACTION_ADD = "add";
     public static final String COMMON_ACTION_UPDATE = "update";

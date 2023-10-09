@@ -1,7 +1,6 @@
 package tech.corefinance.common.services;
 
 import tech.corefinance.common.config.ServiceSecurityConfig;
-import tech.corefinance.common.controller.CommonController;
 import tech.corefinance.common.model.AbstractInternalServiceConfig;
 import tech.corefinance.common.model.AbstractPermission;
 import tech.corefinance.common.model.AbstractResourceAction;
@@ -45,7 +44,7 @@ public class ControllerScannerTest {
     private ControllerScanner controllerScanner;
     private RequestMappingHandlerMapping mapping;
     private CoreFinanceUtil coreFinanceUtil;
-    private PermissionService<AbstractPermission, AbstractInternalServiceConfig, AbstractResourceAction> permissionService;
+    private PermissionService<AbstractPermission, AbstractResourceAction> permissionService;
 
     @BeforeEach
     public void setUp() throws IllegalAccessException {
@@ -188,17 +187,19 @@ public class ControllerScannerTest {
     public void test_scan_ConfiguredActionAndResource() throws NoSuchMethodException {
         // Handlers
         Map<RequestMappingInfo, HandlerMethod> handlerMethods = new HashMap<>();
-        String url = "/common/initialization-default-permissions-data";
+        String url = "/another-normal";
         var requestMethod = RequestMethod.GET;
         RequestMappingInfo requestMappingInfo = RequestMappingInfo.paths(url).methods(requestMethod).build();
-        Method method = CommonController.class.getDeclaredMethod("initializationDefaultData");
-        var testController = new CommonController();
+        Method method = AnotherTestController.class.getDeclaredMethod("anotherNormal2", String.class, HttpServletResponse.class);
+        var testController = new AnotherTestController();
         HandlerMethod handlerMethod = new HandlerMethod(testController, method);
         handlerMethods.put(requestMappingInfo, handlerMethod);
         PowerMockito.when(mapping.getHandlerMethods()).thenReturn(handlerMethods);
         // Check saved empty list by checking exception
         var result = new LinkedList<AbstractResourceAction>();
-        var resourceAction = permissionService.newResourceAction("common", "initial", url, requestMethod);
+        var resourceAction =
+                permissionService.newResourceAction("test-common", AbstractResourceAction.COMMON_ACTION_VIEW, url,
+                        requestMethod);
         resourceAction.setId("initial-common-_common_initialization-default-permissions-data");
         result.add(resourceAction);
         controllerScanner.scan();

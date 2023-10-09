@@ -12,20 +12,29 @@ import org.springframework.security.web.authentication.AnonymousAuthenticationFi
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import tech.corefinance.common.model.AbstractPermission;
+import tech.corefinance.common.repository.PermissionRepository;
+
+import java.util.List;
 
 @Configuration
 public class WebSecurityConfig {
 
     @Autowired
     private ServiceSecurityConfig serviceSecurityConfig;
+    @Autowired
+    private PermissionRepository<? extends AbstractPermission> permissionRepository;
 
     @Bean
     @ConditionalOnProperty(prefix = "tech.corefinance.security", name = "public-key")
     public SecurityFilterChain filterChain(HttpSecurity http, SessionAuthenticationFilter sessionAuthenticationFilter) throws Exception {
+        List<? extends AbstractPermission> annonymousList = permissionRepository.findByRoleId(AbstractPermission.ANONYMOUS_ROLE_VALUE);
         return http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> serviceSecurityConfig.getNoAuthenUrls().stream().forEach(url -> auth
                         .requestMatchers(url).permitAll())
-                ).authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                ).authorizeHttpRequests(auth -> annonymousList.stream().forEach(p ->
+                        auth.requestMatchers(p.getUrl()).anonymous()))
+                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 .addFilterBefore(sessionAuthenticationFilter, AnonymousAuthenticationFilter.class)
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).build();
     }

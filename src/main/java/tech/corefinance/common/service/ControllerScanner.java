@@ -15,6 +15,7 @@ import tech.corefinance.common.annotation.ManualPermissionCheck;
 import tech.corefinance.common.annotation.PermissionAction;
 import tech.corefinance.common.config.ServiceSecurityConfig;
 import tech.corefinance.common.context.ApplicationContextHolder;
+import tech.corefinance.common.dto.PermissionDto;
 import tech.corefinance.common.enums.AccessControl;
 import tech.corefinance.common.ex.ReflectiveIncorrectFieldException;
 import tech.corefinance.common.model.AbstractPermission;
@@ -40,7 +41,7 @@ public class ControllerScanner {
     @Autowired
     private ServiceSecurityConfig serviceSecurityConfig;
     @Autowired
-    private PermissionService<?, ?, ?> permissionService;
+    private PermissionService<?, ?> permissionService;
     @Autowired
     private RequestMappingHandlerMapping mapping;
     @Autowired
@@ -118,7 +119,7 @@ public class ControllerScanner {
                                             Iterable<RequestMethod> requestMethods) {
         for (String url : urls) {
             for (RequestMethod requestMethod : requestMethods) {
-                var permission = permissionService.createEntityObject();
+                var permission = new PermissionDto();
                 permission.setControl(AccessControl.MANUAL_CHECK);
                 permission.setUrl(url);
                 permission.setRoleId(AbstractPermission.ANY_ROLE_APPLIED_VALUE);

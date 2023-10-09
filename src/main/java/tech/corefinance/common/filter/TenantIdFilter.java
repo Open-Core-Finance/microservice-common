@@ -4,11 +4,11 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import tech.corefinance.common.context.TraceIdContext;
 import tech.corefinance.common.enums.CommonConstants;
 
@@ -18,12 +18,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @Component
-@ConditionalOnProperty(prefix = "tech.corefinance.common.enabled", name = "trace-id-filter", havingValue = "true",
-        matchIfMissing = true)
+@ConditionalOnProperty(prefix = "tech.corefinance.common.enabled", name = "tenant", havingValue = "true")
 @Slf4j
-public class TraceInfoFilter implements Filter, Ordered {
+public class TenantIdFilter implements Filter, Ordered {
 
-    @Value("${tech.corefinance.common.filter-ordered.trace-info-id-order:0}")
+    @Value("${tech.corefinance.common.filter-ordered.tenant-id-filter-order:0}")
     private int order;
 
     @Override
@@ -40,21 +39,22 @@ public class TraceInfoFilter implements Filter, Ordered {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         TraceIdContext traceIdContext = TraceIdContext.getInstance();
-        log.debug("Checking trace id header [{}] in the request...", CommonConstants.HEADER_KEY_TRACE_ID);
+        log.debug("Checking tenant id header [{}] in the request...", CommonConstants.HEADER_KEY_TENANT_ID);
         try {
             HttpServletRequest httpServletRequest = (HttpServletRequest) request;
             HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
-            String traceId = httpServletRequest.getHeader(CommonConstants.HEADER_KEY_TRACE_ID);
-            log.debug("Trace id value [{}]", traceId);
-            if (StringUtils.isBlank(traceId)) {
-                traceId = UUID.randomUUID().toString();
+            String tenantId = httpServletRequest.getHeader(CommonConstants.HEADER_KEY_TENANT_ID);
+            log.debug("Tenant id value [{}]", tenantId);
+            if (StringUtils.hasText(tenantId)) {
+                traceIdContext.setTraceId(tenantId);
+                httpServletResponse.setHeader(CommonConstants.HEADER_KEY_TRACE_ID, URLEncoder.encode(tenantId,
+                        StandardCharsets.US_ASCII));
+                log.debug("Set tenant id [{}] to context and response.", tenantId);
+                log.debug("Continue filter chain");
+            } else {
+                log.debug("No Tenant ID in request!");
             }
-            traceIdContext.setTraceId(traceId);
-            httpServletResponse.setHeader(CommonConstants.HEADER_KEY_TRACE_ID, URLEncoder.encode(traceId,
-                    StandardCharsets.US_ASCII));
-            log.debug("Set trace id [{}] to context and response.", traceId);
-            log.debug("Continue filter chain");
             chain.doFilter(request, response);
         } finally {
             log.debug("Clear trace id in the context!");

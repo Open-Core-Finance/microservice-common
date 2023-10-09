@@ -18,6 +18,9 @@ public class ApplicationContextHolder implements ApplicationContextAware {
 
     private ApplicationContext applicationContext;
 
+    /**
+     * Private constructor for singleton implementation.
+     */
     private ApplicationContextHolder() {
         // Empty private constructor for singleton design.
         log.debug("Created ApplicationContextHolder [{}]", this);

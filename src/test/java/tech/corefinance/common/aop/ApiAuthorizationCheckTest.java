@@ -1,12 +1,13 @@
 package tech.corefinance.common.aop;
 
 import tech.corefinance.common.context.JwtContext;
-import tech.corefinance.common.controller.CommonController;
+import tech.corefinance.common.controller.PermissionController;
 import tech.corefinance.common.dto.GeneralApiResponse;
 import tech.corefinance.common.dto.JwtTokenDto;
 import tech.corefinance.common.dto.UserRoleDto;
 import tech.corefinance.common.enums.AccessControl;
 import tech.corefinance.common.model.AbstractPermission;
+import tech.corefinance.common.model.AbstractResourceAction;
 import tech.corefinance.common.repository.PermissionRepository;
 import tech.corefinance.common.service.ResourceOwnerVerifier;
 import tech.corefinance.common.test.support.controllers.AnotherTestController;
@@ -116,9 +117,10 @@ public class ApiAuthorizationCheckTest {
         try {
             JwtContext.getInstance().setJwt(jwtTokenDto);
             // Controller target
-            var controller = new CommonController();
+            var controller = new PermissionController();
             // Method
-            var method = CommonController.class.getDeclaredMethod("initializationDefaultData");
+            var method = AnotherTestController.class.getDeclaredMethod("anotherNormal2", String.class,
+                    HttpServletResponse.class);
             // Invoke
             PowerMockito.when(methodInvocation.getThis()).thenReturn(controller);
             PowerMockito.when(methodInvocation.getMethod()).thenReturn(method);
@@ -144,9 +146,10 @@ public class ApiAuthorizationCheckTest {
         try {
             JwtContext.getInstance().setJwt(jwtTokenDto);
             // Controller target
-            var controller = new CommonController();
+            var controller = new PermissionController();
             // Method
-            var method = CommonController.class.getDeclaredMethod("initializationDefaultData");
+            var method = AnotherTestController.class.getDeclaredMethod("anotherNormal2", String.class,
+                    HttpServletResponse.class);
             // Handlers
             var handlerMethods = new HashMap<RequestMappingInfo, HandlerMethod>();
             PowerMockito.when(mapping.getHandlerMethods()).thenReturn(handlerMethods);
@@ -182,9 +185,10 @@ public class ApiAuthorizationCheckTest {
         try {
             JwtContext.getInstance().setJwt(jwtTokenDto);
             // Controller target
-            var controller = new CommonController();
+            var controller = new PermissionController();
             // Method
-            var method = CommonController.class.getDeclaredMethod("initializationDefaultData");
+            var method = AnotherTestController.class.getDeclaredMethod("anotherNormal2", String.class,
+                    HttpServletResponse.class);
             // Handlers
             var handlerMethods = new HashMap<RequestMappingInfo, HandlerMethod>();
             PowerMockito.when(mapping.getHandlerMethods()).thenReturn(handlerMethods);
@@ -222,9 +226,10 @@ public class ApiAuthorizationCheckTest {
         try {
             JwtContext.getInstance().setJwt(jwtTokenDto);
             // Controller target
-            var controller = new CommonController();
+            var controller = new PermissionController();
             // Method
-            var method = CommonController.class.getDeclaredMethod("initializationDefaultData");
+            var method = AnotherTestController.class.getDeclaredMethod("anotherNormal2", String.class,
+                    HttpServletResponse.class);
             // Handlers
             var handlerMethods = new HashMap<RequestMappingInfo, HandlerMethod>();
             PowerMockito.when(mapping.getHandlerMethods()).thenReturn(handlerMethods);
@@ -276,9 +281,10 @@ public class ApiAuthorizationCheckTest {
         try {
             JwtContext.getInstance().setJwt(jwtTokenDto);
             // Controller target
-            var controller = new CommonController();
+            var controller = new PermissionController();
             // Method
-            var method = CommonController.class.getDeclaredMethod("initializationDefaultData");
+            var method = AnotherTestController.class.getDeclaredMethod("anotherNormal2", String.class,
+                    HttpServletResponse.class);
             // Handlers
             var handlerMethods = new HashMap<RequestMappingInfo, HandlerMethod>();
             PowerMockito.when(mapping.getHandlerMethods()).thenReturn(handlerMethods);
@@ -318,18 +324,19 @@ public class ApiAuthorizationCheckTest {
         UserRoleDto userRole = new UserRoleDto();
         userRoleDtos.add(userRole);
         userRole.setRoleId("normal_role");
-        userRole.setResourceType("common");
+        userRole.setResourceType("test-common");
         userRole.setResourceId(null);
         try {
             JwtContext.getInstance().setJwt(jwtTokenDto);
             // Controller target
-            var controller = new CommonController();
+            var controller = new AnotherTestController();
             // Method
-            var method = CommonController.class.getDeclaredMethod("initializationDefaultData");
+            var method = AnotherTestController.class.getDeclaredMethod("anotherNormal2", String.class,
+                    HttpServletResponse.class);
             // Handlers
             var handlerMethods = new HashMap<RequestMappingInfo, HandlerMethod>();
             PowerMockito.when(mapping.getHandlerMethods()).thenReturn(handlerMethods);
-            var url = "/common/initialization-default-permissions-data";
+            var url = "/another-normal-2";
             var requestMappingInfo = RequestMappingInfo.paths(url).build();
             HandlerMethod handlerMethod = new HandlerMethod(controller, method);
             handlerMethods.put(requestMappingInfo, handlerMethod);
@@ -345,7 +352,7 @@ public class ApiAuthorizationCheckTest {
             var permission = new PermissionTest();
             permission.setRequestMethod(RequestMethod.PUT);
             permission.setUrl(url);
-            permission.setAction("initial");
+            permission.setAction(AbstractResourceAction.COMMON_ACTION_VIEW);
             permission.setRoleId(userRole.getRoleId());
             permission.setControl(AccessControl.ALLOWED);
             permission.setResourceType(userRole.getResourceType());
@@ -381,9 +388,10 @@ public class ApiAuthorizationCheckTest {
         try {
             JwtContext.getInstance().setJwt(jwtTokenDto);
             // Controller target
-            var controller = new CommonController();
+            var controller = new PermissionController();
             // Method
-            var method = CommonController.class.getDeclaredMethod("initializationDefaultData");
+            var method = AnotherTestController.class.getDeclaredMethod("anotherNormal2", String.class,
+                    HttpServletResponse.class);
             // Handlers
             var handlerMethods = new HashMap<RequestMappingInfo, HandlerMethod>();
             PowerMockito.when(mapping.getHandlerMethods()).thenReturn(handlerMethods);
@@ -430,7 +438,7 @@ public class ApiAuthorizationCheckTest {
         UserRoleDto userRole = new UserRoleDto();
         userRoleDtos.add(userRole);
         userRole.setRoleId("normal_role");
-        userRole.setResourceType("common");
+        userRole.setResourceType("test-common");
         userRole.setResourceId(null);
         userRole = new UserRoleDto();
         userRoleDtos.add(userRole);
@@ -440,13 +448,14 @@ public class ApiAuthorizationCheckTest {
         try {
             JwtContext.getInstance().setJwt(jwtTokenDto);
             // Controller target
-            var controller = new CommonController();
+            var controller = new AnotherTestController();
             // Method
-            var method = CommonController.class.getDeclaredMethod("initializationDefaultData");
+            var method = AnotherTestController.class.getDeclaredMethod("anotherNormal2", String.class,
+                    HttpServletResponse.class);
             // Handlers
             var handlerMethods = new HashMap<RequestMappingInfo, HandlerMethod>();
             PowerMockito.when(mapping.getHandlerMethods()).thenReturn(handlerMethods);
-            var url = "/common/initialization-default-permissions-data";
+            var url = "/another-normal-2";
             var requestMappingInfo = RequestMappingInfo.paths(url).build();
             HandlerMethod handlerMethod = new HandlerMethod(controller, method);
             handlerMethods.put(requestMappingInfo, handlerMethod);
@@ -457,12 +466,12 @@ public class ApiAuthorizationCheckTest {
             // Permissions
             List<AbstractPermission> abstractPermissions = new LinkedList<>();
             var sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "action"), new Sort.Order(Sort.Direction.ASC, "url"));
-            PowerMockito.when(permissionRepository.findAllByRoleIdAndResourceType("normal_role", "common", sort))
+            PowerMockito.when(permissionRepository.findAllByRoleIdAndResourceType("normal_role", "test-common", sort))
                     .thenReturn(abstractPermissions);
             var permission = new PermissionTest();
             permission.setRequestMethod(RequestMethod.POST);
             permission.setUrl(AbstractPermission.ANY_ROLE_APPLIED_VALUE);
-            permission.setAction("initial");
+            permission.setAction(AbstractResourceAction.COMMON_ACTION_VIEW);
             permission.setRoleId(userRole.getRoleId());
             permission.setControl(AccessControl.ALLOWED);
             permission.setResourceType(userRole.getResourceType());
@@ -493,7 +502,7 @@ public class ApiAuthorizationCheckTest {
         UserRoleDto userRole = new UserRoleDto();
         userRoleDtos.add(userRole);
         userRole.setRoleId("normal_role");
-        userRole.setResourceType("common");
+        userRole.setResourceType("test-common");
         userRole.setResourceId(null);
         userRole = new UserRoleDto();
         userRoleDtos.add(userRole);
@@ -503,13 +512,14 @@ public class ApiAuthorizationCheckTest {
         try {
             JwtContext.getInstance().setJwt(jwtTokenDto);
             // Controller target
-            var controller = new CommonController();
+            var controller = new AnotherTestController();
             // Method
-            var method = CommonController.class.getDeclaredMethod("initializationDefaultData");
+            var method = AnotherTestController.class.getDeclaredMethod("anotherNormal2", String.class,
+                    HttpServletResponse.class);
             // Handlers
             var handlerMethods = new HashMap<RequestMappingInfo, HandlerMethod>();
             PowerMockito.when(mapping.getHandlerMethods()).thenReturn(handlerMethods);
-            var url = "/common/initialization-default-permissions-data";
+            var url = "/another-normal-2";
             var requestMappingInfo = RequestMappingInfo.paths(url).build();
             HandlerMethod handlerMethod = new HandlerMethod(controller, method);
             handlerMethods.put(requestMappingInfo, handlerMethod);
@@ -521,8 +531,6 @@ public class ApiAuthorizationCheckTest {
             // Permissions
             List<AbstractPermission> abstractPermissions = new LinkedList<>();
             var sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "action"), new Sort.Order(Sort.Direction.ASC, "url"));
-            PowerMockito.when(permissionRepository.findAllByRoleIdAndResourceType("normal_role", "common", sort))
-                    .thenReturn(abstractPermissions);
             var permission = new PermissionTest();
             permission.setRequestMethod(RequestMethod.DELETE);
             permission.setUrl(url);
@@ -531,6 +539,8 @@ public class ApiAuthorizationCheckTest {
             permission.setControl(AccessControl.ALLOWED);
             permission.setResourceType(userRole.getResourceType());
             abstractPermissions.add(permission);
+            PowerMockito.when(permissionRepository.findAllByRoleIdAndResourceType("normal_role", "test-common", sort))
+                    .thenReturn(abstractPermissions);
 
             // Injects
             PowerMockito.when(methodInvocation.getThis()).thenReturn(controller);
@@ -567,9 +577,10 @@ public class ApiAuthorizationCheckTest {
         try {
             JwtContext.getInstance().setJwt(jwtTokenDto);
             // Controller target
-            var controller = new CommonController();
+            var controller = new PermissionController();
             // Method
-            var method = CommonController.class.getDeclaredMethod("initializationDefaultData");
+            var method = AnotherTestController.class.getDeclaredMethod("anotherNormal2", String.class,
+                    HttpServletResponse.class);
             // Handlers
             var handlerMethods = new HashMap<RequestMappingInfo, HandlerMethod>();
             PowerMockito.when(mapping.getHandlerMethods()).thenReturn(handlerMethods);
@@ -629,9 +640,10 @@ public class ApiAuthorizationCheckTest {
         try {
             JwtContext.getInstance().setJwt(jwtTokenDto);
             // Controller target
-            var controller = new CommonController();
+            var controller = new PermissionController();
             // Method
-            var method = CommonController.class.getDeclaredMethod("initializationDefaultData");
+            var method = AnotherTestController.class.getDeclaredMethod("anotherNormal2", String.class,
+                    HttpServletResponse.class);
             // Handlers
             var handlerMethods = new HashMap<RequestMappingInfo, HandlerMethod>();
             PowerMockito.when(mapping.getHandlerMethods()).thenReturn(handlerMethods);
@@ -691,9 +703,10 @@ public class ApiAuthorizationCheckTest {
         try {
             JwtContext.getInstance().setJwt(jwtTokenDto);
             // Controller target
-            var controller = new CommonController();
+            var controller = new PermissionController();
             // Method
-            var method = CommonController.class.getDeclaredMethod("initializationDefaultData");
+            var method = AnotherTestController.class.getDeclaredMethod("anotherNormal2", String.class,
+                    HttpServletResponse.class);
             // Handlers
             var handlerMethods = new HashMap<RequestMappingInfo, HandlerMethod>();
             PowerMockito.when(mapping.getHandlerMethods()).thenReturn(handlerMethods);
@@ -1112,7 +1125,7 @@ public class ApiAuthorizationCheckTest {
         UserRoleDto userRole = new UserRoleDto();
         userRoleDtos.add(userRole);
         userRole.setRoleId("normal_role");
-        userRole.setResourceType("common");
+        userRole.setResourceType("test-common");
         userRole.setResourceId(null);
         userRole = new UserRoleDto();
         userRoleDtos.add(userRole);
@@ -1122,13 +1135,14 @@ public class ApiAuthorizationCheckTest {
         try {
             JwtContext.getInstance().setJwt(jwtTokenDto);
             // Controller target
-            var controller = new CommonController();
+            var controller = new AnotherTestController();
             // Method
-            var method = CommonController.class.getDeclaredMethod("initializationDefaultData");
+            var method = AnotherTestController.class.getDeclaredMethod("anotherNormal3",
+                    HttpServletResponse.class);
             // Handlers
             var handlerMethods = new HashMap<RequestMappingInfo, HandlerMethod>();
             PowerMockito.when(mapping.getHandlerMethods()).thenReturn(handlerMethods);
-            var url = "/common/initialization-default-permissions-data";
+            var url = "/another-normal-3";
             var requestMappingInfo = RequestMappingInfo.paths(url).build();
             HandlerMethod handlerMethod = new HandlerMethod(controller, method);
             handlerMethods.put(requestMappingInfo, handlerMethod);
@@ -1142,7 +1156,7 @@ public class ApiAuthorizationCheckTest {
             // Permissions
             List<AbstractPermission> abstractPermissions = new LinkedList<>();
             var sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "action"), new Sort.Order(Sort.Direction.ASC, "url"));
-            PowerMockito.when(permissionRepository.findAllByRoleIdAndResourceType("normal_role", "common", sort))
+            PowerMockito.when(permissionRepository.findAllByRoleIdAndResourceType("normal_role", "test-common", sort))
                     .thenReturn(abstractPermissions);
             var permission = new PermissionTest();
             permission.setRequestMethod(RequestMethod.PUT);
@@ -1150,7 +1164,7 @@ public class ApiAuthorizationCheckTest {
             permission.setAction(AbstractPermission.ANY_ROLE_APPLIED_VALUE);
             permission.setRoleId(userRole.getRoleId());
             permission.setControl(AccessControl.ALLOWED_SPECIFIC_RESOURCES);
-            permission.setResourceType("common");
+            permission.setResourceType("test-common");
             abstractPermissions.add(permission);
 
             // Injects

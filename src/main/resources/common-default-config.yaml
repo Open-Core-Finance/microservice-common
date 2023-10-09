@@ -24,13 +24,18 @@ tech:
         zoned-date-time-to-date: true
     common:
       filter-ordered:
-        authen-filter: 0
+        authen-filter: 2
+        tenant-id-filter-order: 1
+        trace-info-id-order: 0
+        encoding-response-order: 0
       enabled:
         async: true
         simple-version: true
         property-encryption: true
         auto-response-encoding: true
         trace-id-filter: true
+        tenant: true
+      default-response-charset: utf-8
     log:
       enabled:
         services: true
