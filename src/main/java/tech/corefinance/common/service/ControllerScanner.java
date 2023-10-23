@@ -14,12 +14,11 @@ import tech.corefinance.common.annotation.ControllerManagedResource;
 import tech.corefinance.common.annotation.ManualPermissionCheck;
 import tech.corefinance.common.annotation.PermissionAction;
 import tech.corefinance.common.config.ServiceSecurityConfig;
-import tech.corefinance.common.context.ApplicationContextHolder;
 import tech.corefinance.common.dto.PermissionDto;
 import tech.corefinance.common.enums.AccessControl;
 import tech.corefinance.common.ex.ReflectiveIncorrectFieldException;
-import tech.corefinance.common.model.AbstractPermission;
-import tech.corefinance.common.model.AbstractResourceAction;
+import tech.corefinance.common.model.Permission;
+import tech.corefinance.common.model.ResourceAction;
 import tech.corefinance.common.repository.ResourceActionRepository;
 import tech.corefinance.common.util.CoreFinanceUtil;
 
@@ -35,13 +34,12 @@ import java.util.regex.Pattern;
 @Slf4j
 public class ControllerScanner {
 
-    @SuppressWarnings({"rawtypes"})
     @Autowired
     private ResourceActionRepository resourceActionRepository;
     @Autowired
     private ServiceSecurityConfig serviceSecurityConfig;
     @Autowired
-    private PermissionService<?, ?> permissionService;
+    private PermissionService permissionService;
     @Autowired
     private RequestMappingHandlerMapping mapping;
     @Autowired
@@ -49,12 +47,10 @@ public class ControllerScanner {
 
     @Async
     @PostConstruct
-    @SuppressWarnings({"unchecked"})
     public void scan() {
-        var context = ApplicationContextHolder.getInstance().getApplicationContext();
         var handlerMethods = mapping.getHandlerMethods();
-        var permissionActions = new LinkedList<AbstractResourceAction>();
-        mainloop:
+        var permissionActions = new LinkedList<ResourceAction>();
+        main_loop:
         for (Map.Entry<RequestMappingInfo, HandlerMethod> entry : handlerMethods.entrySet()) {
             var key = entry.getKey();
             var value = entry.getValue();
@@ -68,7 +64,7 @@ public class ControllerScanner {
                 log.debug("Checking if controller full package contain [{}] or not...", ignoreController);
                 if (controllerClassName.contains(ignoreController)) {
                     log.debug("Skipped permission scan for {}", declaringClass);
-                    continue mainloop;
+                    continue main_loop;
                 }
             }
             for (String url : urls) {
@@ -78,7 +74,7 @@ public class ControllerScanner {
                     var matched = pattern.matcher(url).matches();
                     log.debug("Checking result with pattern [{}] is [{}]", noAuthenUrl, matched);
                     if (matched) {
-                        continue mainloop;
+                        continue main_loop;
                     }
                 }
             }
@@ -104,9 +100,9 @@ public class ControllerScanner {
         resourceActionRepository.saveAll(permissionActions);
     }
 
-    private List<AbstractResourceAction> buildListActions(String resourceType, String action, Iterable<String> urls,
-                                                          Iterable<RequestMethod> requestMethods) {
-        var permissionActions = new LinkedList<AbstractResourceAction>();
+    private List<ResourceAction> buildListActions(String resourceType, String action, Iterable<String> urls,
+                                                  Iterable<RequestMethod> requestMethods) {
+        var permissionActions = new LinkedList<ResourceAction>();
         for (String url : urls) {
             for (RequestMethod requestMethod : requestMethods) {
                 permissionActions.add(permissionService.newResourceAction(resourceType, action, url, requestMethod));
@@ -122,7 +118,7 @@ public class ControllerScanner {
                 var permission = new PermissionDto();
                 permission.setControl(AccessControl.MANUAL_CHECK);
                 permission.setUrl(url);
-                permission.setRoleId(AbstractPermission.ANY_ROLE_APPLIED_VALUE);
+                permission.setRoleId(Permission.ANY_ROLE_APPLIED_VALUE);
                 permission.setResourceType(resourceType);
                 permission.setAction(action);
                 permission.setRequestMethod(requestMethod);

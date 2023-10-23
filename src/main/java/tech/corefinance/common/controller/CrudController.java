@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import tech.corefinance.common.annotation.PermissionAction;
 import tech.corefinance.common.dto.GeneralApiResponse;
 import tech.corefinance.common.dto.PageDto;
-import tech.corefinance.common.model.AbstractResourceAction;
+import tech.corefinance.common.model.ResourceAction;
 import tech.corefinance.common.model.CreateUpdateDto;
 import tech.corefinance.common.model.GenericModel;
 import tech.corefinance.common.service.CommonService;
@@ -22,7 +22,7 @@ public interface CrudController<I extends Serializable ,T extends GenericModel<I
         return null;
     }
 
-    @PermissionAction(action = AbstractResourceAction.COMMON_ACTION_LIST)
+    @PermissionAction(action = ResourceAction.COMMON_ACTION_LIST)
     @PostMapping(value = "/")
     default PageDto<?> search(@RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize,
                                    @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex,

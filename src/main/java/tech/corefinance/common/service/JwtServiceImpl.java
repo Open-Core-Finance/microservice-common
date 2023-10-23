@@ -21,6 +21,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import tech.corefinance.common.config.JwtConfiguration;
+import tech.corefinance.common.context.TenantContext;
 import tech.corefinance.common.dto.BasicUserDto;
 import tech.corefinance.common.dto.JwtTokenDto;
 import tech.corefinance.common.enums.CommonConstants;
@@ -170,6 +171,13 @@ public class JwtServiceImpl implements JwtService {
         }
         if (!ipaddress.equalsIgnoreCase(decodedJWT.getClaim(CommonConstants.ATTRIBUTE_NAME_IP_ADDRESS).asString())) {
             throw new JWTVerificationException("IP Address miss matched in token and request!!");
+        }
+        var requestTenant = TenantContext.getInstance().getTenantId();
+        var tokenTenant = decodedJWT.getClaim("tenantId").asString();
+        if (StringUtils.isNotBlank(requestTenant) && StringUtils.isNotBlank(tokenTenant)) {
+            if (!tokenTenant.equalsIgnoreCase(requestTenant)) {
+                throw new JWTVerificationException("Cross tenant requested!!");
+            }
         }
         return decodedJWT;
     }

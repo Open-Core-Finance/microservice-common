@@ -1,16 +1,13 @@
 package tech.corefinance.common.services;
 
 import tech.corefinance.common.config.ServiceSecurityConfig;
-import tech.corefinance.common.model.AbstractInternalServiceConfig;
-import tech.corefinance.common.model.AbstractPermission;
-import tech.corefinance.common.model.AbstractResourceAction;
+import tech.corefinance.common.model.Permission;
+import tech.corefinance.common.model.ResourceAction;
 import tech.corefinance.common.repository.ResourceActionRepository;
 import tech.corefinance.common.service.ControllerScanner;
 import tech.corefinance.common.service.PermissionService;
 import tech.corefinance.common.test.support.controllers.AnotherTestController;
 import tech.corefinance.common.test.support.controllers.TestController;
-import tech.corefinance.common.test.support.model.PermissionTest;
-import tech.corefinance.common.test.support.model.ResourceActionTest;
 import tech.corefinance.common.util.CoreFinanceUtil;
 import tech.corefinance.common.ex.ReflectiveIncorrectFieldException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,7 +41,7 @@ public class ControllerScannerTest {
     private ControllerScanner controllerScanner;
     private RequestMappingHandlerMapping mapping;
     private CoreFinanceUtil coreFinanceUtil;
-    private PermissionService<AbstractPermission, AbstractResourceAction> permissionService;
+    private PermissionService permissionService;
 
     @BeforeEach
     public void setUp() throws IllegalAccessException {
@@ -78,9 +75,9 @@ public class ControllerScannerTest {
         var permissionServiceField = PowerMockito.field(ControllerScanner.class, "permissionService");
         permissionServiceField.setAccessible(true);
         permissionServiceField.set(controllerScanner, permissionService);
-        PowerMockito.when(permissionService.createEntityObject()).thenReturn(new PermissionTest());
+        PowerMockito.when(permissionService.createEntityObject()).thenReturn(new Permission());
         PowerMockito.when(permissionService.newResourceAction(any(), any(), any(), any()))
-                .thenReturn(new ResourceActionTest("", "", "", RequestMethod.GET));
+                .thenReturn(new ResourceAction("", "", "", RequestMethod.GET));
     }
 
     @Test
@@ -96,7 +93,7 @@ public class ControllerScannerTest {
         // Config
         listIgnoredPackage.add(".test.");
         // Check if call save with empty list
-        var result = new LinkedList<AbstractResourceAction>();
+        var result = new LinkedList<ResourceAction>();
         controllerScanner.scan();
         // Verify
         verify(resourceActionRepository, times(1)).saveAll(result);
@@ -114,7 +111,7 @@ public class ControllerScannerTest {
         // Invoke and got exception
         assertThrowsExactly(ReflectiveIncorrectFieldException.class, () -> controllerScanner.scan());
         // Verify if do not call save empty list
-        var result = new LinkedList<AbstractResourceAction>();
+        var result = new LinkedList<ResourceAction>();
         verify(resourceActionRepository, times(0)).saveAll(result);
     }
 
@@ -131,7 +128,7 @@ public class ControllerScannerTest {
         // Config
         noAuthenUrls.add("/test-api");
         // Check if call save with empty list
-        var result = new LinkedList<AbstractResourceAction>();
+        var result = new LinkedList<ResourceAction>();
         controllerScanner.scan();
         // Verify
         verify(resourceActionRepository, times(1)).saveAll(result);
@@ -150,7 +147,7 @@ public class ControllerScannerTest {
         // Config
         noAuthenUrls.add("/test-*");
         // Check if call save with empty list
-        var result = new LinkedList<AbstractResourceAction>();
+        var result = new LinkedList<ResourceAction>();
         controllerScanner.scan();
         // Verify
         verify(resourceActionRepository, times(1)).saveAll(result);
@@ -175,7 +172,7 @@ public class ControllerScannerTest {
         // Call
         controllerScanner.scan();
         // Verify
-        var result = new LinkedList<AbstractResourceAction>();
+        var result = new LinkedList<ResourceAction>();
         var resourceAction = permissionService.newResourceAction("test-common", "add", url, requestMethod);
         resourceAction.setId("add-test-common-_test_another-normal");
         result.add(resourceAction);
@@ -196,9 +193,9 @@ public class ControllerScannerTest {
         handlerMethods.put(requestMappingInfo, handlerMethod);
         PowerMockito.when(mapping.getHandlerMethods()).thenReturn(handlerMethods);
         // Check saved empty list by checking exception
-        var result = new LinkedList<AbstractResourceAction>();
+        var result = new LinkedList<ResourceAction>();
         var resourceAction =
-                permissionService.newResourceAction("test-common", AbstractResourceAction.COMMON_ACTION_VIEW, url,
+                permissionService.newResourceAction("test-common", ResourceAction.COMMON_ACTION_VIEW, url,
                         requestMethod);
         resourceAction.setId("initial-common-_common_initialization-default-permissions-data");
         result.add(resourceAction);

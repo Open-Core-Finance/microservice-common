@@ -103,6 +103,14 @@ dependencies {
     // security
     api group: 'com.auth0', name: 'java-jwt', version: "$javaJwtVersion"
 
+
+    // Compile only
+    compileOnly ('org.springframework.boot:spring-boot-starter-data-mongodb') {
+        // Exclude because current version of snakeyaml have vulnerabilities. Need re-define.
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter'
+    }
+    implementation group: 'jakarta.persistence', name: 'jakarta.persistence-api'
+
     // Test
     testImplementation ('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter'

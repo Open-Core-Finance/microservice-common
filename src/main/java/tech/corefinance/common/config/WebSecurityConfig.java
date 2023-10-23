@@ -12,7 +12,9 @@ import org.springframework.security.web.authentication.AnonymousAuthenticationFi
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import tech.corefinance.common.model.AbstractPermission;
+import tech.corefinance.common.model.AnonymousUrlAccess;
+import tech.corefinance.common.model.Permission;
+import tech.corefinance.common.repository.AnonymousUrlAccessRepository;
 import tech.corefinance.common.repository.PermissionRepository;
 
 import java.util.List;
@@ -23,16 +25,18 @@ public class WebSecurityConfig {
     @Autowired
     private ServiceSecurityConfig serviceSecurityConfig;
     @Autowired
-    private PermissionRepository<? extends AbstractPermission> permissionRepository;
+    private PermissionRepository permissionRepository;
+    @Autowired
+    private AnonymousUrlAccessRepository anonymousUrlAccessRepository;
 
     @Bean
     @ConditionalOnProperty(prefix = "tech.corefinance.security", name = "public-key")
     public SecurityFilterChain filterChain(HttpSecurity http, SessionAuthenticationFilter sessionAuthenticationFilter) throws Exception {
-        List<? extends AbstractPermission> annonymousList = permissionRepository.findByRoleId(AbstractPermission.ANONYMOUS_ROLE_VALUE);
+        List<AnonymousUrlAccess> anonymousList = anonymousUrlAccessRepository.findAll();
         return http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> serviceSecurityConfig.getNoAuthenUrls().stream().forEach(url -> auth
                         .requestMatchers(url).permitAll())
-                ).authorizeHttpRequests(auth -> annonymousList.stream().forEach(p ->
+                ).authorizeHttpRequests(auth -> anonymousList.stream().forEach(p ->
                         auth.requestMatchers(p.getUrl()).anonymous()))
                 .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 .addFilterBefore(sessionAuthenticationFilter, AnonymousAuthenticationFilter.class)

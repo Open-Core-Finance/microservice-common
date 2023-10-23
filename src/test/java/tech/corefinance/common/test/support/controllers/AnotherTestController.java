@@ -1,7 +1,7 @@
 package tech.corefinance.common.test.support.controllers;
 
 import tech.corefinance.common.controller.CrudController;
-import tech.corefinance.common.model.AbstractResourceAction;
+import tech.corefinance.common.model.ResourceAction;
 import tech.corefinance.common.service.CommonService;
 import tech.corefinance.common.test.support.model.UserWrapterTest;
 import tech.corefinance.common.annotation.ControllerManagedResource;
@@ -34,7 +34,7 @@ public class AnotherTestController implements CrudController {
     }
 
     @PostMapping("/another-normal-2")
-    @PermissionAction(action = AbstractResourceAction.COMMON_ACTION_VIEW)
+    @PermissionAction(action = ResourceAction.COMMON_ACTION_VIEW)
     public void anotherNormal2(
             @RequestParam("resourceId") @PermissionResource(resourceType = "custom-resource-type") String resourceId,
             HttpServletResponse response) throws IOException {
@@ -42,13 +42,13 @@ public class AnotherTestController implements CrudController {
     }
 
     @PostMapping("/another-normal-3")
-    @PermissionAction(action = AbstractResourceAction.COMMON_ACTION_VIEW)
+    @PermissionAction(action = ResourceAction.COMMON_ACTION_VIEW)
     public void anotherNormal3(HttpServletResponse response) throws IOException {
         writeTest(response);
     }
 
     @PostMapping("/request-with-complex-resource")
-    @PermissionAction(action = AbstractResourceAction.COMMON_ACTION_LIST)
+    @PermissionAction(action = ResourceAction.COMMON_ACTION_LIST)
     public void complexResource(HttpServletResponse response,
                                 @RequestBody
                                 @PermissionResource(resourceType = "custom-resource-type", idPath = "user.id")

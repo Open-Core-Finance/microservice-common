@@ -1,60 +1,58 @@
 package tech.corefinance.common.test.support.repository;
 
 import org.springframework.data.domain.Example;
-import org.springframework.data.repository.query.FluentQuery;
-import tech.corefinance.common.repository.PermissionRepository;
-import tech.corefinance.common.test.support.model.PermissionTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMethod;
+import tech.corefinance.common.model.Permission;
+import tech.corefinance.common.repository.PermissionRepository;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
 @Component
-public class TestPermissionRepository
-        implements PermissionRepository<PermissionTest> {
+public class TestPermissionRepository implements PermissionRepository {
     @Override
-    public Optional<PermissionTest> findFirstByRoleIdAndResourceTypeAndActionAndUrlAndRequestMethod(String roleId,
-                                                                                                    String resourceType,
-                                                                                                    String action,
-                                                                                                    String url,
-                                                                                                    RequestMethod requestMethod) {
+    public Optional<Permission> findFirstByRoleIdAndResourceTypeAndActionAndUrlAndRequestMethod(String roleId,
+                                                                                                String resourceType,
+                                                                                                String action,
+                                                                                                String url,
+                                                                                                RequestMethod requestMethod) {
         return Optional.empty();
     }
 
     @Override
-    public List<PermissionTest> findAllByRoleIdAndResourceType(String roleId, String resourceType, Sort sort) {
+    public List<Permission> findAllByRoleIdAndResourceType(String roleId, String resourceType, Sort sort) {
         return new LinkedList<>();
     }
 
     @Override
-    public List<PermissionTest> findByRoleId(String roleId) {
+    public List<Permission> findByRoleId(String roleId) {
         return new LinkedList<>();
     }
 
     @Override
-    public PermissionTest save(PermissionTest entity) {
+    public Permission save(Permission entity) {
         return entity;
     }
 
     @Override
-    public <S extends PermissionTest> List<S> saveAll(Iterable<S> entities) {
+    public <S extends Permission> List<S> saveAll(Iterable<S> entities) {
         var result = new LinkedList<S>();
         var iterator = entities.iterator();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             result.add(iterator.next());
         }
         return result;
     }
 
     @Override
-    public Optional<PermissionTest> findById(String s) {
+    public Optional<Permission> findById(String s) {
         return Optional.empty();
     }
 
@@ -64,12 +62,12 @@ public class TestPermissionRepository
     }
 
     @Override
-    public List<PermissionTest> findAll() {
+    public List<Permission> findAll() {
         return new LinkedList<>();
     }
 
     @Override
-    public List<PermissionTest> findAllById(Iterable<String> strings) {
+    public List<Permission> findAllById(Iterable<String> strings) {
         return new LinkedList<>();
     }
 
@@ -84,7 +82,7 @@ public class TestPermissionRepository
     }
 
     @Override
-    public void delete(PermissionTest entity) {
+    public void delete(Permission entity) {
 
     }
 
@@ -94,7 +92,7 @@ public class TestPermissionRepository
     }
 
     @Override
-    public void deleteAll(Iterable<? extends PermissionTest> entities) {
+    public void deleteAll(Iterable<? extends Permission> entities) {
 
     }
 
@@ -104,47 +102,48 @@ public class TestPermissionRepository
     }
 
     @Override
-    public List<PermissionTest> findAll(Sort sort) {
+    public List<Permission> findAll(Sort sort) {
         return new LinkedList<>();
     }
 
     @Override
-    public Page<PermissionTest> findAll(Pageable pageable) {
+    public Page<Permission> findAll(Pageable pageable) {
         return null;
     }
 
     @Override
-    public <S extends PermissionTest> Optional<S> findOne(Example<S> example) {
+    public <S extends Permission> Optional<S> findOne(Example<S> example) {
         return Optional.empty();
     }
 
     @Override
-    public <S extends PermissionTest> Iterable<S> findAll(Example<S> example) {
+    public <S extends Permission> Iterable<S> findAll(Example<S> example) {
         return new LinkedList<>();
     }
 
     @Override
-    public <S extends PermissionTest> Iterable<S> findAll(Example<S> example, Sort sort) {
+    public <S extends Permission> Iterable<S> findAll(Example<S> example, Sort sort) {
         return new LinkedList<>();
     }
 
     @Override
-    public <S extends PermissionTest> Page<S> findAll(Example<S> example, Pageable pageable) {
+    public <S extends Permission> Page<S> findAll(Example<S> example, Pageable pageable) {
         return null;
     }
 
     @Override
-    public <S extends PermissionTest> long count(Example<S> example) {
+    public <S extends Permission> long count(Example<S> example) {
         return 0;
     }
 
     @Override
-    public <S extends PermissionTest> boolean exists(Example<S> example) {
+    public <S extends Permission> boolean exists(Example<S> example) {
         return false;
     }
 
     @Override
-    public <S extends PermissionTest, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
+    public <S extends Permission, R> R findBy(Example<S> example,
+                                              Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
         return null;
     }
 }

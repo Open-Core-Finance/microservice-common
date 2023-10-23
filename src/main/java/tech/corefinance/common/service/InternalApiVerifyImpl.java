@@ -9,7 +9,7 @@ import org.springframework.util.StringUtils;
 import tech.corefinance.common.annotation.InternalApi;
 import tech.corefinance.common.context.JwtContext;
 import tech.corefinance.common.enums.CommonConstants;
-import tech.corefinance.common.model.AbstractInternalServiceConfig;
+import tech.corefinance.common.model.InternalServiceConfig;
 import tech.corefinance.common.repository.InternalServiceConfigRepository;
 
 import java.lang.reflect.Method;
@@ -36,7 +36,7 @@ public class InternalApiVerifyImpl implements InternalApiVerify {
             if (!StringUtils.hasText(internalApi)) {
                 throw new AccessDeniedException("no_internal_key_found");
             }
-            Optional<AbstractInternalServiceConfig> internalServiceConfigOptional = internalServiceConfigRepository.findFirstByApiKeyAndActivatedOrderByLastModifiedDateDesc(internalApi, true);
+            Optional<InternalServiceConfig> internalServiceConfigOptional = internalServiceConfigRepository.findFirstByApiKeyAndActivatedOrderByLastModifiedDateDesc(internalApi, true);
             var config = internalServiceConfigOptional.orElseThrow(() -> new AccessDeniedException("invalid_internal_api_key"));
             log.debug("Received call from service [{}]", config);
         }

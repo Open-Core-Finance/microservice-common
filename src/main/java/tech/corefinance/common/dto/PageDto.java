@@ -1,5 +1,6 @@
 package tech.corefinance.common.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,7 +19,7 @@ public class PageDto<T> extends GeneralApiResponse<List<T>> {
      */
     private static final long serialVersionUID = -9141677225193449525L;
 
-    private Sort sort;
+    private List<OrderDto> orders;
     private int pageNumber;
     private int pageSize;
     private long totalElements;
@@ -36,9 +37,10 @@ public class PageDto<T> extends GeneralApiResponse<List<T>> {
         setPageData(page);
     }
 
+    @Schema(hidden = true)
     public void setPageData(Page<T> page) {
         setResult(page.getContent());
-        this.sort = page.getSort();
+        this.orders = page.getSort().stream().map(OrderDto::fromOrder).toList();
         this.pageNumber = page.getNumber();
         this.pageSize = page.getSize();
         this.totalElements = page.getTotalElements();
