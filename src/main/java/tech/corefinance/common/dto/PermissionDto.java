@@ -27,4 +27,9 @@ public class PermissionDto implements CreateUpdateDto<String>{
         result.setResourceType(permission.getResourceType());
         return result;
     }
+
+    @Override
+    public String getEntityId() {
+        return entityId;
+    }
 }
