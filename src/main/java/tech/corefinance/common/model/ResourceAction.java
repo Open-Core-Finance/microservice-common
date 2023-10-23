@@ -1,9 +1,6 @@
 package tech.corefinance.common.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
@@ -30,6 +27,7 @@ public class ResourceAction implements GenericModel<String> {
     private String resourceType;
     private String action = COMMON_ACTION_ADD;
     private String url;
+    @Enumerated(EnumType.STRING)
     private RequestMethod requestMethod;
 
     public ResourceAction(String resourceType, String action, String url, RequestMethod requestMethod) {

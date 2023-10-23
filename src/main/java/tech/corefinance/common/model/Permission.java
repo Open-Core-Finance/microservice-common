@@ -1,9 +1,6 @@
 package tech.corefinance.common.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -29,6 +26,8 @@ public class Permission implements GenericModel<String> {
     private String action;
     private String url;
     @NotNull
+    @Enumerated(EnumType.STRING)
     private AccessControl control;
+    @Enumerated(EnumType.STRING)
     private RequestMethod requestMethod;
 }
