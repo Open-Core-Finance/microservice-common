@@ -8,7 +8,7 @@ import tech.corefinance.common.context.JwtContext;
 import tech.corefinance.common.dto.JwtTokenDto;
 import tech.corefinance.common.dto.UserRoleDto;
 import tech.corefinance.common.enums.AccessControl;
-import tech.corefinance.common.model.AbstractPermission;
+import tech.corefinance.common.model.Permission;
 import tech.corefinance.common.repository.PermissionRepository;
 import tech.corefinance.common.service.InternalApiVerify;
 import tech.corefinance.common.service.ResourceOwnerVerifier;
@@ -226,12 +226,12 @@ public class ApiAuthorizationCheck {
     private boolean verifyRole(JwtTokenDto jwtTokenDto, UserRoleDto userRole, String action, String url,
                                RequestMethod requestMethod, String resourceType, ProceedingJoinPoint joinPoint) {
         var sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "action"), new Sort.Order(Sort.Direction.ASC, "url"));
-        List<? extends AbstractPermission> permissions = permissionRepository.findAllByRoleIdAndResourceType(userRole.getRoleId(), resourceType, sort);
+        var permissions = permissionRepository.findAllByRoleIdAndResourceType(userRole.getRoleId(), resourceType, sort);
         var foundMatched = false;
         for (var permission : permissions) {
-            var matchedAction = AbstractPermission.ANY_ROLE_APPLIED_VALUE.equalsIgnoreCase(permission.getAction()) ||
+            var matchedAction = Permission.ANY_ROLE_APPLIED_VALUE.equalsIgnoreCase(permission.getAction()) ||
                     action.equalsIgnoreCase(permission.getAction());
-            var matchUrl = AbstractPermission.ANY_ROLE_APPLIED_VALUE.equalsIgnoreCase(permission.getUrl()) ||
+            var matchUrl = Permission.ANY_ROLE_APPLIED_VALUE.equalsIgnoreCase(permission.getUrl()) ||
                     url.equalsIgnoreCase(permission.getUrl());
             var matchedRequestMethod =
                     permission.getRequestMethod() == null || permission.getRequestMethod() == requestMethod;
@@ -250,13 +250,13 @@ public class ApiAuthorizationCheck {
         log.debug("ANN [{}]", new Object[] { anns });
         PermissionResource permissionResource = null;
         Object parameterValue = null;
-        mainloop:
+        main_loop:
         for (int i = 0; i < anns.length; i++) {
             for (var annotation : anns[i]) {
                 if (PermissionResource.class.isAssignableFrom(annotation.annotationType())) {
                     permissionResource = (PermissionResource) annotation;
                     parameterValue = joinPoint.getArgs()[i];
-                    break mainloop;
+                    break main_loop;
                 }
             }
         }
@@ -276,36 +276,36 @@ public class ApiAuthorizationCheck {
     }
 
     private boolean checkResourceOwnership(JwtTokenDto jwtTokenDto, String resourceType, Object resourceId,
-                                           AbstractPermission abstractPermission, UserRoleDto userRole) {
+                                           Permission permission, UserRoleDto userRole) {
         var result = false;
         for (var verifier : resourceOwnerVerifiers) {
             if (verifier.isSupportedResource(resourceType)) {
-                result = verifier.verifyOwner(jwtTokenDto, resourceType, resourceId, abstractPermission, userRole);
+                result = verifier.verifyOwner(jwtTokenDto, resourceType, resourceId, permission, userRole);
                 break;
             }
         }
         return result;
     }
 
-    private void checkPermissionControl(JwtTokenDto jwtTokenDto, AbstractPermission abstractPermission, ProceedingJoinPoint joinPoint,
+    private void checkPermissionControl(JwtTokenDto jwtTokenDto, Permission permission, ProceedingJoinPoint joinPoint,
                                         UserRoleDto userRole) {
-        var control = abstractPermission.getControl();
+        var control = permission.getControl();
         switch (control) {
-            case DENIED -> throw new AccessDeniedException("access_denied_" + abstractPermission.getId());
+            case DENIED -> throw new AccessDeniedException("access_denied_" + permission.getId());
             case ALLOWED_SPECIFIC_RESOURCES -> {
                 var resourceInfo = resolveResourceId(joinPoint);
                 var matched = checkResourceOwnership(jwtTokenDto, resourceInfo.resourceType, resourceInfo.resourceId,
-                        abstractPermission, userRole);
+                        permission, userRole);
                 if (!matched) {
-                    throw new AccessDeniedException("access_denied_" + abstractPermission.getId());
+                    throw new AccessDeniedException("access_denied_" + permission.getId());
                 }
             }
             case DENIED_SPECIFIC_RESOURCES -> {
                 var resourceInfo = resolveResourceId(joinPoint);
                 var matched = checkResourceOwnership(jwtTokenDto, resourceInfo.resourceType, resourceInfo.resourceId,
-                        abstractPermission, userRole);
+                        permission, userRole);
                 if (matched) {
-                    throw new AccessDeniedException("access_denied_" + abstractPermission.getId());
+                    throw new AccessDeniedException("access_denied_" + permission.getId());
                 }
             }
         }

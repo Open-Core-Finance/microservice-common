@@ -1,11 +1,8 @@
 package tech.corefinance.common.repository;
 
-import tech.corefinance.common.model.AbstractResourceAction;
-import org.springframework.data.repository.ListPagingAndSortingRepository;
-import org.springframework.data.repository.NoRepositoryBean;
+import org.springframework.stereotype.Repository;
+import tech.corefinance.common.model.ResourceAction;
 
-@NoRepositoryBean
-public interface ResourceActionRepository<T extends AbstractResourceAction> extends CommonResourceRepository<T, String>,
-        ListPagingAndSortingRepository<T, String> {
-
+@Repository
+public interface ResourceActionRepository extends CommonResourceRepository<ResourceAction, String> {
 }

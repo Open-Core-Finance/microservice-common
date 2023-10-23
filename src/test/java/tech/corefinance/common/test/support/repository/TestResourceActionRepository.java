@@ -6,8 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Component;
+import tech.corefinance.common.model.ResourceAction;
 import tech.corefinance.common.repository.ResourceActionRepository;
-import tech.corefinance.common.test.support.model.ResourceActionTest;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -15,26 +15,25 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @Component
-public class TestResourceActionRepository
-        implements ResourceActionRepository<ResourceActionTest> {
+public class TestResourceActionRepository implements ResourceActionRepository {
 
     @Override
-    public ResourceActionTest save(ResourceActionTest entity) {
+    public ResourceAction save(ResourceAction entity) {
         return entity;
     }
 
     @Override
-    public <S extends ResourceActionTest> List<S> saveAll(Iterable<S> entities) {
+    public <S extends ResourceAction> List<S> saveAll(Iterable<S> entities) {
         var result = new LinkedList<S>();
         var iterator = entities.iterator();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             result.add(iterator.next());
         }
         return result;
     }
 
     @Override
-    public Optional<ResourceActionTest> findById(String s) {
+    public Optional<ResourceAction> findById(String s) {
         return Optional.empty();
     }
 
@@ -44,12 +43,12 @@ public class TestResourceActionRepository
     }
 
     @Override
-    public List<ResourceActionTest> findAll() {
+    public List<ResourceAction> findAll() {
         return new LinkedList<>();
     }
 
     @Override
-    public List<ResourceActionTest> findAllById(Iterable<String> strings) {
+    public List<ResourceAction> findAllById(Iterable<String> strings) {
         return new LinkedList<>();
     }
 
@@ -64,7 +63,7 @@ public class TestResourceActionRepository
     }
 
     @Override
-    public void delete(ResourceActionTest entity) {
+    public void delete(ResourceAction entity) {
 
     }
 
@@ -74,7 +73,7 @@ public class TestResourceActionRepository
     }
 
     @Override
-    public void deleteAll(Iterable<? extends ResourceActionTest> entities) {
+    public void deleteAll(Iterable<? extends ResourceAction> entities) {
 
     }
 
@@ -84,47 +83,48 @@ public class TestResourceActionRepository
     }
 
     @Override
-    public List<ResourceActionTest> findAll(Sort sort) {
+    public List<ResourceAction> findAll(Sort sort) {
         return new LinkedList<>();
     }
 
     @Override
-    public Page<ResourceActionTest> findAll(Pageable pageable) {
+    public Page<ResourceAction> findAll(Pageable pageable) {
         return null;
     }
 
     @Override
-    public <S extends ResourceActionTest> Optional<S> findOne(Example<S> example) {
+    public <S extends ResourceAction> Optional<S> findOne(Example<S> example) {
         return Optional.empty();
     }
 
     @Override
-    public <S extends ResourceActionTest> Iterable<S> findAll(Example<S> example) {
+    public <S extends ResourceAction> Iterable<S> findAll(Example<S> example) {
         return new LinkedList<>();
     }
 
     @Override
-    public <S extends ResourceActionTest> Iterable<S> findAll(Example<S> example, Sort sort) {
+    public <S extends ResourceAction> Iterable<S> findAll(Example<S> example, Sort sort) {
         return new LinkedList<>();
     }
 
     @Override
-    public <S extends ResourceActionTest> Page<S> findAll(Example<S> example, Pageable pageable) {
+    public <S extends ResourceAction> Page<S> findAll(Example<S> example, Pageable pageable) {
         return null;
     }
 
     @Override
-    public <S extends ResourceActionTest> long count(Example<S> example) {
+    public <S extends ResourceAction> long count(Example<S> example) {
         return 0;
     }
 
     @Override
-    public <S extends ResourceActionTest> boolean exists(Example<S> example) {
+    public <S extends ResourceAction> boolean exists(Example<S> example) {
         return false;
     }
 
     @Override
-    public <S extends ResourceActionTest, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
+    public <S extends ResourceAction, R> R findBy(Example<S> example,
+                                                  Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
         return null;
     }
 }

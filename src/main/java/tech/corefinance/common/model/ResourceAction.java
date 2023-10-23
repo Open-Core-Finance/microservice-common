@@ -1,13 +1,21 @@
 package tech.corefinance.common.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Data
 @NoArgsConstructor
-public abstract class AbstractResourceAction implements GenericModel<String> {
+@Document("resource_action")
+@Table(name = "resource_action")
+@Entity
+public class ResourceAction implements GenericModel<String> {
     public static final String COMMON_ACTION_ADD = "add";
     public static final String COMMON_ACTION_UPDATE = "update";
     public static final String COMMON_ACTION_DELETE = "delete";
@@ -16,13 +24,15 @@ public abstract class AbstractResourceAction implements GenericModel<String> {
     public static final String COMMON_ACTION_INITIAL = "initial";
 
     @Id
+    @jakarta.persistence.Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     private String resourceType;
     private String action = COMMON_ACTION_ADD;
     private String url;
     private RequestMethod requestMethod;
 
-    public AbstractResourceAction(String resourceType, String action, String url, RequestMethod requestMethod) {
+    public ResourceAction(String resourceType, String action, String url, RequestMethod requestMethod) {
         this.resourceType = resourceType;
         this.action = action;
         this.url = url;

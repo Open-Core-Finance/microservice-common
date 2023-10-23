@@ -6,13 +6,12 @@ import tech.corefinance.common.dto.GeneralApiResponse;
 import tech.corefinance.common.dto.JwtTokenDto;
 import tech.corefinance.common.dto.UserRoleDto;
 import tech.corefinance.common.enums.AccessControl;
-import tech.corefinance.common.model.AbstractPermission;
-import tech.corefinance.common.model.AbstractResourceAction;
+import tech.corefinance.common.model.Permission;
+import tech.corefinance.common.model.ResourceAction;
 import tech.corefinance.common.repository.PermissionRepository;
 import tech.corefinance.common.service.ResourceOwnerVerifier;
 import tech.corefinance.common.test.support.controllers.AnotherTestController;
 import tech.corefinance.common.test.support.controllers.TestController;
-import tech.corefinance.common.test.support.model.PermissionTest;
 import tech.corefinance.common.test.support.model.UserTest;
 import tech.corefinance.common.test.support.model.UserWrapterTest;
 import tech.corefinance.common.util.CoreFinanceUtil;
@@ -124,7 +123,7 @@ public class ApiAuthorizationCheckTest {
             // Invoke
             PowerMockito.when(methodInvocation.getThis()).thenReturn(controller);
             PowerMockito.when(methodInvocation.getMethod()).thenReturn(method);
-            var response = GeneralApiResponse.createSuccessResponse(new LinkedList<AbstractPermission>());
+            var response = GeneralApiResponse.createSuccessResponse(new LinkedList<Permission>());
             PowerMockito.when(methodInvocation.proceed()).thenReturn(response);
             assertThrowsExactly(IllegalStateException.class, () -> apiAuthorizationCheck.verifyPostRequest(joinPoint));
         } finally {
@@ -163,7 +162,7 @@ public class ApiAuthorizationCheckTest {
             // Invoke
             PowerMockito.when(methodInvocation.getThis()).thenReturn(controller);
             PowerMockito.when(methodInvocation.getMethod()).thenReturn(method);
-            var response = GeneralApiResponse.createSuccessResponse(new LinkedList<AbstractPermission>());
+            var response = GeneralApiResponse.createSuccessResponse(new LinkedList<Permission>());
             PowerMockito.when(methodInvocation.proceed()).thenReturn(response);
             assertThrowsExactly(IllegalStateException.class, () -> apiAuthorizationCheck.verifyPutRequest(joinPoint));
         } finally {
@@ -201,7 +200,7 @@ public class ApiAuthorizationCheckTest {
             // Invoke
             PowerMockito.when(methodInvocation.getThis()).thenReturn(controller);
             PowerMockito.when(methodInvocation.getMethod()).thenReturn(method);
-            var response = GeneralApiResponse.createSuccessResponse(new LinkedList<AbstractPermission>());
+            var response = GeneralApiResponse.createSuccessResponse(new LinkedList<Permission>());
             PowerMockito.when(methodInvocation.proceed()).thenReturn(response);
             apiAuthorizationCheck.verifyPatchRequest(joinPoint);
             // Verify
@@ -243,7 +242,7 @@ public class ApiAuthorizationCheckTest {
             // Injects
             PowerMockito.when(methodInvocation.getThis()).thenReturn(controller);
             PowerMockito.when(methodInvocation.getMethod()).thenReturn(method);
-            var response = GeneralApiResponse.createSuccessResponse(new LinkedList<AbstractPermission>());
+            var response = GeneralApiResponse.createSuccessResponse(new LinkedList<Permission>());
             PowerMockito.when(methodInvocation.proceed()).thenReturn(response);
 
             // Request
@@ -301,7 +300,7 @@ public class ApiAuthorizationCheckTest {
             // Injects
             PowerMockito.when(methodInvocation.getThis()).thenReturn(controller);
             PowerMockito.when(methodInvocation.getMethod()).thenReturn(method);
-            var response = GeneralApiResponse.createSuccessResponse(new LinkedList<AbstractPermission>());
+            var response = GeneralApiResponse.createSuccessResponse(new LinkedList<Permission>());
             PowerMockito.when(methodInvocation.proceed()).thenReturn(response);
 
             Field field = PowerMockito.field(ApiAuthorizationCheck.class, "permissionDefaultControl");
@@ -345,23 +344,23 @@ public class ApiAuthorizationCheckTest {
             request.setRequestURI(url);
 
             // Permissions
-            List<AbstractPermission> abstractPermissions = new LinkedList<>();
+            List<Permission> permissions = new LinkedList<>();
             var sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "action"), new Sort.Order(Sort.Direction.ASC, "url"));
             PowerMockito.when(permissionRepository.findAllByRoleIdAndResourceType(userRole.getRoleId(),
-                    userRole.getResourceType(), sort)).thenReturn(abstractPermissions);
-            var permission = new PermissionTest();
+                    userRole.getResourceType(), sort)).thenReturn(permissions);
+            var permission = new Permission();
             permission.setRequestMethod(RequestMethod.PUT);
             permission.setUrl(url);
-            permission.setAction(AbstractResourceAction.COMMON_ACTION_VIEW);
+            permission.setAction(ResourceAction.COMMON_ACTION_VIEW);
             permission.setRoleId(userRole.getRoleId());
             permission.setControl(AccessControl.ALLOWED);
             permission.setResourceType(userRole.getResourceType());
-            abstractPermissions.add(permission);
+            permissions.add(permission);
 
             // Injects
             PowerMockito.when(methodInvocation.getThis()).thenReturn(controller);
             PowerMockito.when(methodInvocation.getMethod()).thenReturn(method);
-            var response = GeneralApiResponse.createSuccessResponse(abstractPermissions);
+            var response = GeneralApiResponse.createSuccessResponse(permissions);
             PowerMockito.when(methodInvocation.proceed()).thenReturn(response);
 
             apiAuthorizationCheck.verifyPutRequest(joinPoint);
@@ -404,23 +403,23 @@ public class ApiAuthorizationCheckTest {
             request.setRequestURI(url);
 
             // Permissions
-            List<AbstractPermission> abstractPermissions = new LinkedList<>();
+            List<Permission> permissions = new LinkedList<>();
             var sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "action"), new Sort.Order(Sort.Direction.ASC, "url"));
             PowerMockito.when(permissionRepository.findAllByRoleIdAndResourceType(userRole.getRoleId(),
-                    userRole.getResourceType(), sort)).thenReturn(abstractPermissions);
-            var permission = new PermissionTest();
+                    userRole.getResourceType(), sort)).thenReturn(permissions);
+            var permission = new Permission();
             permission.setRequestMethod(null);
             permission.setUrl(url);
-            permission.setAction(AbstractPermission.ANY_ROLE_APPLIED_VALUE);
+            permission.setAction(Permission.ANY_ROLE_APPLIED_VALUE);
             permission.setRoleId(userRole.getRoleId());
             permission.setControl(AccessControl.DENIED);
             permission.setResourceType(userRole.getResourceType());
-            abstractPermissions.add(permission);
+            permissions.add(permission);
 
             // Injects
             PowerMockito.when(methodInvocation.getThis()).thenReturn(controller);
             PowerMockito.when(methodInvocation.getMethod()).thenReturn(method);
-            var response = GeneralApiResponse.createSuccessResponse(abstractPermissions);
+            var response = GeneralApiResponse.createSuccessResponse(permissions);
             PowerMockito.when(methodInvocation.proceed()).thenReturn(response);
 
             assertThrowsExactly(AccessDeniedException.class, () -> apiAuthorizationCheck.verifyPostRequest(joinPoint));
@@ -464,23 +463,23 @@ public class ApiAuthorizationCheckTest {
             request.setRequestURI(url);
 
             // Permissions
-            List<AbstractPermission> abstractPermissions = new LinkedList<>();
+            List<Permission> permissions = new LinkedList<>();
             var sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "action"), new Sort.Order(Sort.Direction.ASC, "url"));
             PowerMockito.when(permissionRepository.findAllByRoleIdAndResourceType("normal_role", "test-common", sort))
-                    .thenReturn(abstractPermissions);
-            var permission = new PermissionTest();
+                    .thenReturn(permissions);
+            var permission = new Permission();
             permission.setRequestMethod(RequestMethod.POST);
-            permission.setUrl(AbstractPermission.ANY_ROLE_APPLIED_VALUE);
-            permission.setAction(AbstractResourceAction.COMMON_ACTION_VIEW);
+            permission.setUrl(Permission.ANY_ROLE_APPLIED_VALUE);
+            permission.setAction(ResourceAction.COMMON_ACTION_VIEW);
             permission.setRoleId(userRole.getRoleId());
             permission.setControl(AccessControl.ALLOWED);
             permission.setResourceType(userRole.getResourceType());
-            abstractPermissions.add(permission);
+            permissions.add(permission);
 
             // Injects
             PowerMockito.when(methodInvocation.getThis()).thenReturn(controller);
             PowerMockito.when(methodInvocation.getMethod()).thenReturn(method);
-            var response = GeneralApiResponse.createSuccessResponse(abstractPermissions);
+            var response = GeneralApiResponse.createSuccessResponse(permissions);
             PowerMockito.when(methodInvocation.proceed()).thenReturn(response);
 
             apiAuthorizationCheck.verifyPostRequest(joinPoint);
@@ -529,23 +528,23 @@ public class ApiAuthorizationCheckTest {
             request.setMethod(RequestMethod.DELETE.name());
 
             // Permissions
-            List<AbstractPermission> abstractPermissions = new LinkedList<>();
+            List<Permission> permissions = new LinkedList<>();
             var sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "action"), new Sort.Order(Sort.Direction.ASC, "url"));
-            var permission = new PermissionTest();
+            var permission = new Permission();
             permission.setRequestMethod(RequestMethod.DELETE);
             permission.setUrl(url);
-            permission.setAction(AbstractPermission.ANY_ROLE_APPLIED_VALUE);
+            permission.setAction(Permission.ANY_ROLE_APPLIED_VALUE);
             permission.setRoleId(userRole.getRoleId());
             permission.setControl(AccessControl.ALLOWED);
             permission.setResourceType(userRole.getResourceType());
-            abstractPermissions.add(permission);
+            permissions.add(permission);
             PowerMockito.when(permissionRepository.findAllByRoleIdAndResourceType("normal_role", "test-common", sort))
-                    .thenReturn(abstractPermissions);
+                    .thenReturn(permissions);
 
             // Injects
             PowerMockito.when(methodInvocation.getThis()).thenReturn(controller);
             PowerMockito.when(methodInvocation.getMethod()).thenReturn(method);
-            var response = GeneralApiResponse.createSuccessResponse(abstractPermissions);
+            var response = GeneralApiResponse.createSuccessResponse(permissions);
             PowerMockito.when(methodInvocation.proceed()).thenReturn(response);
 
             apiAuthorizationCheck.verifyGenericRequest(joinPoint);
@@ -594,23 +593,23 @@ public class ApiAuthorizationCheckTest {
             request.setMethod(RequestMethod.POST.name());
 
             // Permissions
-            List<AbstractPermission> abstractPermissions = new LinkedList<>();
+            List<Permission> permissions = new LinkedList<>();
             var sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "action"), new Sort.Order(Sort.Direction.ASC, "url"));
             PowerMockito.when(permissionRepository.findAllByRoleIdAndResourceType("normal_role", "common", sort))
-                    .thenReturn(abstractPermissions);
-            var permission = new PermissionTest();
+                    .thenReturn(permissions);
+            var permission = new Permission();
             permission.setRequestMethod(RequestMethod.DELETE);
             permission.setUrl(url);
-            permission.setAction(AbstractPermission.ANY_ROLE_APPLIED_VALUE);
+            permission.setAction(Permission.ANY_ROLE_APPLIED_VALUE);
             permission.setRoleId(userRole.getRoleId());
             permission.setControl(AccessControl.ALLOWED);
             permission.setResourceType(userRole.getResourceType());
-            abstractPermissions.add(permission);
+            permissions.add(permission);
 
             // Injects
             PowerMockito.when(methodInvocation.getThis()).thenReturn(controller);
             PowerMockito.when(methodInvocation.getMethod()).thenReturn(method);
-            var response = GeneralApiResponse.createSuccessResponse(abstractPermissions);
+            var response = GeneralApiResponse.createSuccessResponse(permissions);
             PowerMockito.when(methodInvocation.proceed()).thenReturn(response);
 
             assertThrowsExactly(AccessDeniedException.class,
@@ -657,23 +656,23 @@ public class ApiAuthorizationCheckTest {
             request.setMethod(RequestMethod.PUT.name());
 
             // Permissions
-            List<AbstractPermission> abstractPermissions = new LinkedList<>();
+            List<Permission> permissions = new LinkedList<>();
             var sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "action"), new Sort.Order(Sort.Direction.ASC, "url"));
             PowerMockito.when(permissionRepository.findAllByRoleIdAndResourceType("normal_role", "common", sort))
-                    .thenReturn(abstractPermissions);
-            var permission = new PermissionTest();
+                    .thenReturn(permissions);
+            var permission = new Permission();
             permission.setRequestMethod(RequestMethod.PUT);
             permission.setUrl("not_matched_url");
-            permission.setAction(AbstractPermission.ANY_ROLE_APPLIED_VALUE);
+            permission.setAction(Permission.ANY_ROLE_APPLIED_VALUE);
             permission.setRoleId(userRole.getRoleId());
             permission.setControl(AccessControl.ALLOWED);
             permission.setResourceType(userRole.getResourceType());
-            abstractPermissions.add(permission);
+            permissions.add(permission);
 
             // Injects
             PowerMockito.when(methodInvocation.getThis()).thenReturn(controller);
             PowerMockito.when(methodInvocation.getMethod()).thenReturn(method);
-            var response = GeneralApiResponse.createSuccessResponse(abstractPermissions);
+            var response = GeneralApiResponse.createSuccessResponse(permissions);
             PowerMockito.when(methodInvocation.proceed()).thenReturn(response);
 
             assertThrowsExactly(AccessDeniedException.class,
@@ -720,23 +719,23 @@ public class ApiAuthorizationCheckTest {
             request.setMethod(RequestMethod.DELETE.name());
 
             // Permissions
-            List<AbstractPermission> abstractPermissions = new LinkedList<>();
+            List<Permission> permissions = new LinkedList<>();
             var sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "action"), new Sort.Order(Sort.Direction.ASC, "url"));
             PowerMockito.when(permissionRepository.findAllByRoleIdAndResourceType("normal_role", "common", sort))
-                    .thenReturn(abstractPermissions);
-            var permission = new PermissionTest();
+                    .thenReturn(permissions);
+            var permission = new Permission();
             permission.setRequestMethod(RequestMethod.DELETE);
             permission.setUrl(url);
             permission.setAction("In-correct-action");
             permission.setRoleId(userRole.getRoleId());
             permission.setControl(AccessControl.ALLOWED);
             permission.setResourceType(userRole.getResourceType());
-            abstractPermissions.add(permission);
+            permissions.add(permission);
 
             // Injects
             PowerMockito.when(methodInvocation.getThis()).thenReturn(controller);
             PowerMockito.when(methodInvocation.getMethod()).thenReturn(method);
-            var response = GeneralApiResponse.createSuccessResponse(abstractPermissions);
+            var response = GeneralApiResponse.createSuccessResponse(permissions);
             PowerMockito.when(methodInvocation.proceed()).thenReturn(response);
 
             assertThrowsExactly(AccessDeniedException.class,
@@ -785,23 +784,23 @@ public class ApiAuthorizationCheckTest {
                     .thenReturn(new Object[]{"1", new MockHttpServletResponse()});
 
             // Permissions
-            List<AbstractPermission> abstractPermissions = new LinkedList<>();
+            List<Permission> permissions = new LinkedList<>();
             var sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "action"), new Sort.Order(Sort.Direction.ASC, "url"));
             PowerMockito.when(permissionRepository.findAllByRoleIdAndResourceType("normal_role", "test-common", sort))
-                    .thenReturn(abstractPermissions);
-            var permission = new PermissionTest();
+                    .thenReturn(permissions);
+            var permission = new Permission();
             permission.setRequestMethod(RequestMethod.PATCH);
             permission.setUrl(url);
-            permission.setAction(AbstractPermission.ANY_ROLE_APPLIED_VALUE);
+            permission.setAction(Permission.ANY_ROLE_APPLIED_VALUE);
             permission.setRoleId(userRole.getRoleId());
             permission.setControl(AccessControl.ALLOWED_SPECIFIC_RESOURCES);
             permission.setResourceType("test-common");
-            abstractPermissions.add(permission);
+            permissions.add(permission);
 
             // Injects
             PowerMockito.when(methodInvocation.getThis()).thenReturn(controller);
             PowerMockito.when(methodInvocation.getMethod()).thenReturn(method);
-            var response = GeneralApiResponse.createSuccessResponse(abstractPermissions);
+            var response = GeneralApiResponse.createSuccessResponse(permissions);
             PowerMockito.when(methodInvocation.proceed()).thenReturn(response);
 
             // Resource verifier
@@ -860,23 +859,23 @@ public class ApiAuthorizationCheckTest {
                     .thenReturn(new Object[]{"1", new MockHttpServletResponse()});
 
             // Permissions
-            List<AbstractPermission> abstractPermissions = new LinkedList<>();
+            List<Permission> permissions = new LinkedList<>();
             var sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "action"), new Sort.Order(Sort.Direction.ASC, "url"));
             PowerMockito.when(permissionRepository.findAllByRoleIdAndResourceType("normal_role", "test-common", sort))
-                    .thenReturn(abstractPermissions);
-            var permission = new PermissionTest();
+                    .thenReturn(permissions);
+            var permission = new Permission();
             permission.setRequestMethod(RequestMethod.PATCH);
             permission.setUrl(url);
-            permission.setAction(AbstractPermission.ANY_ROLE_APPLIED_VALUE);
+            permission.setAction(Permission.ANY_ROLE_APPLIED_VALUE);
             permission.setRoleId(userRole.getRoleId());
             permission.setControl(AccessControl.DENIED_SPECIFIC_RESOURCES);
             permission.setResourceType("test-common");
-            abstractPermissions.add(permission);
+            permissions.add(permission);
 
             // Injects
             PowerMockito.when(methodInvocation.getThis()).thenReturn(controller);
             PowerMockito.when(methodInvocation.getMethod()).thenReturn(method);
-            var response = GeneralApiResponse.createSuccessResponse(abstractPermissions);
+            var response = GeneralApiResponse.createSuccessResponse(permissions);
             PowerMockito.when(methodInvocation.proceed()).thenReturn(response);
 
             // Resource verifier
@@ -934,23 +933,23 @@ public class ApiAuthorizationCheckTest {
                     .thenReturn(new Object[]{"1", new MockHttpServletResponse()});
 
             // Permissions
-            List<AbstractPermission> abstractPermissions = new LinkedList<>();
+            List<Permission> permissions = new LinkedList<>();
             var sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "action"), new Sort.Order(Sort.Direction.ASC, "url"));
             PowerMockito.when(permissionRepository.findAllByRoleIdAndResourceType("normal_role", "test-common", sort))
-                    .thenReturn(abstractPermissions);
-            var permission = new PermissionTest();
+                    .thenReturn(permissions);
+            var permission = new Permission();
             permission.setRequestMethod(RequestMethod.PATCH);
             permission.setUrl(url);
-            permission.setAction(AbstractPermission.ANY_ROLE_APPLIED_VALUE);
+            permission.setAction(Permission.ANY_ROLE_APPLIED_VALUE);
             permission.setRoleId(userRole.getRoleId());
             permission.setControl(AccessControl.DENIED_SPECIFIC_RESOURCES);
             permission.setResourceType("test-common");
-            abstractPermissions.add(permission);
+            permissions.add(permission);
 
             // Injects
             PowerMockito.when(methodInvocation.getThis()).thenReturn(controller);
             PowerMockito.when(methodInvocation.getMethod()).thenReturn(method);
-            var response = GeneralApiResponse.createSuccessResponse(abstractPermissions);
+            var response = GeneralApiResponse.createSuccessResponse(permissions);
             PowerMockito.when(methodInvocation.proceed()).thenReturn(response);
 
             // Resource verifier
@@ -1014,23 +1013,23 @@ public class ApiAuthorizationCheckTest {
                     .thenReturn(new Object[]{"1", new MockHttpServletResponse()});
 
             // Permissions
-            List<AbstractPermission> abstractPermissions = new LinkedList<>();
+            List<Permission> permissions = new LinkedList<>();
             var sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "action"), new Sort.Order(Sort.Direction.ASC, "url"));
             PowerMockito.when(permissionRepository.findAllByRoleIdAndResourceType("normal_role", "test-common", sort))
-                    .thenReturn(abstractPermissions);
-            var permission = new PermissionTest();
+                    .thenReturn(permissions);
+            var permission = new Permission();
             permission.setRequestMethod(RequestMethod.PATCH);
             permission.setUrl(url);
-            permission.setAction(AbstractPermission.ANY_ROLE_APPLIED_VALUE);
+            permission.setAction(Permission.ANY_ROLE_APPLIED_VALUE);
             permission.setRoleId(userRole.getRoleId());
             permission.setControl(AccessControl.ALLOWED_SPECIFIC_RESOURCES);
             permission.setResourceType("test-common");
-            abstractPermissions.add(permission);
+            permissions.add(permission);
 
             // Injects
             PowerMockito.when(methodInvocation.getThis()).thenReturn(controller);
             PowerMockito.when(methodInvocation.getMethod()).thenReturn(method);
-            var response = GeneralApiResponse.createSuccessResponse(abstractPermissions);
+            var response = GeneralApiResponse.createSuccessResponse(permissions);
             PowerMockito.when(methodInvocation.proceed()).thenReturn(response);
 
             // Resource verifier
@@ -1088,23 +1087,23 @@ public class ApiAuthorizationCheckTest {
                     .thenReturn(new Object[]{"1", new MockHttpServletResponse()});
 
             // Permissions
-            List<AbstractPermission> abstractPermissions = new LinkedList<>();
+            List<Permission> permissions = new LinkedList<>();
             var sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "action"), new Sort.Order(Sort.Direction.ASC, "url"));
             PowerMockito.when(permissionRepository.findAllByRoleIdAndResourceType("normal_role", "test-common", sort))
-                    .thenReturn(abstractPermissions);
-            var permission = new PermissionTest();
+                    .thenReturn(permissions);
+            var permission = new Permission();
             permission.setRequestMethod(RequestMethod.PATCH);
             permission.setUrl(url);
-            permission.setAction(AbstractPermission.ANY_ROLE_APPLIED_VALUE);
+            permission.setAction(Permission.ANY_ROLE_APPLIED_VALUE);
             permission.setRoleId(userRole.getRoleId());
             permission.setControl(AccessControl.ALLOWED_SPECIFIC_RESOURCES);
             permission.setResourceType("test-common");
-            abstractPermissions.add(permission);
+            permissions.add(permission);
 
             // Injects
             PowerMockito.when(methodInvocation.getThis()).thenReturn(controller);
             PowerMockito.when(methodInvocation.getMethod()).thenReturn(method);
-            var response = GeneralApiResponse.createSuccessResponse(abstractPermissions);
+            var response = GeneralApiResponse.createSuccessResponse(permissions);
             PowerMockito.when(methodInvocation.proceed()).thenReturn(response);
 
             // Invoke
@@ -1154,23 +1153,23 @@ public class ApiAuthorizationCheckTest {
                     .thenReturn(new Object[]{"1", new MockHttpServletResponse()});
 
             // Permissions
-            List<AbstractPermission> abstractPermissions = new LinkedList<>();
+            List<Permission> permissions = new LinkedList<>();
             var sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "action"), new Sort.Order(Sort.Direction.ASC, "url"));
             PowerMockito.when(permissionRepository.findAllByRoleIdAndResourceType("normal_role", "test-common", sort))
-                    .thenReturn(abstractPermissions);
-            var permission = new PermissionTest();
+                    .thenReturn(permissions);
+            var permission = new Permission();
             permission.setRequestMethod(RequestMethod.PUT);
             permission.setUrl(url);
-            permission.setAction(AbstractPermission.ANY_ROLE_APPLIED_VALUE);
+            permission.setAction(Permission.ANY_ROLE_APPLIED_VALUE);
             permission.setRoleId(userRole.getRoleId());
             permission.setControl(AccessControl.ALLOWED_SPECIFIC_RESOURCES);
             permission.setResourceType("test-common");
-            abstractPermissions.add(permission);
+            permissions.add(permission);
 
             // Injects
             PowerMockito.when(methodInvocation.getThis()).thenReturn(controller);
             PowerMockito.when(methodInvocation.getMethod()).thenReturn(method);
-            var response = GeneralApiResponse.createSuccessResponse(abstractPermissions);
+            var response = GeneralApiResponse.createSuccessResponse(permissions);
             PowerMockito.when(methodInvocation.proceed()).thenReturn(response);
 
             // Resource verifier
@@ -1228,23 +1227,23 @@ public class ApiAuthorizationCheckTest {
                     .thenReturn(new Object[]{null, new MockHttpServletResponse()});
 
             // Permissions
-            List<AbstractPermission> abstractPermissions = new LinkedList<>();
+            List<Permission> permissions = new LinkedList<>();
             var sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "action"), new Sort.Order(Sort.Direction.ASC, "url"));
             PowerMockito.when(permissionRepository.findAllByRoleIdAndResourceType("normal_role", "test-common", sort))
-                    .thenReturn(abstractPermissions);
-            var permission = new PermissionTest();
+                    .thenReturn(permissions);
+            var permission = new Permission();
             permission.setRequestMethod(RequestMethod.PATCH);
             permission.setUrl(url);
-            permission.setAction(AbstractPermission.ANY_ROLE_APPLIED_VALUE);
+            permission.setAction(Permission.ANY_ROLE_APPLIED_VALUE);
             permission.setRoleId(userRole.getRoleId());
             permission.setControl(AccessControl.ALLOWED_SPECIFIC_RESOURCES);
             permission.setResourceType("test-common");
-            abstractPermissions.add(permission);
+            permissions.add(permission);
 
             // Injects
             PowerMockito.when(methodInvocation.getThis()).thenReturn(controller);
             PowerMockito.when(methodInvocation.getMethod()).thenReturn(method);
-            var response = GeneralApiResponse.createSuccessResponse(abstractPermissions);
+            var response = GeneralApiResponse.createSuccessResponse(permissions);
             PowerMockito.when(methodInvocation.proceed()).thenReturn(response);
 
             // Resource verifier
@@ -1302,23 +1301,23 @@ public class ApiAuthorizationCheckTest {
                     .thenReturn(new Object[]{new MockHttpServletResponse(), null});
 
             // Permissions
-            List<AbstractPermission> abstractPermissions = new LinkedList<>();
+            List<Permission> permissions = new LinkedList<>();
             var sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "action"), new Sort.Order(Sort.Direction.ASC, "url"));
             PowerMockito.when(permissionRepository.findAllByRoleIdAndResourceType("normal_role", "test-common", sort))
-                    .thenReturn(abstractPermissions);
-            var permission = new PermissionTest();
+                    .thenReturn(permissions);
+            var permission = new Permission();
             permission.setRequestMethod(RequestMethod.PATCH);
             permission.setUrl(url);
-            permission.setAction(AbstractPermission.ANY_ROLE_APPLIED_VALUE);
+            permission.setAction(Permission.ANY_ROLE_APPLIED_VALUE);
             permission.setRoleId(userRole.getRoleId());
             permission.setControl(AccessControl.ALLOWED_SPECIFIC_RESOURCES);
             permission.setResourceType("test-common");
-            abstractPermissions.add(permission);
+            permissions.add(permission);
 
             // Injects
             PowerMockito.when(methodInvocation.getThis()).thenReturn(controller);
             PowerMockito.when(methodInvocation.getMethod()).thenReturn(method);
-            var response = GeneralApiResponse.createSuccessResponse(abstractPermissions);
+            var response = GeneralApiResponse.createSuccessResponse(permissions);
             PowerMockito.when(methodInvocation.proceed()).thenReturn(response);
 
             // Resource verifier
@@ -1376,23 +1375,23 @@ public class ApiAuthorizationCheckTest {
                     .thenReturn(new Object[]{new MockHttpServletResponse(), new UserWrapterTest(new UserTest())});
 
             // Permissions
-            List<AbstractPermission> abstractPermissions = new LinkedList<>();
+            List<Permission> permissions = new LinkedList<>();
             var sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "action"), new Sort.Order(Sort.Direction.ASC, "url"));
             PowerMockito.when(permissionRepository.findAllByRoleIdAndResourceType("normal_role", "test-common", sort))
-                    .thenReturn(abstractPermissions);
-            var permission = new PermissionTest();
+                    .thenReturn(permissions);
+            var permission = new Permission();
             permission.setRequestMethod(RequestMethod.PATCH);
             permission.setUrl(url);
-            permission.setAction(AbstractPermission.ANY_ROLE_APPLIED_VALUE);
+            permission.setAction(Permission.ANY_ROLE_APPLIED_VALUE);
             permission.setRoleId(userRole.getRoleId());
             permission.setControl(AccessControl.ALLOWED_SPECIFIC_RESOURCES);
             permission.setResourceType("test-common");
-            abstractPermissions.add(permission);
+            permissions.add(permission);
 
             // Injects
             PowerMockito.when(methodInvocation.getThis()).thenReturn(controller);
             PowerMockito.when(methodInvocation.getMethod()).thenReturn(method);
-            var response = GeneralApiResponse.createSuccessResponse(abstractPermissions);
+            var response = GeneralApiResponse.createSuccessResponse(permissions);
             PowerMockito.when(methodInvocation.proceed()).thenReturn(response);
 
             // Resource verifier
@@ -1452,23 +1451,23 @@ public class ApiAuthorizationCheckTest {
                     .thenReturn(new Object[]{new MockHttpServletResponse(), new UserWrapterTest(user)});
 
             // Permissions
-            List<AbstractPermission> abstractPermissions = new LinkedList<>();
+            List<Permission> permissions = new LinkedList<>();
             var sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "action"), new Sort.Order(Sort.Direction.ASC, "url"));
             PowerMockito.when(permissionRepository.findAllByRoleIdAndResourceType("normal_role", "test-common", sort))
-                    .thenReturn(abstractPermissions);
-            var permission = new PermissionTest();
+                    .thenReturn(permissions);
+            var permission = new Permission();
             permission.setRequestMethod(RequestMethod.PATCH);
             permission.setUrl(url);
-            permission.setAction(AbstractPermission.ANY_ROLE_APPLIED_VALUE);
+            permission.setAction(Permission.ANY_ROLE_APPLIED_VALUE);
             permission.setRoleId(userRole.getRoleId());
             permission.setControl(AccessControl.ALLOWED_SPECIFIC_RESOURCES);
             permission.setResourceType("test-common");
-            abstractPermissions.add(permission);
+            permissions.add(permission);
 
             // Injects
             PowerMockito.when(methodInvocation.getThis()).thenReturn(controller);
             PowerMockito.when(methodInvocation.getMethod()).thenReturn(method);
-            var response = GeneralApiResponse.createSuccessResponse(abstractPermissions);
+            var response = GeneralApiResponse.createSuccessResponse(permissions);
             PowerMockito.when(methodInvocation.proceed()).thenReturn(response);
 
             // Resource verifier

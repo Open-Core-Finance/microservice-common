@@ -25,8 +25,7 @@ import tech.corefinance.common.converter.ExportTypeConverter;
 import tech.corefinance.common.dto.SimpleVersion;
 import tech.corefinance.common.dto.SimpleVersionComparator;
 import tech.corefinance.common.ex.ReflectiveIncorrectFieldException;
-import tech.corefinance.common.ex.ServiceProcessingException;
-import tech.corefinance.common.model.AbstractResourceAction;
+import tech.corefinance.common.model.ResourceAction;
 import tech.corefinance.common.model.GenericModel;
 import tech.corefinance.common.service.CommonService;
 
@@ -147,15 +146,15 @@ public class CoreFinanceUtil {
         if (!StringUtils.hasText(resourceType)) {
             var requestMethods = requestMappingInfo.getMethodsCondition().getMethods();
             if (requestMethods.contains(RequestMethod.DELETE)) {
-                resourceType = AbstractResourceAction.COMMON_ACTION_DELETE;
+                resourceType = ResourceAction.COMMON_ACTION_DELETE;
             } else if (requestMethods.contains(RequestMethod.GET)) {
-                resourceType = AbstractResourceAction.COMMON_ACTION_LIST;
+                resourceType = ResourceAction.COMMON_ACTION_LIST;
             } else if (requestMethods.contains(RequestMethod.POST)) {
-                resourceType = AbstractResourceAction.COMMON_ACTION_ADD;
+                resourceType = ResourceAction.COMMON_ACTION_ADD;
             } else if (requestMethods.contains(RequestMethod.PUT) || requestMethods.contains(RequestMethod.PATCH)) {
-                resourceType = AbstractResourceAction.COMMON_ACTION_UPDATE;
+                resourceType = ResourceAction.COMMON_ACTION_UPDATE;
             } else {
-                resourceType = AbstractResourceAction.COMMON_ACTION_VIEW;
+                resourceType = ResourceAction.COMMON_ACTION_VIEW;
             }
         }
         return resourceType;
