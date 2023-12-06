@@ -1,0 +1,88 @@
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "product"
+  namespace: "default"
+  labels:
+    app: "product"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "product"
+  template:
+    metadata:
+      labels:
+        app: "product"
+    spec:
+      serviceAccountName: corefinance-ksa-cloud-sql
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        #cloud.google.com/compute-class: "general-purpose"
+      containers:
+        - name: "product"
+          image: "gcr.io/corefinance/product"
+          env:
+            - name: "SERVICE_ENV"
+              value: "COMPUTE_ENGINE"
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: compute-engine-sql-secrets
+                  key: product_username
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: compute-engine-sql-secrets
+                  key: product_password
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: compute-engine-sql-secrets
+                  key: product_database
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: compute-engine-sql-secrets
+                  key: product_dbhost
+            - name: DB_MAX_CONNECTIONS
+              value: "5"
+            - name: DB_MIN_CONNECTIONS
+              value: "2"
+          resources:
+            limits:
+              cpu: 500m
+              ephemeral-storage: 1Gi
+              memory: 2G
+            requests:
+              cpu: 500m
+              ephemeral-storage: 1Gi
+              memory: 2Gi
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8081
+            initialDelaySeconds: 200
+            periodSeconds: 10
+---
+apiVersion: "autoscaling/v2"
+kind: "HorizontalPodAutoscaler"
+metadata:
+  name: "product"
+  namespace: "default"
+  labels:
+    app: "product"
+spec:
+  scaleTargetRef:
+    kind: "Deployment"
+    name: "product"
+    apiVersion: "apps/v1"
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    - type: "Resource"
+      resource:
+        name: "cpu"
+        target:
+          type: "Utilization"
+          averageUtilization: 90

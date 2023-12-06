@@ -1,0 +1,38 @@
+<mat-card>
+    <mat-card-title>{{languageService.formatLanguage('login.loginTitle', [])}}</mat-card-title>
+    <mat-card-content>
+        <form [formGroup]="loginForm" (ngSubmit)="submit()">
+            <mat-form-field>
+                <input type="text" matInput placeholder="{{languageService.formatLanguage('login.username', [])}}" formControlName="username">
+            </mat-form-field>
+            <mat-form-field>
+                <input type="password" matInput placeholder="{{languageService.formatLanguage('login.password', [])}}" formControlName="password">
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-select name="selectedLanguage" id="selectedLanguage" [value]="selectedLanguage.languageKey">
+                    <mat-select-trigger>
+                        <span class="flag-icon flag-icon-{{selectedLanguage.languageKey}}"></span>
+                        {{ selectedLanguage.name }}
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let language of languageList"
+                        [value]="language.languageKey" (click)="changeLanguage(language)">
+                        <span class="flag-icon flag-icon-{{language.languageKey}}"></span>
+                        {{ language.name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <div class="error" *ngIf="message['error'] && message['error'].length > 0">
+                <span *ngFor="let error of message['error']">
+                    {{languageService.formatLanguage("login.error." + error, [])}}
+                </span>
+            </div>
+
+            <div class="button">
+                <button type="submit" mat-button>{{languageService.formatLanguage('login.loginButton', [])}}</button>
+            </div>
+
+        </form>
+    </mat-card-content>
+</mat-card>

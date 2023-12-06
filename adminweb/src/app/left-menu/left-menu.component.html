@@ -1,0 +1,27 @@
+<div class="left-menu">
+    <ng-container *ngFor="let menuGroup of menuGroups">
+        <mat-expansion-panel expanded *ngIf="menuGroup.label != ''">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    {{menuGroup.label}}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div>
+                <div *ngFor="let menuItem of menuGroup.items">
+                    <div class="menu-item" *ngIf="!isActionItem(menuItem)" (click)="menuItemClicked(menuItem)"
+                        [ngClass]="{'activate': isSameUrl(menuItem), 'disabled': !menuItem.activated}">
+                        <img [src]="menuItem.iconUrl" *ngIf="menuItem.iconUrl != ''">
+                        <mat-icon aria-hidden="false" [fontIcon]="menuItem.iconName" *ngIf="menuItem.iconName != ''"></mat-icon>
+                        <label>{{menuItem.label}}</label>
+                    </div>
+                    <div class="menu-item" *ngIf="isActionItem(menuItem)" (click)="callMenuAction(menuItem)">
+                        <img [src]="menuItem.iconUrl" *ngIf="menuItem.iconUrl != '' && !isLanuageItem(menuItem)">
+                        <mat-icon aria-hidden="false" [fontIcon]="menuItem.iconName" *ngIf="menuItem.iconName != '' && !isLanuageItem(menuItem)"></mat-icon>
+                        <span class="flag-icon flag-icon-{{menuItem.iconName}}" *ngIf="isLanuageItem(menuItem)"></span>
+                        <label>{{menuItem.label}}</label>
+                    </div>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </ng-container>
+</div>

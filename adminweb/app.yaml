@@ -1,0 +1,10 @@
+#runtime: nodejs20
+runtime: python39
+# service: adminweb
+# version: 1234567
+handlers:
+  - url: /
+    static_files: dist/corefinance-adminweb/index.html
+    upload: dist/corefinance-adminweb
+  - url: /
+    static_dir: dist/corefinance-adminweb

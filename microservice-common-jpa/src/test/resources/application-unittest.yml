@@ -1,0 +1,110 @@
+#Logging
+logging.config: classpath:logback-test.xml
+
+spring:
+  main:
+    allow-bean-definition-overriding: false
+  jackson:
+    default-property-inclusion: NON_NULL
+    serialization:
+      write-dates-as-timestamps: true
+      write-date-keys-as-timestamps: true
+      write-durations-as-timestamps: true
+      write-enums-using-to-string: false
+      FAIL_ON_EMPTY_BEANS: false
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/kuniv_unit_test}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-test-query: SELECT 1
+      maximum-pool-size: 10 # Adjust as needed
+      minimum-idle: 2
+      idle-timeout: 30000
+      # pool-name: order_pool
+  jpa:
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: create-drop
+      show-sql: true
+      generate-ddl: false
+  # Liquibase settings
+  liquibase:
+    change-log: classpath:db/changelog/sql-changelog.xml
+    drop-first: false
+    enabled: true
+    contexts: development
+tech:
+  corefinance:
+    app:
+      converter:
+        local-date-to-string: true
+        local-date-time-to-string: true
+        zoned-date-time-to-string: true
+        zoned-date-time-to-local-date-time: true
+        zoned-date-time-to-date: true
+    common:
+      filter-ordered:
+        authen-filter: 2
+        tenant-id-filter-order: 1
+        trace-info-id-order: 0
+        encoding-response-order: 0
+      enabled:
+        async: true
+        simple-version: true
+        property-encryption: true
+        auto-response-encoding: true
+        trace-id-filter: true
+        tenant: true
+        default-simple-search: true
+      default-response-charset: utf-8
+    log:
+      enabled:
+        services: true
+        repositories: true
+        api: true
+    security:
+      internal-api-key: No-key
+      # Json Web Token
+      jwt:
+        expiration: 3600
+        login-mode: SINGLE_LOGIN_PER_APP
+        enabled:
+          common: true
+          cached: false
+      public-key: classpath:public_key.der
+      private-key:
+      no-authen-urls:
+        - /
+        - /void
+        - /parserConfigurationException
+        - /throwable
+        - /test/api/*
+      permission:
+        default-control: ALLOWED
+      authorize-check: false
+      scan-controllers-actions: true
+      ignore-controller-scan:
+        - .springframework.
+        - .springdoc.
+        - .test.
+    encryption:
+      plain: test
+      encoded: ENC(O5MFWIMMOz+V3iItOVY60g==)
+export:
+  format:
+    date: yyyy/MM/dd
+    datetime: yyyy/MM/dd HH:mm:ss
+jasypt:
+  encryptor:
+    password: password
+    # algorithm: PBEWithHmacSHA512AndAES_256
+    algorithm: PBEWithMD5AndDES
+    salt-generator-class-name: org.jasypt.salt.RandomSaltGenerator
+    # provider-class-name: com.sun.crypto.provider.SunJCE
+    provider-name: SunJCE
+    string-output-type: base64
+    key-obtention-iterations: 1000
+    pool-size: 1

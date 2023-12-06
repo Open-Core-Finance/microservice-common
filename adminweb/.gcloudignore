@@ -1,0 +1,9 @@
+# Exclude dependencies
+node_modules/
+e2e/
+src/
+coverage
+^LICENSE
+\.angular
+\.idea
+\.vscode

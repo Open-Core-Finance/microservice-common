@@ -1,0 +1,49 @@
+<div class="add-item-page">
+    <mat-card>
+        <mat-card-title>
+            {{languageService.formatLanguage('currencyScreens.addTitle', [])}}
+        </mat-card-title>
+        <mat-card-content>
+            <form [formGroup]="addCurrencyForm">
+                <mat-form-field class="full-width" appearance="fill" color="primary">
+                    <input type="text" matInput placeholder="{{languageService.formatLanguage('currency', [])}}" formControlName="name" required>
+                </mat-form-field>
+                <mat-form-field class="full-width" appearance="fill" color="primary">
+                    <input type="text" matInput placeholder="{{languageService.formatLanguage('currencySymbol', [])}}" formControlName="symbol" required>
+                </mat-form-field>
+                <mat-form-field class="full-width" appearance="fill" color="primary">
+                    <mat-label>{{languageService.formatLanguage('decimalMark', [])}}</mat-label>
+                    <mat-select required formControlName="decimalMark">
+                        <mat-option value=".">{{languageService.formatLanguage('decimalMarkPeriod', [])}}</mat-option>
+                        <mat-option value=",">{{languageService.formatLanguage('decimalMarkComma', [])}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field class="full-width" appearance="fill" color="primary">
+                    <mat-label>{{languageService.formatLanguage('currencySymbolPosision', [])}}</mat-label>
+                    <mat-select required formControlName="symbolAtBeginning">
+                        <mat-option [value]="true">{{languageService.formatLanguage('currencySymbolPosision_true', [])}}</mat-option>
+                        <mat-option [value]="false">{{languageService.formatLanguage('currencySymbolPosision_false', [])}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <div *ngIf="message['error'] && message['error'].length > 0" class="error-container">
+                    <div class="error" *ngFor="let err of message['error']">
+                        {{languageService.formatLanguage("currencyScreens.error." + err, [])}}
+                    </div>
+                </div>
+                
+            </form>
+        </mat-card-content>
+
+        <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="saveClick($event);">
+                {{languageService.formatLanguage('action.save', [])}}
+            </button>
+            <button mat-raised-button color="warn" (click)="cancelClick($event);">
+                {{languageService.formatLanguage('action.cancel', [])}}
+            </button>
+        </mat-card-actions>
+
+    </mat-card>
+
+</div>

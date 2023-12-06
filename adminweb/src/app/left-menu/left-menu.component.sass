@@ -1,0 +1,38 @@
+::ng-deep mat-expansion-panel
+    .mat-expansion-panel-body
+        background-color: white
+        padding: 0px
+
+        .menu-item
+            padding: 5px
+            border-style: solid none none none
+            border-width: 1px
+            border-color: gray
+            // background-color: #c2e6e8
+            padding: 10px
+            cursor: pointer
+            label
+                cursor: pointer
+
+            .flag-icon
+                top: -5px
+
+        .menu-item.activate
+            background-color: green
+            color: white
+            img
+                filter: brightness(0) invert(1)
+        .menu-item.disabled
+            // background-color: white
+            color: grey
+            cursor: auto
+            label
+                cursor: auto
+
+        label
+            top: -5px
+            position: relative
+            margin-left: 5px
+.left-menu
+    padding: 0px 2px 0px 2px
+    min-width: 300px

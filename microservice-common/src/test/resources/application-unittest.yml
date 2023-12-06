@@ -1,0 +1,117 @@
+#Logging
+logging.config: classpath:logback-test.xml
+server.port: 7777
+spring:
+  main:
+    allow-bean-definition-overriding: false
+  jackson:
+    default-property-inclusion: NON_NULL
+    serialization:
+      write-dates-as-timestamps: true
+      write-date-keys-as-timestamps: true
+      write-durations-as-timestamps: true
+      write-enums-using-to-string: false
+      FAIL_ON_EMPTY_BEANS: false
+
+tech:
+  corefinance:
+    app:
+      converter:
+        local-date-to-string: true
+        local-date-time-to-string: true
+        zoned-date-time-to-string: true
+        zoned-date-time-to-local-date-time: true
+        zoned-date-time-to-date: true
+    common:
+      filter-ordered:
+        authen-filter: 2
+        tenant-id-filter-order: 3
+        trace-info-id-order: 0
+        encoding-response-order: 100
+      enabled:
+        async: true
+        simple-version: true
+        property-encryption: true
+        auto-response-encoding: true
+        trace-id-filter: true
+        tenant: true
+      default-response-charset: utf-8
+    log:
+      enabled:
+        services: true
+        repositories: true
+        api: true
+      exclude-classes: "feign.Target"
+    security:
+      internal-api-key: No-key
+      # Json Web Token
+      jwt:
+        expiration: 3600
+        login-mode: SINGLE_LOGIN_PER_APP
+        enabled:
+          common: true
+          cached: false
+      public-key: classpath:public_key.der
+      private-key: classpath:private_key.der
+      no-authen-urls:
+        - /
+        - /void
+        - /parserConfigurationException
+        - /throwable
+        - /test/api/*
+      permission:
+        default-control: ALLOWED
+      authorize-check: false
+      scan-controllers-actions: true
+      ignore-controller-scan:
+        - .springframework.
+        - .springdoc.
+        - .test.
+      url-cors:
+        cors-configurations:
+          - url-pattern: /v3/api-docs/*
+            allowed-origins:
+              - http://localhost:4200
+            allowed-methods:
+              - GET
+            allowed-headers: '*'
+          - url-pattern: /**
+            allowed-origins:
+              - http://localhost:4200
+              - http://*.corefinance.tech
+            allowed-methods:
+              - GET
+              - PUT
+              - OPTIONS
+              - DELETE
+              - POST
+              - PATCH
+            allowed-headers: '*'
+    encryption:
+      plain: test
+      encoded: ENC(O5MFWIMMOz+V3iItOVY60g==)
+    initial:
+      name-separator: _
+      version-separator: .
+      data-regex:
+        permission:
+          file-name-regex: classpath:initial/*permissions*.json
+          replace-if-existed: true
+        internal-api:
+          file-name-regex: classpath:initial/*internal_api*.json
+          replace-if-existed: true
+export:
+  format:
+    date: yyyy/MM/dd
+    datetime: yyyy/MM/dd HH:mm:ss
+jasypt:
+  encryptor:
+    password: password
+    # algorithm: PBEWithHmacSHA512AndAES_256
+    algorithm: PBEWithMD5AndDES
+    salt-generator-class-name: org.jasypt.salt.RandomSaltGenerator
+    # provider-class-name: com.sun.crypto.provider.SunJCE
+    provider-name: SunJCE
+    string-output-type: base64
+    key-obtention-iterations: 1000
+    pool-size: 1

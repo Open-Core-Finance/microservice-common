@@ -1,0 +1,50 @@
+$table-action-color: blue
+
+.mat-mdc-row, .mat-mdc-header-row
+    .mat-mdc-cell.no-column, .mat-mdc-header-cell.no-column
+        width: 40px
+        // border-right: 1px solid currentColor
+        padding-right: 24px
+        text-align: center
+
+.mat-column-action
+    width: 200px
+    border-left: 1px solid black
+    padding-left: 24px
+    text-align: center
+    mat-icon
+        color: $table-action-color
+        font-weight: bold
+        position: relative
+        top: 6px
+        cursor: pointer
+        font-size: 26px
+        margin-left: 10px
+
+.mat-column-action.mat-mdc-cell
+    color: $table-action-color
+
+.add-item-page
+    padding: 10px
+
+    button
+        margin-right: 5px
+    mat-form-field, mat-select
+        margin-right: 10px
+
+.error
+    padding: 5px
+    width: 300px
+    color: red
+    span, label
+        display: block
+    span:before, label:before
+        content: ""
+        display: block
+
+mat-card-title
+    padding: 10px
+
+.mat-mdc-optgroup
+    .mat-mdc-optgroup-label
+        font-weight: bold

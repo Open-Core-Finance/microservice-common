@@ -1,0 +1,14 @@
+<header class="header">
+    <mat-toolbar>
+        <button mat-icon-button class="left-nav-icon" aria-label="left navigation icon" (click)="toggleMenu()">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <span>{{ languageService.formatLanguage("applicationName", []) }}</span>
+    
+        <span class="spacer"></span>
+        <span>{{ languageService.formatLanguage("user.welcome", [loginSession?.displayName]) }}</span>
+        <button mat-icon-button (click)="logout($event)">
+            <mat-icon aria-hidden="false" fontIcon="logout"></mat-icon>
+        </button>
+    </mat-toolbar>
+</header>

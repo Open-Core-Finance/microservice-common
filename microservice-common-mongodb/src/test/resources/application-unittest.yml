@@ -1,0 +1,78 @@
+#Logging
+logging.config: classpath:logback-test.xml
+
+spring:
+  main:
+    allow-bean-definition-overriding: false
+  jackson:
+    default-property-inclusion: NON_NULL
+    serialization:
+      write-dates-as-timestamps: true
+      write-date-keys-as-timestamps: true
+      write-durations-as-timestamps: true
+      write-enums-using-to-string: false
+      FAIL_ON_EMPTY_BEANS: false
+  data:
+    mongodb:
+      database: core_finance
+      port: 27999
+      uri: mongodb://localhost:${spring.data.mongodb.port}/${spring.data.mongodb.database}
+tech:
+  corefinance:
+    common-mongodb:
+      converter:
+        zoned-date-time: true
+        zonedDateTime: true
+    security:
+      internal-api-key: No-key
+      # Json Web Token
+      jwt:
+        expiration: 3600
+        login-mode: SINGLE_LOGIN_PER_APP
+        enabled:
+          common: true
+          cached: false
+      public-key: classpath:public_key.der
+      private-key:
+      no-authen-urls:
+        - /
+        - /void
+        - /parserConfigurationException
+        - /throwable
+        - /test/api/*
+      permission:
+        default-control: ALLOWED
+      authorize-check: false
+      scan-controllers-actions: true
+      ignore-controller-scan:
+        - .springframework.
+        - .springdoc.
+        - .test.
+    encryption:
+      plain: test
+      encoded: ENC(O5MFWIMMOz+V3iItOVY60g==)
+    initial:
+      name-separator: _
+      version-separator: .
+      data-regex:
+        permission:
+          file-name-regex: classpath:initial/*permissions*.json
+          replace-if-existed: true
+        internal-api:
+          file-name-regex: classpath:initial/*internal_api*.json
+          replace-if-existed: true
+export:
+  format:
+    date: yyyy/MM/dd
+    datetime: yyyy/MM/dd HH:mm:ss
+jasypt:
+  encryptor:
+    password: password
+    # algorithm: PBEWithHmacSHA512AndAES_256
+    algorithm: PBEWithMD5AndDES
+    salt-generator-class-name: org.jasypt.salt.RandomSaltGenerator
+    # provider-class-name: com.sun.crypto.provider.SunJCE
+    provider-name: SunJCE
+    string-output-type: base64
+    key-obtention-iterations: 1000
+    pool-size: 1

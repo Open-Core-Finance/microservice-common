@@ -1,0 +1,24 @@
+#Logging
+logging.config: classpath:logback-default.xml
+
+spring:
+  main:
+    allow-bean-definition-overriding: false
+  jackson:
+    default-property-inclusion: NON_NULL
+    serialization:
+      write-dates-as-timestamps: true
+      write-date-keys-as-timestamps: true
+      write-durations-as-timestamps: true
+      write-enums-using-to-string: false
+      FAIL_ON_EMPTY_BEANS: false
+  data:
+    mongodb:
+      database: core_finance
+
+tech:
+  corefinance:
+    common-mongodb:
+      converter:
+        zoned-date-time: true
+        zonedDateTime: true

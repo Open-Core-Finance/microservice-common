@@ -1,0 +1,88 @@
+{
+    "applicationName": "Admin Web",
+    "languageKey": "vn",
+    "login": {
+        "username": "Tên đăng nhập",
+        "password": "Mật khẩu",
+        "loginTitle": "Đăng nhập",
+        "loginButton": "Đăng nhập",
+        "error": {
+            "user_locked": "User đã bị khóa. Xin liên hệ admin để mở khóa.",
+            "login_fail": "Tên đăng nhập và mật khẩu không khớp."
+        }
+    },
+    "user": {
+        "welcome": "Xin chào ${0}!"
+    },
+    "menu": {
+        "groupSystem": "Hệ thống",
+        "groupOther": "Khác",
+        "organizations": "Tổ chức",
+        "settings": "Settings",
+        "curencies": "Tiền tệ"
+    },
+    "organization": {
+        "id": "Mã số",
+        "name": "Tên tổ chức",
+        "addTitle": "Thêm tổ chức",
+        "error": {
+            "name_empty": "Không được bỏ trống tên tổ chức!",
+            "currency_empty": "Xin hãy chọn 1 đơn vị tiền chính!",
+            "timezone_empty": "Không được bỏ trống timezone!",
+            "invalid_date_format": "Định dạng ngày không đúng!",
+            "invalid_date_time_format": "Định dạng ngày giờ không đúng!",
+            "phone_empty": "Không được bỏ trống số điện thoại!",
+            "email_empty": "Không được bỏ trống email!",
+            "country_empty": "Không được bỏ trống quốc gia!"
+        },
+        "deleteConfirmContent": "Bạn có chắc muốn xóa tổ chức ${0} không?",
+        "deleteConfirmTitle": "Xác nhận xóa tổ chức"
+    },
+    "action": {
+        "add": "Thêm",
+        "edit": "Sửa",
+        "delete": "Xoá",
+        "action": "Thao tác",
+        "save": "Lưu",
+        "cancel": "Hủy",
+        "yes": "Đồng ý",
+        "no": "Không"
+    },
+    "numberInList": "No.",
+    "tableNoData": "Không có dữ liệu để hiển thị! Xin hãy tạo thêm dữ liệu!",
+    "streetAddressLine1": "Số nhà - đường",
+    "city": "Thành phố",
+    "state": "Bang",
+    "zipPostalCode": "Zip postal code",
+    "country": "Quốc gia",
+    "phoneNumber": "Số ĐT",
+    "email": "Email",
+    "currency": "Tiền tệ",
+    "timezone": "Timezone",
+    "localDateFormat": "Định dạng ngày",
+    "localDateTimeFormat": "Định dạng ngày giờ",
+    "decimalMark": "Phân cách thập phân",
+    "logoUrl": "Logo URL",
+    "iconUrl": "Icon URL",
+    "address": "Địa chỉ",
+    "contact": "Liên hệ",
+    "basicInfo": "Thông tin cơ bản",
+    "dateTime": "Ngày giờ",
+    "decimalMarkPeriod": "Dấu chấm (.)",
+    "decimalMarkComma": "Dấu phẩy (,)",
+    "currencySymbol": "Ký hiệu",
+    "currencySymbolPosision": "Vị trí ký hiệu",
+    "currencySymbolPosision_true": "Đầu tiên",
+    "currencySymbolPosision_false": "Cuối cùng",
+    "currencyDeleteConfirmContent": "Bạn có chắc muốn xóa tiền tệ ${0}?",
+    "currencyDeleteConfirmTitle": "Xác nhận xóa tiền tệ",
+    "currencyId": "Mã số",
+    "currencyScreens": {
+        "addTitle": "Tạo tiền tệ mới",
+        "error": {
+            "name_empty": "Tên không được bỏ trống!",
+            "symbol_empty": "Ký hiệu không được bỏ trống!",
+            "decimal_mark_empty": "Phải chọn dấu phân cách thập phân"
+        }
+    }
+}
