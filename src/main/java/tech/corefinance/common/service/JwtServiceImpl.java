@@ -214,9 +214,13 @@ public class JwtServiceImpl implements JwtService {
                 jwtTokenDto = objectMapper.readValue(json, JwtTokenDto.class);
                 jwtTokenDto.setOriginalToken(token);
                 log.debug("Decoded token [{}]", jwtTokenDto);
-                additionalJwtVerifyStep(jwtTokenDto, token, deviceId, ipAddress);
+                jwtTokenDto = additionalJwtVerifyStep(jwtTokenDto, token, deviceId, ipAddress);
                 log.debug("Completed add on verify!");
-                map.put(authorizationHeader, jwtTokenDto);
+                if (jwtTokenDto != null) {
+                    map.put(authorizationHeader, jwtTokenDto);
+                } else {
+                    log.error("Token fail the validation!");
+                }
             }
         }
         return map;
@@ -303,6 +307,9 @@ public class JwtServiceImpl implements JwtService {
             log.debug("Configured JWT verify addon {}", jwtVerifyAddOns);
             for (JwtVerifyAddOn addOn : jwtVerifyAddOns) {
                 jwtTokenDto = addOn.additionalJwtVerify(jwtTokenDto, token, deviceId, ipaddress);
+                if (jwtTokenDto == null) {
+                    return null;
+                }
             }
         }
         return jwtTokenDto;

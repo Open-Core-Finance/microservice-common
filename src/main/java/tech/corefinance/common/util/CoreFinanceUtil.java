@@ -25,9 +25,10 @@ import tech.corefinance.common.converter.ExportTypeConverter;
 import tech.corefinance.common.dto.SimpleVersion;
 import tech.corefinance.common.dto.SimpleVersionComparator;
 import tech.corefinance.common.ex.ReflectiveIncorrectFieldException;
-import tech.corefinance.common.model.ResourceAction;
 import tech.corefinance.common.model.GenericModel;
+import tech.corefinance.common.model.ResourceAction;
 import tech.corefinance.common.service.CommonService;
+import tech.corefinance.common.service.ProxyUnbox;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,6 +53,8 @@ public class CoreFinanceUtil {
     private ResourcePatternResolver resourcePatternResolver;
     @Autowired
     private SimpleVersionComparator simpleVersionComparator;
+    @Autowired
+    private List<ProxyUnbox> proxyUnboxes;
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     public Object checkAndConvertExportData(Object data) {
@@ -231,6 +234,42 @@ public class CoreFinanceUtil {
         for (var t : argumentTypes) {
             if (t instanceof Class<?> && GenericModel.class.isAssignableFrom((Class<?>) t)) {
                 return (Class<?>) t;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Check if input target is proxy object or not. And check if it can cast to one of expected target classes.
+     *
+     * @param target    target
+     * @param excludeClasses Target classes to check
+     * @return True if proxyObject can cast to one of expected target classes.
+     */
+    public boolean isMatchedInstanceType(Object target, List<String> excludeClasses) {
+        var result = false;
+        log.debug("Checking if [{}] is included in list {}", target, excludeClasses);
+        for (String className : excludeClasses) {
+            try {
+                var clzz = Class.forName(className);
+                var targetClass = target.getClass();
+                if (clzz.isAssignableFrom(targetClass)) {
+                    log.debug("[{}] can assign from [{}]", clzz, targetClass);
+                    return true;
+                } else {
+                    log.debug("[{}] can not assign from [{}]", clzz, targetClass);
+                }
+            } catch (ClassNotFoundException e) {
+                log.error("Invalid configuration for class name [{}]", className, e);
+            }
+        }
+        return result;
+    }
+
+    public Object unProxy(Object proxyObject) {
+        for (var unbox : proxyUnboxes) {
+            if (unbox.canUnbox(proxyObject)) {
+                return unbox.unProxy(proxyObject);
             }
         }
         return null;

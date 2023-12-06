@@ -23,7 +23,7 @@ import java.util.UUID;
 @Slf4j
 public class TraceInfoFilter implements Filter, Ordered {
 
-    @Value("${tech.corefinance.common.filter-ordered.trace-info-id-order:0}")
+    @Value("${tech.corefinance.common.filter-ordered.trace-info-id-order:1}")
     private int order;
 
     @Override

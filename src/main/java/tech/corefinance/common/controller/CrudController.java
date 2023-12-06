@@ -38,7 +38,7 @@ public interface CrudController<I extends Serializable ,T extends GenericModel<I
     }
 
     @PostMapping(value = "/create-or-update")
-    default GeneralApiResponse<?> createOrUpdateRole(@RequestBody D role) {
+    default GeneralApiResponse<?> createOrUpdate(@RequestBody D role) {
         var converter = getEntityConverter();
         var result = getHandlingService().createOrUpdateEntity(role);
         if (converter == null) {
@@ -48,7 +48,7 @@ public interface CrudController<I extends Serializable ,T extends GenericModel<I
     }
 
     @DeleteMapping(value = "/delete")
-    default GeneralApiResponse<Boolean> deleteRole(@RequestParam("entityId") I entityId) {
+    default GeneralApiResponse<Boolean> delete(@RequestParam("entityId") I entityId) {
         return new GeneralApiResponse<>(getHandlingService().deleteEntity(entityId));
     }
 

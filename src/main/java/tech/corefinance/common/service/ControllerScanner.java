@@ -41,13 +41,19 @@ public class ControllerScanner {
     @Autowired
     private PermissionService permissionService;
     @Autowired
-    private RequestMappingHandlerMapping mapping;
+    private List<RequestMappingHandlerMapping> handlerMappings;
     @Autowired
     private CoreFinanceUtil coreFinanceUtil;
 
     @Async
     @PostConstruct
     public void scan() {
+        for (var mapping : handlerMappings) {
+            scanHandler(mapping);
+        }
+    }
+
+    private void scanHandler(RequestMappingHandlerMapping mapping) {
         var handlerMethods = mapping.getHandlerMethods();
         var permissionActions = new LinkedList<ResourceAction>();
         main_loop:

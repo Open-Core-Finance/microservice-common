@@ -7,6 +7,9 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import tech.corefinance.common.util.CoreFinanceUtil;
 
+import java.lang.reflect.Proxy;
+import java.util.List;
+
 /**
  * Abstract method call logging.
  */
@@ -17,6 +20,11 @@ public abstract class MethodDataLoging {
     protected CoreFinanceUtil coreFinanceUtil;
     @Autowired
     protected ObjectMapper objectMapper;
+    private List<String> excludeClasses;
+
+    public MethodDataLoging(List<String> excludeClasses) {
+        this.excludeClasses = excludeClasses;
+    }
 
     /**
      * Mark in the log for reading purpose.
@@ -38,7 +46,21 @@ public abstract class MethodDataLoging {
 
         // Start mark
         String startMark = getLogingStartMark();
-        StringBuilder msg = new StringBuilder(startMark).append(joinPoint.getTarget().getClass().getSimpleName()).append("#").append(
+        var target = joinPoint.getTarget();
+        var targetClass = target.getClass();
+        log.debug("Target class [{}]", targetClass);
+        if (Proxy.isProxyClass(targetClass)) {
+            var unProxyObj = coreFinanceUtil.unProxy(target);
+            if (unProxyObj != null) {
+                targetClass = unProxyObj.getClass();
+                log.debug("UnProxy target class [{}]", targetClass);
+                if (coreFinanceUtil.isMatchedInstanceType(unProxyObj, excludeClasses)) {
+                    log.debug("Excluded for [{}]", unProxyObj);
+                    return joinPoint.proceed();
+                }
+            }
+        }
+        StringBuilder msg = new StringBuilder(startMark).append(targetClass.getSimpleName()).append("#").append(
                 signature.getName()).append(startMark + " <= ");
         int length = msg.length();
         long start = 0, end = 0;

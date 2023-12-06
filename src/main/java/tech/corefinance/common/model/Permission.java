@@ -25,9 +25,12 @@ public class Permission implements GenericModel<String> {
     @NotNull
     private String action;
     private String url;
+
     @NotNull
     @Enumerated(EnumType.STRING)
     private AccessControl control;
+
+    @Column(name = "request_method")
     @Enumerated(EnumType.STRING)
     private RequestMethod requestMethod;
 }

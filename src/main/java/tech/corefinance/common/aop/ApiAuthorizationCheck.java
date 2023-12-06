@@ -31,6 +31,7 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -41,22 +42,18 @@ import java.util.Set;
  */
 @Aspect
 @Component
-@ConditionalOnProperty(prefix = "tech.corefinance.security", name = "authorize-check", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(prefix = "tech.corefinance.security", name = "authorize-check", havingValue = "true",
+        matchIfMissing = true)
 @Slf4j
 public class ApiAuthorizationCheck {
 
-    private static final String EXECUTION_FEIGN_CLIENT = "execution(* tech.corefinance.rest.client.*Client.*(..))";
-    private static final String EXECUTION_FEIGN_CLIENT_EXCLUDED = "!" + EXECUTION_FEIGN_CLIENT;
-
-    private static final String EXECUTION_MANUAL_CHECK_EXCLUDED =
-            "!@annotation(tech.corefinance.common.annotation.ManualPermissionCheck)";
     private static final String EXECUTION_EXCLUDED =
-            EXECUTION_FEIGN_CLIENT_EXCLUDED + " && " + EXECUTION_MANUAL_CHECK_EXCLUDED;
+            "!@annotation(tech.corefinance.common.annotation.ManualPermissionCheck)";
 
     @Autowired
     private HttpServletRequest request;
     @Autowired
-    private RequestMappingHandlerMapping mapping;
+    private List<RequestMappingHandlerMapping> handlerMappings;
     @Autowired
     private CoreFinanceUtil coreFinanceUtil;
     @Autowired
@@ -69,9 +66,12 @@ public class ApiAuthorizationCheck {
 
     @Value("${tech.corefinance.security.permission.default-control}")
     private AccessControl permissionDefaultControl;
+    @Value("${tech.corefinance.security.exclude-classes-authorize-check:}")
+    private List<String> excludeClasses;
 
     /**
      * Verify for GET HTTP Methods.
+     *
      * @param joinPoint Method call
      * @return Method response
      * @throws Throwable Method exception or error.
@@ -83,6 +83,7 @@ public class ApiAuthorizationCheck {
 
     /**
      * Verify for POST HTTP Methods.
+     *
      * @param joinPoint Method call
      * @return Method response
      * @throws Throwable Method exception or error.
@@ -94,6 +95,7 @@ public class ApiAuthorizationCheck {
 
     /**
      * Verify for PUT HTTP Methods.
+     *
      * @param joinPoint Method call
      * @return Method response
      * @throws Throwable Method exception or error.
@@ -105,6 +107,7 @@ public class ApiAuthorizationCheck {
 
     /**
      * Verify for PATCH HTTP Methods.
+     *
      * @param joinPoint Method call
      * @return Method response
      * @throws Throwable Method exception or error.
@@ -116,6 +119,7 @@ public class ApiAuthorizationCheck {
 
     /**
      * Verify for DELETE HTTP Methods.
+     *
      * @param joinPoint Method call
      * @return Method response
      * @throws Throwable Method exception or error.
@@ -139,7 +143,8 @@ public class ApiAuthorizationCheck {
 
     /**
      * Verify for HTTP Methods.
-     * @param joinPoint Method call
+     *
+     * @param joinPoint     Method call
      * @param requestMethod Runtime HTTP method.
      * @return Method response
      * @throws Throwable Method exception or error.
@@ -147,10 +152,26 @@ public class ApiAuthorizationCheck {
     public Object verifyRequest(ProceedingJoinPoint joinPoint, RequestMethod requestMethod) throws Throwable {
         JwtTokenDto jwtTokenDto = JwtContext.getInstance().getJwt();
         if (jwtTokenDto != null) {
-            var controllerClass = joinPoint.getTarget().getClass();
+            var target = joinPoint.getTarget();
+            var controllerClass = target.getClass();
             String controllerClassName = controllerClass.getName();
             MethodSignature signature = (MethodSignature) joinPoint.getSignature();
             Method method = signature.getMethod();
+
+            log.debug("Controller class [{}]", controllerClass);
+            if (Proxy.isProxyClass(controllerClass)) {
+                var unProxyObj = coreFinanceUtil.unProxy(target);
+                if (unProxyObj != null) {
+                    controllerClass = unProxyObj.getClass();
+                    log.debug("UnProxy target class [{}]", controllerClass);
+                    log.debug("Checking with ignored list {}", excludeClasses);
+                    if (coreFinanceUtil.isMatchedInstanceType(unProxyObj, excludeClasses)) {
+                        log.debug("Excluded for [{}]", unProxyObj);
+                        return joinPoint.proceed();
+                    }
+                }
+            }
+
             String requestUri = request.getRequestURI();
             log.debug("Verifying method [{}#{}]", controllerClassName, signature.getName());
             Map.Entry<RequestMappingInfo, HandlerMethod> handlerMethodEntry = resolveHandlerInfo(method);
@@ -199,11 +220,13 @@ public class ApiAuthorizationCheck {
     }
 
     private Map.Entry<RequestMappingInfo, HandlerMethod> resolveHandlerInfo(Method method) {
-        var handlerMethods = mapping.getHandlerMethods();
-        for (Map.Entry<RequestMappingInfo, HandlerMethod> entry : handlerMethods.entrySet()) {
-            var value = entry.getValue();
-            if (method.equals(value.getMethod())) {
-                return entry;
+        for (var mapping : handlerMappings) {
+            var handlerMethods = mapping.getHandlerMethods();
+            for (Map.Entry<RequestMappingInfo, HandlerMethod> entry : handlerMethods.entrySet()) {
+                var value = entry.getValue();
+                if (method.equals(value.getMethod())) {
+                    return entry;
+                }
             }
         }
         return null;
@@ -246,13 +269,13 @@ public class ApiAuthorizationCheck {
     private ResourceInfoPair resolveResourceId(ProceedingJoinPoint joinPoint) {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method method = methodSignature.getMethod();
-        var anns = method.getParameterAnnotations();
-        log.debug("ANN [{}]", new Object[] { anns });
+        var annotations = method.getParameterAnnotations();
+        log.debug("ANN [{}]", new Object[]{annotations});
         PermissionResource permissionResource = null;
         Object parameterValue = null;
         main_loop:
-        for (int i = 0; i < anns.length; i++) {
-            for (var annotation : anns[i]) {
+        for (int i = 0; i < annotations.length; i++) {
+            for (var annotation : annotations[i]) {
                 if (PermissionResource.class.isAssignableFrom(annotation.annotationType())) {
                     permissionResource = (PermissionResource) annotation;
                     parameterValue = joinPoint.getArgs()[i];
