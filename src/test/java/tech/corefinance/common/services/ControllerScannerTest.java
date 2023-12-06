@@ -62,9 +62,9 @@ public class ControllerScannerTest {
         serviceSecurityConfigField.set(controllerScanner, serviceSecurityConfig);
         // RequestMappingHandlerMapping
         mapping = PowerMockito.mock(RequestMappingHandlerMapping.class);
-        var mappingField = PowerMockito.field(ControllerScanner.class, "mapping");
+        var mappingField = PowerMockito.field(ControllerScanner.class, "handlerMappings");
         mappingField.setAccessible(true);
-        mappingField.set(controllerScanner, mapping);
+        mappingField.set(controllerScanner, List.of(mapping));
         // Util
         coreFinanceUtil = new CoreFinanceUtil();
         var utilField = PowerMockito.field(ControllerScanner.class, "coreFinanceUtil");

@@ -11,7 +11,7 @@ public class TenantContext {
 
     private TenantContext() {
         // Singleton
-        log.debug("Created TraceIdContext [{}]", this);
+        log.debug("Created TenantContext [{}]", this);
     }
 
     public static TenantContext getInstance() {

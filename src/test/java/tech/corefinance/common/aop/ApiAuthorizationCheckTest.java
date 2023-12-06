@@ -63,9 +63,9 @@ public class ApiAuthorizationCheckTest {
         field.set(apiAuthorizationCheck, request);
         // mapping
         mapping = PowerMockito.mock(RequestMappingHandlerMapping.class);
-        field = PowerMockito.field(ApiAuthorizationCheck.class, "mapping");
+        field = PowerMockito.field(ApiAuthorizationCheck.class, "handlerMappings");
         field.setAccessible(true);
-        field.set(apiAuthorizationCheck, mapping);
+        field.set(apiAuthorizationCheck, List.of(mapping));
         // Util
         coreFinanceUtil = new CoreFinanceUtil();
         field = PowerMockito.field(ApiAuthorizationCheck.class, "coreFinanceUtil");

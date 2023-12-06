@@ -1,6 +1,6 @@
 #Logging
 logging.config: classpath:logback-test.xml
-
+server.port: 7777
 spring:
   main:
     allow-bean-definition-overriding: false
@@ -25,7 +25,7 @@ tech:
     common:
       filter-ordered:
         authen-filter: 2
-        tenant-id-filter-order: 1
+        tenant-id-filter-order: 3
         trace-info-id-order: 0
         encoding-response-order: 100
       enabled:
@@ -41,6 +41,7 @@ tech:
         services: true
         repositories: true
         api: true
+      exclude-classes: "feign.Target"
     security:
       internal-api-key: No-key
       # Json Web Token
@@ -66,6 +67,26 @@ tech:
         - .springframework.
         - .springdoc.
         - .test.
+      url-cors:
+        cors-configurations:
+          - url-pattern: /v3/api-docs/*
+            allowed-origins:
+              - http://localhost:4200
+            allowed-methods:
+              - GET
+            allowed-headers: '*'
+          - url-pattern: /**
+            allowed-origins:
+              - http://localhost:4200
+              - http://*.corefinance.tech
+            allowed-methods:
+              - GET
+              - PUT
+              - OPTIONS
+              - DELETE
+              - POST
+              - PATCH
+            allowed-headers: '*'
     encryption:
       plain: test
       encoded: ENC(O5MFWIMMOz+V3iItOVY60g==)

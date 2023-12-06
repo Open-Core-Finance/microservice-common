@@ -39,7 +39,7 @@ public class SessionAuthenticationFilter extends OncePerRequestFilter implements
 
     @Autowired
     private JwtService jwtService;
-    @Value("${tech.corefinance.common.filter-ordered.authen-filter:0}")
+    @Value("${tech.corefinance.common.filter-ordered.authen-filter:2}")
     private int ordered;
 
     @Override

@@ -8,10 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.LocaleResolver;
-import tech.corefinance.common.context.ApplicationContextHolder;
-import tech.corefinance.common.context.JwtContext;
-import tech.corefinance.common.context.StatelessLocaleResolver;
-import tech.corefinance.common.context.TenantContext;
+import tech.corefinance.common.context.*;
 import tech.corefinance.common.dto.SimpleVersionComparator;
 
 @Configuration
@@ -59,5 +56,12 @@ public class CommonAutoConfiguration {
     public TenantContext tenantContext() {
         log.info("Creating TenantContext...");
         return TenantContext.getInstance();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(TraceIdContext.class)
+    public TraceIdContext traceIdContext() {
+        log.info("Creating TraceIdContext...");
+        return TraceIdContext.getInstance();
     }
 }

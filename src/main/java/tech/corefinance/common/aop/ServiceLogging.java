@@ -6,6 +6,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedList;
+
 /**
  * Logging service calls.
  */
@@ -13,6 +15,10 @@ import org.springframework.stereotype.Component;
 @Component
 @ConditionalOnProperty(name = "tech.corefinance.log.enabled.services", havingValue = "true", matchIfMissing = true)
 public class ServiceLogging extends MethodDataLoging {
+
+    public ServiceLogging() {
+        super(new LinkedList<>());
+    }
 
     /**
      * Mark in the log for reading purpose.

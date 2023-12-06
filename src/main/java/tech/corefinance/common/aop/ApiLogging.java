@@ -8,12 +8,14 @@ import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Logging for APIs (Controllers).
@@ -24,11 +26,12 @@ import java.util.Collections;
 @Slf4j
 public class ApiLogging extends MethodDataLoging {
 
-    private static final String EXECUTION_FEIGN_CLIENT = "execution(* *Client(..))";
-    private static final String EXECUTION_FEIGN_CLIENT_EXCLUDED = "!" + EXECUTION_FEIGN_CLIENT;
-
     @Autowired
     private HttpServletRequest request;
+
+    public ApiLogging(@Value("${tech.corefinance.log.exclude-classes:}") List<String> excludeClasses) {
+        super(excludeClasses);
+    }
 
     /**
      * Generate logs for GET HTTP Methods.
@@ -36,7 +39,7 @@ public class ApiLogging extends MethodDataLoging {
      * @return Method response
      * @throws Throwable Method exception or error.
      */
-    @Around("@annotation(org.springframework.web.bind.annotation.GetMapping) && " + EXECUTION_FEIGN_CLIENT_EXCLUDED)
+    @Around("@annotation(org.springframework.web.bind.annotation.GetMapping)")
     public Object logGetRequest(ProceedingJoinPoint joinPoint) throws Throwable {
         return doLogging(joinPoint);
     }
@@ -47,7 +50,7 @@ public class ApiLogging extends MethodDataLoging {
      * @return Method response
      * @throws Throwable Method exception or error.
      */
-    @Around("@annotation(org.springframework.web.bind.annotation.PostMapping) && " + EXECUTION_FEIGN_CLIENT_EXCLUDED)
+    @Around("@annotation(org.springframework.web.bind.annotation.PostMapping)")
     public Object logPostRequest(ProceedingJoinPoint joinPoint) throws Throwable {
         return doLogging(joinPoint);
     }
@@ -58,7 +61,7 @@ public class ApiLogging extends MethodDataLoging {
      * @return Method response
      * @throws Throwable Method exception or error.
      */
-    @Around("@annotation(org.springframework.web.bind.annotation.PutMapping) && " + EXECUTION_FEIGN_CLIENT_EXCLUDED)
+    @Around("@annotation(org.springframework.web.bind.annotation.PutMapping)")
     public Object logPutRequest(ProceedingJoinPoint joinPoint) throws Throwable {
         return doLogging(joinPoint);
     }
@@ -69,7 +72,7 @@ public class ApiLogging extends MethodDataLoging {
      * @return Method response
      * @throws Throwable Method exception or error.
      */
-    @Around("@annotation(org.springframework.web.bind.annotation.PatchMapping) && " + EXECUTION_FEIGN_CLIENT_EXCLUDED)
+    @Around("@annotation(org.springframework.web.bind.annotation.PatchMapping)")
     public Object verifyPatchRequest(ProceedingJoinPoint joinPoint) throws Throwable {
         return doLogging(joinPoint);
     }
@@ -80,7 +83,7 @@ public class ApiLogging extends MethodDataLoging {
      * @return Method response
      * @throws Throwable Method exception or error.
      */
-    @Around("@annotation(org.springframework.web.bind.annotation.DeleteMapping) && " + EXECUTION_FEIGN_CLIENT_EXCLUDED)
+    @Around("@annotation(org.springframework.web.bind.annotation.DeleteMapping)")
     public Object verifyDeleteRequest(ProceedingJoinPoint joinPoint) throws Throwable {
         return doLogging(joinPoint);
     }
@@ -93,7 +96,7 @@ public class ApiLogging extends MethodDataLoging {
      * @return result of the wrapped services method
      * @throws Throwable when target method have exception
      */
-    @Around("@annotation(org.springframework.web.bind.annotation.RequestMapping) && " + EXECUTION_FEIGN_CLIENT_EXCLUDED)
+    @Around("@annotation(org.springframework.web.bind.annotation.RequestMapping)")
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
         return doLogging(joinPoint);
     }
@@ -107,7 +110,7 @@ public class ApiLogging extends MethodDataLoging {
     protected void doAdditionalInputLog(ProceedingJoinPoint joinPoint, ObjectMapper objectMapper) {
         log.debug("== Request header <= START");
         log.debug("API: [{}] - [{}]", request.getMethod(), request.getServletPath());
-        Collections.list(request.getHeaderNames()).stream().forEach(h -> log.debug("Name: [{}] - Value: [{}]", h, request.getHeader(h)));
+        Collections.list(request.getHeaderNames()).forEach(h -> log.debug("Name: [{}] - Value: [{}]", h, request.getHeader(h)));
         log.debug("== Request header <=   END");
     }
 
