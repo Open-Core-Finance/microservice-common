@@ -27,7 +27,7 @@ spring:
     properties:
       hibernate:
         hbm2ddl:
-          auto: create-drop
+          auto: none
       show-sql: true
       generate-ddl: false
   # Liquibase settings

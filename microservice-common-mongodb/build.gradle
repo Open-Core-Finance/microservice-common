@@ -27,17 +27,7 @@ plugins {
 }
 
 group = 'tech.corefinance'
-version = "${projectVersion}"
-java {
-    sourceCompatibility = "${javaSourceCompatibility}"
-    targetCompatibility = "${javaSourceCompatibility}"
-}
-
-if (new File("artifact-credential.gradle").exists()) {
-    apply from: '../artifact-credential.gradle'
-} else {
-    apply from: '../artifact-credential-sample.gradle'
-}
+version = "${internalCommonMongoDbVersion}"
 
 repositories {
 	mavenLocal()
