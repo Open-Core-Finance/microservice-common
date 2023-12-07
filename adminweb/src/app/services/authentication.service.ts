@@ -14,11 +14,13 @@ import { interval } from 'rxjs';
 export class AuthenticationService implements OnDestroy {
 
     private currentSessionSubject: BehaviorSubject<LoginSession | null>;
+    private selectedOrganizationObject: BehaviorSubject<String | null>;
     public currentSession: Observable<LoginSession | null>;
     loginSession: LoginSession | null = null;
     refreshIntervalSubscription: Subscription | null = null;
     loginSubscription: Subscription | null = null;
     refreshInterval: Observable<number>;
+    selectedOrganizationObservable: Observable<String | null>
 
     constructor(private restService: RestService, private http: HttpClient, private commonService: CommonService) {
         this.refreshInterval = interval(environment.loginRefreshInterval);
@@ -36,6 +38,8 @@ export class AuthenticationService implements OnDestroy {
             restService.loginSession = x;
             this.loginSession = x;
         });
+        this.selectedOrganizationObject = new BehaviorSubject<String | null>(null);
+        this.selectedOrganizationObservable = this.selectedOrganizationObject.asObservable();
     }
 
     ngOnDestroy(): void {

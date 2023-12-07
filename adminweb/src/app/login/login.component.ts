@@ -7,6 +7,7 @@ import { AppSettings } from '../classes/AppSetting';
 import { AuthenticationService } from '../services/authentication.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import { LoginSession } from '../classes/LoginSession';
 
 @Component({
   selector: 'app-login',
@@ -26,6 +27,7 @@ export class LoginComponent implements OnInit {
     error: []
   };
   returnUrl: string | null = null;
+  isLoading = false;
 
   constructor(public languageService: LanguageService, private auth: AuthenticationService, private router: Router,
     private route: ActivatedRoute) {
@@ -35,8 +37,9 @@ export class LoginComponent implements OnInit {
     this.changeLanguage(languageService.selectedLanguage);
     that.auth.currentSession.subscribe(x => {
       if (x != null) {
-        let urlToNavigate = that.returnUrl || "/" + environment.frontEndUrl.organizations;
-        that.router.navigate([urlToNavigate]);
+        // let urlToNavigate = that.returnUrl || "/" + environment.frontEndUrl.organizations;
+        // that.router.navigate([urlToNavigate]);
+        console.log(x);
       }
     });
   }
@@ -47,22 +50,19 @@ export class LoginComponent implements OnInit {
 
   submit() {
     this.clearMessages();
+    this.isLoading = true;
     this.auth.login(this.loginForm.value, (data: any) => {
-        if (data.status === 0) {
-            // const loginSession = data.result as LoginSession;
-            if (this.returnUrl) {
-              this.router.navigate([this.returnUrl]);
-            }
-        } else {
-            this.clearMessages();
-            var err = data.error;
-            if (err.statusCode) {
-                this.message['error'].push(err.statusCode);
-            } else if (err.message != null) {
-                this.message['error'].push(err.message);
-            } else {
-                this.message['error'].push(data);
-            }
+        if (data.status !== 0) {
+          this.isLoading = false;
+          this.clearMessages();
+          var err = data.error;
+          if (err.statusCode) {
+              this.message['error'].push(err.statusCode);
+          } else if (err.message != null) {
+              this.message['error'].push(err.message);
+          } else {
+              this.message['error'].push(data);
+          }
         }
     });
     // if (this.router.url.indexOf(this.authGuard.noPerError) > -1) {

@@ -1,7 +1,8 @@
 <mat-card>
     <mat-card-title>{{languageService.formatLanguage('login.loginTitle', [])}}</mat-card-title>
     <mat-card-content>
-        <form [formGroup]="loginForm" (ngSubmit)="submit()">
+        <mat-spinner *ngIf="isLoading==true"></mat-spinner>
+        <form [formGroup]="loginForm" (ngSubmit)="submit()" *ngIf="isLoading==false">
             <mat-form-field>
                 <input type="text" matInput placeholder="{{languageService.formatLanguage('login.username', [])}}" formControlName="username">
             </mat-form-field>

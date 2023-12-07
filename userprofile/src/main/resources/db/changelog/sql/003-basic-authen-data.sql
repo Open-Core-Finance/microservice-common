@@ -3,6 +3,8 @@
 
 -- Role
 INSERT INTO role (id, name, tenant_id) VALUES ('SystemAdmin', 'System Admin', NULL) ON CONFLICT DO NOTHING;
+INSERT INTO role (id, name, tenant_id) VALUES ('Bank1-Admin', 'Bank 1 Admin', '57488b17-0af8-4eaf-841e-f3cce2c6c062') ON CONFLICT DO NOTHING;
+INSERT INTO role (id, name, tenant_id) VALUES ('Bank2-Admin', 'Bank 2 Admin', '0f522100-7d8c-4b67-9a7f-779e1b179eff') ON CONFLICT DO NOTHING;
 
 -- UserProfile
 INSERT INTO user_profile (id, activated, address, birthday, display_name, email, first_name, gender, last_name, password,
@@ -12,6 +14,8 @@ INSERT INTO user_profile (id, activated, address, birthday, display_name, email,
 
 -- User Role
 INSERT INTO user_profile_role(user_profile_id, role_id) VALUES ('01', 'SystemAdmin') ON CONFLICT DO NOTHING;
+INSERT INTO user_profile_role(user_profile_id, role_id) VALUES ('01', 'Bank1-Admin') ON CONFLICT DO NOTHING;
+INSERT INTO user_profile_role(user_profile_id, role_id) VALUES ('01', 'Bank2-Admin') ON CONFLICT DO NOTHING;
 
 -- Authen
 INSERT INTO permission (id, action, control, request_method, resource_type, role_id, url)
