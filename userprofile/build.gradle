@@ -63,7 +63,7 @@ dependencies {
 
     // Database
     implementation group: 'org.postgresql', name: 'postgresql', version: "${postgresqlVersion}"
-    implementation group: 'com.google.cloud.sql', name: 'postgres-socket-factory', version: "${gcloudPostgresSocketVersion}"
+//    implementation group: 'com.google.cloud.sql', name: 'postgres-socket-factory', version: "${gcloudPostgresSocketVersion}"
 
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
