@@ -123,10 +123,8 @@ export class AddOrganizationComponent implements OnDestroy, OnInit {
     }
     if (errors.length < 1) {
       const requestHeaders = this.restService.initApplicationJsonRequestHeaders();
-      const serviceUrl = environment.apiUrl.organization + "/create-or-update";
-      this.http.post<GeneralApiResponse>(serviceUrl, formData, {
-        headers: requestHeaders, params: {}
-      }).subscribe({
+      let serviceUrl = environment.apiUrl.organization + "/";
+      var responseHandler = {
         next: (data: GeneralApiResponse) => {
           if (this.save) {
             $event.organization = data.result;
@@ -142,7 +140,18 @@ export class AddOrganizationComponent implements OnDestroy, OnInit {
             message['error'].push("Unknown error: " + JSON.stringify(data));
           }
         }
-      });
+      };
+      if (formData.id) {
+        serviceUrl = environment.apiUrl.organization + "/" + formData.id;
+        this.http.post<GeneralApiResponse>(serviceUrl, formData, {
+          headers: requestHeaders, params: {}
+        }).subscribe(responseHandler);
+      } else {
+        serviceUrl = environment.apiUrl.organization + "/create";
+        this.http.put<GeneralApiResponse>(serviceUrl, formData, {
+          headers: requestHeaders, params: {}
+        }).subscribe(responseHandler);
+      }
     }
   }
 

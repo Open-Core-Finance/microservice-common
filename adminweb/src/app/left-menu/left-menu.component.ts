@@ -2,6 +2,8 @@ import { Component, Input, OnInit, OnDestroy, Output, EventEmitter } from '@angu
 import { ActionMenuItem, LanguageMenuItem, MenuGroup, MenuItem } from '../classes/Menu';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
+import { AuthenticationService } from '../services/authentication.service';
+import { OrganizationService } from '../services/organization.service';
 
 @Component({
   selector: 'app-left-menu',
@@ -14,7 +16,8 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
   menuGroups: MenuGroup[] = [];
   @Output() menuClosedEmitter = new EventEmitter();
 
-  constructor(private router: Router, private route: ActivatedRoute) {
+  constructor(private router: Router, private route: ActivatedRoute, private auth: AuthenticationService,
+    private organizationService: OrganizationService) {
   }
 
   ngOnInit(): void {
@@ -64,5 +67,13 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
       }
       this.toggleMenu();
     }
+  }
+
+  isVisibleMenu(visibleFn: Function | null) {
+    var result = true;
+    if (visibleFn != null) {
+       result = visibleFn(this.auth, this.organizationService);
+    }
+    return result;
   }
 }

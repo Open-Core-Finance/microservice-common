@@ -1,13 +1,18 @@
 <mat-card>
-    <mat-card-title>{{languageService.formatLanguage('login.loginTitle', [])}}</mat-card-title>
+    <mat-card-title>
+        <span *ngIf="roleList.length <= 0">{{languageService.formatLanguage('login.loginTitle', [])}}</span>
+        <span *ngIf="roleList.length > 0">{{languageService.formatLanguage('login.selectRole', [])}}</span>
+    </mat-card-title>
     <mat-card-content>
         <mat-spinner *ngIf="isLoading==true"></mat-spinner>
-        <form [formGroup]="loginForm" (ngSubmit)="submit()" *ngIf="isLoading==false">
+        <form [formGroup]="loginForm" (ngSubmit)="submit()" *ngIf="isLoading==false && roleList.length <= 0">
             <mat-form-field>
-                <input type="text" matInput placeholder="{{languageService.formatLanguage('login.username', [])}}" formControlName="username">
+                <input type="text" matInput placeholder="{{languageService.formatLanguage('login.username', [])}}" formControlName="username"
+                    (keydown.enter)="submit()">
             </mat-form-field>
             <mat-form-field>
-                <input type="password" matInput placeholder="{{languageService.formatLanguage('login.password', [])}}" formControlName="password">
+                <input type="password" matInput placeholder="{{languageService.formatLanguage('login.password', [])}}" formControlName="password"
+                     (keydown.enter)="submit()">
             </mat-form-field>
 
             <mat-form-field>
@@ -30,10 +35,23 @@
                 </span>
             </div>
 
-            <div class="button">
-                <button type="submit" mat-button>{{languageService.formatLanguage('login.loginButton', [])}}</button>
-            </div>
-
         </form>
+        <mat-selection-list #roles [multiple]="false">
+            @for (role of roleList; track role) {
+              <mat-list-option [value]="role.id">{{role.name}}<span *ngIf="role.organization"> - {{role.organization.name}}</span></mat-list-option>
+            }
+        </mat-selection-list>
     </mat-card-content>
+    <mat-card-actions>
+        <button mat-raised-button color="primary" (click)="submit()" *ngIf="roleList.length <= 0">
+            {{languageService.formatLanguage('login.loginButton', [])}}
+        </button>
+        <button mat-raised-button color="primary" *ngIf="roleList.length > 0" [disabled]="!roles.selectedOptions.hasValue()"
+            (click)="selectRole(roles.selectedOptions.selected[0].value)">
+            {{languageService.formatLanguage('login.loginButton', [])}}
+        </button>
+        <button mat-raised-button color="warn" *ngIf="roleList.length > 0" (click)="logout($event);">
+            {{languageService.formatLanguage('logOut', [])}}
+        </button>
+    </mat-card-actions>
 </mat-card>

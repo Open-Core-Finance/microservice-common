@@ -37,18 +37,45 @@ public interface CrudController<I extends Serializable ,T extends GenericModel<I
         return PageDto.createSuccessResponse(result.map(converter::convert));
     }
 
-    @PostMapping(value = "/create-or-update")
-    default GeneralApiResponse<?> createOrUpdate(@RequestBody D role) {
+    /**
+     * Create new entity
+     * @param entity Entity Object
+     * @return Create result.
+     */
+    @PostMapping(value = "/create")
+    default GeneralApiResponse<?> createEntity(@RequestBody D entity) {
+        entity.setEntityId(null);
+        return createOrUpdate(entity);
+    }
+
+    default GeneralApiResponse<?> createOrUpdate(@RequestBody D entity) {
         var converter = getEntityConverter();
-        var result = getHandlingService().createOrUpdateEntity(role);
+        var result = getHandlingService().createOrUpdateEntity(entity);
         if (converter == null) {
             return new GeneralApiResponse<>(result);
         }
         return new GeneralApiResponse<>(converter.convert(result));
     }
 
-    @DeleteMapping(value = "/delete")
-    default GeneralApiResponse<Boolean> delete(@RequestParam("entityId") I entityId) {
+    /**
+     * Update entity
+     * @param entityId Entity ID
+     * @param entity Entity Object
+     * @return Updated result.
+     */
+    @PutMapping(value = "/{entityId}")
+    default GeneralApiResponse<?> updateEntity(@PathVariable("entityId") I entityId, @RequestBody D entity) {
+        entity.setEntityId(entityId);
+        return createOrUpdate(entity);
+    }
+
+    /**
+     * Delete entity by ID.
+     * @param entityId Entity ID
+     * @return True if deleted
+     */
+    @DeleteMapping(value = "/{entityId}")
+    default GeneralApiResponse<Boolean> delete(@PathVariable("entityId") I entityId) {
         return new GeneralApiResponse<>(getHandlingService().deleteEntity(entityId));
     }
 

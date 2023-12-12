@@ -41,7 +41,7 @@ export class OrganizationComponent extends TableComponent<Organization> {
 
   viewOrganizationClick(organization: Organization) {
     this.organizationService.organizationSubject.next(organization);
-    const urlToNavigate = "/" + environment.frontEndUrl.settings;
+    const urlToNavigate = "/" + environment.frontEndUrl.organizationDetails;
     this.router.navigateByUrl(urlToNavigate);
   }
 }

@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.data.util.Pair;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -60,12 +61,12 @@ public class ControllerScanner {
         for (Map.Entry<RequestMappingInfo, HandlerMethod> entry : handlerMethods.entrySet()) {
             var key = entry.getKey();
             var value = entry.getValue();
-            var urls = key.getDirectPaths();
+            var urls = coreFinanceUtil.buildUrlPair(key.getPatternValues());
             Method method = value.getMethod();
             var declaringClass = method.getDeclaringClass();
             var controllerClass = value.getBeanType();
             String controllerClassName = controllerClass.getName();
-            log.debug("{}#{}", controllerClassName, method.getName());
+            log.debug("{}#{} ==> {}", controllerClassName, method.getName(), urls);
             for (String ignoreController : serviceSecurityConfig.getIgnoreControllerScan()) {
                 log.debug("Checking if controller full package contain [{}] or not...", ignoreController);
                 if (controllerClassName.contains(ignoreController)) {
@@ -73,11 +74,12 @@ public class ControllerScanner {
                     continue main_loop;
                 }
             }
-            for (String url : urls) {
+            log.debug("URLs {}", urls);
+            for (var url : urls) {
                 log.debug("Validating URL [{}]", url);
                 for (String noAuthenUrl : serviceSecurityConfig.getNoAuthenUrls()) {
                     Pattern pattern = Pattern.compile(noAuthenUrl.replace("*", ".*"));
-                    var matched = pattern.matcher(url).matches();
+                    var matched = pattern.matcher(url.getSecond()).matches();
                     log.debug("Checking result with pattern [{}] is [{}]", noAuthenUrl, matched);
                     if (matched) {
                         continue main_loop;
@@ -106,24 +108,32 @@ public class ControllerScanner {
         resourceActionRepository.saveAll(permissionActions);
     }
 
-    private List<ResourceAction> buildListActions(String resourceType, String action, Iterable<String> urls,
+    private List<ResourceAction> buildListActions(String resourceType, String action, Iterable<Pair<String, String>> urls,
                                                   Iterable<RequestMethod> requestMethods) {
         var permissionActions = new LinkedList<ResourceAction>();
-        for (String url : urls) {
+        for (var url : urls) {
             for (RequestMethod requestMethod : requestMethods) {
-                permissionActions.add(permissionService.newResourceAction(resourceType, action, url, requestMethod));
+                log.debug("Checking URL [{}] with method [{}]", url, requestMethod);
+                var resourceAction = permissionService.newResourceAction(resourceType, action, url.getSecond(), requestMethod);
+                if (!resourceActionRepository.existsByActionAndRequestMethodAndResourceTypeAndUrl(action, requestMethod,
+                        resourceType, url.getSecond())) {
+                    log.debug("Saving action [{}]", resourceAction);
+                    permissionActions.add(resourceAction);
+                } else {
+                    log.debug("Skip existed action [{}]", resourceAction);
+                }
             }
         }
         return permissionActions;
     }
 
-    private void saveManualCheckPermissions(String resourceType, String action, Iterable<String> urls,
+    private void saveManualCheckPermissions(String resourceType, String action, Iterable<Pair<String, String>> urls,
                                             Iterable<RequestMethod> requestMethods) {
-        for (String url : urls) {
+        for (var url : urls) {
             for (RequestMethod requestMethod : requestMethods) {
                 var permission = new PermissionDto();
                 permission.setControl(AccessControl.MANUAL_CHECK);
-                permission.setUrl(url);
+                permission.setUrl(url.getSecond());
                 permission.setRoleId(Permission.ANY_ROLE_APPLIED_VALUE);
                 permission.setResourceType(resourceType);
                 permission.setAction(action);

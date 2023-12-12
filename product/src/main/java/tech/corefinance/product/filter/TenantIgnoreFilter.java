@@ -4,8 +4,6 @@ import jakarta.annotation.PostConstruct;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +17,7 @@ import java.util.List;
 
 @Component
 @Slf4j
-public class OrganizationIgnoreTenantFilter implements Filter, Ordered {
+public class TenantIgnoreFilter implements Filter, Ordered {
 
     private static List<Class<?>> controllerToIgnoreTenant = List.of(OrganizationController.class, CurrencyController.class);
     private List<String> listApplyUrls = new LinkedList<>();

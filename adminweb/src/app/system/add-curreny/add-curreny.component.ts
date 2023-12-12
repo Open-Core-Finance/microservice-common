@@ -60,10 +60,8 @@ export class AddCurrenyComponent {
     }
     if (this.message['error'].length < 1) {
       const requestHeaders = this.restService.initApplicationJsonRequestHeaders();
-      const serviceUrl = environment.apiUrl.currency + "/create-or-update";
-      this.http.post<GeneralApiResponse>(serviceUrl, formData, {
-        headers: requestHeaders, params: {}
-      }).subscribe({
+      let serviceUrl = environment.apiUrl.currency + "/";
+      var responseHandler = {
         next: (data: GeneralApiResponse) => {
           if (this.save) {
             $event.organization = data.result;
@@ -79,7 +77,19 @@ export class AddCurrenyComponent {
             message['error'].push("Unknown error: " + JSON.stringify(data));
           }
         }
-      });
+      };
+      if (formData.id) {
+        serviceUrl = environment.apiUrl.currency + "/" + formData.id;
+        this.http.put<GeneralApiResponse>(serviceUrl, formData, {
+          headers: requestHeaders, params: {}
+        }).subscribe(responseHandler);
+      } else {
+        serviceUrl = environment.apiUrl.currency + "/create";
+        this.http.post<GeneralApiResponse>(serviceUrl, formData, {
+          headers: requestHeaders, params: {}
+        }).subscribe(responseHandler);
+      }
+      
     }
   }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { LanguageService } from '../services/language.service';
@@ -7,14 +7,15 @@ import { AppSettings } from '../classes/AppSetting';
 import { AuthenticationService } from '../services/authentication.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
-import { LoginSession } from '../classes/LoginSession';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { Role } from '../classes/Role';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.sass']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   loginForm = new FormGroup({
     username: new FormControl(''),
     password: new FormControl('')
@@ -28,47 +29,66 @@ export class LoginComponent implements OnInit {
   };
   returnUrl: string | null = null;
   isLoading = false;
+  roleList: Role[] = [];
+
+  languageSubscription: Subscription | null = null;
+  languageListSubscription: Subscription | null = null;
+  loginErrorSubscription: Subscription | null = null;
+  roleListSubscription: Subscription | null = null;
+  selectedRoleSubscription: Subscription | null = null;
 
   constructor(public languageService: LanguageService, private auth: AuthenticationService, private router: Router,
     private route: ActivatedRoute) {
-    const that = this;
-    languageService.languageDataObservable.subscribe(languageData => that.refreshLanguage(languageData));
-    languageService.languageListObservable.subscribe( list => this.languageList = list);
-    this.changeLanguage(languageService.selectedLanguage);
-    that.auth.currentSession.subscribe(x => {
-      if (x != null) {
-        // let urlToNavigate = that.returnUrl || "/" + environment.frontEndUrl.organizations;
-        // that.router.navigate([urlToNavigate]);
-        console.log(x);
-      }
-    });
+  }
+
+  ngOnDestroy(): void {
+    this.languageSubscription?.unsubscribe();
+    this.languageListSubscription?.unsubscribe();
+    this.roleListSubscription?.unsubscribe();
+    this.loginErrorSubscription?.unsubscribe();
+    this.selectedRoleSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {
+    const that = this;
+    this.languageSubscription = this.languageService.languageDataObservable.subscribe(languageData => that.refreshLanguage(languageData));
+    this.languageListSubscription = this.languageService.languageListObservable.subscribe( list => this.languageList = list);
+    this.changeLanguage(this.languageService.selectedLanguage);
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'];
+    this.loginErrorSubscription = this.auth.loginErrorObservable.subscribe(err => {
+      if (err != null && err.length > 0) {
+        this.isLoading = false;
+        this.clearMessages();
+        this.message['error'].push(err);
+      }
+    });
+    this.roleListSubscription = this.auth.roleListObservable.subscribe(list => {
+      if (list.length > 0) {
+        this.isLoading = false;
+        this.clearMessages();
+      }
+      this.roleList = list;
+      if (this.roleList.length === 1) {
+        this.auth.selectedRoleSubject.next(this.roleList[0]);
+      }
+    });
+    this.selectedRoleSubscription = this.auth.selectedRoleObservable.subscribe( role => {
+      if (role != null) {
+        let urlToNavigate: string;
+        if (role.organization == null) {
+          urlToNavigate = that.returnUrl || "/" + environment.frontEndUrl.organizations;
+        } else {
+          urlToNavigate = that.returnUrl || "/" + environment.frontEndUrl.organizationDetails;
+        }
+        that.router.navigate([urlToNavigate]);
+      }
+    });
   }
 
   submit() {
     this.clearMessages();
     this.isLoading = true;
-    this.auth.login(this.loginForm.value, (data: any) => {
-        if (data.status !== 0) {
-          this.isLoading = false;
-          this.clearMessages();
-          var err = data.error;
-          if (err.statusCode) {
-              this.message['error'].push(err.statusCode);
-          } else if (err.message != null) {
-              this.message['error'].push(err.message);
-          } else {
-              this.message['error'].push(data);
-          }
-        }
-    });
-    // if (this.router.url.indexOf(this.authGuard.noPerError) > -1) {
-    //     this.clearMessages();
-    //     this.message.error.push(this.languageData.permissionDenied);
-    // }
+    this.auth.login(this.loginForm.value, (data: any) => {});
   }
 
   refreshLanguage(languageData: Record<string, any>) {
@@ -85,5 +105,19 @@ export class LoginComponent implements OnInit {
         success: [],
         error: []
     };
+  }
+
+  logout($event: any): any {
+    this.auth.logout();
+    window.location.reload();
+  }
+
+  selectRole(roleId: string) {
+    for (let role of this.roleList) {
+      if (role.id == roleId) {
+        this.auth.selectedRoleSubject.next(role);
+        break;
+      }
+    }
   }
 }

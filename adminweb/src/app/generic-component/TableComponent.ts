@@ -160,20 +160,8 @@ export abstract class TableComponent<T extends GeneralModel> implements AfterVie
 
     abstract getServiceUrl(): string;
 
-    getDeleteUrl(): string {
-        return this.getServiceUrl() + "/delete";
-    }
-
     getSearchUrl(): string {
         return this.getServiceUrl() + "/";
-    }
-
-    getCreateUpdateUrl(): string {
-        return this.getServiceUrl() + "/create-or-update";
-    }
-
-    getViewDetailsUrl(itemId: string): string {
-        return this.getServiceUrl() + "/" + itemId;
     }
 
     changeOrder($event: any) {
@@ -215,7 +203,7 @@ export abstract class TableComponent<T extends GeneralModel> implements AfterVie
         this._deleteSubscription = dialogRef.afterClosed().subscribe(dialogResult => {
           if (dialogResult) {
             const requestHeaders = this.restService.initApplicationJsonRequestHeaders();
-            const serviceUrl = this.getDeleteUrl();
+            const serviceUrl = this.getServiceUrl() + "/" + item.id;
             this.http.delete<GeneralApiResponse>(serviceUrl, {
               headers: requestHeaders, params: { entityId: item.id }
             }).subscribe({

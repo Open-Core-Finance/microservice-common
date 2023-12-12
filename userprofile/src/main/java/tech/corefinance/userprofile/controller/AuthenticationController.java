@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import tech.corefinance.common.annotation.ControllerManagedResource;
+import tech.corefinance.common.annotation.PermissionAction;
 import tech.corefinance.common.dto.GeneralApiResponse;
 import tech.corefinance.common.dto.LoginDto;
 import tech.corefinance.common.enums.AppPlatform;
@@ -23,6 +24,7 @@ public class AuthenticationController {
     private final AuthenService authenService;
 
     @PostMapping(value = "/login")
+    @PermissionAction(action = "login")
     public GeneralApiResponse<LoginDto> login(
             @RequestHeader(name = HEADER_KEY_CLIENT_APP_ID, defaultValue = DEFAULT_CLIENT_APP_ID) String clientAppId,
             @RequestHeader(name = HEADER_KEY_APP_PLATFORM, defaultValue = DEFAULT_APP_PLATFORM_STRING)
@@ -36,12 +38,14 @@ public class AuthenticationController {
     }
 
     @PostMapping(value = "/unlock-user")
+    @PermissionAction(action = "update")
     public GeneralApiResponse<Boolean> unlockUser(@RequestParam("account") String account) {
         authenService.unlockUser(account);
         return GeneralApiResponse.createSuccessResponse(true);
     }
 
     @PostMapping(value = "/refresh-token")
+    @PermissionAction(action = "login")
     public GeneralApiResponse<LoginDto> refreshToken(
             @RequestHeader(name = HEADER_KEY_CLIENT_APP_ID, defaultValue = DEFAULT_CLIENT_APP_ID) String clientAppId,
             @RequestHeader(name = HEADER_KEY_APP_PLATFORM, defaultValue = DEFAULT_APP_PLATFORM_STRING)
@@ -56,11 +60,13 @@ public class AuthenticationController {
     }
 
     @GetMapping(value = "/login-session/{loginId}/valid")
+    @PermissionAction(action = "check")
     public GeneralApiResponse<Boolean> isValidToken(@PathVariable String loginId) {
         return GeneralApiResponse.createSuccessResponse(authenService.isValidToken(loginId));
     }
 
     @PostMapping(value = "/login-session/{loginId}/invalidate")
+    @PermissionAction(action = "update")
     public GeneralApiResponse<Boolean> invalidateLogin(@PathVariable String loginId) {
         authenService.invalidateLogin(loginId);
         return GeneralApiResponse.createSuccessResponse(true);

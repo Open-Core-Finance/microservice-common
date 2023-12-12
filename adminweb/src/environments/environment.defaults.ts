@@ -13,7 +13,8 @@ export const environment = {
         login: "login",
         organizations: "organizations",
         curencies: "curencies",
-        settings: "settings"
+        settings: "settings",
+        organizationDetails: "organization-details"
     },
     appVersion: "1.0.0-SNAPSHOT",
     appClientId: "corefinance-ADMIN-WEB",

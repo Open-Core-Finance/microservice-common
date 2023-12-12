@@ -7,7 +7,7 @@ export class LoginSession {
     refreshToken: string = "";
     username: string = "";
     userEmail: string = "";
-    _userRoles: UserRole[] = [];
+    userRoles: UserRole[] = [];
     fistName: string = "";
     lastName: string | null = null;
     displayName: string = "";
@@ -15,21 +15,13 @@ export class LoginSession {
     gender: Gender = Gender.MALE;
     birthday: string | null = null;
     phoneNumber: string | null = null;
-
-    get userRoles() {
-        return this.userRoles;
-    }
-
-    set userRoles(userRoles: UserRole[]) {
-        this._userRoles = userRoles || [];
-    }
-
 }
 
 export class UserRole {
     resourceType: string | null = null;
     resourceId: string | null = null;
     roleId: string = "";
+    roleName: string = ""
 }
 
 export enum AppPlatform {

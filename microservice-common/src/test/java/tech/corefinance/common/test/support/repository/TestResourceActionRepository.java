@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMethod;
 import tech.corefinance.common.model.ResourceAction;
 import tech.corefinance.common.repository.ResourceActionRepository;
 
@@ -126,5 +127,11 @@ public class TestResourceActionRepository implements ResourceActionRepository {
     public <S extends ResourceAction, R> R findBy(Example<S> example,
                                                   Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
         return null;
+    }
+
+    @Override
+    public boolean existsByActionAndRequestMethodAndResourceTypeAndUrl(String action, RequestMethod requestMethod,
+                                                                       String resourceType, String url) {
+        return true;
     }
 }
