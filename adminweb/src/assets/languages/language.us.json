@@ -8,8 +8,10 @@
         "loginButton": "Login",
         "error": {
             "user_locked": "User was locked. Please contact administrator to unlock.",
-            "login_fail": "Combination of username and password is incorrect."
-        }
+            "login_fail": "Combination of username and password is incorrect.",
+            "permission_denied": "Permission denied."
+        },
+        "selectRole": "Select role to login"
     },
     "user": {
         "welcome": "Welcome ${0}!"
@@ -19,7 +21,8 @@
         "groupOther": "Other",
         "organizations": "Organization",
         "settings": "Settings",
-        "curencies": "Curencies"
+        "curencies": "Curencies",
+        "organizationDetails": "Org details"
     },
     "organization": {
         "id": "ID",
@@ -36,7 +39,8 @@
             "country_empty": "Country cannot be empty!"
         },
         "deleteConfirmContent": "Are you sure to delete organization ${0}?",
-        "deleteConfirmTitle": "Confirm delete organization"
+        "deleteConfirmTitle": "Confirm delete organization",
+        "details": "Organization details"
     },
     "action": {
         "add": "Add",
@@ -84,5 +88,6 @@
             "symbol_empty": "Symbol cannot be empty!",
             "decimal_mark_empty": "Decimal mark cannot be empty!"
         }
-    }
+    },
+    "logOut": "Logout"
 }

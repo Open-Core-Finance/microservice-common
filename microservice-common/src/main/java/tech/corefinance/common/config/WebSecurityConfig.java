@@ -39,13 +39,13 @@ public class WebSecurityConfig {
         return http.csrf(csrf -> csrf.disable()).cors(c -> c.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> serviceSecurityConfig.getNoAuthenUrls().stream().forEach(url -> auth
                         .requestMatchers(url).permitAll())
-                ).authorizeHttpRequests(auth -> anonymousList.stream().forEach(p -> registerAnonymousAccess(auth, p)))
+                ).authorizeHttpRequests(auth -> anonymousList.stream().forEach(p -> registerPermitAllAccess(auth, p)))
                 .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 .addFilterBefore(sessionAuthenticationFilter, AnonymousAuthenticationFilter.class)
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).build();
     }
 
-    private void registerAnonymousAccess(
+    private void registerPermitAllAccess(
             AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry auth,
             AnonymousUrlAccess anonymousUrlAccess) {
         HttpMethod httpMethod = null;
@@ -53,7 +53,7 @@ public class WebSecurityConfig {
         if (requestMethod != null) {
             httpMethod = requestMethod.asHttpMethod();
         }
-        auth.requestMatchers(httpMethod, anonymousUrlAccess.getUrl()).anonymous();
+        auth.requestMatchers(httpMethod, anonymousUrlAccess.getUrl()).permitAll();
     }
 
     @Bean

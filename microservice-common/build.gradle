@@ -229,8 +229,8 @@ publishing {
     }
 }
 
-publish.dependsOn(':build')
-publish.mustRunAfter(':build')
+publish.dependsOn(':microservice-common:build')
+publish.mustRunAfter(':microservice-common:build')
 
 signing {
     sign publishing.publications

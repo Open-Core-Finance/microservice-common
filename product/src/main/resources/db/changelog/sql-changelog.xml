@@ -8,5 +8,6 @@
     <include file="classpath:db/changelog/sql/001-create-product-tables.sql"/>
     <include file="classpath:db/changelog/sql/002-no-authen-access-urls.sql"/>
     <include file="classpath:db/changelog/sql/003-organization-details.sql"/>
+    <include file="classpath:db/changelog/sql/004-permissions.sql"/>
 
 </databaseChangeLog>

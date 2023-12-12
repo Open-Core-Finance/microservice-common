@@ -8,7 +8,8 @@ CREATE TABLE IF NOT EXISTS resource_action
     request_method character varying(255),
     resource_type character varying(255),
     url character varying(255),
-    CONSTRAINT resource_action_request_method_check CHECK (request_method::text = ANY (ARRAY['GET'::character varying, 'HEAD'::character varying, 'POST'::character varying, 'PUT'::character varying, 'PATCH'::character varying, 'DELETE'::character varying, 'OPTIONS'::character varying, 'TRACE'::character varying]::text[]))
+    CONSTRAINT resource_action_request_method_check CHECK (request_method::text = ANY (ARRAY['GET'::character varying, 'HEAD'::character varying, 'POST'::character varying, 'PUT'::character varying, 'PATCH'::character varying, 'DELETE'::character varying, 'OPTIONS'::character varying, 'TRACE'::character varying]::text[])),
+    CONSTRAINT resource_action_action_method_type_url_unique UNIQUE NULLS NOT DISTINCT (action, request_method, resource_type, url)
 );
 
 CREATE TABLE IF NOT EXISTS internal_service_config
@@ -18,7 +19,8 @@ CREATE TABLE IF NOT EXISTS internal_service_config
     api_key character varying(255) NOT NULL,
     created_date timestamp(6) with time zone,
     last_modified_date timestamp(6) with time zone,
-    service_name character varying(255) NOT NULL
+    service_name character varying(255) NOT NULL,
+    CONSTRAINT internal_service_config_activated_service_name_unique UNIQUE NULLS NOT DISTINCT (activated, service_name)
 );
 
 CREATE TABLE IF NOT EXISTS permission
@@ -31,9 +33,9 @@ CREATE TABLE IF NOT EXISTS permission
     role_id character varying(255) NOT NULL,
     url character varying(255),
     CONSTRAINT permission_control_check CHECK (control::text = ANY (ARRAY['ALLOWED'::character varying, 'DENIED'::character varying, 'ALLOWED_SPECIFIC_RESOURCES'::character varying, 'DENIED_SPECIFIC_RESOURCES'::character varying, 'MANUAL_CHECK'::character varying]::text[])),
-    CONSTRAINT permission_request_method_check CHECK (request_method::text = ANY (ARRAY['GET'::character varying, 'HEAD'::character varying, 'POST'::character varying, 'PUT'::character varying, 'PATCH'::character varying, 'DELETE'::character varying, 'OPTIONS'::character varying, 'TRACE'::character varying]::text[]))
+    CONSTRAINT permission_request_method_check CHECK (request_method::text = ANY (ARRAY['GET'::character varying, 'HEAD'::character varying, 'POST'::character varying, 'PUT'::character varying, 'PATCH'::character varying, 'DELETE'::character varying, 'OPTIONS'::character varying, 'TRACE'::character varying]::text[])),
+    CONSTRAINT permission_action_control_method_resource_type_role_url_unique UNIQUE NULLS NOT DISTINCT (action, control, request_method, resource_type, role_id, url)
 );
-
 
 CREATE TABLE IF NOT EXISTS user_profile
 (
@@ -96,14 +98,17 @@ CREATE TABLE IF NOT EXISTS role
 
 CREATE TABLE IF NOT EXISTS user_profile_role
 (
+    id character varying(255) DEFAULT gen_random_uuid()::character varying(255) NOT NULL,
     user_profile_id character varying(255) NOT NULL,
     role_id character varying(255) NOT NULL,
-    CONSTRAINT fkbcv28jasfm03h2ei2shwm5ui8 FOREIGN KEY (role_id)
+    CONSTRAINT user_profile_role_pkey PRIMARY KEY (id),
+    CONSTRAINT user_profile_role_user_role_id_fkey FOREIGN KEY (role_id)
         REFERENCES role (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
-    CONSTRAINT fkmoy1bt7jbxlra3c1jmeekigwm FOREIGN KEY (user_profile_id)
+    CONSTRAINT user_profile_role_user_profile_id_fkey FOREIGN KEY (user_profile_id)
         REFERENCES user_profile (id) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT user_profile_role_user_profile_role_unique UNIQUE NULLS NOT DISTINCT (role_id, user_profile_id)
 );

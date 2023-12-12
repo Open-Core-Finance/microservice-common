@@ -8,8 +8,10 @@
         "loginButton": "Đăng nhập",
         "error": {
             "user_locked": "User đã bị khóa. Xin liên hệ admin để mở khóa.",
-            "login_fail": "Tên đăng nhập và mật khẩu không khớp."
-        }
+            "login_fail": "Tên đăng nhập và mật khẩu không khớp.",
+            "permission_denied": "Không có quyền truy cập."
+        },
+        "selectRole": "Chọn role để đăng nhập"
     },
     "user": {
         "welcome": "Xin chào ${0}!"
@@ -19,7 +21,8 @@
         "groupOther": "Khác",
         "organizations": "Tổ chức",
         "settings": "Settings",
-        "curencies": "Tiền tệ"
+        "curencies": "Tiền tệ",
+        "organizationDetails": "Thông tin tổ chức"
     },
     "organization": {
         "id": "Mã số",
@@ -36,7 +39,8 @@
             "country_empty": "Không được bỏ trống quốc gia!"
         },
         "deleteConfirmContent": "Bạn có chắc muốn xóa tổ chức ${0} không?",
-        "deleteConfirmTitle": "Xác nhận xóa tổ chức"
+        "deleteConfirmTitle": "Xác nhận xóa tổ chức",
+        "details": "Thông tin tổ chức"
     },
     "action": {
         "add": "Thêm",
@@ -84,5 +88,6 @@
             "symbol_empty": "Ký hiệu không được bỏ trống!",
             "decimal_mark_empty": "Phải chọn dấu phân cách thập phân"
         }
-    }
+    },
+    "logOut": "Đăng xuất"
 }

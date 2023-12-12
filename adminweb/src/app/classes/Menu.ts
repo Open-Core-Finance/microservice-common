@@ -5,11 +5,13 @@ export class MenuGroup {
     id: string;
     items: MenuItem[];
     labelProvider: LabelProvider;
+    visibleFn: Function | null;
 
-    constructor(id: string, labelProvider: LabelProvider, items: MenuItem[]) {
+    constructor(id: string, labelProvider: LabelProvider, items: MenuItem[], visibleFn: Function | null) {
         this.id = id;
         this.labelProvider = labelProvider;
         this.items = items;
+        this.visibleFn = visibleFn;
     }
 
     get label(): string {
@@ -37,11 +39,14 @@ export class MenuItem {
 
     activated: boolean  = true;
 
-    constructor(activateUrl: string, labelProvider: LabelProvider, iconUrl: string, iconName: string) {
+    visibleFn: Function | null;
+
+    constructor(activateUrl: string, labelProvider: LabelProvider, iconUrl: string, iconName: string, visibleFn: Function | null) {
         this.activateUrl = activateUrl;
         this.labelProvider = labelProvider;
         this.iconUrl = iconUrl;
         this.iconName = iconName;
+        this.visibleFn = visibleFn;
     }
 
     get label(): string {
@@ -51,8 +56,8 @@ export class MenuItem {
 
 export class ActionMenuItem extends MenuItem {
     action: Function | null;
-    constructor(labelProvider: LabelProvider, iconUrl: string, iconName: string, action: Function | null) {
-        super("", labelProvider, iconUrl, iconName);
+    constructor(labelProvider: LabelProvider, iconUrl: string, iconName: string, action: Function | null, visibleFn: Function | null) {
+        super("", labelProvider, iconUrl, iconName, visibleFn);
         this.action = action;
     }
 }
@@ -60,8 +65,8 @@ export class ActionMenuItem extends MenuItem {
 export class LanguageMenuItem extends ActionMenuItem {
     languageItem: LanguageItem;
 
-    constructor(labelProvider: LabelProvider, iconName: string, languageItem: LanguageItem) {
-        super(labelProvider, "", iconName, null);
+    constructor(labelProvider: LabelProvider, iconName: string, languageItem: LanguageItem, visibleFn: Function | null) {
+        super(labelProvider, "", iconName, null, visibleFn);
         this.languageItem = languageItem;
     }
 }

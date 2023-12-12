@@ -3,6 +3,7 @@ package tech.corefinance.common.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import tech.corefinance.common.ex.ServiceProcessingException;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -18,20 +19,23 @@ public class UserRoleDto implements GrantedAuthority {
     private String resourceId;
     @NotEmpty(message = "roleId_must_not_null")
     private String roleId;
+    private String roleName;
+
+    public UserRoleDto(String resourceType, String resourceId, String roleId) {
+        this(resourceType, resourceId, roleId, "NA");
+    }
 
     /**
      * Importance constructor for JSON deserializer.
      * @param jsonString RoleInSchoolDto JSON
      */
+    @SneakyThrows({JsonProcessingException.class})
     public UserRoleDto(String jsonString) {
-        try {
-            UserRoleDto that = new ObjectMapper().readValue(jsonString, getClass());
-            this.resourceId = that.resourceId;
-            this.resourceType = that.resourceType;
-            this.roleId = that.roleId;
-        } catch (JsonProcessingException e) {
-            throw new ServiceProcessingException("Parse version error", e);
-        }
+        UserRoleDto that = new ObjectMapper().readValue(jsonString, getClass());
+        this.resourceId = that.resourceId;
+        this.resourceType = that.resourceType;
+        this.roleId = that.roleId;
+        this.roleName = that.roleName;
     }
 
     @Override

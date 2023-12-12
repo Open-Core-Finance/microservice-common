@@ -13,6 +13,7 @@ import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -151,13 +152,13 @@ public class CoreFinanceUtil {
             if (requestMethods.contains(RequestMethod.DELETE)) {
                 resourceType = ResourceAction.COMMON_ACTION_DELETE;
             } else if (requestMethods.contains(RequestMethod.GET)) {
-                resourceType = ResourceAction.COMMON_ACTION_LIST;
+                resourceType = ResourceAction.COMMON_ACTION_VIEW;
             } else if (requestMethods.contains(RequestMethod.POST)) {
                 resourceType = ResourceAction.COMMON_ACTION_ADD;
             } else if (requestMethods.contains(RequestMethod.PUT) || requestMethods.contains(RequestMethod.PATCH)) {
                 resourceType = ResourceAction.COMMON_ACTION_UPDATE;
             } else {
-                resourceType = ResourceAction.COMMON_ACTION_VIEW;
+                resourceType = ResourceAction.COMMON_ACTION_LIST;
             }
         }
         return resourceType;
@@ -242,7 +243,7 @@ public class CoreFinanceUtil {
     /**
      * Check if input target is proxy object or not. And check if it can cast to one of expected target classes.
      *
-     * @param target    target
+     * @param target         target
      * @param excludeClasses Target classes to check
      * @return True if proxyObject can cast to one of expected target classes.
      */
@@ -273,5 +274,23 @@ public class CoreFinanceUtil {
             }
         }
         return null;
+    }
+
+    public Set<Pair<String, String>> buildUrlPair(Set<String> urlPatterns) {
+        Set<Pair<String, String>> urlPairs = new HashSet<>();
+        urlPatterns.forEach(pattern -> urlPairs.add(Pair.of(pattern, patternToUrl(pattern))));
+        return urlPairs;
+    }
+
+    private String patternToUrl(String pattern) {
+        var url = pattern;
+        var lastOpenCurlyBracketIndex = pattern.lastIndexOf("{");
+        var firstCloseCurlyBracketIndex = pattern.indexOf("}");
+        while (lastOpenCurlyBracketIndex >= 0 && lastOpenCurlyBracketIndex < firstCloseCurlyBracketIndex) {
+            url = url.substring(0, lastOpenCurlyBracketIndex) + '*' + url.substring(firstCloseCurlyBracketIndex + 1);
+            lastOpenCurlyBracketIndex = url.lastIndexOf("{");
+            firstCloseCurlyBracketIndex = url.indexOf("}");
+        }
+        return url;
     }
 }

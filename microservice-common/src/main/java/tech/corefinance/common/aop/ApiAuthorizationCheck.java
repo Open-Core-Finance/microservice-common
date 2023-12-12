@@ -1,6 +1,9 @@
 package tech.corefinance.common.aop;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.util.Pair;
+import org.springframework.security.config.annotation.web.AbstractRequestMatcherRegistry;
+import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 import tech.corefinance.common.annotation.ControllerManagedResource;
 import tech.corefinance.common.annotation.PermissionAction;
 import tech.corefinance.common.annotation.PermissionResource;
@@ -172,15 +175,14 @@ public class ApiAuthorizationCheck {
                 }
             }
 
-            String requestUri = request.getRequestURI();
             log.debug("Verifying method [{}#{}]", controllerClassName, signature.getName());
             Map.Entry<RequestMappingInfo, HandlerMethod> handlerMethodEntry = resolveHandlerInfo(method);
             if (handlerMethodEntry == null) {
                 log.error("This error should not happen. If it happens, please check AOP condition.");
                 throw new IllegalStateException("unknown_method_handler");
             }
-            String url = resolveUrl(handlerMethodEntry, requestUri);
-            log.debug("Resolved URL [{}] for request URI [{}]", url, requestUri);
+            String url = resolveUrl(handlerMethodEntry, request);
+            log.debug("Resolved URL [{}] for request URI [{}]", url, request.getRequestURI());
             var perActAnn = method.getAnnotation(PermissionAction.class);
             var action = coreFinanceUtil.resolveResourceAction(perActAnn, handlerMethodEntry.getKey());
             var controllerManagedResource = controllerClass.getAnnotation(ControllerManagedResource.class);
@@ -232,15 +234,15 @@ public class ApiAuthorizationCheck {
         return null;
     }
 
-    private String resolveUrl(Map.Entry<RequestMappingInfo, HandlerMethod> handlerMethodEntry, String requestUri) {
-        Set<String> urls = handlerMethodEntry.getKey().getDirectPaths();
+    private String resolveUrl(Map.Entry<RequestMappingInfo, HandlerMethod> handlerMethodEntry, HttpServletRequest request) {
+        Set<Pair<String, String>> urls = coreFinanceUtil.buildUrlPair(handlerMethodEntry.getKey().getPatternValues());
         String result = null;
         for (var url : urls) {
-            if (url.equals(requestUri)) {
-                result = url;
+            if (RegexRequestMatcher.regexMatcher(url.getSecond()).matches(request)) {
+                result = url.getSecond();
                 break;
             } else if (result == null) {
-                result = url;
+                result = url.getSecond();
             }
         }
         return result;

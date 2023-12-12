@@ -10,7 +10,6 @@ CREATE TABLE IF NOT EXISTS anonymous_url_access
     CONSTRAINT url_method_unique UNIQUE NULLS NOT DISTINCT (url, request_method)
 );
 
-
 INSERT INTO anonymous_url_access (url) VALUES ('/') ON CONFLICT DO NOTHING;
 INSERT INTO anonymous_url_access (url) VALUES ('/parserConfigurationException') ON CONFLICT DO NOTHING;
 INSERT INTO anonymous_url_access (url) VALUES ('/error') ON CONFLICT DO NOTHING;

@@ -133,6 +133,7 @@ public class AuthenServiceImpl implements AuthenService {
         userRoleDto.setRoleId(role.getId());
         userRoleDto.setResourceType("ORGANIZATION");
         userRoleDto.setResourceId(role.getTenantId());
+        userRoleDto.setRoleName(role.getName());
         return userRoleDto;
     }
 
