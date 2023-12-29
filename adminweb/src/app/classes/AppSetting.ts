@@ -3,6 +3,8 @@ import { LanguageItem } from "./LanguageItem";
 export class AppSettings {
     public static LOCAL_KEY_SAVED_LANGUAGE ='selectedLanguage';
     public static LOCAL_KEY_SAVED_CREDENTIAL ='credential';
+    public static LOCAL_KEY_SAVED_SELECTED_ROLE ='selectedRole';
+    public static LOCAL_KEY_SAVED_ORGANIZATION ='org';
 
     public static LANGUAGE_DEFAULT = new LanguageItem("vn", "Việt Nam");
 

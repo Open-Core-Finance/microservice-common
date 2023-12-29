@@ -21,7 +21,7 @@ export class Organization implements ListableItem, GeneralModel {
     logoUrl: string = "";
     iconUrl: string = "";
 
-    nonWorkingDays: DayOfWeek[] = [];
+    nonWorkingDays: DayOfWeek[] = [DayOfWeek.SATURDAY, DayOfWeek.SUNDAY];
 
     constructor() {
         this.index = 0;

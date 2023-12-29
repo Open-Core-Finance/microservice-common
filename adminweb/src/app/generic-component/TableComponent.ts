@@ -22,7 +22,7 @@ import { GeneralModel } from '../classes/CommonClasses';
 @Component({
     template: ''
 })
-export abstract class TableComponent<T extends GeneralModel> implements AfterViewInit {
+export abstract class TableComponent<T extends GeneralModel> implements AfterViewInit, OnInit {
 
     public paging: Paging | null = null;
     public message: UserMessage = {success: [], error: []};
@@ -48,7 +48,7 @@ export abstract class TableComponent<T extends GeneralModel> implements AfterVie
     private _messageSubscription: Subscription | null = null;
     private _sessionSubscription: Subscription | null = null;
     private _languageSubscription: Subscription | null = null;
-    private _organizationSubscription: Subscription | null = null;
+    private _organizationSubscription: Subscription | null | undefined = null;
     private _sortSubscription: Subscription | null = null;
     private _deleteSubscription: Subscription | null = null;
 
@@ -58,23 +58,26 @@ export abstract class TableComponent<T extends GeneralModel> implements AfterVie
                           protected organizationService: OrganizationService) {
         this.messageSubject = new BehaviorSubject<UserMessage>({success: [], error: []});
         this.messageObservable = this.messageSubject.asObservable();
-        this._messageSubscription = this.messageObservable.subscribe( m => this.message = m);
         this.clearMessages();
         this.sortFields = [];
         this.searchText = "";
         this.itemPerPage = environment.pageSize;
-        this._sessionSubscription = this.auth.currentSession.subscribe(x =>  this.loginSession = x);
-        this._languageSubscription = languageService.languageDataObservable.subscribe( languageData => this.refreshLanguage(languageData));
         this.pageEvent = this.emptyPageEvent();
         this.pageEvent.pageSize = environment.pageSize;
         this.displayedColumns = this.buildTableColumns();
         this.customData = {};
-        this._organizationSubscription = this.organizationService.organizationObservable.subscribe(s => {
+    }
+    ngOnInit(): void {
+        this._messageSubscription = this.messageObservable.subscribe( m => this.message = m);
+        this._sessionSubscription = this.auth.currentSession.subscribe(x =>  this.loginSession = x);
+        this._languageSubscription = this.languageService.languageDataObservable.subscribe( languageData => this.refreshLanguage(languageData));
+        this._organizationSubscription = this.organizationService.organizationObservable?.subscribe(s => {
             if (s) this.customData['organizationId'] = s.id;
         });
     }
 
     ngAfterViewInit() {
+        this._sortSubscription?.unsubscribe();
         if (this.sort) {
           this._sortSubscription = this.sort.sortChange.subscribe( s => this.changeOrder({order: s}));
         }
@@ -84,12 +87,12 @@ export abstract class TableComponent<T extends GeneralModel> implements AfterVie
     }
 
     ngOnDestroy() {
-        this.unsubscribe(this._messageSubscription);
-        this.unsubscribe(this._sessionSubscription);
-        this.unsubscribe(this._languageSubscription);
-        this.unsubscribe(this._organizationSubscription);
-        this.unsubscribe(this._sortSubscription);
-        this.unsubscribe(this._deleteSubscription);
+        this._messageSubscription?.unsubscribe();
+        this._sessionSubscription?.unsubscribe();
+        this._languageSubscription?.unsubscribe();
+        this._organizationSubscription?.unsubscribe();
+        this._sortSubscription?.unsubscribe();
+        this._deleteSubscription?.unsubscribe();
     }
 
     reloadData() {
@@ -254,11 +257,5 @@ export abstract class TableComponent<T extends GeneralModel> implements AfterVie
         result.pageIndex = 0;
         result.length = 0;
         return result;
-    }
-
-    protected unsubscribe( subscription: Subscription | null) {
-        if (subscription) {
-            subscription.unsubscribe();
-        }
     }
 }

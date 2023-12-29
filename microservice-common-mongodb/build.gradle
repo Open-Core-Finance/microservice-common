@@ -29,6 +29,14 @@ plugins {
 group = 'tech.corefinance'
 version = "${internalCommonMongoDbVersion}"
 
+sourceCompatibility = javaSourceCompatibility
+targetCompatibility = javaSourceCompatibility
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(javaSourceCompatibility))
+    }
+}
+
 repositories {
 	mavenLocal()
 	mavenCentral()
@@ -187,8 +195,8 @@ publishing {
     }
 }
 
-publish.dependsOn(':build')
-publish.mustRunAfter(':build')
+publish.dependsOn(':microservice-common-mongodb:build')
+publish.mustRunAfter(':microservice-common-mongodb:build')
 
 signing {
     sign publishing.publications

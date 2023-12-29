@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { LoginSession } from '../classes/LoginSession';
 import { RestService } from "./rest.service";
@@ -11,18 +11,19 @@ import { AppSettings } from '../classes/AppSetting';
 import { interval } from 'rxjs';
 import { Role } from '../classes/Role';
 import { Organization } from '../classes/Organization';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
-export class AuthenticationService implements OnDestroy {
+export class AuthenticationService implements OnDestroy, OnInit {
 
-    private currentSessionSubject: BehaviorSubject<LoginSession | null>;
-    selectedRoleSubject: BehaviorSubject<Role | null> = new BehaviorSubject<Role | null>(null);
+    private currentSessionSubject!: BehaviorSubject<LoginSession | null>;
+    private selectedRoleSubject!: BehaviorSubject<Role | null>;
     private loginErrorSubject: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
     private roleListSubject: BehaviorSubject<Role[]> = new BehaviorSubject<Role[]>([]);
 
-    public currentSession: Observable<LoginSession | null>;
+    public currentSession!: Observable<LoginSession | null>;
     refreshInterval: Observable<number>;
-    selectedRoleObservable = this.selectedRoleSubject.asObservable();
+    selectedRoleObservable!: Observable<Role | null>;
     loginErrorObservable = this.loginErrorSubject.asObservable();
     roleListObservable = this.roleListSubject.asObservable();
 
@@ -30,17 +31,25 @@ export class AuthenticationService implements OnDestroy {
     loginSubscription!: Subscription;
     roleList: Role[] = [];
 
-    constructor(private restService: RestService, private http: HttpClient, private commonService: CommonService) {
+    constructor(private restService: RestService, private http: HttpClient, private commonService: CommonService,
+        private router: Router) {
+        // Refresh token
         this.refreshInterval = interval(environment.loginRefreshInterval);
-        const savedCredential = sessionStorage.getItem(AppSettings.LOCAL_KEY_SAVED_CREDENTIAL);
+        // Login session
+        const savedCredential = this.currentSessionValue;
         if (savedCredential != null) {
-          this.currentSessionSubject = new BehaviorSubject<LoginSession | null>(JSON.parse(savedCredential));
+          this.currentSessionSubject = new BehaviorSubject<LoginSession | null>(savedCredential);
           this.refreshIntervalSubscription = this.refreshInterval.subscribe(_ => this.refeshToken());
         } else {
           this.currentSessionSubject = new BehaviorSubject<LoginSession | null>(null);
         }
         this.currentSession = this.currentSessionSubject.asObservable();
-        this.loginSubscription = this.currentSession.subscribe(x => restService.loginSession = x);
+        // Selected role
+        this.selectedRoleSubject = new BehaviorSubject<Role | null>(this.selectedRoleValue);
+        this.selectedRoleObservable = this.selectedRoleSubject.asObservable();
+    }
+
+    ngOnInit(): void {
     }
 
     ngOnDestroy(): void {
@@ -49,7 +58,11 @@ export class AuthenticationService implements OnDestroy {
     }
 
     public get currentSessionValue(): LoginSession | null {
-        return this.currentSessionSubject.value;
+        const savedCredential = sessionStorage.getItem(AppSettings.LOCAL_KEY_SAVED_CREDENTIAL);
+        if (savedCredential != null) {
+          return JSON.parse(savedCredential) as LoginSession;
+        }
+        return null;
     }
 
     public login(formData: Record<string, any>, callback: (data: GeneralApiResponse) => void) : void {
@@ -60,11 +73,10 @@ export class AuthenticationService implements OnDestroy {
             next: (data: any) => {
                 if (data.status === 0) {
                     this.saveSession(data.result as LoginSession);
-                    if (!this.refreshIntervalSubscription) {
-                        this.refreshIntervalSubscription = this.refreshInterval.subscribe(
-                            _ => this.refeshToken()
-                        );
-                    }
+                    this.refreshIntervalSubscription?.unsubscribe();
+                    this.refreshIntervalSubscription = this.refreshInterval.subscribe(
+                        _ => this.refeshToken()
+                    );
                 } else {
                     this.buildLoginError(data);
                 }
@@ -93,6 +105,7 @@ export class AuthenticationService implements OnDestroy {
     }
 
     refeshToken(): void {
+        console.log("=======================", "Refreshing token...");
         const savedCredential = sessionStorage.getItem(AppSettings.LOCAL_KEY_SAVED_CREDENTIAL);
         if (savedCredential == null) {
            this.logout();
@@ -113,15 +126,16 @@ export class AuthenticationService implements OnDestroy {
                     this.logout();
                 }
             }, error: (data: any) => {
-                console.error(data);
                 this.logout();
             }
         });
     }
 
     public saveSession(session: LoginSession) {
-        this.currentSessionSubject.next(session);
+        // Save session
         sessionStorage.setItem(AppSettings.LOCAL_KEY_SAVED_CREDENTIAL, JSON.stringify(session));
+        this.currentSessionSubject.next(session);
+        // Load selected role
         var roleCount = session.userRoles.length;
         if (roleCount <= 0) {
             this.permissionDeniedError();
@@ -161,6 +175,19 @@ export class AuthenticationService implements OnDestroy {
         });
     }
 
+    public saveSelectedRole(role: Role) {
+        sessionStorage.setItem(AppSettings.LOCAL_KEY_SAVED_SELECTED_ROLE, JSON.stringify(role));
+        this.selectedRoleSubject.next(role);
+    }
+
+    public get selectedRoleValue(): Role | null {
+        const savedSelectedRole = sessionStorage.getItem(AppSettings.LOCAL_KEY_SAVED_SELECTED_ROLE);
+        if (savedSelectedRole != null) {
+            return JSON.parse(savedSelectedRole) as Role;
+        }
+        return null;
+    }
+
     private permissionDeniedError() {
         this.loginErrorSubject.next(["permission_denied"]);
         this.roleListSubject.next([]);
@@ -169,9 +196,13 @@ export class AuthenticationService implements OnDestroy {
     logout() {
         // remove user from storage to log user out
         sessionStorage.removeItem(AppSettings.LOCAL_KEY_SAVED_CREDENTIAL);
+        sessionStorage.removeItem(AppSettings.LOCAL_KEY_SAVED_SELECTED_ROLE);
+        sessionStorage.removeItem(AppSettings.LOCAL_KEY_SAVED_ORGANIZATION);
         this.selectedRoleSubject.next(null);
         this.roleListSubject.next([]);
         this.currentSessionSubject.next(null);
         this.refreshIntervalSubscription?.unsubscribe();
+        this.router.navigate([environment.frontEndUrl.login]);
     }
+    
 }

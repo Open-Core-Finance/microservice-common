@@ -29,6 +29,13 @@ plugins {
 
 group = 'tech.corefinance'
 version = "${internalCommonJpaVersion}"
+sourceCompatibility = javaSourceCompatibility
+targetCompatibility = javaSourceCompatibility
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(javaSourceCompatibility))
+    }
+}
 
 repositories {
 	mavenLocal()
@@ -206,8 +213,8 @@ publishing {
     }
 }
 
-publish.dependsOn(':build')
-publish.mustRunAfter(':build')
+publish.dependsOn(':microservice-common-jpa:build')
+publish.mustRunAfter(':microservice-common-jpa:build')
 
 signing {
     sign publishing.publications

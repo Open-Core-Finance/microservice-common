@@ -3,7 +3,6 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Observable } from 'rxjs/internal/Observable';
 import { RestService } from './rest.service';
 import { environment } from 'src/environments/environment';
-import { CommonService } from './common.service';
 import { GeneralApiResponse } from '../classes/GeneralApiResponse';
 import { HttpClient } from '@angular/common/http';
 import { Currency } from '../classes/Currency';
@@ -19,8 +18,7 @@ export class EntitiesService implements OnInit {
     public organizationObservableMap: Map<string, Observable<any[]> | undefined> =
         new Map<string, Observable<any[]> | undefined>();
 
-    constructor(private restService: RestService, private commonService: CommonService,
-        private http: HttpClient) {
+    constructor(private restService: RestService, private http: HttpClient) {
         // Currency
         this.entitySubjectMap.set(this.ENTITY_TYPE_CURRENCY, new BehaviorSubject<any[]>([]));
         this.organizationObservableMap.set(this.ENTITY_TYPE_CURRENCY, 

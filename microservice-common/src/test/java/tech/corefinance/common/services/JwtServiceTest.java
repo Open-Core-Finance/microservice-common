@@ -203,7 +203,7 @@ public class JwtServiceTest {
         });
         // Sign
         String token = jwtService.sign(dataToSign);
-        DecodedJWT decodedJWT = jwtService.verfiy(token, deviceId, ipaddress);
+        DecodedJWT decodedJWT = jwtService.verify(token, deviceId, ipaddress);
         assertEquals(permissions, decodedJWT.getClaim("ListField").asList(String.class));
         assertEquals(3, decodedJWT.getClaim("IntegerField").asInt());
         assertEquals(true, decodedJWT.getClaim("BooleanField").asBoolean());
@@ -229,7 +229,7 @@ public class JwtServiceTest {
         loginInfo.setUserEmail(admin.getEmail());
         loginInfo.setUsername(admin.getUsername());
         String token = jwtService.buildRefreshToken(loginInfo, jwtService.buildLoginToken(loginInfo));
-        DecodedJWT decodedJWT = jwtService.verfiy(token, loginInfo.getDeviceId(), loginInfo.getLoginIpAddr());
+        DecodedJWT decodedJWT = jwtService.verify(token, loginInfo.getDeviceId(), loginInfo.getLoginIpAddr());
         log.info("Decoded json: [{}]", decodedJWT.getClaims());
         assertEquals(loginInfo.getLoginId().toString(), decodedJWT.getClaim("loginId").asString());
         assertEquals(loginInfo.getUserId(), decodedJWT.getClaim("userId").asString());
@@ -264,7 +264,7 @@ public class JwtServiceTest {
         long expiredIn = System.currentTimeMillis() + loginExpiry * 1000;
         String token = jwtService.buildLoginToken(loginInfo);
         // Verify token
-        DecodedJWT decodedJWT = jwtService.verfiy(token, deviceId, loginInfo.getLoginIpAddr());
+        DecodedJWT decodedJWT = jwtService.verify(token, deviceId, loginInfo.getLoginIpAddr());
         String json = new String(Base64.getDecoder().decode(decodedJWT.getPayload().getBytes()), StandardCharsets.UTF_8);
         log.info("Decoded json: [{}]", json);
         JwtTokenDto jwtTokenDto = objectMapper.readValue(json, JwtTokenDto.class);

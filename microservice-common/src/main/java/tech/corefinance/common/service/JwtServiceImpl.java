@@ -162,7 +162,7 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public DecodedJWT verfiy(String token, String deviceId, String ipaddress) {
+    public DecodedJWT verify(String token, String deviceId, String ipaddress) {
         log.debug("Verifying token [{}] with device [{}] and IP [{}]", token, deviceId, ipaddress);
         DecodedJWT decodedJWT = verifier.verify(token);
         log.debug("Decoded JWT [{}]", decodedJWT);
@@ -209,7 +209,7 @@ public class JwtServiceImpl implements JwtService {
                 log.error("Invalid bearer token found!!! [{}]", authorizationHeader);
             } else {
                 String token = authorizationHeader.substring(CommonConstants.BEARER_PREFIX.length());
-                DecodedJWT decodedJWT = verfiy(token, deviceId, ipAddress);
+                DecodedJWT decodedJWT = verify(token, deviceId, ipAddress);
                 String json = new String(Base64.getDecoder().decode(decodedJWT.getPayload().getBytes()), StandardCharsets.UTF_8);
                 jwtTokenDto = objectMapper.readValue(json, JwtTokenDto.class);
                 jwtTokenDto.setOriginalToken(token);

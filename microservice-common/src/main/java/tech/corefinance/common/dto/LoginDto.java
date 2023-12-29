@@ -19,7 +19,7 @@ public class LoginDto {
     private String username;
     private String userEmail;
     private Collection<UserRoleDto> userRoles;
-    private String fistName;
+    private String firstName;
     private String lastName;
     private String displayName;
     private String address;
