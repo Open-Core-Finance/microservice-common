@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnDestroy, Output, OnInit, LOCALE_ID, Inject } from '@angular/core';
 import { DatePipe, formatDate } from '@angular/common';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { Subscription, Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { Currency } from 'src/app/classes/Currency';
@@ -14,6 +14,7 @@ import { LanguageService } from 'src/app/services/language.service';
 import { RestService } from 'src/app/services/rest.service';
 import { environment } from 'src/environments/environment';
 import { Timezone, _filterTimezoneName, _filterTimezone, DATE_FORMAT_CHARS } from 'src/app/const/TimeZoneList';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-add-organization',
@@ -25,6 +26,7 @@ export class AddOrganizationComponent implements OnDestroy, OnInit {
   @Output() cancel = new EventEmitter();
   @Output() save = new EventEmitter();
   _addingItem: Organization | null = null;
+  listDayOfWeeks = Object.keys(DayOfWeek);
 
   currencies: Currency[] = [];
   currencySubscription: Subscription | undefined;
@@ -51,6 +53,7 @@ export class AddOrganizationComponent implements OnDestroy, OnInit {
     iconUrl: new FormControl(""),
     nonWorkingDays: new FormControl<DayOfWeek[]>([])
   });
+
   message: Record<string, any[]> = {
     success: [],
     error: []
@@ -143,12 +146,12 @@ export class AddOrganizationComponent implements OnDestroy, OnInit {
       };
       if (formData.id) {
         serviceUrl = environment.apiUrl.organization + "/" + formData.id;
-        this.http.post<GeneralApiResponse>(serviceUrl, formData, {
+        this.http.put<GeneralApiResponse>(serviceUrl, formData, {
           headers: requestHeaders, params: {}
         }).subscribe(responseHandler);
       } else {
         serviceUrl = environment.apiUrl.organization + "/create";
-        this.http.put<GeneralApiResponse>(serviceUrl, formData, {
+        this.http.post<GeneralApiResponse>(serviceUrl, formData, {
           headers: requestHeaders, params: {}
         }).subscribe(responseHandler);
       }
@@ -193,5 +196,33 @@ export class AddOrganizationComponent implements OnDestroy, OnInit {
     this.addOrganizationForm.patchValue({
       decimalMark: currency.decimalMark
     });
+  }
+
+  isDayOfWeekChecked(dayOfWeekName: string) {
+    const dayOfWeeks = this.addOrganizationForm.controls.nonWorkingDays.value;
+    if (dayOfWeeks) {
+      for (var dayOfWeek of dayOfWeeks) {
+        if (dayOfWeek === (dayOfWeekName as DayOfWeek)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  dayOfWeekChanged(dayOfWeekName: string, event: MatCheckboxChange) {
+    const dayOfWeeks = this.addOrganizationForm.controls.nonWorkingDays.value;
+    if (dayOfWeeks) {
+      if (event.checked == false) {
+        for (let i = 0; i < dayOfWeeks.length; i++) {
+          if ((dayOfWeekName as DayOfWeek) == dayOfWeeks[i]) {
+            dayOfWeeks.splice(i, 1);
+            i--;
+          }
+        }
+      } else {
+        dayOfWeeks.push(dayOfWeekName as DayOfWeek);
+      }
+    }
   }
 }

@@ -30,6 +30,14 @@ plugins {
 group = 'tech.corefinance'
 version = "${internalUserprofileVersion}"
 
+sourceCompatibility = javaSourceCompatibility
+targetCompatibility = javaSourceCompatibility
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(javaSourceCompatibility))
+    }
+}
+
 repositories {
 	mavenLocal()
 	mavenCentral()
@@ -185,8 +193,8 @@ publishing {
     }
 }
 
-publish.dependsOn(':build')
-publish.mustRunAfter(':build')
+publish.dependsOn(':userprofile:build')
+publish.mustRunAfter(':userprofile:build')
 
 signing {
     sign publishing.publications

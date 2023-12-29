@@ -8,17 +8,18 @@ import {LanguageService} from "./language.service";
 import { AppSettings } from '../classes/AppSetting';
 import { environment } from 'src/environments/environment';
 import { v4 as uuidv4 } from 'uuid';
+import { Role } from '../classes/Role';
+import { OrganizationService } from './organization.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class RestService {
 
-    loginSession: LoginSession | null = null;
     languageData: Record<string, any> = {};
     siteUrl: string;
 
-    constructor(private http: HttpClient, private languageService: LanguageService) {
+    constructor(private http: HttpClient, private languageService: LanguageService, private organizationService: OrganizationService) {
         languageService.languageDataObservable.subscribe(languageData => {
             this.languageData = languageData;
         });
@@ -29,8 +30,14 @@ export class RestService {
         if (this.languageData['languageKey']) {
             headers = headers.set(AppSettings.REST_HEADER_LANGUAGE_KEY, this.languageData['languageKey']);
         }
-        if (this.loginSession && this.loginSession.token) {
-            headers = headers.set('Authorization', 'Bearer ' + this.loginSession.token);
+        var loginSession = this.currentSessionValue;
+        if (loginSession && loginSession.token) {
+            headers = headers.set('Authorization', 'Bearer ' + loginSession.token);
+        }
+
+        var org = this.organizationService.organization;
+        if (org && org.id) {
+            headers = headers.set('x-tenant-id', org.id);
         }
         headers = headers.set(AppSettings.REST_HEADER_APP_PLATFORM, AppPlatform.WEB);
         headers = headers.set(AppSettings.REST_HEADER_APP_VERSION, environment.appVersion);
@@ -91,11 +98,19 @@ export class RestService {
     getDeviceId() {
         let deviceId: string | null = localStorage.getItem(AppSettings.REST_HEADER_DEVICE_ID)
         if(!deviceId) {
-           deviceId = uuidv4()
-           if (deviceId) {
-            localStorage.setItem(AppSettings.REST_HEADER_DEVICE_ID, deviceId)
-        }
+            deviceId = uuidv4()
+            if (deviceId) {
+                localStorage.setItem(AppSettings.REST_HEADER_DEVICE_ID, deviceId)
+            }
         }
         return deviceId
+    }
+
+    public get currentSessionValue(): LoginSession | null {
+        const savedCredential = sessionStorage.getItem(AppSettings.LOCAL_KEY_SAVED_CREDENTIAL);
+        if (savedCredential != null) {
+          return JSON.parse(savedCredential) as LoginSession;
+        }
+        return null;
     }
 }

@@ -29,6 +29,14 @@ plugins {
 group = 'tech.corefinance'
 version = "${internalCommonVersion}"
 
+sourceCompatibility = javaSourceCompatibility
+targetCompatibility = javaSourceCompatibility
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(javaSourceCompatibility))
+    }
+}
+
 repositories {
 	mavenLocal()
 	mavenCentral()

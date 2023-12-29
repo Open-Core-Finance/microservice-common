@@ -1,6 +1,7 @@
 package tech.corefinance.common.config;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -15,6 +16,7 @@ public class UrlBasedCorsConfiguration {
     private List<UrlPatternCorsConfiguration> corsConfigurations = new LinkedList<>();
 
     @Data
+    @EqualsAndHashCode(callSuper = false)
     public static class UrlPatternCorsConfiguration extends CorsConfiguration {
         private String urlPattern;
     }

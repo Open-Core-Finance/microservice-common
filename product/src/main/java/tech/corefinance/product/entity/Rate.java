@@ -1,5 +1,6 @@
 package tech.corefinance.product.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import tech.corefinance.common.model.CreateUpdateDto;
@@ -25,7 +26,8 @@ public class Rate implements GenericModel<String>, CreateUpdateDto<String> {
     @Enumerated(EnumType.STRING)
     private RateType type;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "rate_source_id")
+    @JsonIgnore
     private RateSource rateSource;
 }

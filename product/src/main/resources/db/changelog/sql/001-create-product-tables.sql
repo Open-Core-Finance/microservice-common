@@ -55,20 +55,28 @@ CREATE TABLE IF NOT EXISTS currency
     symbol_at_beginning boolean NOT NULL DEFAULT false
 );
 
-CREATE TABLE IF NOT EXISTS product_category
+CREATE TABLE IF NOT EXISTS organization
 (
     id character varying(255) DEFAULT gen_random_uuid()::character varying(255) PRIMARY KEY,
+    city character varying(255),
+    country character varying(255),
+    currency_id character varying(255),
+    decimal_mark character varying(255),
+    email character varying(255),
+    icon_url character varying(255),
+    local_date_format character varying(255),
+    local_date_time_format character varying(255),
+    logo_url character varying(255),
     name character varying(255),
-    type character varying(255),
-    CONSTRAINT product_category_type_check CHECK (type::text = ANY (ARRAY['DEPOSIT_CATEGORY'::character varying, 'LOAN_CATEGORY'::character varying, 'DEPOSIT_TYPE'::character varying, 'LOAN_TYPE'::character varying, 'GL_TYPE'::character varying, 'CRYPTO_TYPE'::character varying]::text[]))
-);
-
-CREATE TABLE IF NOT EXISTS holiday
-(
-    id character varying(255) DEFAULT gen_random_uuid()::character varying(255) PRIMARY KEY,
-    description character varying(255),
-    holiday_date date,
-    repeat_yearly boolean
+    non_working_days jsonb,
+    phone_number character varying(255),
+    state character varying(255),
+    street_address_line_1 character varying(255),
+    timezone character varying(255),
+    zip_postal_code character varying(255),
+    CONSTRAINT currency_foreign_key FOREIGN KEY (currency_id) REFERENCES currency (id) MATCH FULL
+        ON UPDATE RESTRICT ON DELETE RESTRICT,
+    CONSTRAINT organization_name_unique UNIQUE NULLS NOT DISTINCT (name)
 );
 
 CREATE TABLE IF NOT EXISTS branch
@@ -82,7 +90,25 @@ CREATE TABLE IF NOT EXISTS branch
     phone_number character varying(255),
     state character varying(255),
     street_address_line_1 character varying(255),
-    zip_postal_code character varying(255)
+    zip_postal_code character varying(255),
+    non_working_days jsonb,
+    inherit_non_working_days boolean NOT NULL default true
+);
+
+CREATE TABLE IF NOT EXISTS product_category
+(
+    id character varying(255) DEFAULT gen_random_uuid()::character varying(255) PRIMARY KEY,
+    name character varying(255),
+    type character varying(255),
+    CONSTRAINT product_category_type_check CHECK (type::text = ANY (ARRAY['DEPOSIT'::character varying, 'LOAN'::character varying, 'GL'::character varying, 'CRYPTO'::character varying]::text[]))
+);
+
+CREATE TABLE IF NOT EXISTS holiday
+(
+    id character varying(255) DEFAULT gen_random_uuid()::character varying(255) PRIMARY KEY,
+    description character varying(255),
+    holiday_date date,
+    repeat_yearly boolean
 );
 
 CREATE TABLE IF NOT EXISTS crypto_product
@@ -190,30 +216,6 @@ CREATE TABLE IF NOT EXISTS loan_product
     repayment_scheduling jsonb NOT NULL,
     under_credit_arrangement_managed character varying(255),
     CONSTRAINT loan_product_under_credit_arrangement_managed_check CHECK (under_credit_arrangement_managed::text = ANY (ARRAY['REQUIRED'::character varying, 'NO'::character varying, 'OPTIONAL'::character varying]::text[]))
-);
-
-CREATE TABLE IF NOT EXISTS organization
-(
-    id character varying(255) DEFAULT gen_random_uuid()::character varying(255) PRIMARY KEY,
-    city character varying(255),
-    country character varying(255),
-    currency_id character varying(255),
-    decimal_mark character varying(255),
-    email character varying(255),
-    icon_url character varying(255),
-    local_date_format character varying(255),
-    local_date_time_format character varying(255),
-    logo_url character varying(255),
-    name character varying(255),
-    non_working_days jsonb,
-    phone_number character varying(255),
-    state character varying(255),
-    street_address_line_1 character varying(255),
-    timezone character varying(255),
-    zip_postal_code character varying(255),
-    CONSTRAINT currency_foreign_key FOREIGN KEY (currency_id) REFERENCES currency (id) MATCH FULL
-        ON UPDATE RESTRICT ON DELETE RESTRICT,
-    CONSTRAINT organization_name_unique UNIQUE NULLS NOT DISTINCT (name)
 );
 
 CREATE TABLE IF NOT EXISTS rate

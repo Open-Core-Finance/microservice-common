@@ -1,0 +1,67 @@
+<div class="add-item-page">
+    <mat-card>
+        <mat-card-title>
+            {{languageService.formatLanguage('branch.addTitle', [])}}
+        </mat-card-title>
+        <mat-card-content>
+            <form [formGroup]="addBranchForm">
+                <mat-form-field class="full-width" appearance="fill" color="primary">
+                    <input type="text" matInput placeholder="{{languageService.formatLanguage('branch.name', [])}}" formControlName="name" required>
+                </mat-form-field>
+                <mat-form-field>
+                    <input type="text" matInput placeholder="{{languageService.formatLanguage('streetAddressLine1', [])}}" formControlName="streetAddressLine1">
+                </mat-form-field>
+                <mat-form-field>
+                    <input type="text" matInput placeholder="{{languageService.formatLanguage('city', [])}}" formControlName="city">
+                </mat-form-field>
+                <mat-form-field>
+                    <input type="text" matInput placeholder="{{languageService.formatLanguage('state', [])}}" formControlName="state">
+                </mat-form-field>
+                <mat-form-field>
+                    <input type="text" matInput placeholder="{{languageService.formatLanguage('country', [])}}" formControlName="country">
+                </mat-form-field>
+                <mat-form-field>
+                    <input type="text" matInput placeholder="{{languageService.formatLanguage('zipPostalCode', [])}}" formControlName="zipPostalCode">
+                </mat-form-field>
+                <mat-form-field>
+                    <input type="text" matInput placeholder="{{languageService.formatLanguage('phoneNumber', [])}}" formControlName="phoneNumber">
+                </mat-form-field>
+                <mat-form-field>
+                    <input type="text" matInput placeholder="{{languageService.formatLanguage('email', [])}}" formControlName="email">
+                </mat-form-field>
+                <mat-checkbox color="accent" formControlName="inheritNonWorkingDays">
+                    {{languageService.formatLanguage('branch.inheritNonWorkingDays', [])}}
+                </mat-checkbox>
+
+                <mat-card *ngIf="addBranchForm.value.inheritNonWorkingDays == false">
+                    <mat-card-header>
+                        <mat-card-title>{{languageService.formatLanguage('nonWorkingDays', [])}}</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <mat-checkbox color="accent" [checked]="isDayOfWeekChecked(w)" (change)="dayOfWeekChanged(w, $event)" *ngFor="let w of listDayOfWeeks;">
+                            {{languageService.formatLanguage('dayOfWeek.' + w, [])}}
+                        </mat-checkbox>
+                    </mat-card-content>
+                </mat-card>
+
+                <div *ngIf="message['error'] && message['error'].length > 0" class="error-container">
+                    <div class="error" *ngFor="let err of message['error']">
+                        {{languageService.formatLanguage("branch.error." + err, [])}}
+                    </div>
+                </div>
+                
+            </form>
+        </mat-card-content>
+
+        <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="saveClick($event);">
+                {{languageService.formatLanguage('action.save', [])}}
+            </button>
+            <button mat-raised-button color="warn" (click)="cancelClick($event);">
+                {{languageService.formatLanguage('action.cancel', [])}}
+            </button>
+        </mat-card-actions>
+
+    </mat-card>
+
+</div>

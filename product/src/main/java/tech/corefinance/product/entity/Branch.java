@@ -2,8 +2,13 @@ package tech.corefinance.product.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import tech.corefinance.common.model.CreateUpdateDto;
 import tech.corefinance.common.model.GenericModel;
+
+import java.time.DayOfWeek;
+import java.util.List;
 
 @Data
 @Entity
@@ -25,4 +30,11 @@ public class Branch implements GenericModel<String>, CreateUpdateDto<String> {
     private String email;
     @Column(name = "parent_branch_id")
     private String parentBranchId;
+
+    @Column(name = "non_working_days")
+    @JdbcTypeCode(SqlTypes.JSON)
+    private List<DayOfWeek> nonWorkingDays = List.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
+
+    @Column(name = "inherit_non_working_days")
+    private boolean inheritNonWorkingDays;
 }

@@ -21,8 +21,22 @@
         "groupOther": "Other",
         "organizations": "Organization",
         "settings": "Settings",
-        "curencies": "Curencies",
-        "organizationDetails": "Org details"
+        "curencies": "Curency",
+        "organizationDetails": "Org details",
+        "holidays": "Holiday",
+        "branches": "Branch",
+        "exchangeRate": "Exchange rate",
+        "rate": "Interest rate",
+        "rateSource": "Rate source",
+        "productCategory": "Product category",
+        "depositProduct": "Deposit product",
+        "loanProduct": "Loan product",
+        "glProduct": "GL product",
+        "cryptoProduct": "Crypto product",
+        "groupProduct": "Product",
+        "groupAccount": "Account",
+        "groupMaster": "Master data",
+        "groupUam": "UAM"
     },
     "organization": {
         "id": "ID",
@@ -40,7 +54,8 @@
         },
         "deleteConfirmContent": "Are you sure to delete organization ${0}?",
         "deleteConfirmTitle": "Confirm delete organization",
-        "details": "Organization details"
+        "details": "Organization details",
+        "listOrg": "List organizations"
     },
     "action": {
         "add": "Add",
@@ -89,5 +104,102 @@
             "decimal_mark_empty": "Decimal mark cannot be empty!"
         }
     },
-    "logOut": "Logout"
+    "logOut": "Logout",
+    "holiday": {
+        "id": "ID",
+        "description": "Description",
+        "repeatYearly": "Repeat yearly",
+        "holidayDate": "Holiday date",
+        "deleteConfirmContent": "Are you sure to delete holiday ${0}?",
+        "deleteConfirmTitle": "Confirm delete holiday",
+        "holidayDateFormat": "dd MMM yyyy",
+        "holidayDateYearlyFormat": "dd MMM' (Annually)'",
+        "error": {
+            "description_empty": "Description cannot be empty!",
+            "holiday_date_empty": "Holiday date cannot be empty!"
+        },
+        "addTitle": "Add holiday"
+    },
+    "dateFormatValue": "MM/dd/yyyy",
+    "monthYearLabel": "MMM YYYY",
+    "dateA11yLabel": "LL",
+    "monthYearA11yLabel": "MMMM YYYY",
+    "nonWorkingDays": "Non Working Days",
+    "dayOfWeek": {
+        "MONDAY": "Monday",
+        "TUESDAY": "Tuesday",
+        "WEDNESDAY": "Wednesday",
+        "THURSDAY": "Thursday",
+        "FRIDAY": "Friday",
+        "SATURDAY": "Saturday",
+        "SUNDAY": "Sunday"
+    },
+    "branch": {
+        "deleteConfirmContent": "Are you sure to delete branch ${0}?",
+        "deleteConfirmTitle": "Confirm delete branch",
+        "id": "ID",
+        "name": "Name",
+        "addTitle": "Add branch",
+        "inheritNonWorkingDays": "Inherit non-working days from organization",
+        "parrentBanch": "Parrent branch",
+        "error": {
+            "name_empty": "Branch name cannot be empty!",
+            "phone_empty": "Phone number cannot be empty!",
+            "email_empty": "Email cannot be empty!"
+        }
+    },
+    "productCategory": {
+        "id": "ID",
+        "name": "Category name",
+        "type": "Category type",
+        "deleteConfirmContent": "Are you sure to delete product category ${0}?",
+        "deleteConfirmTitle": "Confirm delete product category",
+        "addTitle": "Add product category",
+        "error": {
+            "name_empty": "Category name cannot be empty!",
+            "type_empty": "Type cannot be empty!"
+        }
+    },
+    "exchangeRate": {
+        "id": "Code",
+        "name": "Name",
+        "sellRate": "Sale rate",
+        "buyRate": "Buy rate",
+        "deleteConfirmContent": "Are you sure to delete exchange rate ${0}?",
+        "deleteConfirmTitle": "Confirm delete exchange rate",
+        "addTitle": "Add exchange rate",
+        "error": {
+            "id_empty": "Exchange rate code cannot be empty!",
+            "name_empty": "Exchange rate name cannot be empty!",
+            "sell_rate_error": "Sell rate must be larger than 0!",
+            "buy_rate_error": "Sell rate must be larger than 0!"
+        }
+    },
+    "rateSource": {
+        "id": "ID",
+        "name": "Source name",
+        "type": "Source type",
+        "note": "Note",
+        "deleteConfirmContent": "Are you sure to delete rate source ${0}?",
+        "deleteConfirmTitle": "Confirm delete rate source",
+        "addTitle": "Add rate source",
+        "error": {
+            "name_empty": "Source name cannot be empty!",
+            "type_empty": "Source type cannot be empty!"
+        }
+    },
+    "rate": {
+      "id": "ID",
+      "rateValue": "Rate value",
+      "validFrom": "Valid from",
+      "note": "Note",
+      "type": "Rate type",
+      "deleteConfirmContent": "Are you sure to delete interest rate ${0}?",
+      "deleteConfirmTitle": "Confirm delete interest rate",
+      "addTitle": "Add interest rate",
+      "error": {
+        "value_error": "Rate value cannot be empty!"
+      },
+      "rateSource": "Rate source"
+    }
 }

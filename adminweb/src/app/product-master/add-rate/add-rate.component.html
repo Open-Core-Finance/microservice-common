@@ -1,0 +1,57 @@
+<div class="add-item-page">
+    <mat-card>
+        <mat-card-title>
+            {{languageService.formatLanguage('rate.addTitle', [])}}
+        </mat-card-title>
+        <mat-card-content>
+            <form [formGroup]="addRateForm">
+                <mat-form-field class="full-width" appearance="fill" color="primary">
+                    <mat-label>{{languageService.formatLanguage('rate.type', [])}}</mat-label>
+                    <mat-select required formControlName="type" (valueChange)="typeChange($event)">
+                        <mat-option *ngFor="let type of rateTypes" [value]="type">{{type}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field class="full-width" appearance="fill" color="primary">
+                    <input type="text" matInput placeholder="{{languageService.formatLanguage('rate.rateValue', [])}}" formControlName="rateValue" required>
+                </mat-form-field>
+                <mat-form-field class="full-width" appearance="fill" color="primary">
+                    <mat-label>{{languageService.formatLanguage('rate.validFrom', [])}}</mat-label>
+                    <input matInput [matDatepicker]="validFromPicker" required placeholder="{{languageService.formatLanguage('holiday.validFrom', [])}}"
+                        formControlName="validFrom">
+                    <!-- <mat-hint>{{config.display.dateInput}}</mat-hint> -->
+                    <mat-datepicker-toggle matIconSuffix [for]="validFromPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #validFromPicker></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field class="full-width" appearance="fill" color="primary">
+                    <input type="text" matInput placeholder="{{languageService.formatLanguage('rate.note', [])}}" formControlName="note" required>
+                </mat-form-field>
+
+                <mat-form-field class="full-width" appearance="fill" color="primary">
+                    <mat-label>{{languageService.formatLanguage('rate.rateSource', [])}}</mat-label>
+                    <mat-select formControlName="rateSourceId">
+                        <mat-option [value]="null">&nbsp;</mat-option>
+                        <mat-option [value]="source.id" *ngFor="let source of rateSources">{{source.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <div *ngIf="message['error'] && message['error'].length > 0" class="error-container">
+                    <div class="error" *ngFor="let err of message['error']">
+                        {{languageService.formatLanguage("rate.error." + err, [])}}
+                    </div>
+                </div>
+                
+            </form>
+        </mat-card-content>
+
+        <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="saveClick($event);">
+                {{languageService.formatLanguage('action.save', [])}}
+            </button>
+            <button mat-raised-button color="warn" (click)="cancelClick($event);">
+                {{languageService.formatLanguage('action.cancel', [])}}
+            </button>
+        </mat-card-actions>
+
+    </mat-card>
+
+</div>

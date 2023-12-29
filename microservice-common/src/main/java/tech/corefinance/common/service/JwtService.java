@@ -35,7 +35,7 @@ public interface JwtService {
      * @param ipaddress Client IP Address
      * @return True if token active
      */
-    DecodedJWT verfiy(String token, String deviceId, String ipaddress);
+    DecodedJWT verify(String token, String deviceId, String ipaddress);
 
     /**
      * Extract client IP Address from request.

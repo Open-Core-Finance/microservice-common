@@ -1,17 +1,19 @@
 package tech.corefinance.common.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.*;
+import org.springframework.lang.Nullable;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.BindException;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import tech.corefinance.common.dto.GeneralApiResponse;
 import tech.corefinance.common.ex.ResourceNotFound;
 import tech.corefinance.common.ex.ServiceProcessingException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.ConstraintViolationException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.util.NoSuchElementException;
@@ -46,21 +48,20 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
         return new GeneralApiResponse<>("access_denied", 1, e.getMessage());
     }
 
-    @ExceptionHandler({IllegalArgumentException.class,ConstraintViolationException.class})
+    @ExceptionHandler({IllegalArgumentException.class, ConstraintViolationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public GeneralApiResponse<String> badRequest(Exception e) {
         log.debug(e.getMessage(), e);
-        if(e instanceof IllegalArgumentException) {
+        if (e instanceof IllegalArgumentException) {
             return new GeneralApiResponse<>("bad_request", 1, e.getMessage());
         }
-        if(e instanceof ConstraintViolationException){
+        if (e instanceof ConstraintViolationException) {
             return new GeneralApiResponse<>("bad_request", 1, e.getMessage());
         }
-        return new GeneralApiResponse<>("system_error", 1,null);
+        return new GeneralApiResponse<>("system_error", 1, null);
     }
 
     @ExceptionHandler(value = {Throwable.class})
-
     public GeneralApiResponse<String> internalServerError(Throwable e) {
         log.error("System Exception", e);
         return new GeneralApiResponse<>("system_error", 1, e.getMessage());
@@ -72,7 +73,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
         return handleGeneralException(request, e, 404);
     }
 
-    private Object handleGeneralException(HttpServletRequest request, Exception e, int status){
+    private Object handleGeneralException(HttpServletRequest request, Exception e, int status) {
         String message = e.getMessage();
         Throwable cause = e.getCause();
         log.error("Return error for user: [{}]", message);
@@ -90,5 +91,28 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
         } else {
             return internalServerError(cause);
         }
+    }
+
+    /**
+     * Create the {@link ResponseEntity} to use from the given body, headers,
+     * and statusCode. Subclasses can override this method to inspect and possibly
+     * modify the body, headers, or statusCode, e.g. to re-create an instance of
+     * {@link ProblemDetail} as an extension of {@link ProblemDetail}.
+     * @param body the body to use for the response
+     * @param headers the headers to use for the response
+     * @param statusCode the status code to use for the response
+     * @param request the current request
+     * @return the {@code ResponseEntity} instance to use
+     * @since 6.0
+     */
+    protected ResponseEntity<Object> createResponseEntity(
+            @Nullable Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
+        var errorResponse = new GeneralApiResponse(body);
+        if (body instanceof ProblemDetail problemDetail) {
+            errorResponse.setStatus(problemDetail.getStatus());
+        } else {
+            errorResponse.setStatus(GeneralApiResponse.STATUS_UNKNOWN_ERROR);
+        }
+        return new ResponseEntity<>(errorResponse, headers, statusCode);
     }
 }

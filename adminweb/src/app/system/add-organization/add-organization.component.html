@@ -96,6 +96,19 @@
                     </mat-card-content>
                 </mat-card>
 
+                <mat-card>
+                    <mat-card-header>
+                        <mat-card-title>{{languageService.formatLanguage('nonWorkingDays', [])}}</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+
+                        <mat-checkbox color="accent" [checked]="isDayOfWeekChecked(w)" (change)="dayOfWeekChanged(w, $event)" *ngFor="let w of listDayOfWeeks;">
+                            {{languageService.formatLanguage('dayOfWeek.' + w, [])}}
+                        </mat-checkbox>
+
+                    </mat-card-content>
+                </mat-card>
+
                 <div *ngIf="message['error'] && message['error'].length > 0" class="error-container">
                     <div class="error" *ngFor="let err of message['error']">
                         {{languageService.formatLanguage("organization.error." + err, [])}}

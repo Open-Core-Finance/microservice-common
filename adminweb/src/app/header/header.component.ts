@@ -29,7 +29,6 @@ export class HeaderComponent {
 
   logout($event: any): any {
     this.authenticationService.logout();
-    this.router.navigate([environment.frontEndUrl.login]);
   }
 
   toggleMenu() {

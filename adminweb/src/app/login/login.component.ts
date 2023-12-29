@@ -69,7 +69,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       }
       this.roleList = list;
       if (this.roleList.length === 1) {
-        this.auth.selectedRoleSubject.next(this.roleList[0]);
+        this.auth.saveSelectedRole(this.roleList[0]);
       }
     });
     this.selectedRoleSubscription = this.auth.selectedRoleObservable.subscribe( role => {
@@ -109,13 +109,12 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   logout($event: any): any {
     this.auth.logout();
-    window.location.reload();
   }
 
   selectRole(roleId: string) {
     for (let role of this.roleList) {
       if (role.id == roleId) {
-        this.auth.selectedRoleSubject.next(role);
+        this.auth.saveSelectedRole(role);
         break;
       }
     }

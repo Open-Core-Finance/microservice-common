@@ -111,7 +111,7 @@ public class AuthenServiceImpl implements AuthenService {
         loginDto.setAddress(userProfile.getAddress());
         loginDto.setBirthday(userProfile.getBirthday());
         loginDto.setPhoneNumber(userProfile.getPhoneNumber());
-        loginDto.setFistName(userProfile.getFirstName());
+        loginDto.setFirstName(userProfile.getFirstName());
         loginDto.setLastName(userProfile.getLastName());
         return loginDto;
     }
@@ -199,11 +199,8 @@ public class AuthenServiceImpl implements AuthenService {
 
     private void validateLoginSession(String deviceId, HttpServletRequest request, LoginSession loginSession)
             throws UnknownHostException {
-        if (!loginSession.isValidToken()) {
-            throw new AccessDeniedException("The refresh token is invalid");
-        }
         try {
-            jwtService.verfiy(loginSession.getLoginToken(), deviceId, jwtService.extractIpAddress(request));
+            jwtService.verify(loginSession.getLoginToken(), deviceId, jwtService.extractIpAddress(request));
         } catch (JWTVerificationException e) {
             throw new AccessDeniedException("IP Address is changed or Device ID is not correct");
         }
