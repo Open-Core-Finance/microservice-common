@@ -1,53 +1,33 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Branch } from '../../classes/organizations/Branch';
-import { FormControl, FormGroup } from '@angular/forms';
-import { LanguageService } from 'src/app/services/language.service';
-import { CommonService } from 'src/app/services/common.service';
-import { RestService } from 'src/app/services/rest.service';
-import { HttpClient } from '@angular/common/http';
+import { FormControl, FormGroup} from "@angular/forms";
 import { environment } from 'src/environments/environment';
-import { GeneralApiResponse } from 'src/app/classes/GeneralApiResponse';
 import { DayOfWeek } from 'src/app/classes/DayOfWeek';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { GeneralEntityAddComponent } from 'src/app/generic-component/GeneralEntityAddComponent';
 
 @Component({
   selector: 'app-add-branch',
   templateUrl: './add-branch.component.html',
   styleUrl: './add-branch.component.sass'
 })
-export class AddBranchComponent {
-  @Output() cancel = new EventEmitter();
-  @Output() save = new EventEmitter();
-  _addingItem: Branch | null = null;
+export class AddBranchComponent extends GeneralEntityAddComponent<Branch> {
+
   listDayOfWeeks = Object.keys(DayOfWeek);
 
-  addBranchForm = new FormGroup({
-    index: new FormControl(0),
-    id: new FormControl(""),
-    name: new FormControl('', {nonNullable: true}),
-    inheritNonWorkingDays: new FormControl(true, {nonNullable: true}),
-    nonWorkingDays: new FormControl<DayOfWeek[]>([]),
-    streetAddressLine1: new FormControl(""),
-    city: new FormControl(""),
-    state: new FormControl(""),
-    country: new FormControl(""),
-    zipPostalCode: new FormControl(""),
-    phoneNumber: new FormControl(""),
-    email: new FormControl(""),
-    parentBranchId: new FormControl("")
-  });
-  message: Record<string, any[]> = {
-    success: [],
-    error: []
-  };
+  addBranchForm = this.formBuilder.group(Object.assign(
+    Object.assign({}, new Branch()), {
+      nonWorkingDays: new FormControl<DayOfWeek[]>([]),
+      createdDate: new FormControl<any>(new Date()),
+      lastModifiedDate: new FormControl<any>(new Date())
+    }
+  ));
 
-  constructor(public languageService: LanguageService, private commonService: CommonService,
-    private restService: RestService, private http: HttpClient) {
+  protected override getAddForm(): FormGroup<any> {
+    return this.addBranchForm;
   }
 
-  saveClick($event: any): any {
-    this.clearMessages();
-    const formData = this.addBranchForm.value;
+  protected override validateFormData(formData: any): void {
     if (this.commonService.isNullOrEmpty(formData.name)) {
       this.message['error'].push("name_empty")
     }
@@ -57,64 +37,14 @@ export class AddBranchComponent {
     if (this.commonService.isNullOrEmpty(formData.email)) {
       this.message['error'].push("email_empty")
     }
-    if (this.commonService.isNullOrEmpty(formData.id)) {
-      delete formData.id;
-    }
-    console.log(this.message['error']);
-    if (this.message['error'].length < 1) {
-      const requestHeaders = this.restService.initApplicationJsonRequestHeaders();
-      let serviceUrl = environment.apiUrl.branch + "/";
-      var responseHandler = {
-        next: (data: GeneralApiResponse) => {
-          if (this.save) {
-            $event.organization = data.result;
-            this.save.emit($event);
-          }
-        }, error: (data: any) => {
-          const message = this.message;
-          if (data.statusText) {
-            message['error'].push(data.statusText);
-          } else if (data.statusCode) {
-            message['error'].push(data.statusCode);
-          } else {
-            message['error'].push("Unknown error: " + JSON.stringify(data));
-          }
-        }
-      };
-      if (formData.id) {
-        serviceUrl = environment.apiUrl.branch + "/" + formData.id;
-        this.http.put<GeneralApiResponse>(serviceUrl, formData, {
-          headers: requestHeaders, params: {}
-        }).subscribe(responseHandler);
-      } else {
-        serviceUrl = environment.apiUrl.branch + "/create";
-        this.http.post<GeneralApiResponse>(serviceUrl, formData, {
-          headers: requestHeaders, params: {}
-        }).subscribe(responseHandler);
-      }
-    }
   }
 
-  cancelClick($event: any): any {
-    if (this.cancel) {
-      this.cancel.emit($event);
-    }
+  protected override getServiceUrl(): string {
+    return environment.apiUrl.branch;
   }
 
-  clearMessages() {
-    this.message = {
-      success: [],
-      error: []
-    };
-  }
-
-  @Input() set addingItem(item: Branch| null) {
-    this._addingItem = item;
-    if (item) {
-      this.addBranchForm.setValue(item);
-    } else {
-      this.addBranchForm.setValue(new Branch());
-    }
+  protected override newEmptyEntity(): Branch {
+    return new Branch();
   }
 
   isDayOfWeekChecked(dayOfWeekName: string) {

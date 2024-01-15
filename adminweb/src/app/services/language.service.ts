@@ -83,14 +83,14 @@ export class LanguageService {
             const prefix = languageKey.substring(0, languageKey.indexOf("."));
             const postfix = languageKey.substring(languageKey.indexOf(".") + 1);
             if (result == null) {
-                return "";
+                return languageKey;
             }
             result = result[prefix];
             languageKey = postfix;
         }
         if (languageKey.trim().length > 0) {
             if (result == null) {
-                return "";
+                return languageKey;
             }
             result = result[languageKey];
         }
@@ -103,6 +103,9 @@ export class LanguageService {
                     finalResult = finalResult.replace(strToReplace, parameters[i]);
                 }
             }
+        }
+        if (finalResult == null || finalResult == "") {
+            finalResult = languageKey;
         }
         return finalResult;
     }

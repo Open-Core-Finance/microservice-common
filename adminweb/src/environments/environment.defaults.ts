@@ -3,7 +3,8 @@ export const environment = {
     apiUrlRoot: '',
     apiUrl: {
         userprofile: '', organization: '', role: '', common: '', authentication: '', product: '',
-        currency: '', holiday: '', branch: '', productCategory: '', exchangeRate: '', rateSource: '', rate: ''
+        currency: '', holiday: '', branch: '', productCategory: '', exchangeRate: '', rateSource: '', rate: '',
+        depositProduct: '', productType: '', glProduct: '', cryptoProduct: ''
     },
     apiPrefix: {
         userLogin: '/login',
@@ -12,13 +13,14 @@ export const environment = {
     frontEndUrl: {
         login: "login",
         organizations: "organizations",
-        curencies: "curencies",
+        currencies: "currencies",
         settings: "settings",
         organizationDetails: "organization-details",
         holidays: "holidays",
         branches: "Branches",
         depositProducts: "deposit-products",
         productCategories: "product-categories",
+        productTypes: "product-types",
         loanProducts: "loan-products",
         glProducts: "gl-products",
         cryptoProducts: "crypto-products",
@@ -46,4 +48,8 @@ export function rebuildEnvironment() {
     environment.apiUrl.exchangeRate = environment.apiUrl.product + "/exchange-rates"
     environment.apiUrl.rateSource = environment.apiUrl.product + "/rate-sources"
     environment.apiUrl.rate = environment.apiUrl.product + "/rates"
+    environment.apiUrl.depositProduct = environment.apiUrl.product + "/deposit-products"
+    environment.apiUrl.productType = environment.apiUrl.product + "/product-types"
+    environment.apiUrl.glProduct = environment.apiUrl.product + "/gl-products"
+    environment.apiUrl.cryptoProduct = environment.apiUrl.product + "/crypto-products"
 }

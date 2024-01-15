@@ -1,24 +1,21 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Currency } from 'src/app/classes/Currency';
 import { Subscription } from 'rxjs';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { LanguageService } from 'src/app/services/language.service';
 import { RestService } from 'src/app/services/rest.service';
 import { HttpClient } from '@angular/common/http';
 import { CommonService } from 'src/app/services/common.service';
 import { EntitiesService } from 'src/app/services/EntitiesService';
-import { GeneralApiResponse } from 'src/app/classes/GeneralApiResponse';
 import { environment } from 'src/environments/environment';
+import { GeneralEntityAddComponent } from 'src/app/generic-component/GeneralEntityAddComponent';
 
 @Component({
   selector: 'app-add-curreny',
   templateUrl: './add-curreny.component.html',
   styleUrl: './add-curreny.component.sass'
 })
-export class AddCurrenyComponent {
-  @Output() cancel = new EventEmitter();
-  @Output() save = new EventEmitter();
-  _addingItem: Currency | null = null;
+export class AddCurrenyComponent extends GeneralEntityAddComponent<Currency> implements OnDestroy {
 
   currencies: Currency[] = [];
   currencySubscription: Subscription | undefined;
@@ -31,21 +28,28 @@ export class AddCurrenyComponent {
     decimalMark: new FormControl("", {nonNullable: true}),
     symbolAtBeginning: new FormControl(false, {nonNullable: true})
   });
-  message: Record<string, any[]> = {
-    success: [],
-    error: []
-  };
 
-  constructor(public languageService: LanguageService, private commonService: CommonService,
-    private restService: RestService, private http: HttpClient, private entitiesService: EntitiesService) {
-      this.currencySubscription = entitiesService.organizationObservableMap.get(entitiesService.ENTITY_TYPE_CURRENCY)?.subscribe(
+  constructor(public override languageService: LanguageService, protected override commonService: CommonService,
+    protected override restService: RestService, protected override http: HttpClient, protected override formBuilder: FormBuilder,
+    private entitiesService: EntitiesService) {
+      super(languageService, commonService, restService, http, formBuilder);
+      this.currencySubscription?.unsubscribe();
+      this.currencySubscription = entitiesService.organizationObservableMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.subscribe(
          currencies => this.currencies = currencies
       );
   }
 
-  saveClick($event: any): any {
-    this.clearMessages();
-    const formData = this.addCurrencyForm.value;
+  ngOnDestroy(): void {
+    this.currencySubscription?.unsubscribe();
+  }
+
+  protected override getServiceUrl(): string {
+    return environment.apiUrl.currency;
+  }
+  protected override getAddForm(): FormGroup<any> {
+    return this.addCurrencyForm;
+  }
+  protected override validateFormData(formData: any): void {
     if (this.commonService.isNullOrEmpty(formData.name)) {
       this.message['error'].push("name_empty")
     }
@@ -55,63 +59,8 @@ export class AddCurrenyComponent {
     if (this.commonService.isNullOrEmpty(formData.decimalMark)) {
       this.message['error'].push("decimal_mark_empty")
     }
-    if (this.commonService.isNullOrEmpty(formData.id)) {
-      delete formData.id;
-    }
-    if (this.message['error'].length < 1) {
-      const requestHeaders = this.restService.initApplicationJsonRequestHeaders();
-      let serviceUrl = environment.apiUrl.currency + "/";
-      var responseHandler = {
-        next: (data: GeneralApiResponse) => {
-          if (this.save) {
-            $event.organization = data.result;
-            this.save.emit($event);
-          }
-        }, error: (data: any) => {
-          const message = this.message;
-          if (data.statusText) {
-            message['error'].push(data.statusText);
-          } else if (data.statusCode) {
-            message['error'].push(data.statusCode);
-          } else {
-            message['error'].push("Unknown error: " + JSON.stringify(data));
-          }
-        }
-      };
-      if (formData.id) {
-        serviceUrl = environment.apiUrl.currency + "/" + formData.id;
-        this.http.put<GeneralApiResponse>(serviceUrl, formData, {
-          headers: requestHeaders, params: {}
-        }).subscribe(responseHandler);
-      } else {
-        serviceUrl = environment.apiUrl.currency + "/create";
-        this.http.post<GeneralApiResponse>(serviceUrl, formData, {
-          headers: requestHeaders, params: {}
-        }).subscribe(responseHandler);
-      }
-      
-    }
   }
-
-  cancelClick($event: any): any {
-    if (this.cancel) {
-      this.cancel.emit($event);
-    }
-  }
-
-  clearMessages() {
-    this.message = {
-      success: [],
-      error: []
-    };
-  }
-
-  @Input() set addingItem(item: Currency| null) {
-    this._addingItem = item;
-    if (item) {
-      this.addCurrencyForm.setValue(item);
-    } else {
-      this.addCurrencyForm.setValue(new Currency());
-    }
+  protected override newEmptyEntity(): Currency {
+    return new Currency();
   }
 }

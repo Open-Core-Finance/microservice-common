@@ -1,8 +1,8 @@
-import { Component, ViewChild, Input, Output, OnDestroy, OnInit } from '@angular/core';
+import {Component, ViewChild, OnDestroy, OnInit, AfterViewInit} from '@angular/core';
 import { LanguageMenuItem, MenuGroup, MenuItem } from './classes/Menu';
 import { OrganizationService } from './services/organization.service';
 import { environment } from 'src/environments/environment';
-import { LanguageKeyLabelProvider, OrganizationNameLabelProvider, StaticTextLabelProvider } from './classes/LabelProvider';
+import { LanguageKeyLabelProvider, StaticTextLabelProvider } from './classes/LabelProvider';
 import { LanguageService } from './services/language.service';
 import { LoginSession } from './classes/LoginSession';
 import { AuthenticationService } from './services/authentication.service';
@@ -10,17 +10,21 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { Subscription } from 'rxjs';
 import { LanguageItem } from './classes/LanguageItem';
 import { Role } from './classes/Role';
+import {LeftMenuComponent} from "./left-menu/left-menu.component";
+import {RouterOutlet} from "@angular/router";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.sass']
 })
-export class AppComponent implements OnDestroy, OnInit {
+export class AppComponent implements OnDestroy, OnInit, AfterViewInit {
   title = 'corefinance-adminweb';
   loginSession: LoginSession | null = null;
   menuGroups: MenuGroup[] = [];
   @ViewChild('drawer') drawer: MatDrawer | undefined;
+  @ViewChild('leftMenu') leftMenu: LeftMenuComponent | undefined;
+  @ViewChild('routerOutlet') routerOutlet: RouterOutlet | undefined;
 
   selectedRole: Role | null | undefined;
 
@@ -33,7 +37,7 @@ export class AppComponent implements OnDestroy, OnInit {
     this.loginSession = authenticationService.currentSessionValue;
     this.selectedRole = null;
   }
-    
+
   ngOnInit(): void {
     this.sessionSubscription?.unsubscribe();
     this.sessionSubscription = this.authenticationService.currentSession.subscribe(session => this.loginSession = session);
@@ -69,8 +73,16 @@ export class AppComponent implements OnDestroy, OnInit {
     }
   }
 
-  toggleMenuClicked() {
+  public toggleMenuClicked() {
     this.drawer?.toggle();
+  }
+
+  public openMenu() {
+    this.drawer?.open();
+  }
+
+  public closeMenu() {
+    this.drawer?.close();
   }
 
   languageClick(langiageItem: LanguageItem) {
@@ -95,40 +107,37 @@ export class AppComponent implements OnDestroy, OnInit {
 
   private get masterMenu(): MenuGroup {
     const languageService = this.languageService;
-    const organizationMenuItem = new MenuItem(environment.frontEndUrl.organizations, 
+    const organizationMenuItem = new MenuItem(environment.frontEndUrl.organizations,
       new LanguageKeyLabelProvider(languageService, "menu.organizations", []), "assets/images/organization-icon.svg", "", this.isVisibleOrganizationMenu);
-    const organizationDetailsMenuItem = new MenuItem(environment.frontEndUrl.organizationDetails, 
+    const organizationDetailsMenuItem = new MenuItem(environment.frontEndUrl.organizationDetails,
         new LanguageKeyLabelProvider(languageService, "menu.organizationDetails", []), "assets/images/organization-icon.svg", "", this.isVisibleOrganizationDetailsMenu);
-    const curenciesMenuItem = new MenuItem(environment.frontEndUrl.curencies, new LanguageKeyLabelProvider(languageService, "menu.curencies", []), "", "security", null);
+    const currenciesMenuItem = new MenuItem(environment.frontEndUrl.currencies, new LanguageKeyLabelProvider(languageService, "menu.currencies", []), "", "security", null);
     const holidaysMenuItem = new MenuItem(environment.frontEndUrl.holidays, new LanguageKeyLabelProvider(languageService, "menu.holidays", []), "",
       "calendar_month", this.isVisibleOrganizationDetailsMenu);
     const branchesMenuItem = new MenuItem(environment.frontEndUrl.branches, new LanguageKeyLabelProvider(languageService, "menu.branches", []), "",
       "location_city", this.isVisibleOrganizationDetailsMenu);
     return new MenuGroup("", new LanguageKeyLabelProvider(languageService, "menu.groupMaster", []),
-      [organizationMenuItem, organizationDetailsMenuItem, curenciesMenuItem, holidaysMenuItem, branchesMenuItem], null);
+      [organizationMenuItem, organizationDetailsMenuItem, currenciesMenuItem, holidaysMenuItem, branchesMenuItem], null);
   }
 
   private get productMenu(): MenuGroup {
     const languageService = this.languageService;
     const depositProductMenuItem = new MenuItem(environment.frontEndUrl.depositProducts, new LanguageKeyLabelProvider(languageService, "menu.depositProduct", []), "", "account_balance", null);
-    depositProductMenuItem.activated = false;
     const productCategoryMenuItem = new MenuItem(environment.frontEndUrl.productCategories, new LanguageKeyLabelProvider(languageService, "menu.productCategory", []), "", "category", null);
+    const productTypeMenuItem = new MenuItem(environment.frontEndUrl.productTypes, new LanguageKeyLabelProvider(languageService, "menu.productType", []), "", "type_specimen", null);
     const loanProductMenuItem = new MenuItem(environment.frontEndUrl.loanProducts, new LanguageKeyLabelProvider(languageService, "menu.loanProduct", []), "", "real_estate_agent", null);
-    loanProductMenuItem.activated = false;
     const glProductMenuItem = new MenuItem(environment.frontEndUrl.glProducts, new LanguageKeyLabelProvider(languageService, "menu.glProduct", []), "", "account_balance_wallet", null);
-    glProductMenuItem.activated = false;
     const cryptoProductMenuItem = new MenuItem(environment.frontEndUrl.cryptoProducts, new LanguageKeyLabelProvider(languageService, "menu.cryptoProduct", []), "", "currency_bitcoin", null);
-    cryptoProductMenuItem.activated = false;
     const exchangeRatesMenuItem = new MenuItem(environment.frontEndUrl.exchangeRates, new LanguageKeyLabelProvider(languageService, "menu.exchangeRate", []), "", "currency_exchange", null);
     const ratesMenuItem = new MenuItem(environment.frontEndUrl.rates, new LanguageKeyLabelProvider(languageService, "menu.rate", []), "", "paid", null);
     const rateSourceMenuItem = new MenuItem(environment.frontEndUrl.rateSources, new LanguageKeyLabelProvider(languageService, "menu.rateSource", []), "", "receipt", null);
     return new MenuGroup("", new LanguageKeyLabelProvider(languageService, "menu.groupProduct", []),
-      [productCategoryMenuItem, depositProductMenuItem, loanProductMenuItem, glProductMenuItem, cryptoProductMenuItem, exchangeRatesMenuItem, ratesMenuItem, rateSourceMenuItem], this.isVisibleOrganizationDetailsMenu);
+      [productCategoryMenuItem, productTypeMenuItem, depositProductMenuItem, loanProductMenuItem, glProductMenuItem, cryptoProductMenuItem, exchangeRatesMenuItem, ratesMenuItem, rateSourceMenuItem], this.isVisibleOrganizationDetailsMenu);
   }
 
   private get languageMenu(): MenuGroup {
     const that = this;
-    const languageMenu = new  MenuGroup("", new StaticTextLabelProvider("Language"), [], null);    
+    const languageMenu = new  MenuGroup("", new StaticTextLabelProvider("Language"), [], null);
     this.languageSubscription?.unsubscribe();
     this.languageSubscription = this.languageService.languageListObservable.subscribe( langs => {
       languageMenu.items = [];
@@ -151,5 +160,12 @@ export class AppComponent implements OnDestroy, OnInit {
   private get uamMenu(): MenuGroup {
     const languageService = this.languageService;
     return new MenuGroup("", new LanguageKeyLabelProvider(languageService, "menu.groupUam", []), [], null);
+  }
+
+  ngAfterViewInit(): void {
+  }
+
+  onActive($event: any) {
+    $event.parent = this;
   }
 }

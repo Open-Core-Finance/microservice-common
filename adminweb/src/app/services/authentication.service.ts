@@ -12,19 +12,18 @@ import { interval } from 'rxjs';
 import { Role } from '../classes/Role';
 import { Organization } from '../classes/Organization';
 import { Router } from '@angular/router';
+import { UserMessage } from '../classes/UserMessage';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService implements OnDestroy, OnInit {
 
     private currentSessionSubject!: BehaviorSubject<LoginSession | null>;
     private selectedRoleSubject!: BehaviorSubject<Role | null>;
-    private loginErrorSubject: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
     private roleListSubject: BehaviorSubject<Role[]> = new BehaviorSubject<Role[]>([]);
 
     public currentSession!: Observable<LoginSession | null>;
     refreshInterval: Observable<number>;
     selectedRoleObservable!: Observable<Role | null>;
-    loginErrorObservable = this.loginErrorSubject.asObservable();
     roleListObservable = this.roleListSubject.asObservable();
 
     refreshIntervalSubscription: Subscription | null = null;
@@ -65,43 +64,33 @@ export class AuthenticationService implements OnDestroy, OnInit {
         return null;
     }
 
-    public login(formData: Record<string, any>, callback: (data: GeneralApiResponse) => void) : void {
+    public login(formData: Record<string, any>, userMessage: UserMessage, callback: (data: GeneralApiResponse) => void,
+            errorCallback: (data: GeneralApiResponse) => void) : void {
         let headers = this.restService.initRequestHeaders();
         const serviceUrl = environment.apiUrl.authentication + environment.apiPrefix.userLogin;
         const requestBody = this.commonService.buildPostStringBody(formData);
         this.http.post<GeneralApiResponse>(serviceUrl, requestBody, { headers }).subscribe({
             next: (data: any) => {
                 if (data.status === 0) {
-                    this.saveSession(data.result as LoginSession);
+                    this.saveSession(data.result as LoginSession, userMessage);
                     this.refreshIntervalSubscription?.unsubscribe();
                     this.refreshIntervalSubscription = this.refreshInterval.subscribe(
                         _ => this.refeshToken()
                     );
                 } else {
-                    this.buildLoginError(data);
+                    if (errorCallback) {
+                        errorCallback(data);
+                    }
                 }
                 if (callback) {
                     callback(data);
                 }
             }, error: (data: any) => {
-                console.error(data);
-                if (callback) {
-                    callback(data);
+                if (errorCallback) {
+                    errorCallback(data);
                 }
-                this.buildLoginError(data);
             }
         });
-    }
-
-    private buildLoginError(data: any) {
-        var err = data.error;
-        if (err.statusCode) {
-            this.loginErrorSubject.next([err.statusCode as string]);
-        } else if (err.message != null) {
-            this.loginErrorSubject.next([err.message as string]);
-        } else {
-            this.loginErrorSubject.next([data as string]);
-        }
     }
 
     refeshToken(): void {
@@ -121,7 +110,7 @@ export class AuthenticationService implements OnDestroy, OnInit {
         this.http.post<GeneralApiResponse>(serviceUrl, requestBody, { headers }).subscribe({
             next: (data: GeneralApiResponse) => {
                 if (data.status === 0) {
-                    this.saveSession(data.result as LoginSession);
+                    this.saveSession(data.result as LoginSession, new UserMessage([], []));
                 } else {
                     this.logout();
                 }
@@ -131,14 +120,14 @@ export class AuthenticationService implements OnDestroy, OnInit {
         });
     }
 
-    public saveSession(session: LoginSession) {
+    public saveSession(session: LoginSession, userMessage: UserMessage) {
         // Save session
         sessionStorage.setItem(AppSettings.LOCAL_KEY_SAVED_CREDENTIAL, JSON.stringify(session));
         this.currentSessionSubject.next(session);
         // Load selected role
         var roleCount = session.userRoles.length;
         if (roleCount <= 0) {
-            this.permissionDeniedError();
+            this.permissionDeniedError(userMessage);
         }
         this.roleList = [];
         var errCount = 0;
@@ -157,11 +146,11 @@ export class AuthenticationService implements OnDestroy, OnInit {
                                 this.roleListSubject.next(this.roleList);
                             }
                         } else if (++errCount + successCount >= roleCount) {
-                            this.permissionDeniedError();
+                            this.permissionDeniedError(userMessage);
                         }
                     }, error: (data: any) => {
                         if (++errCount >= roleCount) {
-                            this.permissionDeniedError();
+                            this.permissionDeniedError(userMessage);
                         }
                     }
                 });
@@ -188,8 +177,8 @@ export class AuthenticationService implements OnDestroy, OnInit {
         return null;
     }
 
-    private permissionDeniedError() {
-        this.loginErrorSubject.next(["permission_denied"]);
+    private permissionDeniedError(userMessage: UserMessage) {
+        userMessage.error = ["permission_denied"];
         this.roleListSubject.next([]);
     }
 

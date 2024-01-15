@@ -7,8 +7,10 @@ import { AppSettings } from '../classes/AppSetting';
 import { AuthenticationService } from '../services/authentication.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Role } from '../classes/Role';
+import { UserMessage } from '../classes/UserMessage';
+import { RestService } from '../services/rest.service';
 
 @Component({
   selector: 'app-login',
@@ -23,10 +25,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   selectedLanguage = AppSettings.LANGUAGE_DEFAULT;
   languageData: Record<string, any> = {};
   languageList: LanguageItem[] = [];
-  message: Record<string, any[]> = {
-    success: [],
-    error: []
-  };
+  message = new UserMessage([], []);
   returnUrl: string | null = null;
   isLoading = false;
   roleList: Role[] = [];
@@ -38,7 +37,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   selectedRoleSubscription: Subscription | null = null;
 
   constructor(public languageService: LanguageService, private auth: AuthenticationService, private router: Router,
-    private route: ActivatedRoute) {
+    private route: ActivatedRoute, private restService: RestService) {
   }
 
   ngOnDestroy(): void {
@@ -55,13 +54,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.languageListSubscription = this.languageService.languageListObservable.subscribe( list => this.languageList = list);
     this.changeLanguage(this.languageService.selectedLanguage);
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'];
-    this.loginErrorSubscription = this.auth.loginErrorObservable.subscribe(err => {
-      if (err != null && err.length > 0) {
-        this.isLoading = false;
-        this.clearMessages();
-        this.message['error'].push(err);
-      }
-    });
     this.roleListSubscription = this.auth.roleListObservable.subscribe(list => {
       if (list.length > 0) {
         this.isLoading = false;
@@ -88,7 +80,11 @@ export class LoginComponent implements OnInit, OnDestroy {
   submit() {
     this.clearMessages();
     this.isLoading = true;
-    this.auth.login(this.loginForm.value, (data: any) => {});
+    this.auth.login(this.loginForm.value, this.message, (data: any) => {},
+      (data: any) => {
+        this.isLoading = false;
+        this.restService.handleRestError(data, this.message);
+      });
   }
 
   refreshLanguage(languageData: Record<string, any>) {
@@ -101,10 +97,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   clearMessages() {
-    this.message = {
-        success: [],
-        error: []
-    };
+    this.message.clearAll();
   }
 
   logout($event: any): any {

@@ -11,7 +11,7 @@ import { Currency } from '../classes/Currency';
   providedIn: 'root'
 })
 export class EntitiesService implements OnInit {
-    public readonly ENTITY_TYPE_CURRENCY = "CURRENCY";
+    public static readonly ENTITY_TYPE_CURRENCY = "CURRENCY";
 
     public entitySubjectMap: Map<string, BehaviorSubject<any[]> | undefined> = 
         new Map<string, BehaviorSubject<any[]> | undefined>();
@@ -20,9 +20,9 @@ export class EntitiesService implements OnInit {
 
     constructor(private restService: RestService, private http: HttpClient) {
         // Currency
-        this.entitySubjectMap.set(this.ENTITY_TYPE_CURRENCY, new BehaviorSubject<any[]>([]));
-        this.organizationObservableMap.set(this.ENTITY_TYPE_CURRENCY, 
-            this.entitySubjectMap.get(this.ENTITY_TYPE_CURRENCY)?.asObservable()
+        this.entitySubjectMap.set(EntitiesService.ENTITY_TYPE_CURRENCY, new BehaviorSubject<any[]>([]));
+        this.organizationObservableMap.set(EntitiesService.ENTITY_TYPE_CURRENCY, 
+            this.entitySubjectMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.asObservable()
         );
         // Init
         this.ngOnInit();
@@ -35,7 +35,7 @@ export class EntitiesService implements OnInit {
         this.http.post<GeneralApiResponse>(serviceUrl, requestBody, { headers }).subscribe({
             next: (data: GeneralApiResponse) => {
                 if (data.status === 0) {
-                    this.entitySubjectMap.get(this.ENTITY_TYPE_CURRENCY)?.next(data.result as Currency[]);
+                    this.entitySubjectMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.next(data.result as Currency[]);
                 }
             }, error: (data: GeneralApiResponse) => {
                 console.error(data);

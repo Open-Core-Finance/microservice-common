@@ -8,7 +8,6 @@ import {LanguageService} from "./language.service";
 import { AppSettings } from '../classes/AppSetting';
 import { environment } from 'src/environments/environment';
 import { v4 as uuidv4 } from 'uuid';
-import { Role } from '../classes/Role';
 import { OrganizationService } from './organization.service';
 
 @Injectable({
@@ -60,22 +59,21 @@ export class RestService {
         return this.addGeneralHeaders(headers);
     }
 
-    handleRestError(err: any, messageSubject: BehaviorSubject<UserMessage>) {
-        if (err.error) {
-            err = err.error as GeneralApiResponse;
-        }
-        const message = new UserMessage([], []);
-        if (err.statusText) {
-            message.error.push(err.statusText);
-        } else if (err.statusCode) {
-            const codes = err.statusCode.split('\n');
-            for (const code of codes) {
-                message.error.push(code);
+    handleRestError(data: any, message: UserMessage) {
+        if (data.error) {
+            var err = data.error;
+            if (err.result) {
+              message['error'].push(err.result as string[]);
+            } else if (err.statusText) {
+              message['error'].push(err.statusText);
+            } else if (err.statusCode) {
+              message['error'].push(err.statusCode);
+            } else {
+              message['error'].push("Unknown error: " + JSON.stringify(err));
             }
         } else {
-            message.error.push("Unknown error: " + JSON.stringify(err));
+            message['error'].push("Unknown error: " + JSON.stringify(data));
         }
-        messageSubject.next(message);
     }
 
     extractSingleErrorMsg(err: any) {
