@@ -1,11 +1,14 @@
 package tech.corefinance.product.model;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import tech.corefinance.product.enums.AccountState;
 
 @Data
 public class ProductNewAccountSetting {
-    private String typeName;
-    private String typeConfig;
+    @NotNull(message = "new_account_type_null")
+    private ProductNewAccountSettingType type;
+    private String randomPatternTemplate;
+    private int increasementStartingFrom;
     private AccountState initialState;
 }

@@ -12,6 +12,7 @@ public class ProductFee {
     private String name;
     private ProductFeeType type;
     private Double amount;
+    private String currencyId;
     private Double disbursedPercent;
 
     private MonthlyPayOption monthlyPayOption;

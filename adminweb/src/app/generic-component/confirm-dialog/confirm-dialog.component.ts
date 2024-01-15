@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { LanguageService } from '../services/language.service';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-confirm-dialog',

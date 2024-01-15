@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {environment} from "../../environments/environment";
 import {Order, OrderDirection, Paging} from '../classes/Paging';
 import {RestService} from '../services/rest.service';
@@ -7,7 +7,7 @@ import {AuthenticationService} from "../services/authentication.service";
 import {HttpClient} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {UserMessage} from '../classes/UserMessage';
-import {BehaviorSubject, Observable, Subscription} from "rxjs";
+import {Subscription} from "rxjs";
 import {LanguageService} from "../services/language.service";
 import {CommonService} from "../services/common.service";
 import { LoginSession } from '../classes/LoginSession';
@@ -16,7 +16,7 @@ import { UiOrderEvent } from '../classes/UiOrderEvent';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { OrganizationService } from '../services/organization.service';
-import { ConfirmDialogComponent, ConfirmDialogModel } from '../confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent, ConfirmDialogModel } from './confirm-dialog/confirm-dialog.component';
 import { GeneralModel } from '../classes/CommonClasses';
 
 @Component({
@@ -25,7 +25,7 @@ import { GeneralModel } from '../classes/CommonClasses';
 export abstract class TableComponent<T extends GeneralModel> implements AfterViewInit, OnInit {
 
     public paging: Paging | null = null;
-    public message: UserMessage = {success: [], error: []};
+    public message: UserMessage = new UserMessage([], []);
     protected limitOrderColumn = 1;
     public sortFields: Order[];
     protected customData: any;
@@ -40,9 +40,6 @@ export abstract class TableComponent<T extends GeneralModel> implements AfterVie
     displayedColumns: string[] 
     isLoadingResults: boolean = true;
 
-    public messageSubject: BehaviorSubject<UserMessage>;
-    private messageObservable: Observable<UserMessage>;
-
     @ViewChild(MatSort) sort: MatSort = new MatSort();
 
     private _messageSubscription: Subscription | null = null;
@@ -56,8 +53,6 @@ export abstract class TableComponent<T extends GeneralModel> implements AfterVie
                           protected http: HttpClient, protected router: Router, public languageService: LanguageService,
                           protected commonService: CommonService, public dialog: MatDialog,
                           protected organizationService: OrganizationService) {
-        this.messageSubject = new BehaviorSubject<UserMessage>({success: [], error: []});
-        this.messageObservable = this.messageSubject.asObservable();
         this.clearMessages();
         this.sortFields = [];
         this.searchText = "";
@@ -68,7 +63,6 @@ export abstract class TableComponent<T extends GeneralModel> implements AfterVie
         this.customData = {};
     }
     ngOnInit(): void {
-        this._messageSubscription = this.messageObservable.subscribe( m => this.message = m);
         this._sessionSubscription = this.auth.currentSession.subscribe(x =>  this.loginSession = x);
         this._languageSubscription = this.languageService.languageDataObservable.subscribe( languageData => this.refreshLanguage(languageData));
         this._organizationSubscription = this.organizationService.organizationObservable?.subscribe(s => {
@@ -100,7 +94,7 @@ export abstract class TableComponent<T extends GeneralModel> implements AfterVie
     }
 
     clearMessages() {
-        this.messageSubject.next({success: [], error: []});
+        this.message.clearAll();
     }
 
     getData(pageNumber: number, orders: Order[], customData: any) {
@@ -119,7 +113,8 @@ export abstract class TableComponent<T extends GeneralModel> implements AfterVie
         }
         const requestBody = this.commonService.buildPostStringBody(body);
         this.http.post<GeneralApiResponse>(this.getSearchUrl(), requestBody, {headers})
-            .subscribe({next: (data: GeneralApiResponse) => this.dataLoadSuccess(data as Paging), error: (data: any) => this.showError(data)});
+            .subscribe({next: (data: GeneralApiResponse) => this.dataLoadSuccess(data as Paging),
+                error: (data: any) => this.restService.handleRestError(data, this.message)});
     }
 
     protected dataLoadSuccess(paging: Paging) {
@@ -141,18 +136,6 @@ export abstract class TableComponent<T extends GeneralModel> implements AfterVie
         } else {
             this.pageEvent = this.emptyPageEvent();
         }
-    }
-
-    protected showError(data: any) {
-        this.isLoadingResults = false;
-        if (data.statusText) {
-            this.message.error.push(data.statusText);
-        } else if (data.statusCode) {
-            this.message.error.push(data.statusCode);
-        } else {
-            this.message.error.push("Unknown error: " + JSON.stringify(data));
-        }
-        this.messageSubject.next(this.message);
     }
 
     handlePageEvent(e: PageEvent) {
@@ -210,7 +193,8 @@ export abstract class TableComponent<T extends GeneralModel> implements AfterVie
             this.http.delete<GeneralApiResponse>(serviceUrl, {
               headers: requestHeaders, params: { entityId: item.id }
             }).subscribe({
-              next: (_: GeneralApiResponse) => this.reloadData(), error: (data: any) => this.showError(data)
+              next: (_: GeneralApiResponse) => this.reloadData(),
+              error: (data: any) => this.restService.handleRestError(data, this.message)
             });
           }
         });

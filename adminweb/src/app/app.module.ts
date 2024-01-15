@@ -36,7 +36,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { OrganizationComponent } from './system/organization/organization.component';
 import { RoleComponent } from './system/role/role.component';
 import { AddOrganizationComponent } from './system/add-organization/add-organization.component';
-import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from './generic-component/confirm-dialog/confirm-dialog.component';
 import { CurrenyComponent } from './system/curreny/curreny.component';
 import { AddCurrenyComponent } from './system/add-curreny/add-curreny.component';
 import { HolidayComponent } from './organization-master/holiday/holiday.component';
@@ -53,6 +53,17 @@ import { RateComponent } from './product-master/rate/rate.component';
 import { AddRateComponent } from './product-master/add-rate/add-rate.component';
 import { RateSourceComponent } from './product-master/rate-source/rate-source.component';
 import { AddRateSourceComponent } from './product-master/add-rate-source/add-rate-source.component';
+import { DepositProductComponent } from './products/deposit-product/deposit-product.component';
+import { AddDepositProductComponent } from './products/add-deposit-product/add-deposit-product.component';
+import {ProductTypeComponent} from "./product-master/product-type/product-type.component";
+import {AddProductTypeComponent} from "./product-master/add-product-type/add-product-type.component";
+import {BranchesSelectionComponent} from "./generic-component/branches-selection/branches-selection.component";
+import { CurrenciesSelectionComponent } from './generic-component/currencies-selection/currencies-selection.component';
+import { ProductFeeInputComponent } from './product-master/product-fee-input/product-fee-input.component';
+import { AddGlProductComponent } from './products/add-gl-product/add-gl-product.component';
+import { GlProductComponent } from './products/gl-product/gl-product.component';
+import { AddCryptoProductComponent } from './products/add-crypto-product/add-crypto-product.component';
+import { CryptoProductComponent } from './products/crypto-product/crypto-product.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +81,11 @@ import { AddRateSourceComponent } from './product-master/add-rate-source/add-rat
     ProductCategoryComponent, AddProductCategoryComponent,
     ExchangeRateComponent, AddExchangeRateComponent,
     RateComponent, AddRateComponent,
-    RateSourceComponent, AddRateSourceComponent
+    RateSourceComponent, AddRateSourceComponent,
+    DepositProductComponent, AddDepositProductComponent, BranchesSelectionComponent, CurrenciesSelectionComponent,
+    ProductTypeComponent, AddProductTypeComponent, ProductFeeInputComponent,
+    AddGlProductComponent, GlProductComponent,
+    AddCryptoProductComponent, CryptoProductComponent
   ],
   imports: [
     BrowserModule, FormsModule, ReactiveFormsModule,

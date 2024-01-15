@@ -7,4 +7,16 @@ export class UserMessage {
       this.error = error;
     }
   
+    clearSuccess() {
+      this.success = [];
+    }
+
+    clearError() {
+      this.error = [];
+    }
+
+    clearAll() {
+      this.clearSuccess();
+      this.clearError();
+    }
   }

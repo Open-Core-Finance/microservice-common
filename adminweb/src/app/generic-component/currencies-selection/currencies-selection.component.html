@@ -1,0 +1,39 @@
+<div>
+  <div>
+    <mat-label *ngIf="selectedCurrenciesDisplay.length < currencies.length">{{languageService.formatLanguage('currencyScreens.selectionPanel.title', [])}}:</mat-label>
+  </div>
+  <div>
+    <mat-form-field class="example-full-width" *ngIf="selectedCurrenciesDisplay.length < currencies.length">
+      <mat-autocomplete #auto="matAutocomplete">
+        @for (currency of currencies; track currency) {
+          <mat-option [value]="currency" *ngIf="!isSelectedCurrency(currency)">{{currency.name}}</mat-option>
+        }
+      </mat-autocomplete>
+      <input type="text" placeholder="{{languageService.formatLanguage('currencyScreens.selectionPanel.title', [])}}"
+             matInput [matAutocomplete]="auto" [(ngModel)]="selectedCurrency" #selectionInput>
+    </mat-form-field>
+  </div>
+  <div *ngIf="selectedCurrenciesDisplay.length > 0">
+    <table>
+      <thead>
+        <tr>
+          <th>{{languageService.formatLanguage('currency', [])}}</th>
+          <th>{{languageService.formatLanguage('currencySymbol', [])}}</th>
+          <th>{{languageService.formatLanguage('decimalMark', [])}}</th>
+          <th>{{languageService.formatLanguage('action.action', [])}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let b of selectedCurrenciesDisplay">
+          <td>{{b.name}}</td>
+          <td>{{b.symbol}}</td>
+          <td>
+            <span *ngIf="b.decimalMark == '.'">{{languageService.formatLanguage("decimalMarkPeriod", [])}}</span>
+            <span *ngIf="b.decimalMark == ','">{{languageService.formatLanguage("decimalMarkComma", [])}}</span>
+          </td>
+          <td><mat-icon aria-hidden="false" fontIcon="delete" (click)="removeBranch(b)"></mat-icon></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

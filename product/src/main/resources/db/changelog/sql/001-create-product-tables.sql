@@ -103,6 +103,14 @@ CREATE TABLE IF NOT EXISTS product_category
     CONSTRAINT product_category_type_check CHECK (type::text = ANY (ARRAY['DEPOSIT'::character varying, 'LOAN'::character varying, 'GL'::character varying, 'CRYPTO'::character varying]::text[]))
 );
 
+CREATE TABLE IF NOT EXISTS product_type
+(
+    id character varying(255) DEFAULT gen_random_uuid()::character varying(255) PRIMARY KEY,
+    name character varying(255),
+    type character varying(255),
+    CONSTRAINT product_type_type_check CHECK (type::text = ANY (ARRAY['DEPOSIT'::character varying, 'LOAN'::character varying, 'GL'::character varying, 'CRYPTO'::character varying]::text[]))
+);
+
 CREATE TABLE IF NOT EXISTS holiday
 (
     id character varying(255) DEFAULT gen_random_uuid()::character varying(255) PRIMARY KEY,
@@ -117,16 +125,14 @@ CREATE TABLE IF NOT EXISTS crypto_product
     activated boolean NOT NULL,
     allow_arbitrary_fees boolean NOT NULL,
     category character varying(255) NOT NULL,
-    currency character varying(255) NOT NULL,
+    currencies character varying[] NOT NULL,
     description character varying(255),
     name character varying(255),
     new_account_setting jsonb NOT NULL,
     product_availabilities jsonb NOT NULL,
     product_fees jsonb,
     show_inactive_fees boolean NOT NULL,
-    type character varying(255),
-    crypto_address character varying(255),
-    crypto_private character varying(255)
+    type character varying(255)
 );
 
 CREATE TABLE IF NOT EXISTS deposit_product
@@ -135,7 +141,7 @@ CREATE TABLE IF NOT EXISTS deposit_product
     activated boolean NOT NULL,
     allow_arbitrary_fees boolean NOT NULL,
     category character varying(255) NOT NULL,
-    currency character varying(255) NOT NULL,
+    currencies character varying[] NOT NULL,
     description character varying(255),
     name character varying(255),
     new_account_setting jsonb NOT NULL,
@@ -155,7 +161,6 @@ CREATE TABLE IF NOT EXISTS deposit_product
     min_term_length double precision,
     overdrafts_interest jsonb,
     overdrafts_under_credit_arrangement_managed character varying(255),
-    supported_currencies jsonb,
     term_unit character varying(255),
     withdrawal_limit jsonb,
     CONSTRAINT deposit_product_overdrafts_under_credit_arrangement_manag_check CHECK (overdrafts_under_credit_arrangement_managed::text = ANY (ARRAY['REQUIRED'::character varying, 'NO'::character varying, 'OPTIONAL'::character varying]::text[])),
@@ -176,15 +181,14 @@ CREATE TABLE IF NOT EXISTS gl_product
     activated boolean NOT NULL,
     allow_arbitrary_fees boolean NOT NULL,
     category character varying(255) NOT NULL,
-    currency character varying(255) NOT NULL,
+    currencies character varying[] NOT NULL,
     description character varying(255),
     name character varying(255),
     new_account_setting jsonb NOT NULL,
     product_availabilities jsonb NOT NULL,
     product_fees jsonb,
     show_inactive_fees boolean NOT NULL,
-    type character varying(255),
-    supported_currencies jsonb
+    type character varying(255)
 );
 
 CREATE TABLE IF NOT EXISTS loan_product
@@ -193,7 +197,7 @@ CREATE TABLE IF NOT EXISTS loan_product
     activated boolean NOT NULL,
     allow_arbitrary_fees boolean NOT NULL,
     category character varying(255) NOT NULL,
-    currency character varying(255) NOT NULL,
+    currencies character varying[] NOT NULL,
     description character varying(255),
     name character varying(255),
     new_account_setting jsonb NOT NULL,
@@ -231,4 +235,15 @@ CREATE TABLE IF NOT EXISTS rate
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT rate_type_check CHECK (type::text = ANY (ARRAY['INTEREST'::character varying, 'WITHHOLDING_TAX'::character varying, 'VALUE_ADDED_TAX'::character varying]::text[]))
+);
+
+CREATE TABLE IF NOT EXISTS delete_tracking
+(
+    id character varying(255) DEFAULT gen_random_uuid()::character varying(255) PRIMARY KEY,
+    entity_class_name character varying(255) NOT NULL,
+    entity_data jsonb NOT NULL,
+    created_date timestamp with time zone,
+    last_modified_date timestamp with time zone,
+    created_by jsonb,
+    last_modified_by jsonb
 );
