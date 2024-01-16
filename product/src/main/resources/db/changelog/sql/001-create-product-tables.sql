@@ -132,7 +132,11 @@ CREATE TABLE IF NOT EXISTS crypto_product
     product_availabilities jsonb NOT NULL,
     product_fees jsonb,
     show_inactive_fees boolean NOT NULL,
-    type character varying(255)
+    type character varying(255),
+    created_date timestamp with time zone,
+    last_modified_date timestamp with time zone,
+    created_by jsonb,
+    last_modified_by jsonb
 );
 
 CREATE TABLE IF NOT EXISTS deposit_product
@@ -163,6 +167,10 @@ CREATE TABLE IF NOT EXISTS deposit_product
     overdrafts_under_credit_arrangement_managed character varying(255),
     term_unit character varying(255),
     withdrawal_limit jsonb,
+    created_date timestamp with time zone,
+    last_modified_date timestamp with time zone,
+    created_by jsonb,
+    last_modified_by jsonb,
     CONSTRAINT deposit_product_overdrafts_under_credit_arrangement_manag_check CHECK (overdrafts_under_credit_arrangement_managed::text = ANY (ARRAY['REQUIRED'::character varying, 'NO'::character varying, 'OPTIONAL'::character varying]::text[])),
     CONSTRAINT deposit_product_term_unit_check CHECK (term_unit::text = ANY (ARRAY['DAY'::character varying, 'WEEK'::character varying, 'MONTH'::character varying]::text[]))
 );
@@ -188,7 +196,11 @@ CREATE TABLE IF NOT EXISTS gl_product
     product_availabilities jsonb NOT NULL,
     product_fees jsonb,
     show_inactive_fees boolean NOT NULL,
-    type character varying(255)
+    type character varying(255),
+    created_date timestamp with time zone,
+    last_modified_date timestamp with time zone,
+    created_by jsonb,
+    last_modified_by jsonb
 );
 
 CREATE TABLE IF NOT EXISTS loan_product
@@ -219,6 +231,10 @@ CREATE TABLE IF NOT EXISTS loan_product
     repayment_collection jsonb NOT NULL,
     repayment_scheduling jsonb NOT NULL,
     under_credit_arrangement_managed character varying(255),
+    created_date timestamp with time zone,
+    last_modified_date timestamp with time zone,
+    created_by jsonb,
+    last_modified_by jsonb,
     CONSTRAINT loan_product_under_credit_arrangement_managed_check CHECK (under_credit_arrangement_managed::text = ANY (ARRAY['REQUIRED'::character varying, 'NO'::character varying, 'OPTIONAL'::character varying]::text[]))
 );
 

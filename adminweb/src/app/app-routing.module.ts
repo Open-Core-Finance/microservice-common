@@ -17,6 +17,7 @@ import { DepositProductComponent } from './products/deposit-product/deposit-prod
 import {ProductTypeComponent} from "./product-master/product-type/product-type.component";
 import { GlProductComponent } from './products/gl-product/gl-product.component';
 import { CryptoProductComponent } from './products/crypto-product/crypto-product.component';
+import { LoanProductComponent } from './products/loan-product/loan-product.component';
 
 const routes: Routes = [
   { path: '', redirectTo: environment.frontEndUrl.organizations, pathMatch: 'full'},
@@ -34,7 +35,8 @@ const routes: Routes = [
   { path: environment.frontEndUrl.rateSources, component: RateSourceComponent, canActivate: [AuthGuard] },
   { path: environment.frontEndUrl.depositProducts, component: DepositProductComponent, canActivate: [AuthGuard] },
   { path: environment.frontEndUrl.glProducts, component: GlProductComponent, canActivate: [AuthGuard] },
-  { path: environment.frontEndUrl.cryptoProducts, component: CryptoProductComponent, canActivate: [AuthGuard] }
+  { path: environment.frontEndUrl.cryptoProducts, component: CryptoProductComponent, canActivate: [AuthGuard] },
+  { path: environment.frontEndUrl.loanProducts, component: LoanProductComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({

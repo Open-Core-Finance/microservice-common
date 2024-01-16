@@ -44,11 +44,7 @@
                     </mat-card-content>
                 </mat-card>
 
-                <div *ngIf="message['error'] && message['error'].length > 0" class="error-container">
-                    <div class="error" *ngFor="let err of message['error']">
-                        {{languageService.formatLanguage("branch.error." + err, [])}}
-                    </div>
-                </div>
+                <app-general-error-panel [message]="message" errorPrefix="branch.error." successPrefix="branch.success."></app-general-error-panel>
                 
             </form>
         </mat-card-content>

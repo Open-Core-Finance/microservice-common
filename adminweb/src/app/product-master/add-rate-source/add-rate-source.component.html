@@ -18,11 +18,7 @@
                     <input type="text" matInput placeholder="{{languageService.formatLanguage('rateSource.note', [])}}" formControlName="note" required>
                 </mat-form-field>
 
-                <div *ngIf="message['error'] && message['error'].length > 0" class="error-container">
-                    <div class="error" *ngFor="let err of message['error']">
-                        {{languageService.formatLanguage("rateSource.error." + err, [])}}
-                    </div>
-                </div>
+                <app-general-error-panel [message]="message" errorPrefix="rateSource.error."></app-general-error-panel>
                 
             </form>
         </mat-card-content>

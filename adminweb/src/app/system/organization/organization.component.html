@@ -2,6 +2,8 @@
 
 <app-add-organization (cancel)="cancelAdd($event)" *ngIf="addMode" (save)="submitAdd($event)" [addingItem]="addingItem"></app-add-organization>
 
+<app-general-error-panel [message]="message" errorPrefix="organization.error."></app-general-error-panel>
+
 <table mat-table [dataSource]="tableData" matSort matSortActive="id" matSortDisableClear matSortDirection="asc"
   *ngIf="!addMode">
   

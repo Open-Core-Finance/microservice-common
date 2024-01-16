@@ -153,6 +153,10 @@
     },
     "selectionPanel": {
       "title": "Select branch"
+    },
+    "success": {
+      "add_successfull": "Branch added successfully!",
+      "update_successfull": "Branch updated successfully!"
     }
   },
   "productCategory": {
@@ -251,14 +255,6 @@
     "addFee": "Add fee",
     "allowArbitraryFees": "Allow Arbitrary Fees"
   },
-  "depositProduct": {
-    "deleteConfirmContent": "Are you sure to delete product ${0}?",
-    "deleteConfirmTitle": "Confirm delete product",
-    "addTitle": "Add product",
-    "error": {
-      "name_empty": "Product name cannot be empty!"
-    }
-  },
   "productFee": {
     "id": "ID",
     "name": "Name",
@@ -278,12 +274,39 @@
     "monthlyApplyDate_MONTHLY_FIRST_DAY": "First Day of Every Month",
     "monthlyApplyDate_MONTHLY_LAST_DAY": "Last Day of Every Month"
   },
+  "depositProduct": {
+    "deleteConfirmContent": "Are you sure to delete product ${0}?",
+    "deleteConfirmTitle": "Confirm delete product",
+    "addTitle": "Add product",
+    "error": {
+      "product_name_empty": "Product name cannot be empty!",
+      "product_category_empty": "Product category cannot be empty!",
+      "type_empty": "Product type cannot be empty!",
+      "new_account_type_empty": "Please select new account setting type",
+      "currencies_empty": "Please select at least 1 currency to continue!"
+    },
+    "internalControl": "Internal control",
+    "autoDormantAccount": "Automatically set accounts as Dormant",
+    "domainAfterLabel": "after",
+    "domainDaysLabel": "days",
+    "earlyClosurePeriod": "Early Closure Period",
+    "earlyClosurePeriodDesc": "Period (in months) for applying Early Closure Fee",
+    "overdrafts": "Overdrafts",
+    "fixedDeposit": "Fixed deposit",
+    "interestRate": "Interest rate",
+    "depositLimits": "Deposit limits",
+    "withdrawalLimit": "Withdrawal limit"
+  },
   "glProduct": {
     "deleteConfirmContent": "Are you sure to delete product ${0}?",
     "deleteConfirmTitle": "Confirm delete product",
     "addTitle": "Add product",
     "error": {
-      "name_empty": "Product name cannot be empty!"
+      "product_name_empty": "Product name cannot be empty!",
+      "product_category_empty": "Product category cannot be empty!",
+      "type_empty": "Product type cannot be empty!",
+      "new_account_type_empty": "Please select new account setting type",
+      "currencies_empty": "Please select at least 1 currency to continue!"
     }
   },
   "cryptoProduct": {
@@ -291,7 +314,30 @@
     "deleteConfirmTitle": "Confirm delete product",
     "addTitle": "Add product",
     "error": {
-      "name_empty": "Product name cannot be empty!"
+      "product_name_empty": "Product name cannot be empty!",
+      "product_category_empty": "Product category cannot be empty!",
+      "type_empty": "Product type cannot be empty!",
+      "new_account_type_empty": "Please select new account setting type",
+      "currencies_empty": "Please select at least 1 currency to continue!"
     }
+  },
+  "loanProduct": {
+    "deleteConfirmContent": "Are you sure to delete product ${0}?",
+    "deleteConfirmTitle": "Confirm delete product",
+    "addTitle": "Add product",
+    "error": {
+      "product_name_empty": "Product name cannot be empty!",
+      "product_category_empty": "Product category cannot be empty!",
+      "type_empty": "Product type cannot be empty!",
+      "new_account_type_empty": "Please select new account setting type",
+      "currencies_empty": "Please select at least 1 currency to continue!"
+    },
+    "loanAmount": "Loan amount",
+    "interestRate": "Interest rate",
+    "repaymentScheduling": "Repayment scheduling",
+    "repaymentCollection": "Repayment collection",
+    "arrearsSetting": "Arrears setting",
+    "penaltySetting": "Penalties setting",
+    "internalControl": "Internal control"
   }
 }

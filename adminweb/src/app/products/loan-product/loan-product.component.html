@@ -2,7 +2,7 @@
 
 <app-add-crypto-product (cancel)="cancelAdd($event)" *ngIf="addMode" (save)="submitAdd($event)" [addingItem]="addingItem"></app-add-crypto-product>
 
-<app-general-error-panel [message]="message" errorPrefix="cryptoProduct.error."></app-general-error-panel>
+<app-general-error-panel [message]="message" errorPrefix="loanProduct.error."></app-general-error-panel>
 
 <table mat-table [dataSource]="tableData" matSort matSortActive="id" matSortDisableClear matSortDirection="asc" *ngIf="!addMode">
 

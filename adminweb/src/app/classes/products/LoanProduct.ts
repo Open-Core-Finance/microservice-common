@@ -1,6 +1,6 @@
 import { ArrearsSetting } from "./ArrearsSetting";
 import { CreditArrangementManaged } from "./CreditArrangementManaged";
-import { FrequencyOptionYearly } from "./FrequencyOptionYearly";
+import { FrequencyOptionYearly } from "./FrequencyOption";
 import { InterestCalculationMethod } from "./InterestCalculationMethod";
 import { InterestDayInYear } from "./InterestDayInYear";
 import { InterestRate } from "./InterestRate";

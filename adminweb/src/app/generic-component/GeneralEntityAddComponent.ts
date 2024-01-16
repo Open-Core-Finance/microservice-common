@@ -48,25 +48,37 @@ export abstract class GeneralEntityAddComponent<T extends GeneralModel>{
     }
     if (this.message['error'].length < 1) {
       this.processingDataBeforeSubmit(formData);
-      const requestHeaders = this.restService.initApplicationJsonRequestHeaders();      
-      var responseHandler = {
-        next: (data: GeneralApiResponse) => {
-          if (this.save) {
-            $event.entity = data.result;
-            this.save.emit($event);
-          }
-        }, error: (data: any) => this.restService.handleRestError(data, this.message)
-      };
+      const requestHeaders = this.restService.initApplicationJsonRequestHeaders();
       if (formData.id) {
         const serviceUrl = this.getServiceUrl() + "/" + formData.id;
         this.http.put<GeneralApiResponse>(serviceUrl, formData, {
           headers: requestHeaders, params: {}
-        }).subscribe(responseHandler);
+        }).subscribe({
+          next: (data: GeneralApiResponse) => {
+            if (this.save) {
+              var outputEvent = {
+                entity: data.result,
+                type: "updated"
+              };
+              this.save.emit(outputEvent);
+            }
+          }, error: (data: any) => this.restService.handleRestError(data, this.message)
+        });
       } else {
         const serviceUrl = this.getServiceUrl() + "/create";
         this.http.post<GeneralApiResponse>(serviceUrl, formData, {
           headers: requestHeaders, params: {}
-        }).subscribe(responseHandler);
+        }).subscribe({
+          next: (data: GeneralApiResponse) => {
+            if (this.save) {
+              var outputEvent = {
+                entity: data.result,
+                type: "added"
+              };
+              this.save.emit(outputEvent);
+            }
+          }, error: (data: any) => this.restService.handleRestError(data, this.message)
+        });
       }
     }
   }

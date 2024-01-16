@@ -1,6 +1,7 @@
 package tech.corefinance.product.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -29,20 +30,18 @@ public abstract class Product implements GenericModel<String>, AuditableEntity<Z
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
+    @NotBlank(message = "product_name_empty")
     private String name;
-    @NotNull(message = "product_category_null")
+    @NotBlank(message = "product_category_empty")
     private String category;
     private String type;
     private String description;
     private boolean activated;
-    @NotNull(message = "product_availabilities_null")
-    @NotEmpty(message = "product_availabilities_empty")
     @JdbcTypeCode(SqlTypes.JSON)
     private List<ProductAvailability> productAvailabilities;
-    @NotNull(message = "new_account_setting_null")
+    @NotNull(message = "new_account_type_empty")
     @JdbcTypeCode(SqlTypes.JSON)
     private ProductNewAccountSetting newAccountSetting;
-    @NotEmpty(message = "currencies_empty")
     @NotNull(message = "currencies_empty")
     private String[] currencies;
 

@@ -2,6 +2,8 @@
 
 <app-add-product-category (cancel)="cancelAdd($event)" *ngIf="addMode" (save)="submitAdd($event)" [addingItem]="addingItem"></app-add-product-category>
 
+<app-general-error-panel [message]="message" errorPrefix="productCategory.error."></app-general-error-panel>
+
 <table mat-table [dataSource]="tableData" matSort matSortActive="id" matSortDisableClear matSortDirection="asc"
   *ngIf="!addMode">
   

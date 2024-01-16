@@ -2,6 +2,8 @@
 
 <app-add-branch (cancel)="cancelAdd($event)" *ngIf="addMode" (save)="submitAdd($event)" [addingItem]="addingItem"></app-add-branch>
 
+<app-general-error-panel [message]="message" errorPrefix="branch.error."></app-general-error-panel>
+
 <table mat-table [dataSource]="tableData" matSort matSortActive="id" matSortDisableClear matSortDirection="asc"
   *ngIf="!addMode">
   
