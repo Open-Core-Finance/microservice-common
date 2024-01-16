@@ -62,6 +62,7 @@ export abstract class TableComponent<T extends GeneralModel> implements AfterVie
         this.displayedColumns = this.buildTableColumns();
         this.customData = {};
     }
+
     ngOnInit(): void {
         this._sessionSubscription = this.auth.currentSession.subscribe(x =>  this.loginSession = x);
         this._languageSubscription = this.languageService.languageDataObservable.subscribe( languageData => this.refreshLanguage(languageData));
@@ -213,6 +214,11 @@ export abstract class TableComponent<T extends GeneralModel> implements AfterVie
         this.createNewItem();
         this.addMode = false;
         this.reloadData();
+        if ($event.type == "updated") {
+            this.message.success.push("update_successfull");
+        } else {
+            this.message.success.push("add_successfull");
+        }
     }
 
     addClick($event: any) {

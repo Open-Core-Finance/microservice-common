@@ -8,14 +8,14 @@ import {TieredInterestItem} from "../../classes/products/TieredInterestItem";
 import {WithdrawalLimit} from "../../classes/products/WithdrawalLimit";
 import {ProductCategoryType} from "../../classes/products/ProductCategory";
 import { DepositLimit } from 'src/app/classes/products/DepositLimit';
-import { GeneralAddProductComponent } from '../GeneralAddProductComponent';
+import { GeneralProductAddComponent } from '../GeneralProductAddComponent';
 
 @Component({
   selector: 'app-add-deposit-product',
   templateUrl: './add-deposit-product.component.html',
   styleUrl: './add-deposit-product.component.sass'
 })
-export class AddDepositProductComponent extends GeneralAddProductComponent<DepositProduct> implements AfterViewInit, OnInit {
+export class AddDepositProductComponent extends GeneralProductAddComponent<DepositProduct> implements AfterViewInit, OnInit {
 
   addDepositProductForm = this.formBuilder.group(
     Object.assign(Object.assign({}, new DepositProduct()), {

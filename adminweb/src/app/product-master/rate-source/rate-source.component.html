@@ -2,6 +2,8 @@
 
 <app-add-rate-source (cancel)="cancelAdd($event)" *ngIf="addMode" (save)="submitAdd($event)" [addingItem]="addingItem"></app-add-rate-source>
 
+<app-general-error-panel [message]="message" errorPrefix="rateSource.error."></app-general-error-panel>
+
 <table mat-table [dataSource]="tableData" matSort matSortActive="id" matSortDisableClear matSortDirection="asc"
   *ngIf="!addMode">
   

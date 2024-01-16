@@ -64,6 +64,9 @@ import { AddGlProductComponent } from './products/add-gl-product/add-gl-product.
 import { GlProductComponent } from './products/gl-product/gl-product.component';
 import { AddCryptoProductComponent } from './products/add-crypto-product/add-crypto-product.component';
 import { CryptoProductComponent } from './products/crypto-product/crypto-product.component';
+import { AddLoanProductComponent } from './products/add-loan-product/add-loan-product.component';
+import { LoanProductComponent } from './products/loan-product/loan-product.component';
+import { GeneralErrorPanelComponent } from './generic-component/general-error-panel/general-error-panel.component';
 
 @NgModule({
   declarations: [
@@ -85,7 +88,8 @@ import { CryptoProductComponent } from './products/crypto-product/crypto-product
     DepositProductComponent, AddDepositProductComponent, BranchesSelectionComponent, CurrenciesSelectionComponent,
     ProductTypeComponent, AddProductTypeComponent, ProductFeeInputComponent,
     AddGlProductComponent, GlProductComponent,
-    AddCryptoProductComponent, CryptoProductComponent
+    AddCryptoProductComponent, CryptoProductComponent,
+    AddLoanProductComponent, LoanProductComponent, GeneralErrorPanelComponent
   ],
   imports: [
     BrowserModule, FormsModule, ReactiveFormsModule,

@@ -116,11 +116,64 @@
           </app-product-fee-input>
         </mat-expansion-panel>
 
-        <div *ngIf="message['error'] && message['error'].length > 0" class="error-container">
-          <div class="error" *ngFor="let err of message['error']">
-            {{languageService.formatLanguage("depositProduct.error." + err, [])}}
-          </div>
-        </div>
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{languageService.formatLanguage('product.internalControl', [])}}</mat-panel-title>
+            <mat-panel-description>&nbsp;</mat-panel-description>
+          </mat-expansion-panel-header>
+          TBD earlyClosurePeriod & daysToSetToDormant
+        </mat-expansion-panel>
+
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{languageService.formatLanguage('product.overdrafts', [])}}</mat-panel-title>
+            <mat-panel-description>&nbsp;</mat-panel-description>
+          </mat-expansion-panel-header>
+          TBD
+          allowOverdrafts: boolean = false;
+          overdraftsInterest: DepositInterestRate | null = new DepositInterestRate();
+          maxOverdraftLimit: number | null = 0.0;
+          overdraftsUnderCreditArrangementManaged: CreditArrangementManaged | null = CreditArrangementManaged.NO;
+        </mat-expansion-panel>
+
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{languageService.formatLanguage('product.fixedDeposit', [])}}</mat-panel-title>
+            <mat-panel-description>&nbsp;</mat-panel-description>
+          </mat-expansion-panel-header>
+          TBD
+          termUnit: FrequencyOptionYearly | null = FrequencyOptionYearly.DAY;
+          minTermLength: number | null = 0.0;
+          maxTermLength: number | null = 0.0;
+          defaultTermLength: number | null = 0.0;
+          allowDepositAfterMaturityDate: boolean | null = false;
+        </mat-expansion-panel>
+
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{languageService.formatLanguage('product.interestRate', [])}}</mat-panel-title>
+            <mat-panel-description>&nbsp;</mat-panel-description>
+          </mat-expansion-panel-header>
+          TBD
+        </mat-expansion-panel>
+
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{languageService.formatLanguage('product.depositLimits', [])}}</mat-panel-title>
+            <mat-panel-description>&nbsp;</mat-panel-description>
+          </mat-expansion-panel-header>
+          TBD
+        </mat-expansion-panel>
+
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{languageService.formatLanguage('product.withdrawalLimit', [])}}</mat-panel-title>
+            <mat-panel-description>&nbsp;</mat-panel-description>
+          </mat-expansion-panel-header>
+          TBD
+        </mat-expansion-panel>
+        
+        <app-general-error-panel [message]="message" errorPrefix="depositProduct.error."></app-general-error-panel>
 
       </form>
     </mat-card-content>

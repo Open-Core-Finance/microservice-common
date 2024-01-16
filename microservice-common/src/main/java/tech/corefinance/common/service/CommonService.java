@@ -53,6 +53,16 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
     }
 
     /**
+     * This method support for create or update entity. Validate entities object.<br />
+     *
+     * @param source DTO object
+     * @param dest   Entity object
+     * @param <D>    DTO type
+     */
+    default <D extends CreateUpdateDto<I>> void customEntityValidation(D source, T dest) {
+    }
+
+    /**
      * Delete an entity from database.
      *
      * @param itemId Entity ID
@@ -101,6 +111,8 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
         BeanUtils.copyProperties(dto, entity);
         logger.info("Calling copyAdditionalPropertiesFromDtoToEntity...");
         copyAdditionalPropertiesFromDtoToEntity(dto, entity);
+        logger.info("Calling customEntityValidation...");
+        customEntityValidation(dto, entity);
         logger.info("Save entity and response");
         return repository.save(entity);
     }

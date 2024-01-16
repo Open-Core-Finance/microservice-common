@@ -116,7 +116,84 @@
           </app-product-fee-input>
         </mat-expansion-panel>
 
-        <app-general-error-panel [message]="message" errorPrefix="cryptoProduct.error."></app-general-error-panel>
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{languageService.formatLanguage('product.loanAmount', [])}}</mat-panel-title>
+            <mat-panel-description>&nbsp;</mat-panel-description>
+          </mat-expansion-panel-header>
+          TBD
+          loanMin: number = 0.0;
+          loanMax: number = 0.0;
+          loanDefault: number = 0.0;
+          
+          underCreditArrangementManaged: CreditArrangementManaged | null = null;
+        </mat-expansion-panel>
+
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{languageService.formatLanguage('product.interestRate', [])}}</mat-panel-title>
+            <mat-panel-description>&nbsp;</mat-panel-description>
+          </mat-expansion-panel-header>
+          TBD
+        </mat-expansion-panel>
+
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{languageService.formatLanguage('product.repaymentScheduling', [])}}</mat-panel-title>
+            <mat-panel-description>&nbsp;</mat-panel-description>
+          </mat-expansion-panel-header>
+          TBD
+        </mat-expansion-panel>
+
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{languageService.formatLanguage('product.repaymentCollection', [])}}</mat-panel-title>
+            <mat-panel-description>&nbsp;</mat-panel-description>
+          </mat-expansion-panel-header>
+          TBD
+        </mat-expansion-panel>
+
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{languageService.formatLanguage('product.arrearsSetting', [])}}</mat-panel-title>
+            <mat-panel-description>&nbsp;</mat-panel-description>
+          </mat-expansion-panel-header>
+          TBD
+        </mat-expansion-panel>
+
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{languageService.formatLanguage('product.penaltySetting', [])}}</mat-panel-title>
+            <mat-panel-description>&nbsp;</mat-panel-description>
+          </mat-expansion-panel-header>
+          TBD
+        </mat-expansion-panel>
+
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{languageService.formatLanguage('product.internalControl', [])}}</mat-panel-title>
+            <mat-panel-description>&nbsp;</mat-panel-description>
+          </mat-expansion-panel-header>
+          TBD
+          closeDormantAccounts: boolean = false;
+          lockArrearsAccounts: boolean = false;
+          capCharges: boolean = false;
+        </mat-expansion-panel>
+
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{languageService.formatLanguage('product.internalControl', [])}}</mat-panel-title>
+            <mat-panel-description>&nbsp;</mat-panel-description>
+          </mat-expansion-panel-header>
+          TBD
+          closeDormantAccounts: boolean = false;
+          lockArrearsAccounts: boolean = false;
+          capCharges: boolean = false;
+          percentGuarantors: boolean | null = false;
+          percentCollateral: boolean | null = false;
+        </mat-expansion-panel>
+
+        <app-general-error-panel [message]="message" errorPrefix="loanProduct.error."></app-general-error-panel>
 
       </form>
     </mat-card-content>

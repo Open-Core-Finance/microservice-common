@@ -104,23 +104,7 @@
           <app-currencies-selection formControlName="currencies"></app-currencies-selection>
         </mat-expansion-panel>
 
-        <mat-expansion-panel hideToggle>
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{languageService.formatLanguage('product.productFees', [])}}</mat-panel-title>
-            <mat-panel-description>&nbsp;</mat-panel-description>
-          </mat-expansion-panel-header>
-          <mat-checkbox color="accent" formControlName="allowArbitraryFees" *ngIf="!addProductForm.value.currencies || addProductForm.value.currencies.length > 0">
-            {{languageService.formatLanguage('product.allowArbitraryFees', [])}}
-          </mat-checkbox>
-          <app-product-fee-input formControlName="productFees" [supportedCurrencies]="addProductForm.value.currencies ? addProductForm.value.currencies : []">
-          </app-product-fee-input>
-        </mat-expansion-panel>
-
-        <div *ngIf="message['error'] && message['error'].length > 0" class="error-container">
-          <div class="error" *ngFor="let err of message['error']">
-            {{languageService.formatLanguage("glProduct.error." + err, [])}}
-          </div>
-        </div>
+        <app-general-error-panel [message]="message" errorPrefix="glProduct.error."></app-general-error-panel>
 
       </form>
     </mat-card-content>

@@ -4,7 +4,7 @@ export const environment = {
     apiUrl: {
         userprofile: '', organization: '', role: '', common: '', authentication: '', product: '',
         currency: '', holiday: '', branch: '', productCategory: '', exchangeRate: '', rateSource: '', rate: '',
-        depositProduct: '', productType: '', glProduct: '', cryptoProduct: ''
+        depositProduct: '', productType: '', glProduct: '', cryptoProduct: '', loanProduct: ''
     },
     apiPrefix: {
         userLogin: '/login',
@@ -52,4 +52,5 @@ export function rebuildEnvironment() {
     environment.apiUrl.productType = environment.apiUrl.product + "/product-types"
     environment.apiUrl.glProduct = environment.apiUrl.product + "/gl-products"
     environment.apiUrl.cryptoProduct = environment.apiUrl.product + "/crypto-products"
+    environment.apiUrl.loanProduct = environment.apiUrl.product + "/loan-products"
 }

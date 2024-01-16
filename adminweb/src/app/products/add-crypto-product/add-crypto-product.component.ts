@@ -3,7 +3,7 @@ import {FormControl, FormGroup} from "@angular/forms";
 import {environment} from "../../../environments/environment";
 import { ProductAvailability, ProductFee, ProductNewAccountSetting} from "../../classes/products/Product";
 import { CryptoProduct } from 'src/app/classes/products/CryptoProduct';
-import { GeneralAddProductComponent } from '../GeneralAddProductComponent';
+import { GeneralProductAddComponent } from '../GeneralProductAddComponent';
 import { ProductCategoryType } from 'src/app/classes/products/ProductCategory';
 
 @Component({
@@ -11,7 +11,7 @@ import { ProductCategoryType } from 'src/app/classes/products/ProductCategory';
   templateUrl: './add-crypto-product.component.html',
   styleUrl: './add-crypto-product.component.sass'
 })
-export class AddCryptoProductComponent extends GeneralAddProductComponent<CryptoProduct> implements AfterViewInit, OnInit {
+export class AddCryptoProductComponent extends GeneralProductAddComponent<CryptoProduct> implements AfterViewInit, OnInit {
 
   addProductForm = this.formBuilder.group(
     Object.assign(Object.assign({}, new CryptoProduct()), {

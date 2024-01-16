@@ -153,6 +153,10 @@
     },
     "selectionPanel": {
       "title": "Chọn chi nhánh"
+    },
+    "success": {
+      "add_successfull": "Tạo chi nhánh thành công!",
+      "update_successfull": "Sửa chi nhánh thành công!"
     }
   },
   "productCategory": {
@@ -251,14 +255,6 @@
     "addFee": "Thêm phí",
     "allowArbitraryFees": "Allow Arbitrary Fees"
   },
-  "depositProduct": {
-    "deleteConfirmContent": "Bạn có chắc muốn xóa sản phầm ${0} không?",
-    "deleteConfirmTitle": "Xác nhận xóa sản phầm",
-    "addTitle": "Thêm sản phầm",
-    "error": {
-      "name_empty": "Tên sản phầm không được bỏ trống!"
-    }
-  },
   "productFee": {
     "id": "ID",
     "name": "Tên",
@@ -278,12 +274,39 @@
     "monthlyApplyDate_MONTHLY_FIRST_DAY": "First Day of Every Month",
     "monthlyApplyDate_MONTHLY_LAST_DAY": "Last Day of Every Month"
   },
+  "depositProduct": {
+    "deleteConfirmContent": "Bạn có chắc muốn xóa sản phầm ${0} không?",
+    "deleteConfirmTitle": "Xác nhận xóa sản phầm",
+    "addTitle": "Thêm sản phầm",
+    "error": {
+      "name_empty": "Tên sản phầm không được bỏ trống!",
+      "category_empty": "Chuyên mục sản phầm không được bỏ trống!",
+      "type_empty": "Loại sản phầm không được bỏ trống!",
+      "new_account_type_empty": "Xin hãy cấu hình cách tạo mã số cho tài khoản mới",
+      "currencies_empty": "Xin hãy chọn ít nhất 1 đơn vị tiền tệ để tiếp tục!"
+    },
+    "internalControl": "Internal control",
+    "autoDormantAccount": "Automatically set accounts as Dormant",
+    "domainAfterLabel": "after",
+    "domainDaysLabel": "days",
+    "earlyClosurePeriod": "Early Closure Period",
+    "earlyClosurePeriodDesc": "Period (in months) for applying Early Closure Fee",
+    "overdrafts": "Overdrafts",
+    "fixedDeposit": "Fixed deposit",
+    "interestRate": "Interest rate",
+    "depositLimits": "Deposit limits",
+    "withdrawalLimit": "Withdrawal limit"
+  },
   "glProduct": {
     "deleteConfirmContent": "Bạn có chắc muốn xóa sản phầm ${0} không?",
     "deleteConfirmTitle": "Xác nhận xóa sản phầm",
     "addTitle": "Thêm sản phầm",
     "error": {
-      "name_empty": "Tên sản phầm không được bỏ trống!"
+      "name_empty": "Tên sản phầm không được bỏ trống!",
+      "category_empty": "Chuyên mục sản phầm không được bỏ trống!",
+      "type_empty": "Loại sản phầm không được bỏ trống!",
+      "new_account_type_empty": "Xin hãy cấu hình cách tạo mã số cho tài khoản mới",
+      "currencies_empty": "Xin hãy chọn ít nhất 1 đơn vị tiền tệ để tiếp tục!"
     }
   },
   "cryptoProduct": {
@@ -291,7 +314,30 @@
     "deleteConfirmTitle": "Xác nhận xóa sản phầm",
     "addTitle": "Thêm sản phầm",
     "error": {
-      "name_empty": "Tên sản phầm không được bỏ trống!"
+      "name_empty": "Tên sản phầm không được bỏ trống!",
+      "category_empty": "Chuyên mục sản phầm không được bỏ trống!",
+      "type_empty": "Loại sản phầm không được bỏ trống!",
+      "new_account_type_empty": "Xin hãy cấu hình cách tạo mã số cho tài khoản mới",
+      "currencies_empty": "Xin hãy chọn ít nhất 1 đơn vị tiền tệ để tiếp tục!"
     }
+  },
+  "loanProduct": {
+    "deleteConfirmContent": "Bạn có chắc muốn xóa sản phầm ${0} không?",
+    "deleteConfirmTitle": "Xác nhận xóa sản phầm",
+    "addTitle": "Thêm sản phầm",
+    "error": {
+      "name_empty": "Tên sản phầm không được bỏ trống!",
+      "category_empty": "Chuyên mục sản phầm không được bỏ trống!",
+      "type_empty": "Loại sản phầm không được bỏ trống!",
+      "new_account_type_empty": "Xin hãy cấu hình cách tạo mã số cho tài khoản mới",
+      "currencies_empty": "Xin hãy chọn ít nhất 1 đơn vị tiền tệ để tiếp tục!"
+    },
+    "loanAmount": "Loan amount",
+    "interestRate": "Interest rate",
+    "repaymentScheduling": "Repayment scheduling",
+    "repaymentCollection": "Repayment collection",
+    "arrearsSetting": "Arrears setting",
+    "penaltySetting": "Penalties setting",
+    "internalControl": "Internal control"
   }
 }
