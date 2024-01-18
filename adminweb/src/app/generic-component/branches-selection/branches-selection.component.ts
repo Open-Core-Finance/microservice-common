@@ -36,7 +36,7 @@ export class BranchesSelectionComponent implements OnInit, ControlValueAccessor 
 
   ngOnInit(): void {
     let headers = this.restService.initRequestHeaders();
-    this.http.post<GeneralApiResponse>(environment.apiUrl.branch + "/", {}, { headers}).subscribe({
+    this.http.post<GeneralApiResponse>(environment.apiUrl.branch + "/", {pageSize: -1, pageIndex: -1}, { headers}).subscribe({
       next: (data: GeneralApiResponse) => {
         if (data.status === 0) {
           this.branches = (data.result as Branch[]);

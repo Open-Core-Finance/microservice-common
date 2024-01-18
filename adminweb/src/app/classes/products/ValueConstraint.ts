@@ -1,4 +1,6 @@
 export class ValueConstraint {
+    currencyId: string = "";
+    currencyName: string = "";
     /**
      * Min amount of money.
      */
@@ -11,4 +13,10 @@ export class ValueConstraint {
      * Default amount of money.
      */
     defaultVal: number | null= 0.0;
+}
+
+export class CurrencyLimitValue {
+    currencyId: string = "";
+    currencyName: string = "";
+    limit = 0.0;
 }

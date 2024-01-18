@@ -11,6 +11,7 @@ import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { CustomDateFormat } from 'src/app/classes/DateFormat';
 import { formatDate } from '@angular/common';
 import { GeneralEntityAddComponent } from 'src/app/generic-component/GeneralEntityAddComponent';
+import { OrganizationService } from 'src/app/services/organization.service';
 
 @Component({
   selector: 'app-add-holiday',
@@ -32,8 +33,8 @@ export class AddHolidayComponent extends GeneralEntityAddComponent<Holiday> impl
 
   constructor(public override languageService: LanguageService, protected override commonService: CommonService,
     protected override restService: RestService, protected override http: HttpClient, protected override formBuilder: FormBuilder,
-    @Inject(MAT_DATE_FORMATS) public config: CustomDateFormat) {
-      super(languageService, commonService, restService, http, formBuilder);
+    protected override organizationService: OrganizationService, @Inject(MAT_DATE_FORMATS) public config: CustomDateFormat) {
+      super(languageService, commonService, restService, http, formBuilder, organizationService);
   }
 
   ngAfterViewInit(): void {

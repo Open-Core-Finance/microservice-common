@@ -1,13 +1,10 @@
 package tech.corefinance.product.dto;
 
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 import tech.corefinance.product.enums.CreditArrangementManaged;
 import tech.corefinance.product.enums.FrequencyOptionYearly;
+import tech.corefinance.product.model.CurrencyLimitValue;
 import tech.corefinance.product.model.DepositInterestRate;
 import tech.corefinance.product.model.DepositLimit;
 import tech.corefinance.product.model.WithdrawalLimit;
@@ -17,13 +14,14 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class DepositProductDto extends ProductDto {
-    private List<String> supportedCurrencies;
     /**
      * Interest Rate.
      */
+    private boolean enableInterestRate;
     private DepositInterestRate interestRate;
 
     // Internal control
+    private boolean autoSetAsDormant;
     private Integer daysToSetToDormant;
 
     /**
@@ -33,20 +31,21 @@ public class DepositProductDto extends ProductDto {
     /**
      * Withdrawal Limits.
      */
-    private WithdrawalLimit withdrawalLimit;
+    private List<WithdrawalLimit> withdrawalLimits;
     /**
      * Early Closure Period.
      */
+    private boolean enableEarlyClosurePeriod;
     private Integer earlyClosurePeriod;
 
     private Boolean allowOverdrafts;
     private DepositInterestRate overdraftsInterest;
-    private Double maxOverdraftLimit;
+    private List<CurrencyLimitValue> maxOverdraftLimits;
     private CreditArrangementManaged overdraftsUnderCreditArrangementManaged;
 
+    private boolean enableTermDeposit;
     private FrequencyOptionYearly termUnit;
-    private Double minTermLength;
-    private Double maxTermLength;
-    private Double defaultTermLength;
-    private Boolean allowDepositAfterMaturityDate;
+    private Integer minTermLength;
+    private Integer maxTermLength;
+    private Integer defaultTermLength;
 }

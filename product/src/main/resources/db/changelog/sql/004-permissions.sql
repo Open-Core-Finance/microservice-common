@@ -28,6 +28,8 @@ INSERT INTO public.permission (action, control, request_method, resource_type, r
   VALUES ('ANY', 'ALLOWED', NULL, 'ratesource', 'SystemAdmin', NULL) ON CONFLICT DO NOTHING;
 INSERT INTO public.permission (action, control, request_method, resource_type, role_id, url)
   VALUES ('ANY', 'ALLOWED', NULL, 'permission', 'SystemAdmin', NULL) ON CONFLICT DO NOTHING;
+INSERT INTO public.permission (action, control, request_method, resource_type, role_id, url)
+  VALUES ('ANY', 'ALLOWED', NULL, 'withdrawalchannel', 'SystemAdmin', NULL) ON CONFLICT DO NOTHING;
 
 -- Bank 1 Admin
 INSERT INTO permission (action, control, request_method, resource_type, role_id, url)
@@ -62,6 +64,8 @@ INSERT INTO permission (action, control, request_method, resource_type, role_id,
   VALUES ('ANY', 'DENIED', 'POST', 'organization', 'Bank1-Admin', null) ON CONFLICT DO NOTHING;
 INSERT INTO permission (action, control, request_method, resource_type, role_id, url)
   VALUES ('ANY', 'DENIED', 'DELETE', 'organization', 'Bank1-Admin', null) ON CONFLICT DO NOTHING;
+INSERT INTO public.permission (action, control, request_method, resource_type, role_id, url)
+  VALUES ('ANY', 'ALLOWED', NULL, 'withdrawalchannel', 'Bank1-Admin', NULL) ON CONFLICT DO NOTHING;
 
 -- Bank 2 Admin
 INSERT INTO permission (action, control, request_method, resource_type, role_id, url)
@@ -96,6 +100,8 @@ INSERT INTO permission (action, control, request_method, resource_type, role_id,
   VALUES ('ANY', 'DENIED', 'POST', 'organization', 'Bank2-Admin', null) ON CONFLICT DO NOTHING;
 INSERT INTO permission (action, control, request_method, resource_type, role_id, url)
   VALUES ('ANY', 'DENIED', 'DELETE', 'organization', 'Bank2-Admin', null) ON CONFLICT DO NOTHING;
+INSERT INTO public.permission (action, control, request_method, resource_type, role_id, url)
+  VALUES ('ANY', 'ALLOWED', NULL, 'withdrawalchannel', 'Bank2-Admin', NULL) ON CONFLICT DO NOTHING;
 
 -- Bank 1 User
 INSERT INTO permission (action, control, request_method, resource_type, role_id, url)
@@ -143,3 +149,6 @@ INSERT INTO permission (action, control, request_method, resource_type, role_id,
 
 INSERT INTO permission (action, control, request_method, resource_type, role_id, url)
   VALUES ('ANY', 'DENIED', NULL, 'organization', 'Bank1-User', null) ON CONFLICT DO NOTHING;
+
+INSERT INTO public.permission (action, control, request_method, resource_type, role_id, url)
+  VALUES ('ANY', 'ALLOWED', NULL, 'withdrawalchannel', 'Bank1-User', NULL) ON CONFLICT DO NOTHING;

@@ -1,11 +1,6 @@
 import {Component, forwardRef, OnInit, ViewChild, ElementRef, OnDestroy} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {LanguageService} from "../../services/language.service";
-import {CommonService} from "../../services/common.service";
-import {RestService} from "../../services/rest.service";
-import {HttpClient} from "@angular/common/http";
-import {GeneralApiResponse} from "../../classes/GeneralApiResponse";
-import {environment} from "../../../environments/environment";
 import { Currency } from 'src/app/classes/Currency';
 import { EntitiesService } from 'src/app/services/EntitiesService';
 import { Subscription } from 'rxjs';
@@ -28,6 +23,7 @@ export class CurrenciesSelectionComponent implements OnInit, ControlValueAccesso
   currencies: Currency[] = [];
   _selectedCurrency: Currency | null = null;
   currenciesSubscription: Subscription | undefined;
+  lastWriteValues: string[] | undefined;
 
   @ViewChild("selectionInput") input: ElementRef | undefined = undefined;
 
@@ -42,6 +38,7 @@ export class CurrenciesSelectionComponent implements OnInit, ControlValueAccesso
     this.currenciesSubscription?.unsubscribe();
     this.currenciesSubscription = this.entityService.organizationObservableMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.subscribe( c => {
       this.currencies = c;
+      this.populateValue(this.lastWriteValues);
     });
   }
 
@@ -54,6 +51,11 @@ export class CurrenciesSelectionComponent implements OnInit, ControlValueAccesso
   }
 
   writeValue(value: string[]): void {
+    this.lastWriteValues = value;
+    this.populateValue(value);
+  }
+
+  private populateValue(value: string[] | undefined) {
     if (value !== undefined) {
       for (let i = 0; i < value.length; i++) {
         for (const b of this.currencies) {

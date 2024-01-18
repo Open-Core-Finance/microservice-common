@@ -26,6 +26,7 @@ export class ProductFeeInputComponent implements OnInit, ControlValueAccessor, O
   monthlyPayOptionEnum = MonthlyPayOption;
   currencies: Currency[] = [];
   currenciesSubscription: Subscription | undefined;
+  lastSupportedCurrencies: string[] | undefined;
 
   public constructor(public languageService: LanguageService, private entityService: EntitiesService) {
   }
@@ -38,6 +39,9 @@ export class ProductFeeInputComponent implements OnInit, ControlValueAccessor, O
     this.currenciesSubscription?.unsubscribe();
     this.currenciesSubscription = this.entityService.organizationObservableMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.subscribe( c => {
       this.currencies = c;
+      if (this.lastSupportedCurrencies) {
+        this.populateCurrenciesToUi(this.lastSupportedCurrencies);
+      }
     });
   }
 
@@ -62,6 +66,11 @@ export class ProductFeeInputComponent implements OnInit, ControlValueAccessor, O
   @Input()
   set supportedCurrencies(supportedCurrencies: string[]) {
     this.supportedCurrenciesObject = [];
+    this.lastSupportedCurrencies = supportedCurrencies;
+    this.populateCurrenciesToUi(supportedCurrencies);
+  }
+
+  private populateCurrenciesToUi(supportedCurrencies: string[]) {
     this.currencies.forEach((value, index, arr) =>{
       for(let  i = 0; i < supportedCurrencies.length; i++) {
         const c = supportedCurrencies[i];

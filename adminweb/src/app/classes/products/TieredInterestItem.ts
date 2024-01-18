@@ -1,4 +1,6 @@
 export class TieredInterestItem {
+    currencyId: string = "";
+    currencyName: string = "";
     /**
      * Value can be number of days or balance.
      */

@@ -31,7 +31,7 @@ export class EntitiesService implements OnInit {
     ngOnInit(): void {
         let headers = this.restService.initRequestHeaders();
         const serviceUrl = environment.apiUrl.currency + "/";
-        const requestBody = {};
+        const requestBody = {pageSize: -1, pageIndex: -1};
         this.http.post<GeneralApiResponse>(serviceUrl, requestBody, { headers }).subscribe({
             next: (data: GeneralApiResponse) => {
                 if (data.status === 0) {

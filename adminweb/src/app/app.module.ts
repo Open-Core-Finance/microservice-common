@@ -67,6 +67,11 @@ import { CryptoProductComponent } from './products/crypto-product/crypto-product
 import { AddLoanProductComponent } from './products/add-loan-product/add-loan-product.component';
 import { LoanProductComponent } from './products/loan-product/loan-product.component';
 import { GeneralErrorPanelComponent } from './generic-component/general-error-panel/general-error-panel.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import { CurrencyValueInputComponent } from './products/currency-value-input/currency-value-input.component';
+import { DepositInterestRateInputComponent } from './products/deposit-interest-rate-input/deposit-interest-rate-input.component';
+import { DepositLimitInputComponent } from './products/deposit-limit-input/deposit-limit-input.component';
+import { WithdrawalLimitInputComponent } from './products/withdrawal-limit-input/withdrawal-limit-input.component';
 
 @NgModule({
   declarations: [
@@ -87,14 +92,15 @@ import { GeneralErrorPanelComponent } from './generic-component/general-error-pa
     RateSourceComponent, AddRateSourceComponent,
     DepositProductComponent, AddDepositProductComponent, BranchesSelectionComponent, CurrenciesSelectionComponent,
     ProductTypeComponent, AddProductTypeComponent, ProductFeeInputComponent,
-    AddGlProductComponent, GlProductComponent,
+    AddGlProductComponent, GlProductComponent, CurrencyValueInputComponent,
     AddCryptoProductComponent, CryptoProductComponent,
-    AddLoanProductComponent, LoanProductComponent, GeneralErrorPanelComponent
+    AddLoanProductComponent, LoanProductComponent, GeneralErrorPanelComponent,
+    DepositInterestRateInputComponent, DepositLimitInputComponent, WithdrawalLimitInputComponent
   ],
   imports: [
     BrowserModule, FormsModule, ReactiveFormsModule,
     AppRoutingModule, HttpClientModule,
-    BrowserAnimationsModule,
+    BrowserAnimationsModule, MatTooltipModule,
     MatButtonModule, MatInputModule, MatMenuModule, MatIconModule, MatCardModule, MatSelectModule,
     MatExpansionModule, MatPaginatorModule, MatTableModule, MatSortModule, MatProgressSpinnerModule,
     MatDialogModule, MatAutocompleteModule, MatDatepickerModule, MatNativeDateModule, MatDividerModule,

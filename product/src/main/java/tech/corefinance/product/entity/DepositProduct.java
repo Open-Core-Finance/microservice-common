@@ -61,7 +61,7 @@ public class DepositProduct extends Product {
      * Withdrawal Limits.
      */
     @JdbcTypeCode(SqlTypes.JSON)
-    private WithdrawalLimit withdrawalLimit;
+    private List<WithdrawalLimit> withdrawalLimits;
     /**
      * Early Closure Period.
      */
@@ -71,14 +71,15 @@ public class DepositProduct extends Product {
     private Boolean allowOverdrafts;
     @JdbcTypeCode(SqlTypes.JSON)
     private DepositInterestRate overdraftsInterest;
-    private Double maxOverdraftLimit;
+    @JdbcTypeCode(SqlTypes.JSON)
+    private List<CurrencyLimitValue> maxOverdraftLimit;
     @Enumerated(EnumType.STRING)
     private CreditArrangementManaged overdraftsUnderCreditArrangementManaged;
 
+    private boolean enableTermDeposit;
     @Enumerated(EnumType.STRING)
     private FrequencyOptionYearly termUnit;
-    private Double minTermLength;
-    private Double maxTermLength;
-    private Double defaultTermLength;
-    private Boolean allowDepositAfterMaturityDate;
+    private Integer minTermLength;
+    private Integer maxTermLength;
+    private Integer defaultTermLength;
 }

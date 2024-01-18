@@ -4,7 +4,7 @@
       {{languageService.formatLanguage('depositProduct.addTitle', [])}}
     </mat-card-title>
     <mat-card-content>
-      <form [formGroup]="addProductForm">
+      <form [formGroup]="addLoanProductForm">
 
         <mat-form-field>
           <mat-label>{{languageService.formatLanguage('product.id', [])}}</mat-label>
@@ -36,7 +36,7 @@
           {{languageService.formatLanguage('product.activated', [])}}
         </mat-checkbox>
 
-        <mat-expansion-panel hideToggle>
+        <mat-expansion-panel hideToggle="false">
           <mat-expansion-panel-header>
             <mat-panel-title>{{languageService.formatLanguage('product.description', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
@@ -47,7 +47,7 @@
           </mat-form-field>
         </mat-expansion-panel>
 
-        <mat-expansion-panel hideToggle>
+        <mat-expansion-panel hideToggle="false">
           <mat-expansion-panel-header>
             <mat-panel-title>{{languageService.formatLanguage('product.availabilities', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
@@ -65,12 +65,12 @@
               {{languageService.formatLanguage('product.availableMode_ALL_BRANCHES', [])}}
             </mat-checkbox>
           </div>
-          <div *ngIf="!addProductForm.value.productAvailabilityAllBranches">
+          <div *ngIf="!addLoanProductForm.value.productAvailabilityAllBranches">
             <app-branches-selection formControlName="productAvailabilityModeInfo"></app-branches-selection>
           </div>
         </mat-expansion-panel>
 
-        <mat-expansion-panel hideToggle formGroupName="newAccountSetting">
+        <mat-expansion-panel hideToggle="false" formGroupName="newAccountSetting" expanded="true">
           <mat-expansion-panel-header>
             <mat-panel-title>{{languageService.formatLanguage('product.newAccountSetting', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
@@ -82,21 +82,21 @@
               <mat-option [value]="newAccountIdTypeEnum.RANDOM_PATTERN">{{languageService.formatLanguage('product.idType_RANDOM_PATTERN', [])}}</mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-label *ngIf="addProductForm.value.newAccountSetting?.type==newAccountIdTypeEnum.RANDOM_PATTERN">
+          <mat-label *ngIf="addLoanProductForm.value.newAccountSetting?.type==newAccountIdTypeEnum.RANDOM_PATTERN">
             {{languageService.formatLanguage('product.patternUsingLabel', [])}}&nbsp;
           </mat-label>
-          <mat-form-field *ngIf="addProductForm.value.newAccountSetting?.type==newAccountIdTypeEnum.RANDOM_PATTERN">
+          <mat-form-field *ngIf="addLoanProductForm.value.newAccountSetting?.type==newAccountIdTypeEnum.RANDOM_PATTERN">
             <input type="text" matInput placeholder="{{languageService.formatLanguage('product.patternUsingLabel', [])}}" formControlName="randomPatternTemplate">
           </mat-form-field>
-          <mat-label *ngIf="addProductForm.value.newAccountSetting?.type==newAccountIdTypeEnum.INCREASEMENT">
+          <mat-label *ngIf="addLoanProductForm.value.newAccountSetting?.type==newAccountIdTypeEnum.INCREASEMENT">
             {{languageService.formatLanguage('product.increasementStartingFrom', [])}}&nbsp;
           </mat-label>
-          <mat-form-field *ngIf="addProductForm.value.newAccountSetting?.type==newAccountIdTypeEnum.INCREASEMENT">
+          <mat-form-field *ngIf="addLoanProductForm.value.newAccountSetting?.type==newAccountIdTypeEnum.INCREASEMENT">
             <input type="number" matInput placeholder="{{languageService.formatLanguage('product.increasementStartingFrom', [])}}" formControlName="increasementStartingFrom">
           </mat-form-field>
         </mat-expansion-panel>
 
-        <mat-expansion-panel hideToggle>
+        <mat-expansion-panel hideToggle="false" expanded="true">
           <mat-expansion-panel-header>
             <mat-panel-title>{{languageService.formatLanguage('product.currencies', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
@@ -104,19 +104,19 @@
           <app-currencies-selection formControlName="currencies"></app-currencies-selection>
         </mat-expansion-panel>
 
-        <mat-expansion-panel hideToggle>
+        <mat-expansion-panel hideToggle="false">
           <mat-expansion-panel-header>
             <mat-panel-title>{{languageService.formatLanguage('product.productFees', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
           </mat-expansion-panel-header>
-          <mat-checkbox color="accent" formControlName="allowArbitraryFees" *ngIf="!addProductForm.value.currencies || addProductForm.value.currencies.length > 0">
+          <mat-checkbox color="accent" formControlName="allowArbitraryFees" *ngIf="!addLoanProductForm.value.currencies || addLoanProductForm.value.currencies.length > 0">
             {{languageService.formatLanguage('product.allowArbitraryFees', [])}}
           </mat-checkbox>
-          <app-product-fee-input formControlName="productFees" [supportedCurrencies]="addProductForm.value.currencies ? addProductForm.value.currencies : []">
+          <app-product-fee-input formControlName="productFees" [supportedCurrencies]="addLoanProductForm.value.currencies ? addLoanProductForm.value.currencies : []">
           </app-product-fee-input>
         </mat-expansion-panel>
 
-        <mat-expansion-panel hideToggle>
+        <mat-expansion-panel hideToggle="false">
           <mat-expansion-panel-header>
             <mat-panel-title>{{languageService.formatLanguage('product.loanAmount', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
@@ -129,7 +129,7 @@
           underCreditArrangementManaged: CreditArrangementManaged | null = null;
         </mat-expansion-panel>
 
-        <mat-expansion-panel hideToggle>
+        <mat-expansion-panel hideToggle="false">
           <mat-expansion-panel-header>
             <mat-panel-title>{{languageService.formatLanguage('product.interestRate', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
@@ -137,7 +137,7 @@
           TBD
         </mat-expansion-panel>
 
-        <mat-expansion-panel hideToggle>
+        <mat-expansion-panel hideToggle="false">
           <mat-expansion-panel-header>
             <mat-panel-title>{{languageService.formatLanguage('product.repaymentScheduling', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
@@ -145,7 +145,7 @@
           TBD
         </mat-expansion-panel>
 
-        <mat-expansion-panel hideToggle>
+        <mat-expansion-panel hideToggle="false">
           <mat-expansion-panel-header>
             <mat-panel-title>{{languageService.formatLanguage('product.repaymentCollection', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
@@ -153,7 +153,7 @@
           TBD
         </mat-expansion-panel>
 
-        <mat-expansion-panel hideToggle>
+        <mat-expansion-panel hideToggle="false">
           <mat-expansion-panel-header>
             <mat-panel-title>{{languageService.formatLanguage('product.arrearsSetting', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
@@ -161,7 +161,7 @@
           TBD
         </mat-expansion-panel>
 
-        <mat-expansion-panel hideToggle>
+        <mat-expansion-panel hideToggle="false">
           <mat-expansion-panel-header>
             <mat-panel-title>{{languageService.formatLanguage('product.penaltySetting', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
@@ -169,7 +169,7 @@
           TBD
         </mat-expansion-panel>
 
-        <mat-expansion-panel hideToggle>
+        <mat-expansion-panel hideToggle="false">
           <mat-expansion-panel-header>
             <mat-panel-title>{{languageService.formatLanguage('product.internalControl', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
@@ -180,7 +180,7 @@
           capCharges: boolean = false;
         </mat-expansion-panel>
 
-        <mat-expansion-panel hideToggle>
+        <mat-expansion-panel hideToggle="false">
           <mat-expansion-panel-header>
             <mat-panel-title>{{languageService.formatLanguage('product.internalControl', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>

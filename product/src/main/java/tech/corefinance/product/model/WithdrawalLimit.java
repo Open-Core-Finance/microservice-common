@@ -6,6 +6,9 @@ import tech.corefinance.product.enums.WithdrawalLimitType;
 @Data
 public class WithdrawalLimit {
 
+    private String currencyId;
+    private String currencyName;
+
     /**
      * Limit type.
      */
@@ -17,5 +20,5 @@ public class WithdrawalLimit {
     /**
      * Limit amount.
      */
-    private double amount;
+    private double value;
 }

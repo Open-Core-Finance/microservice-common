@@ -1,0 +1,162 @@
+<div>
+    <mat-label>{{languageService.formatLanguage('depositProduct.interestRate.terms', [])}}:&nbsp;</mat-label>
+    <mat-form-field appearance="fill" color="primary">
+        <mat-select required [(ngModel)]="value.interestRateTerms">
+            <mat-option *ngFor="let terms of allTerms" [value]="terms">{{languageService.formatLanguage('depositProduct.interestRate.terms_' + terms, [])}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <div>
+        <mat-label>{{languageService.formatLanguage('depositProduct.interestRate.rateCalculationMethod', [])}}&nbsp;</mat-label>
+        <mat-form-field appearance="fill" color="primary">
+            <mat-select required [(ngModel)]="value.interestCalculationMethod">
+                <mat-option *ngFor="let method of allCalculationMethods" [value]="method">
+                    {{languageService.formatLanguage('depositProduct.interestRate.rateCalculationMethod_' + method, [])}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill" color="primary" *ngIf="value.interestCalculationMethod == interestCalculationMethodEnum.PERCENTAGE_PER_X_DAYS">
+            <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.interestRate.perDays', [])}}" [(ngModel)]="value.percentPerDay">
+        </mat-form-field>
+        <mat-label *ngIf="value.interestCalculationMethod == interestCalculationMethodEnum.PERCENTAGE_PER_X_DAYS">&nbsp;{{languageService.formatLanguage('depositProduct.interestRate.perDays', [])}}</mat-label>
+    </div>
+
+    <div *ngIf="value.interestRateTerms != depositInterestRateTermsEnum.FIXED">
+        <div *ngIf="value.interestRateConstraints.length > 0">
+            <table>
+                <thead>
+                    <tr>
+                        <th>{{languageService.formatLanguage('currency', [])}}</th>
+                        <th>{{languageService.formatLanguage('depositProduct.interestRate.tier', [])}}</th>
+                        <th>{{languageService.formatLanguage('depositProduct.interestRate.tierFrom', [])}}</th>
+                        <th>{{languageService.formatLanguage('depositProduct.interestRate.tierTo', [])}}</th>
+                        <th>{{languageService.formatLanguage('depositProduct.interestRate.label', [])}}</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let constr of value.interestItems; let i = index;">
+                        <td>
+                            <mat-form-field *ngIf="currenciesToDisplay.length > 1">
+                                <mat-select [(ngModel)]="constr.currencyId" required (valueChange)="inerestTierCurrencyChanged($event, constr)">
+                                    <mat-option *ngFor="let currency of currenciesToDisplay" [value]="currency.id">
+                                        {{currency.name}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <span *ngIf="currenciesToDisplay.length == 1">
+                                {{currenciesToDisplay[0].name}}
+                            </span>
+                        </td>
+                        <td>{{languageService.formatLanguage('depositProduct.interestRate.tier', []) + " " + (i + 1)}}</td>
+                        <td>
+                            <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.interestRate.tierFrom', [])}}" [(ngModel)]="constr.fromValue">
+                        </td>
+                        <td>
+                            <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.interestRate.tierTo', [])}}" [(ngModel)]="constr.toValue">
+                            <span *ngIf="value.interestRateTerms == depositInterestRateTermsEnum.TIERED_PER_PERIOD">
+                                {{languageService.formatLanguage('depositProduct.interestRate.perDays', [])}}
+                            </span>
+                            <span *ngIf="value.interestRateTerms == depositInterestRateTermsEnum.TIERED_PER_BALANCE">
+                                {{constr.currencyName}}
+                            </span>
+                        </td>
+                        <td>
+                            <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.interestRate.label', [])}}" [(ngModel)]="constr.interestPercentage">
+                            {{languageService.formatLanguage('depositProduct.interestRate.rateCalculationMethod_' + value.interestCalculationMethod, [])}}
+                        </td>
+                        <td>
+                            <mat-icon aria-hidden="false" fontIcon="add" (click)="addTierClick($event)"></mat-icon>
+                            <mat-icon aria-hidden="false" fontIcon="delete" (click)="removeTierClick($event, i)"
+                                *ngIf="i > 0"></mat-icon>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div *ngIf="value.interestRateTerms == depositInterestRateTermsEnum.FIXED">
+        <mat-checkbox color="accent" [(ngModel)]="value.allowNegativeInterestRate">
+            {{languageService.formatLanguage('depositProduct.interestRate.allowNegativeInterestRate', [])}}
+        </mat-checkbox>
+        <div *ngIf="value.interestRateConstraints.length > 0">
+            <h3>{{languageService.formatLanguage('depositProduct.interestRate.interestRateConstraints', [])}}</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>{{languageService.formatLanguage('currency', [])}}</th>
+                        <th>{{languageService.formatLanguage('depositProduct.interestRate.interestRateDefault', [])}}</th>
+                        <th>{{languageService.formatLanguage('depositProduct.interestRate.interestRateMin', [])}}</th>
+                        <th>{{languageService.formatLanguage('depositProduct.interestRate.interestRateMax', [])}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let constr of value.interestRateConstraints">
+                        <td>{{constr.currencyName}}</td>
+                        <td>
+                            <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.interestRate.interestRateDefault', [])}}" [(ngModel)]="constr.defaultVal">
+                        </td>
+                        <td>
+                            <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.interestRate.interestRateMin', [])}}" [(ngModel)]="constr.minVal">
+                        </td>
+                        <td>
+                            <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.interestRate.interestRateMax', [])}}" [(ngModel)]="constr.maxVal">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div>
+        <mat-label>{{languageService.formatLanguage('depositProduct.interestRate.balanceInterestCalculation', [])}}&nbsp;</mat-label>
+        <mat-form-field appearance="fill" color="primary">
+            <mat-select required [(ngModel)]="value.balanceInterestCalculation">
+                <mat-option *ngFor="let cal of allBalanceCalculations" [value]="cal">
+                    {{languageService.formatLanguage('depositProduct.interestRate.balanceInterestCalculation_' + cal, [])}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div>
+        <mat-label>{{languageService.formatLanguage('depositProduct.interestRate.payOption', [])}}&nbsp;</mat-label>
+        <mat-form-field appearance="fill" color="primary">
+            <mat-select required [(ngModel)]="value.calculationDateType">
+                <mat-option *ngFor="let cal of allDateOptionTypes" [value]="cal">
+                    {{languageService.formatLanguage('depositProduct.interestRate.payOption_' + cal, [])}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div *ngIf="value.calculationDateType == calculationDateOptionTypeEnum.ON_FIXED_DATE">
+        <mat-label>{{languageService.formatLanguage('depositProduct.interestRate.payOptionFixedMonth', [])}}:&nbsp;</mat-label>
+        <mat-form-field appearance="fill" color="primary">
+            <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.interestRate.payOptionFixedMonth', [])}}" [(ngModel)]="value.calculationDateFixedMonth">
+        </mat-form-field>
+        <mat-label>{{languageService.formatLanguage('depositProduct.interestRate.payOptionFixedDay', [])}}:&nbsp;</mat-label>
+        <mat-form-field appearance="fill" color="primary">
+            <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.interestRate.payOptionFixedDay', [])}}" [(ngModel)]="value.calculationDateFixedDay">
+        </mat-form-field>
+    </div>
+
+    <div>
+        <mat-label>{{languageService.formatLanguage('depositProduct.interestRate.dayInYear', [])}}&nbsp;</mat-label>
+        <mat-form-field appearance="fill" color="primary">
+            <mat-select required [(ngModel)]="value.interestDayInYear">
+                <mat-option *ngFor="let cal of allDayInYearOption" [value]="cal">
+                    {{languageService.formatLanguage('depositProduct.interestRate.dayInYear_' + cal, [])}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div>
+        <mat-checkbox color="accent" [(ngModel)]="value.applyWithholdingTaxes">
+            {{languageService.formatLanguage('depositProduct.interestRate.applyWithholdingTaxes', [])}}
+        </mat-checkbox>
+    </div>
+    
+</div>

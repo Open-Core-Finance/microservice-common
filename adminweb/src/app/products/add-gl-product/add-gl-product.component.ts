@@ -35,7 +35,4 @@ export class AddGlProductComponent extends GeneralProductAddComponent<GlProduct>
   protected override newEmptyEntity(): GlProduct {
     return new GlProduct();
   }
-
-  ngAfterViewInit(): void {
-  }
 }
