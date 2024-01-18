@@ -7,6 +7,7 @@ import { RestService } from "../services/rest.service";
 import { HttpClient } from "@angular/common/http";
 import { GeneralApiResponse } from "../classes/GeneralApiResponse";
 import { FormBuilder, FormGroup } from "@angular/forms";
+import { OrganizationService } from "../services/organization.service";
 
 @Component({
     template: ''
@@ -18,7 +19,8 @@ export abstract class GeneralEntityAddComponent<T extends GeneralModel>{
   message = new UserMessage([], []);
 
   constructor(public languageService: LanguageService, protected commonService: CommonService,
-    protected restService: RestService, protected http: HttpClient, protected formBuilder: FormBuilder) {
+    protected restService: RestService, protected http: HttpClient, protected formBuilder: FormBuilder,
+    protected organizationService: OrganizationService) {
   }
 
   protected cancelClick($event: any): any {
@@ -87,11 +89,16 @@ export abstract class GeneralEntityAddComponent<T extends GeneralModel>{
     this._addingItem = item;
     if (item) {
       this.getAddForm().setValue(item);
+      this.afterBindingEnityToForm(false);
     } else {
       this.getAddForm().setValue(this.newEmptyEntity());
+      this.afterBindingEnityToForm(true);
     }
   }
 
   protected processingDataBeforeSubmit(formData: any): void {
+  }
+
+  protected afterBindingEnityToForm(isNew: boolean): void {
   }
 }

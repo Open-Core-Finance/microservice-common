@@ -4,6 +4,8 @@ import lombok.Data;
 
 @Data
 public class TieredInterestItem {
+    private String currencyId;
+    private String currencyName;
     /**
      * Value can be number of days or balance.
      */

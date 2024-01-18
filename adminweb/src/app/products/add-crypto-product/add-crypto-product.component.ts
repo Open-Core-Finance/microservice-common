@@ -23,9 +23,6 @@ export class AddCryptoProductComponent extends GeneralProductAddComponent<Crypto
     })
   );
 
-  ngAfterViewInit(): void {
-  }
-
   protected override getServiceUrl(): string {
     return environment.apiUrl.cryptoProduct;
   }

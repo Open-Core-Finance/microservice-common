@@ -9,9 +9,14 @@ import java.util.List;
 
 @Data
 public class DepositInterestRate implements InterestRate {
+    private DepositInterestRateTerms interestRateTerms;
     private InterestCalculationMethod interestCalculationMethod;
+    private int percentPerDay;
     private DepositBalanceInterestCalculation balanceInterestCalculation;
-    private DepositInterestCalculationDateOption calculationDateOption;
+    private InterestCalculationDateOptionType calculationDateType;
+    private int calculationDateFixedMonth;
+    private int calculationDateFixedDay;
+    private InterestCalculationDateOptionType calculationDateOption;
     private InterestDayInYear interestDayInYear;
 
     private Boolean applyWithholdingTaxes;
@@ -21,7 +26,7 @@ public class DepositInterestRate implements InterestRate {
      * Interest Rate Constraints (%) for fixed interest rate. <br/>
      * Interest Spread Constraints (%) for index rate source.
      */
-    private ValueConstraint interestRateConstraint;
+    private List<ValueConstraint> interestRateConstraints;
     private String interestRateIndexSource;
     // Tiered interest rate
     private List<TieredInterestItem> interestItems;

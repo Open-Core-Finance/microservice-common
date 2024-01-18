@@ -6,7 +6,7 @@ import { InterestDayInYear } from "./InterestDayInYear";
 import { InterestRate } from "./InterestRate";
 import { Product } from "./Product";
 import { TieredInterestItem } from "./TieredInterestItem";
-import { ValueConstraint } from "./ValueConstraint";
+import { CurrencyLimitValue, ValueConstraint } from "./ValueConstraint";
 import { WithdrawalLimit } from "./WithdrawalLimit";
 
 export class DepositProduct extends Product {
@@ -14,9 +14,11 @@ export class DepositProduct extends Product {
     /**
      * Interest Rate.
      */
+    enableInterestRate: boolean = false;
     interestRate: DepositInterestRate | null = new DepositInterestRate();
 
     // Internal control
+    autoSetAsDormant: boolean = false;
     daysToSetToDormant: number | null = 0;
 
     /**
@@ -26,28 +28,33 @@ export class DepositProduct extends Product {
     /**
      * Withdrawal Limits.
      */
-    withdrawalLimit: WithdrawalLimit | null = new WithdrawalLimit();
+    withdrawalLimits: WithdrawalLimit[] = [];
     /**
      * Early Closure Period.
      */
+    enableEarlyClosurePeriod: boolean = false;
     earlyClosurePeriod: number | null = 0;
 
     allowOverdrafts: boolean = false;
     overdraftsInterest: DepositInterestRate | null = new DepositInterestRate();
-    maxOverdraftLimit: number | null = 0.0;
+    maxOverdraftLimit: CurrencyLimitValue[] = [];
     overdraftsUnderCreditArrangementManaged: CreditArrangementManaged | null = CreditArrangementManaged.NO;
 
+    enableTermDeposit: boolean = false;
     termUnit: FrequencyOptionYearly | null = FrequencyOptionYearly.DAY;
     minTermLength: number | null = 0.0;
     maxTermLength: number | null = 0.0;
     defaultTermLength: number | null = 0.0;
-    allowDepositAfterMaturityDate: boolean | null = false;
 }
 
 export class DepositInterestRate implements InterestRate {
+    interestRateTerms = DepositInterestRateTerms.FIXED;
     interestCalculationMethod: InterestCalculationMethod | null = InterestCalculationMethod.PERCENTAGE_PER_MONTH;
+    percentPerDay = 0;
     balanceInterestCalculation: DepositBalanceInterestCalculation | null = DepositBalanceInterestCalculation.END_OF_dAY;
-    calculationDateOption: DepositInterestCalculationDateOption | null = new DepositInterestCalculationDateOption();
+    calculationDateType: InterestCalculationDateOptionType = InterestCalculationDateOptionType.FIRST_DAY_EVERY_MOTNH;
+    calculationDateFixedMonth = new Date().getMonth() + 1;
+    calculationDateFixedDay = new Date().getDate();
     interestDayInYear: InterestDayInYear | null = InterestDayInYear.FIXED_365_DAYS;
 
     applyWithholdingTaxes: boolean | null = false;
@@ -57,10 +64,10 @@ export class DepositInterestRate implements InterestRate {
      * Interest Rate Constraints (%) for fixed interest rate. <br/>
      * Interest Spread Constraints (%) for index rate source.
      */
-    interestRateConstraint: ValueConstraint | null = new ValueConstraint();
+    interestRateConstraints: ValueConstraint[] = [];
     interestRateIndexSource: string = "";
     // Tiered interest rate
-    interestItems: TieredInterestItem | null = new TieredInterestItem();
+    interestItems: TieredInterestItem[] = [];
 }
 
 export enum DepositBalanceInterestCalculation {
@@ -81,11 +88,6 @@ export enum DepositBalanceInterestCalculation {
     END_OF_dAY = "END_OF_dAY"
 }
 
-export class DepositInterestCalculationDateOption {
-    type: InterestCalculationDateOptionType = InterestCalculationDateOptionType.EVERY_MONTH;
-    typeConfig: any;
-}
-
 export enum InterestCalculationDateOptionType {
     FIRST_DAY_EVERY_MOTNH = "FIRST_DAY_EVERY_MOTNH",
     EVERY_DAY = "EVERY_DAY",
@@ -99,4 +101,8 @@ export enum InterestCalculationDateOptionType {
      * For example fix every 1st January.
      */
     ON_FIXED_DATE = "ON_FIXED_DATE"
+}
+
+export enum DepositInterestRateTerms {
+    FIXED = "FIXED", TIERED_PER_BALANCE = "TIERED_PER_BALANCE", TIERED_PER_PERIOD = "TIERED_PER_PERIOD"
 }

@@ -14,6 +14,7 @@ import { Timezone, _filterTimezoneName, _filterTimezone, DATE_FORMAT_CHARS } fro
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { GeneralEntityAddComponent } from 'src/app/generic-component/GeneralEntityAddComponent';
+import { OrganizationService } from 'src/app/services/organization.service';
 
 @Component({
   selector: 'app-add-organization',
@@ -52,8 +53,8 @@ export class AddOrganizationComponent extends GeneralEntityAddComponent<Organiza
 
   constructor(public override languageService: LanguageService, protected override commonService: CommonService,
     protected override restService: RestService, protected override http: HttpClient, protected override formBuilder: FormBuilder,
-    private entitiesService: EntitiesService) {
-      super(languageService, commonService, restService, http, formBuilder);
+    protected override organizationService: OrganizationService, private entitiesService: EntitiesService) {
+      super(languageService, commonService, restService, http, formBuilder, organizationService);
       this.currencySubscription?.unsubscribe();
       this.currencySubscription = entitiesService.organizationObservableMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.subscribe(
          currencies => this.currencies = currencies

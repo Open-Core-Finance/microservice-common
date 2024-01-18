@@ -9,6 +9,7 @@ import { CommonService } from 'src/app/services/common.service';
 import { EntitiesService } from 'src/app/services/EntitiesService';
 import { environment } from 'src/environments/environment';
 import { GeneralEntityAddComponent } from 'src/app/generic-component/GeneralEntityAddComponent';
+import { OrganizationService } from 'src/app/services/organization.service';
 
 @Component({
   selector: 'app-add-curreny',
@@ -31,8 +32,8 @@ export class AddCurrenyComponent extends GeneralEntityAddComponent<Currency> imp
 
   constructor(public override languageService: LanguageService, protected override commonService: CommonService,
     protected override restService: RestService, protected override http: HttpClient, protected override formBuilder: FormBuilder,
-    private entitiesService: EntitiesService) {
-      super(languageService, commonService, restService, http, formBuilder);
+    protected override organizationService: OrganizationService, private entitiesService: EntitiesService) {
+      super(languageService, commonService, restService, http, formBuilder, organizationService);
       this.currencySubscription?.unsubscribe();
       this.currencySubscription = entitiesService.organizationObservableMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.subscribe(
          currencies => this.currencies = currencies

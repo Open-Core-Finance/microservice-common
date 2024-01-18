@@ -37,6 +37,9 @@
 	<logger name="org.springframework" level="WARN" />
 	<logger name="org.springframework.data.jpa" level="WARN" />
 	<logger name="org.hibernate" level="WARN" />
+	<logger name="tech.corefinance.common.converter" level="WARN" />
+	<logger name="tech.corefinance.common.audit" level="WARN" />
+	<logger name="tech.corefinance.common.aop.ApiAuthorizationCheck" level="WARN" />
 
 	<root level="INFO">
 		<appender-ref ref="STDOUT" />

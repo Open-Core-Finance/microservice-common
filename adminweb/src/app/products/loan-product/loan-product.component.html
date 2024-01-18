@@ -1,7 +1,6 @@
 <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
 
-<app-add-crypto-product (cancel)="cancelAdd($event)" *ngIf="addMode" (save)="submitAdd($event)" [addingItem]="addingItem"></app-add-crypto-product>
-
+<app-add-loan-product (cancel)="cancelAdd($event)" *ngIf="addMode" (save)="submitAdd($event)" [addingItem]="addingItem"></app-add-loan-product>
 <app-general-error-panel [message]="message" errorPrefix="loanProduct.error."></app-general-error-panel>
 
 <table mat-table [dataSource]="tableData" matSort matSortActive="id" matSortDisableClear matSortDirection="asc" *ngIf="!addMode">

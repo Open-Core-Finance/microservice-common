@@ -36,7 +36,7 @@
           {{languageService.formatLanguage('product.activated', [])}}
         </mat-checkbox>
 
-        <mat-expansion-panel hideToggle>
+        <mat-expansion-panel hideToggle="false">
           <mat-expansion-panel-header>
             <mat-panel-title>{{languageService.formatLanguage('product.description', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
@@ -47,7 +47,7 @@
           </mat-form-field>
         </mat-expansion-panel>
 
-        <mat-expansion-panel hideToggle>
+        <mat-expansion-panel hideToggle="false">
           <mat-expansion-panel-header>
             <mat-panel-title>{{languageService.formatLanguage('product.availabilities', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
@@ -70,7 +70,7 @@
           </div>
         </mat-expansion-panel>
 
-        <mat-expansion-panel hideToggle formGroupName="newAccountSetting">
+        <mat-expansion-panel hideToggle="false" formGroupName="newAccountSetting" expanded="true">
           <mat-expansion-panel-header>
             <mat-panel-title>{{languageService.formatLanguage('product.newAccountSetting', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
@@ -96,7 +96,7 @@
           </mat-form-field>
         </mat-expansion-panel>
 
-        <mat-expansion-panel hideToggle>
+        <mat-expansion-panel hideToggle="false" expanded="true">
           <mat-expansion-panel-header>
             <mat-panel-title>{{languageService.formatLanguage('product.currencies', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>

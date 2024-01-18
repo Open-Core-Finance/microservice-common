@@ -1,5 +1,6 @@
 export class WithdrawalLimit {
-
+    currencyId: string = "";
+    currencyName: string = "";
     /**
      * Limit type.
      */
@@ -11,7 +12,7 @@ export class WithdrawalLimit {
     /**
      * Limit amount.
      */
-    amount: number = 0.0;
+    value: number = 0.0;
 }
 
 export enum WithdrawalLimitType {

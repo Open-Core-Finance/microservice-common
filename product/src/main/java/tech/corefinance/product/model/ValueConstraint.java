@@ -1,6 +1,11 @@
 package tech.corefinance.product.model;
 
+import lombok.Data;
+
+@Data
 public class ValueConstraint {
+    private String currencyId;
+    private String currencyName;
     /**
      * Min amount of money.
      */

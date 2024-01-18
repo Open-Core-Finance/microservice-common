@@ -42,8 +42,7 @@
             <mat-panel-description>&nbsp;</mat-panel-description>
           </mat-expansion-panel-header>
           <mat-form-field class="full-width" appearance="fill" color="primary">
-            <textarea matInput placeholder="{{languageService.formatLanguage('organization.name', [])}}"
-                      formControlName="description"></textarea>
+            <textarea matInput placeholder="{{languageService.formatLanguage('organization.name', [])}}" formControlName="description"></textarea>
           </mat-form-field>
         </mat-expansion-panel>
 
@@ -70,7 +69,7 @@
           </div>
         </mat-expansion-panel>
 
-        <mat-expansion-panel hideToggle formGroupName="newAccountSetting">
+        <mat-expansion-panel hideToggle="false" formGroupName="newAccountSetting" expanded="true">
           <mat-expansion-panel-header>
             <mat-panel-title>{{languageService.formatLanguage('product.newAccountSetting', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
@@ -96,7 +95,7 @@
           </mat-form-field>
         </mat-expansion-panel>
 
-        <mat-expansion-panel hideToggle>
+        <mat-expansion-panel hideToggle="false" expanded="true">
           <mat-expansion-panel-header>
             <mat-panel-title>{{languageService.formatLanguage('product.currencies', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
@@ -118,61 +117,137 @@
 
         <mat-expansion-panel hideToggle>
           <mat-expansion-panel-header>
-            <mat-panel-title>{{languageService.formatLanguage('product.internalControl', [])}}</mat-panel-title>
+            <mat-panel-title>{{languageService.formatLanguage('depositProduct.internalControl', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
           </mat-expansion-panel-header>
-          TBD earlyClosurePeriod & daysToSetToDormant
+          <div>
+            <mat-checkbox color="accent" formControlName="enableEarlyClosurePeriod"></mat-checkbox>
+            <mat-label>&nbsp;{{languageService.formatLanguage('depositProduct.earlyClosurePeriod', [])}}&nbsp;</mat-label>
+            <mat-form-field *ngIf="addDepositProductForm.value.enableEarlyClosurePeriod">
+              <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.earlyClosurePeriodDesc', [])}}" formControlName="earlyClosurePeriod">
+            </mat-form-field>
+            <mat-icon aria-hidden="false" fontIcon="help" matTooltip="{{languageService.formatLanguage('depositProduct.earlyClosurePeriodDesc', [])}}"></mat-icon>
+          </div>
+          <div>
+            <mat-checkbox color="accent" formControlName="autoSetAsDormant">
+              {{languageService.formatLanguage('depositProduct.autoDormantAccount', [])}}
+            </mat-checkbox>
+            <mat-label *ngIf="addDepositProductForm.value.autoSetAsDormant">&nbsp;{{languageService.formatLanguage('depositProduct.domainAfterLabel', [])}}&nbsp;</mat-label>
+            <mat-form-field *ngIf="addDepositProductForm.value.autoSetAsDormant">
+              <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.autoDormantAccount', [])}}" formControlName="daysToSetToDormant">
+            </mat-form-field>
+            <mat-label *ngIf="addDepositProductForm.value.autoSetAsDormant">&nbsp;{{languageService.formatLanguage('depositProduct.domainDaysLabel', [])}}</mat-label>
+          </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel hideToggle *ngIf="hasCurrenciesSelected()">
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{languageService.formatLanguage('depositProduct.interestRate.label', [])}}</mat-panel-title>
+            <mat-panel-description>&nbsp;</mat-panel-description>
+          </mat-expansion-panel-header>
+          <mat-checkbox color="accent" formControlName="enableInterestRate">
+            {{languageService.formatLanguage('depositProduct.interestRate.enableInterestRate', [])}}
+          </mat-checkbox>
+
+          <app-deposit-interest-rate-input [supportedCurrencies]="addDepositProductForm.value.currencies ? addDepositProductForm.value.currencies : []"
+               formControlName="interestRate" *ngIf="addDepositProductForm.value.enableInterestRate"></app-deposit-interest-rate-input>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel hideToggle="false" *ngIf="hasCurrenciesSelected()">
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{languageService.formatLanguage('depositProduct.overdrafts', [])}}</mat-panel-title>
+            <mat-panel-description>&nbsp;</mat-panel-description>
+          </mat-expansion-panel-header>
+          <mat-checkbox color="accent" formControlName="allowOverdrafts">
+            {{languageService.formatLanguage('depositProduct.allowOverdrafts', [])}}
+          </mat-checkbox>
+          <div *ngIf="addDepositProductForm.value.allowOverdrafts">
+            <mat-label>&nbsp;{{languageService.formatLanguage('depositProduct.overdraftsLimit', [])}}:&nbsp;</mat-label>
+            <app-currency-value-input [supportedCurrencies]="addDepositProductForm.value.currencies ? addDepositProductForm.value.currencies : []"
+              formControlName="maxOverdraftLimit"></app-currency-value-input>
+
+            <mat-label>{{languageService.formatLanguage('creditArrangementManaged.label', [])}}:&nbsp;</mat-label>
+            <mat-form-field appearance="fill" color="primary">
+              <mat-select formControlName="type" required formControlName="overdraftsUnderCreditArrangementManaged">
+                <mat-option [value]="creditArrangementManagedEnum.OPTIONAL">{{languageService.formatLanguage('creditArrangementManaged.OPTIONAL', [])}}</mat-option>
+                <mat-option [value]="creditArrangementManagedEnum.REQUIRED">{{languageService.formatLanguage('creditArrangementManaged.REQUIRED', [])}}</mat-option>
+                <mat-option [value]="creditArrangementManagedEnum.NO">{{languageService.formatLanguage('creditArrangementManaged.NO', [])}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <app-deposit-interest-rate-input [supportedCurrencies]="addDepositProductForm.value.currencies ? addDepositProductForm.value.currencies : []"
+              formControlName="overdraftsInterest"></app-deposit-interest-rate-input>
+          </div>
         </mat-expansion-panel>
 
         <mat-expansion-panel hideToggle>
           <mat-expansion-panel-header>
-            <mat-panel-title>{{languageService.formatLanguage('product.overdrafts', [])}}</mat-panel-title>
+            <mat-panel-title>{{languageService.formatLanguage('depositProduct.fixedDeposit', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
           </mat-expansion-panel-header>
-          TBD
-          allowOverdrafts: boolean = false;
-          overdraftsInterest: DepositInterestRate | null = new DepositInterestRate();
-          maxOverdraftLimit: number | null = 0.0;
-          overdraftsUnderCreditArrangementManaged: CreditArrangementManaged | null = CreditArrangementManaged.NO;
+          <mat-checkbox color="accent" formControlName="enableTermDeposit">
+            {{languageService.formatLanguage('depositProduct.enableTermDeposit', [])}}
+          </mat-checkbox>
+          <table *ngIf="addDepositProductForm.value.enableTermDeposit">
+            <thead>
+              <tr>
+                <th></th>
+                <th>{{languageService.formatLanguage('depositProduct.termDepositDefault', [])}}</th>
+                <th>{{languageService.formatLanguage('depositProduct.termDepositMax', [])}}</th>
+                <th>{{languageService.formatLanguage('depositProduct.termDepositMin', [])}}</th>
+                <th>{{languageService.formatLanguage('depositProduct.termDepositUnit', [])}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{languageService.formatLanguage('depositProduct.termLength', [])}}</td>
+                <td>
+                  <mat-form-field appearance="fill" color="primary">
+                    <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.termDepositDefault', [])}}" formControlName="defaultTermLength">
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field appearance="fill" color="primary">
+                    <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.termDepositMax', [])}}" formControlName="maxTermLength">
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field appearance="fill" color="primary">
+                    <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.termDepositMin', [])}}" formControlName="minTermLength">
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field appearance="fill" color="primary">
+                    <mat-select required formControlName="termUnit">
+                        <mat-option *ngFor="let unit of allTermsUnit" [value]="unit">
+                            {{languageService.formatLanguage('depositProduct.termDepositUnit_' + unit, [])}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </mat-expansion-panel>
 
         <mat-expansion-panel hideToggle>
           <mat-expansion-panel-header>
-            <mat-panel-title>{{languageService.formatLanguage('product.fixedDeposit', [])}}</mat-panel-title>
+            <mat-panel-title>{{languageService.formatLanguage('depositProduct.depositLimits', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
           </mat-expansion-panel-header>
-          TBD
-          termUnit: FrequencyOptionYearly | null = FrequencyOptionYearly.DAY;
-          minTermLength: number | null = 0.0;
-          maxTermLength: number | null = 0.0;
-          defaultTermLength: number | null = 0.0;
-          allowDepositAfterMaturityDate: boolean | null = false;
+          <app-deposit-limit-input [supportedCurrencies]="addDepositProductForm.value.currencies ? addDepositProductForm.value.currencies : []"
+            formControlName="depositLimits"></app-deposit-limit-input>
         </mat-expansion-panel>
 
         <mat-expansion-panel hideToggle>
           <mat-expansion-panel-header>
-            <mat-panel-title>{{languageService.formatLanguage('product.interestRate', [])}}</mat-panel-title>
+            <mat-panel-title>{{languageService.formatLanguage('depositProduct.withdrawalLimit', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
           </mat-expansion-panel-header>
-          TBD
+          <app-withdrawal-limit-input [supportedCurrencies]="addDepositProductForm.value.currencies ? addDepositProductForm.value.currencies : []"
+            formControlName="withdrawalLimits"></app-withdrawal-limit-input>
         </mat-expansion-panel>
 
-        <mat-expansion-panel hideToggle>
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{languageService.formatLanguage('product.depositLimits', [])}}</mat-panel-title>
-            <mat-panel-description>&nbsp;</mat-panel-description>
-          </mat-expansion-panel-header>
-          TBD
-        </mat-expansion-panel>
-
-        <mat-expansion-panel hideToggle>
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{languageService.formatLanguage('product.withdrawalLimit', [])}}</mat-panel-title>
-            <mat-panel-description>&nbsp;</mat-panel-description>
-          </mat-expansion-panel-header>
-          TBD
-        </mat-expansion-panel>
-        
         <app-general-error-panel [message]="message" errorPrefix="depositProduct.error."></app-general-error-panel>
 
       </form>

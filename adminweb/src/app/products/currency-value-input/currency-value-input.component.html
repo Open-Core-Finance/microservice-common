@@ -1,0 +1,20 @@
+<div>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>{{languageService.formatLanguage("currency", [])}}</th>
+                    <th>{{languageService.formatLanguage("limitValue", [])}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let val of values">
+                    <td>{{val.currencyName}}</td>
+                    <td>
+                        <input type="number" matInput placeholder="{{languageService.formatLanguage('limitValue', [])}}" [(ngModel)]="val.limit" required>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
