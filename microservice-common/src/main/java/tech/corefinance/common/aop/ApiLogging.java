@@ -114,4 +114,8 @@ public class ApiLogging extends MethodDataLoging {
         log.debug("== Request header <=   END");
     }
 
+    @Override
+    protected Logger getLog() {
+        return log;
+    }
 }

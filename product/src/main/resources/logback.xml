@@ -30,10 +30,9 @@
 		</layout>
 	</appender>
 
-	<!-- Logs for APIs classes -->
-	<logger name="tech.corefinance" level="DEBUG" />
-
 	<!-- Spring framework logs. Should not turn to debug unless you know what you're doing. It's annoyed!!! -->
+	<logger name="org.springframework.web.method.HandlerMethod" level="DEBUG" />
+	<logger name="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver" level="DEBUG" />
 	<logger name="org.springframework" level="WARN" />
 <!--	<logger name="org.springframework.data.jpa" level="DEBUG" />-->
 	<logger name="org.hibernate" level="WARN" />
@@ -41,6 +40,9 @@
 	<logger name="tech.corefinance.common.audit" level="WARN" />
 	<logger name="tech.corefinance.common.aop.ApiAuthorizationCheck" level="WARN" />
 	<logger name="tech.corefinance.common.service.JwtServiceImpl" level="WARN" />
+
+	<!-- Logs for APIs classes -->
+	<logger name="tech.corefinance" level="DEBUG" />
 
 	<root level="INFO">
 		<appender-ref ref="STDOUT" />

@@ -12,7 +12,7 @@
         <tbody>
             <tr *ngFor="let limit of value; let i = index;">
                 <td>
-                    <mat-form-field *ngIf="currenciesToDisplay.length > 1">
+                    <mat-form-field *ngIf="currenciesToDisplay.length > 1" appearance="fill" color="primary">
                         <mat-select [(ngModel)]="limit.currencyId" required (valueChange)="limitCurrencyChanged($event, limit)">
                             <mat-option *ngFor="let currency of currenciesToDisplay" [value]="currency.id">
                                 {{currency.name}}

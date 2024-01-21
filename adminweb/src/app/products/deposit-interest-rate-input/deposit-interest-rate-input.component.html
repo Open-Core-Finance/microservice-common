@@ -80,33 +80,10 @@
         <mat-checkbox color="accent" [(ngModel)]="value.allowNegativeInterestRate">
             {{languageService.formatLanguage('depositProduct.interestRate.allowNegativeInterestRate', [])}}
         </mat-checkbox>
-        <div *ngIf="value.interestRateConstraints.length > 0">
-            <h3>{{languageService.formatLanguage('depositProduct.interestRate.interestRateConstraints', [])}}</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>{{languageService.formatLanguage('currency', [])}}</th>
-                        <th>{{languageService.formatLanguage('depositProduct.interestRate.interestRateDefault', [])}}</th>
-                        <th>{{languageService.formatLanguage('depositProduct.interestRate.interestRateMin', [])}}</th>
-                        <th>{{languageService.formatLanguage('depositProduct.interestRate.interestRateMax', [])}}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let constr of value.interestRateConstraints">
-                        <td>{{constr.currencyName}}</td>
-                        <td>
-                            <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.interestRate.interestRateDefault', [])}}" [(ngModel)]="constr.defaultVal">
-                        </td>
-                        <td>
-                            <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.interestRate.interestRateMin', [])}}" [(ngModel)]="constr.minVal">
-                        </td>
-                        <td>
-                            <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.interestRate.interestRateMax', [])}}" [(ngModel)]="constr.maxVal">
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <app-value-constraints-input labelKey="depositProduct.interestRate.interestRateConstraints" labelKeyDefaultVal="depositProduct.interestRate.interestRateDefault"
+            labelKeyMaxVal="depositProduct.interestRate.interestRateMax" labelKeyMinVal="depositProduct.interestRate.interestRateMin"
+            [value]="value.interestRateConstraints" *ngIf="value.interestRateConstraints.length > 0">
+        </app-value-constraints-input>
     </div>
 
     <div>

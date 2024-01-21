@@ -1,10 +1,10 @@
-import { ValueConstraint } from "./ValueConstraint";
+import { CurrencyLimitValue, ValueConstraint } from "./ValueConstraint";
 
 export class ArrearsSetting {
     /**
      * Arrears Tolerance Period in Days.
      */
-    tolerancePeriod: ValueConstraint | null = null;
+    tolerancePeriods: ValueConstraint[] = [];
     /**
      * Include/Exclude Non-Working Days in Arrears Tolerance Period and Penalty Calculation Method.
      */
@@ -12,15 +12,15 @@ export class ArrearsSetting {
     /**
      * Arrears Days Calculated From.
      */
-    daysCalculatedFrom: ArrearsDaysCalculatedFrom | null = null;
+    daysCalculatedFrom: ArrearsDaysCalculatedFrom | null = ArrearsDaysCalculatedFrom.OLDEST_LATE_REPAYMENT;
     /**
      * Arrears Tolerance Amount (% of Outstanding Principal).
      */
-    toleranceAmount: ValueConstraint | null = null;
+    toleranceAmounts: ValueConstraint[] = [];
     /**
      * With a floor (minimum).
      */
-    floor: number | null = null;
+    floors: CurrencyLimitValue[] =[];
 }
 
 export enum ArrearsDaysCalculatedFrom {

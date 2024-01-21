@@ -15,6 +15,8 @@ import { CommonService } from "../services/common.service";
 import { HttpClient } from "@angular/common/http";
 import { FormBuilder } from "@angular/forms";
 import { OrganizationService } from "../services/organization.service";
+import { AccountState } from "../classes/accounts/AccountState";
+import { CurrencyBasesValue } from "../classes/products/ValueConstraint";
 
 @Component({
     template: ''
@@ -28,6 +30,9 @@ export abstract class GeneralProductAddComponent<T extends Product> extends Gene
     protected lastOrganization: Organization | null = null;
     protected currencies: Currency[] = [];
     protected currenciesSubscription: Subscription | undefined;
+    protected accountStateEnum = AccountState;
+    protected allAccountStates = Object.keys(AccountState);
+    protected currenciesToDisplay: Currency[] = [];
 
     constructor(public override languageService: LanguageService, protected override commonService: CommonService,
         protected override restService: RestService, protected override http: HttpClient, protected override formBuilder: FormBuilder,
@@ -111,5 +116,54 @@ export abstract class GeneralProductAddComponent<T extends Product> extends Gene
     }
 
     protected currenciesChanged() {
+        this.currenciesToDisplay = [];
+        const form = this.getAddForm();
+        const supportedCurrencies = form.value.currencies ? form.value.currencies : [];
+        for (let currency of this.currencies) {
+            for(let  i = 0; i < supportedCurrencies.length; i++) {
+                const c = supportedCurrencies[i];
+                if (c == currency.id) {
+                    this.currenciesToDisplay.push(currency);
+                    break;
+                }
+            }
+        }
     }
+
+    protected cleanUpConstraints<T extends CurrencyBasesValue>(constraints: T[]) {
+        for (let i = 0; i < constraints.length; i++) {
+          const constraint = constraints[i];
+          var found = false;
+          for(let  j = 0; j < this.currenciesToDisplay.length; j++) {
+            const currency = this.currenciesToDisplay[j];
+            if (constraint.currencyId == currency.id) {
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            constraints.splice(i, 1);
+            i--;
+          }
+        }
+      }
+    
+      protected addMissingConstraints<T extends CurrencyBasesValue>(constraints: T[], newItem: T) {
+        for(let  j = 0; j < this.currenciesToDisplay.length; j++) {
+          const currency = this.currenciesToDisplay[j];
+          var found = false;
+          for (let i = 0; i < constraints.length; i++) {
+            const constraint = constraints[i];
+            if (constraint.currencyId == currency.id) {
+              found = true;
+              break;
+            }
+          }
+          if (!found) {
+            newItem.currencyId = currency.id;
+            newItem.currencyName = currency.name;
+            constraints.push(newItem);
+          }
+        }
+      }
 }

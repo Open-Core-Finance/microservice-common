@@ -1,7 +1,6 @@
 import { Component, Input, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { ActionMenuItem, LanguageMenuItem, MenuGroup, MenuItem } from '../classes/Menu';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
 import { AuthenticationService } from '../services/authentication.service';
 import { OrganizationService } from '../services/organization.service';
 

@@ -5,27 +5,25 @@ export class RepaymentCollection {
     /**
      * Horizontal or Vertical.
      */
-    repaymentHorizontal: boolean | null = null;
+    repaymentHorizontal: boolean = true;
+    acceptPrePayments = true;
     /**
      * Accept Pre-Payments. Whether interest that's not yet applied in the account can be paid in advance.
      */
-    acceptInterestPrePayments: boolean | null = null;
-    /**
-     * Accept Pre-Payments. Whether interest that's not yet applied in the account can be paid in advance.
-     */
-    acceptPostdatedPrePayments: boolean | null = null;
-    /**
-     * Dynamic term loan. Auto Apply Interest on Pre-Payment.
-     */
-    autoApplyInterestPrePayment: boolean | null = null;
+    autoApplyInterestPrePayments: boolean  = true;
     /**
      * Dynamic term loan Pre-Payment Recalculation.
      */
-    prePaymentRecalculation: PrePaymentRecalculation | null = null;
+    prePaymentRecalculation: PrePaymentRecalculation = PrePaymentRecalculation.RECALCULATE_SCHEDULE_KEEP_SAME_NUMBER_OF_TERMS;
+
+    acceptPrepaymentFutureInterest = false;
+
     /**
      *  Arrange repayment types according to which should be paid first and last on partial or over-payments.
      */
-    repaymentTypesOrder: RepaymentType[] = [];
+    repaymentTypesOrder: RepaymentType[] = [
+        RepaymentType.FEE, RepaymentType.PENALTY, RepaymentType.INTEREST, RepaymentType.PRINCIPAL
+    ];
 }
 
 export enum PrePaymentRecalculation {
@@ -52,44 +50,48 @@ export enum RepaymentType {
 }
 
 export class RepaymentScheduling {
+    repaymentMethod = RepaymentSchedulingMethod.INTERVAL;
     /**
      * Interval repayment scheduling value.
      */
-    intervalValue: number | null = null;
+    intervalValue: number | null = 1;
     /**
      * Interval repayment scheduling option.
      */
-    intervalOption: FrequencyOption | null = null;
+    intervalOption: FrequencyOption | null = FrequencyOption.MONTH;
     /**
      * Fixed days repayment scheduling value.
      */
     repaymentDays: number[] = [];
 
-    shortMonthHandling: ShortMonthHandling | null = null;
-    installmentsConstraint: ValueConstraint | null = null;
+    shortMonthHandling: ShortMonthHandling | null = ShortMonthHandling.LAST_DAY_OF_MONTH;
+    installmentsConstraints: ValueConstraint[] = [];
     /**
      * Automatically add a default offset in days to the first installment due date and specify
      * the minimum and maximum days that can be added to the first installment date.
      */
-    firstDueDateOffsetConstraint: ValueConstraint | null = null;
+    firstDueDateOffsetConstraints: ValueConstraint[] = [];
     /**
      * Collect Principal Every X Repayments.
      */
-    collectPrincipalEveryRepayments: number | null = null;
+    collectPrincipalEveryRepayments: number | null = 1;
+
+    gracePeriodType: GracePeriodType = GracePeriodType.NO;
     /**
      * Principal Grace Period. If this option is not null then Pure Grace Period must be null.
      */
-    principalGracePeriod: ValueConstraint | null = null;
-    /**
-     * Pure Grace Period. If this option is not null then Principal Grace Period must be null.
-     */
-    pureGracePeriod: ValueConstraint | null = null;
+    gracePeriodsConstraints: ValueConstraint[] = [];
 
     scheduleRounding: RepaymentScheduleRounding = RepaymentScheduleRounding.NO_ROUNDING;
+    currencyRounding = RepaymentCurrencyRounding.NO_ROUNDING;
 
     nonWorkingDaysRescheduling: NonWorkingDaysRescheduling = NonWorkingDaysRescheduling.NO_RESCHEDULING;
 
     repaymentsScheduleEditing: RepaymentsScheduleEditing = new RepaymentsScheduleEditing();
+}
+
+export enum RepaymentSchedulingMethod {
+    INTERVAL = "INTERVAL", FIXED_DAY_OF_MONTH = "FIXED_DAY_OF_MONTH"
 }
 
 export enum ShortMonthHandling {
@@ -97,6 +99,12 @@ export enum ShortMonthHandling {
 }
 
 export enum RepaymentScheduleRounding {
+    NO_ROUNDING = "NO_ROUNDING",
+    ROUND_REMAINDER_INTO_LAST_REPAYMENT = "ROUND_REMAINDER_INTO_LAST_REPAYMENT",
+    ROUND_PRINCIPAL_AND_INTEREST_REMAINDER_INTO_LAST_REPAYMENT = "ROUND_PRINCIPAL_AND_INTEREST_REMAINDER_INTO_LAST_REPAYMENT"
+}
+
+export enum RepaymentCurrencyRounding {
     NO_ROUNDING = "NO_ROUNDING", ROUND_TO_NEAREST = "ROUND_TO_NEAREST", ROUND_UP_TO_NEAREST = "ROUND_UP_TO_NEAREST"
 }
 
@@ -106,9 +114,22 @@ export enum NonWorkingDaysRescheduling {
 }
 
 export class RepaymentsScheduleEditing {
-
+    // All
     adjustPaymentDates: boolean = false;
+    // All
     adjustPrincipalPaymentSchedule: boolean = false;
+    // Dynamic term loan
     adjustNumberInstallments: boolean = false;
+    // Dynamic term loan & Fixed term loan
     configurePaymentHolidays: boolean = false;
+    // Not Dynamic term loan
+    adjustFeePaymentSchedule = false;
+    // Not Dynamic term loan
+    adjustPenaltyPaymentSchedule = false;
+    // Fixed term loan
+    adjustInterestPaymentSchedule = false;
+}
+
+export enum GracePeriodType {
+    NO = "NO", PRINCIPAL = "PRINCIPAL", PURE = "PURE"
 }

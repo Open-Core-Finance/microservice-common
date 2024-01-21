@@ -31,7 +31,7 @@
             <span *ngIf="b.decimalMark == '.'">{{languageService.formatLanguage("decimalMarkPeriod", [])}}</span>
             <span *ngIf="b.decimalMark == ','">{{languageService.formatLanguage("decimalMarkComma", [])}}</span>
           </td>
-          <td><mat-icon aria-hidden="false" fontIcon="delete" (click)="removeBranch(b)"></mat-icon></td>
+          <td><mat-icon aria-hidden="false" fontIcon="delete" (click)="removeCurrency(b)"></mat-icon></td>
         </tr>
       </tbody>
     </table>

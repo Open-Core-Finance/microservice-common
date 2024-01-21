@@ -1,9 +1,6 @@
 package tech.corefinance.product.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,31 +17,45 @@ import java.util.List;
 @Table(name = "loan_product")
 public class LoanProduct extends Product {
 
-    private double loanMin;
-    private double loanMax;
-    private double loanDefault;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "loan_values")
+    private List<ValueConstraint> loanValues;
+
     @Enumerated(EnumType.STRING)
+    @Column(name = "under_credit_arrangement_managed")
     private CreditArrangementManaged underCreditArrangementManaged;
     @JdbcTypeCode(SqlTypes.JSON)
     @NotNull
+    @Column(name = "interest_rate")
     private LoanInterestRate interestRate;
     @JdbcTypeCode(SqlTypes.JSON)
     @NotNull
+    @Column(name = "repayment_scheduling")
     private RepaymentScheduling repaymentScheduling;
     @JdbcTypeCode(SqlTypes.JSON)
     @NotNull
+    @Column(name = "repayment_collection")
     private RepaymentCollection repaymentCollection;
     @JdbcTypeCode(SqlTypes.JSON)
     @NotNull
+    @Column(name = "arrears_setting")
     private ArrearsSetting arrearsSetting;
     @JdbcTypeCode(SqlTypes.JSON)
     @NotNull
+    @Column(name = "penalty_setting")
     private PenaltySetting penaltySetting;
 
+    @Column(name = "close_dormant_accounts")
     private boolean closeDormantAccounts;
+    @Column(name = "lock_arrears_accounts")
     private boolean lockArrearsAccounts;
+    @Column(name = "cap_charges")
     private boolean capCharges;
 
-    private Double percentGuarantors;
-    private Double percentCollateral;
+    @Column(name = "percent_security_per_loan")
+    private Double percentSecurityPerLoan;
+    @Column(name = "enable_guarantors")
+    private boolean enableGuarantors;
+    @Column(name = "enable_collateral")
+    private boolean enableCollateral;
 }

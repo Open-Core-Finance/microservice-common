@@ -2,7 +2,6 @@ package tech.corefinance.product.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -38,17 +37,22 @@ public abstract class Product implements GenericModel<String>, AuditableEntity<Z
     private String description;
     private boolean activated;
     @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "product_availabilities")
     private List<ProductAvailability> productAvailabilities;
     @NotNull(message = "new_account_type_empty")
     @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "new_account_setting")
     private ProductNewAccountSetting newAccountSetting;
     @NotNull(message = "currencies_empty")
     private String[] currencies;
 
     // Product Fees
+    @Column(name = "allow_arbitrary_fees")
     private boolean allowArbitraryFees;
+    @Column(name = "show_inactive_fees")
     private boolean showInactiveFees;
     @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "product_fees")
     private List<ProductFee> productFees;
 
     @CreatedDate

@@ -80,7 +80,7 @@ export class CurrenciesSelectionComponent implements OnInit, ControlValueAccesso
     }
     if (!contain && selectedCurrency) {
       this.selectedCurrenciesDisplay.push(selectedCurrency);
-      this.propagateChange(this.selectedCurrenciesDisplay.map((value, _, __) => value.id));
+      this.triggerCurrenciesChanged();
     }
     this._selectedCurrency = null;
   }
@@ -96,7 +96,7 @@ export class CurrenciesSelectionComponent implements OnInit, ControlValueAccesso
     return false;
   }
 
-  removeBranch(b: Currency) {
+  removeCurrency(b: Currency) {
     let found = false;
     for (let i = 0; i < this.selectedCurrenciesDisplay.length; i++) {
       const branch = this.selectedCurrenciesDisplay[i];
@@ -106,11 +106,16 @@ export class CurrenciesSelectionComponent implements OnInit, ControlValueAccesso
       }
     }
     if (found) {
-      this.propagateChange(this.selectedCurrenciesDisplay.map((value, _, __) => value.id));
+      this.triggerCurrenciesChanged();
     }
     if (this.input) {
       this.input.nativeElement.value = "";
     }
     this._selectedCurrency = null;
+  }
+
+  private triggerCurrenciesChanged() {
+    const value = this.selectedCurrenciesDisplay.map((value, _, __) => value.id);
+    this.propagateChange(value);
   }
 }

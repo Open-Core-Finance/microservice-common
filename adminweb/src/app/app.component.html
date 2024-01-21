@@ -1,5 +1,5 @@
 <mat-drawer-container class="container" autosize *ngIf="loginSession" hasBackdrop="false">
-    <mat-drawer #drawer mode="side">
+    <mat-drawer #drawer mode="side" opened="true">
         <app-left-menu [menuGroups]="menuGroups" (menuClosedEmitter)="toggleMenuClicked()" #leftMenu></app-left-menu>
     </mat-drawer>
     <mat-drawer-content>

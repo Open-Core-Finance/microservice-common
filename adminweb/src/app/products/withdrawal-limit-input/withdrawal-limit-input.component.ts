@@ -92,14 +92,10 @@ export class WithdrawalLimitInputComponent implements OnInit, ControlValueAccess
         const c = supportedCurrencies[i];
         if (c == value.id) {
           this.currenciesToDisplay.push(value);
-          this.checkAndUpdateCurrency(value);
           break;
         }
       }
     });
-  }
-
-  private checkAndUpdateCurrency(currency: Currency) {
   }
 
   limitCurrencyChanged($event: any, limit: WithdrawalLimit) {

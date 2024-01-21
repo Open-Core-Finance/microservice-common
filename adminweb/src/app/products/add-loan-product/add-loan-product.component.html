@@ -94,6 +94,13 @@
           <mat-form-field *ngIf="addLoanProductForm.value.newAccountSetting?.type==newAccountIdTypeEnum.INCREASEMENT">
             <input type="number" matInput placeholder="{{languageService.formatLanguage('product.increasementStartingFrom', [])}}" formControlName="increasementStartingFrom">
           </mat-form-field>
+
+          <mat-label>{{languageService.formatLanguage('product.accountInitState', [])}}:&nbsp;</mat-label>
+          <mat-form-field appearance="fill" color="primary">
+              <mat-select required formControlName="initialState">
+                  <mat-option *ngFor="let state of allAccountStates" [value]="state">{{languageService.formatLanguage('product.accountInitState_' + state, [])}}</mat-option>
+              </mat-select>
+          </mat-form-field>
         </mat-expansion-panel>
 
         <mat-expansion-panel hideToggle="false" expanded="true">
@@ -101,7 +108,7 @@
             <mat-panel-title>{{languageService.formatLanguage('product.currencies', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
           </mat-expansion-panel-header>
-          <app-currencies-selection formControlName="currencies"></app-currencies-selection>
+          <app-currencies-selection formControlName="currencies" (ngModelChange)="currenciesChanged();"></app-currencies-selection>
         </mat-expansion-panel>
 
         <mat-expansion-panel hideToggle="false">
@@ -116,81 +123,155 @@
           </app-product-fee-input>
         </mat-expansion-panel>
 
-        <mat-expansion-panel hideToggle="false">
+        <mat-expansion-panel hideToggle="false" expanded="true">
           <mat-expansion-panel-header>
-            <mat-panel-title>{{languageService.formatLanguage('product.loanAmount', [])}}</mat-panel-title>
+            <mat-panel-title>{{languageService.formatLanguage('loanProduct.loanAmount', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
           </mat-expansion-panel-header>
-          TBD
-          loanMin: number = 0.0;
-          loanMax: number = 0.0;
-          loanDefault: number = 0.0;
-          
-          underCreditArrangementManaged: CreditArrangementManaged | null = null;
+          <app-value-constraints-input labelKey="depositProduct.interestRate.interestRateConstraints" labelKeyDefaultVal="loanProduct.loanDefault"
+                labelKeyMaxVal="loanProduct.loanMax" labelKeyMinVal="loanProduct.loanMin" formControlName="loanValues">
+          </app-value-constraints-input>
+          <mat-label>{{languageService.formatLanguage('creditArrangementManaged.label', [])}}:&nbsp;</mat-label>
+            <mat-form-field appearance="fill" color="primary">
+              <mat-select required formControlName="underCreditArrangementManaged">
+                <mat-option [value]="creditArrangementManagedEnum.OPTIONAL">{{languageService.formatLanguage('creditArrangementManaged.OPTIONAL', [])}}</mat-option>
+                <mat-option [value]="creditArrangementManagedEnum.REQUIRED">{{languageService.formatLanguage('creditArrangementManaged.REQUIRED', [])}}</mat-option>
+                <mat-option [value]="creditArrangementManagedEnum.NO">{{languageService.formatLanguage('creditArrangementManaged.NO', [])}}</mat-option>
+              </mat-select>
+            </mat-form-field>
         </mat-expansion-panel>
 
         <mat-expansion-panel hideToggle="false">
           <mat-expansion-panel-header>
-            <mat-panel-title>{{languageService.formatLanguage('product.interestRate', [])}}</mat-panel-title>
+            <mat-panel-title>{{languageService.formatLanguage('loanProduct.interestRate.label', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
           </mat-expansion-panel-header>
-          TBD
+          <app-loan-interest-rate-input [supportedCurrencies]="addLoanProductForm.value.currencies ? addLoanProductForm.value.currencies : []"
+              formControlName="interestRate"></app-loan-interest-rate-input>
         </mat-expansion-panel>
 
         <mat-expansion-panel hideToggle="false">
           <mat-expansion-panel-header>
-            <mat-panel-title>{{languageService.formatLanguage('product.repaymentScheduling', [])}}</mat-panel-title>
+            <mat-panel-title>{{languageService.formatLanguage('loanProduct.repaymentScheduling', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
           </mat-expansion-panel-header>
-          TBD
+          <app-loan-repayment-scheduling-input [supportedCurrencies]="addLoanProductForm.value.currencies ? addLoanProductForm.value.currencies : []"
+            formControlName="repaymentScheduling"></app-loan-repayment-scheduling-input>
         </mat-expansion-panel>
 
         <mat-expansion-panel hideToggle="false">
           <mat-expansion-panel-header>
-            <mat-panel-title>{{languageService.formatLanguage('product.repaymentCollection', [])}}</mat-panel-title>
+            <mat-panel-title>{{languageService.formatLanguage('loanProduct.repaymentCollection', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
           </mat-expansion-panel-header>
-          TBD
+          <app-loan-repayment-collection-input [supportedCurrencies]="addLoanProductForm.value.currencies ? addLoanProductForm.value.currencies : []"
+            formControlName="repaymentCollection"></app-loan-repayment-collection-input>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel hideToggle="false" formGroupName="arrearsSetting">
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{languageService.formatLanguage('loanProduct.arrearsSetting', [])}}</mat-panel-title>
+            <mat-panel-description>&nbsp;</mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <app-value-constraints-input labelKey="arrearsSetting.tolerancePeriods"
+            labelKeyDefaultVal="arrearsSetting.tolerancePeriodsDefault" labelKeyMaxVal="arrearsSetting.tolerancePeriodsMax"
+            labelKeyMinVal="arrearsSetting.tolerancePeriodsMin" formControlName="tolerancePeriods">
+          </app-value-constraints-input>
+
+          <div>
+            <mat-label>{{languageService.formatLanguage('arrearsSetting.daysCalculatedFrom', [])}}:&nbsp;</mat-label>
+            <mat-form-field appearance="fill" color="primary">
+              <mat-select required formControlName="daysCalculatedFrom">
+                  <mat-option *ngFor="let option of allArrearsDaysCalculatedFroms" [value]="option">
+                      {{languageService.formatLanguage('arrearsSetting.daysCalculatedFrom_' + option, [])}}
+                  </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div>
+            <mat-label>{{languageService.formatLanguage('arrearsSetting.includeNonWorkingDay', [])}}:&nbsp;</mat-label>
+            <mat-form-field appearance="fill" color="primary">
+              <mat-select required formControlName="includeNonWorkingDay">
+                  <mat-option [value]="true">
+                      {{languageService.formatLanguage('arrearsSetting.includeNonWorkingDay_TRUE', [])}}
+                  </mat-option>
+                  <mat-option [value]="false">
+                    {{languageService.formatLanguage('arrearsSetting.includeNonWorkingDay_FALSE', [])}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <app-value-constraints-input labelKey="arrearsSetting.toleranceAmounts"
+            labelKeyDefaultVal="arrearsSetting.toleranceAmountsDefault" labelKeyMaxVal="arrearsSetting.toleranceAmountsMax"
+            labelKeyMinVal="arrearsSetting.toleranceAmountsMin" formControlName="toleranceAmounts">
+          </app-value-constraints-input>
+
+          <div *ngIf="addLoanProductForm.value.arrearsSetting?.floors?.length">
+            <mat-label>{{languageService.formatLanguage('arrearsSetting.floor', [])}}:&nbsp;</mat-label>
+            <app-currency-value-input [supportedCurrencies]="addLoanProductForm.value.currencies ? addLoanProductForm.value.currencies : []"
+                formControlName="floors"></app-currency-value-input>
+          </div>
+
+        </mat-expansion-panel>
+
+        <mat-expansion-panel hideToggle="false" formGroupName="penaltySetting">
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{languageService.formatLanguage('loanProduct.penaltySetting', [])}}</mat-panel-title>
+            <mat-panel-description>&nbsp;</mat-panel-description>
+          </mat-expansion-panel-header>
+          <mat-label>{{languageService.formatLanguage('penalty.calculationMethod', [])}}:&nbsp;</mat-label>
+          <mat-form-field appearance="fill" color="primary">
+            <mat-select required formControlName="calculationMethod">
+                <mat-option *ngFor="let option of allPenaltyCalculationMethods" [value]="option">
+                    {{languageService.formatLanguage('penalty.calculationMethod_' + option, [])}}
+                </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div *ngIf="addLoanProductForm.value.penaltySetting?.calculationMethod != penaltyCalculationMethodEnum.NONE">
+            <mat-label>{{languageService.formatLanguage('penalty.penaltyTolerancePeriod', [])}}:&nbsp;</mat-label>
+            <mat-form-field appearance="fill" color="primary">
+              <input type="number" matInput placeholder="{{languageService.formatLanguage('product.penaltyTolerancePeriod', [])}}"
+                formControlName="penaltyTolerancePeriod">
+            </mat-form-field>
+            <mat-label>&nbsp;{{languageService.formatLanguage('penalty.days', [])}}</mat-label>
+          </div>
+          <app-value-constraints-input [labelKey]="'penalty.constraintsTitle_' + addLoanProductForm.value.penaltySetting?.calculationMethod"
+            labelKeyDefaultVal="penalty.constraintDefault" labelKeyMaxVal="penalty.constraintMax" labelKeyMinVal="penalty.constraintMin"
+            formControlName="penaltyRateConstraints" *ngIf="addLoanProductForm.value.penaltySetting?.calculationMethod != penaltyCalculationMethodEnum.NONE">
+          </app-value-constraints-input>
         </mat-expansion-panel>
 
         <mat-expansion-panel hideToggle="false">
           <mat-expansion-panel-header>
-            <mat-panel-title>{{languageService.formatLanguage('product.arrearsSetting', [])}}</mat-panel-title>
+            <mat-panel-title>{{languageService.formatLanguage('loanProduct.internalControl', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
           </mat-expansion-panel-header>
-          TBD
-        </mat-expansion-panel>
-
-        <mat-expansion-panel hideToggle="false">
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{languageService.formatLanguage('product.penaltySetting', [])}}</mat-panel-title>
-            <mat-panel-description>&nbsp;</mat-panel-description>
-          </mat-expansion-panel-header>
-          TBD
-        </mat-expansion-panel>
-
-        <mat-expansion-panel hideToggle="false">
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{languageService.formatLanguage('product.internalControl', [])}}</mat-panel-title>
-            <mat-panel-description>&nbsp;</mat-panel-description>
-          </mat-expansion-panel-header>
-          TBD
-          closeDormantAccounts: boolean = false;
-          lockArrearsAccounts: boolean = false;
-          capCharges: boolean = false;
-        </mat-expansion-panel>
-
-        <mat-expansion-panel hideToggle="false">
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{languageService.formatLanguage('product.internalControl', [])}}</mat-panel-title>
-            <mat-panel-description>&nbsp;</mat-panel-description>
-          </mat-expansion-panel-header>
-          TBD
-          closeDormantAccounts: boolean = false;
-          lockArrearsAccounts: boolean = false;
-          capCharges: boolean = false;
-          percentGuarantors: boolean | null = false;
-          percentCollateral: boolean | null = false;
+          <mat-checkbox color="accent" formControlName="closeDormantAccounts">
+            {{languageService.formatLanguage('loanProduct.closeDormantAccounts', [])}}
+          </mat-checkbox>
+          <mat-checkbox color="accent" formControlName="lockArrearsAccounts">
+            {{languageService.formatLanguage('loanProduct.lockArrearsAccounts', [])}}
+          </mat-checkbox>
+          <mat-checkbox color="accent" formControlName="capCharges">
+            {{languageService.formatLanguage('loanProduct.capCharges', [])}}
+          </mat-checkbox>
+          <mat-checkbox color="accent" formControlName="enableGuarantors">
+            {{languageService.formatLanguage('loanProduct.enableGuarantors', [])}}
+          </mat-checkbox>
+          <mat-checkbox color="accent" formControlName="enableCollateral">
+            {{languageService.formatLanguage('loanProduct.enableCollateral', [])}}
+          </mat-checkbox>
+          <div *ngIf="addLoanProductForm.value.enableCollateral || addLoanProductForm.value.enableGuarantors">
+            <mat-label>{{languageService.formatLanguage('loanProduct.requiredSecurity', [])}}:&nbsp;</mat-label>
+            <mat-form-field appearance="fill" color="primary">
+              <input type="number" matInput placeholder="{{languageService.formatLanguage('loanProduct.requiredSecurity', [])}}"
+                     formControlName="percentSecurityPerLoan">
+            </mat-form-field>
+            <mat-label>&nbsp;{{languageService.formatLanguage('loanProduct.percentLoanAmount', [])}}</mat-label>
+          </div>
         </mat-expansion-panel>
 
         <app-general-error-panel [message]="message" errorPrefix="loanProduct.error."></app-general-error-panel>

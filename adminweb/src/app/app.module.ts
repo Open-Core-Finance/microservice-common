@@ -72,6 +72,11 @@ import { CurrencyValueInputComponent } from './products/currency-value-input/cur
 import { DepositInterestRateInputComponent } from './products/deposit-interest-rate-input/deposit-interest-rate-input.component';
 import { DepositLimitInputComponent } from './products/deposit-limit-input/deposit-limit-input.component';
 import { WithdrawalLimitInputComponent } from './products/withdrawal-limit-input/withdrawal-limit-input.component';
+import { LoanInterestRateInputComponent } from './products/loan-interest-rate-input/loan-interest-rate-input.component';
+import { LoanRepaymentSchedulingInputComponent } from './products/loan-repayment-scheduling-input/loan-repayment-scheduling-input.component';
+import { ValueConstraintsInputComponent } from './products/value-constraints-input/value-constraints-input.component';
+import { LoanRepaymentCollectionInputComponent } from './products/loan-repayment-collection-input/loan-repayment-collection-input.component';
+import { CdkDropList, CdkDrag} from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -93,9 +98,10 @@ import { WithdrawalLimitInputComponent } from './products/withdrawal-limit-input
     DepositProductComponent, AddDepositProductComponent, BranchesSelectionComponent, CurrenciesSelectionComponent,
     ProductTypeComponent, AddProductTypeComponent, ProductFeeInputComponent,
     AddGlProductComponent, GlProductComponent, CurrencyValueInputComponent,
-    AddCryptoProductComponent, CryptoProductComponent,
+    AddCryptoProductComponent, CryptoProductComponent, LoanRepaymentCollectionInputComponent,
     AddLoanProductComponent, LoanProductComponent, GeneralErrorPanelComponent,
-    DepositInterestRateInputComponent, DepositLimitInputComponent, WithdrawalLimitInputComponent
+    DepositInterestRateInputComponent, DepositLimitInputComponent, WithdrawalLimitInputComponent,
+    LoanInterestRateInputComponent, LoanRepaymentSchedulingInputComponent, ValueConstraintsInputComponent
   ],
   imports: [
     BrowserModule, FormsModule, ReactiveFormsModule,
@@ -104,7 +110,8 @@ import { WithdrawalLimitInputComponent } from './products/withdrawal-limit-input
     MatButtonModule, MatInputModule, MatMenuModule, MatIconModule, MatCardModule, MatSelectModule,
     MatExpansionModule, MatPaginatorModule, MatTableModule, MatSortModule, MatProgressSpinnerModule,
     MatDialogModule, MatAutocompleteModule, MatDatepickerModule, MatNativeDateModule, MatDividerModule,
-    MatListModule, MatToolbarModule, MatSidenavModule, AsyncPipe, MatCheckboxModule
+    MatListModule, MatToolbarModule, MatSidenavModule, AsyncPipe, MatCheckboxModule,
+    CdkDropList, CdkDrag
   ],
   providers: [
     {provide: MAT_DATE_FORMATS, useClass: CustomDateFormat},

@@ -1,6 +1,5 @@
 import { ArrearsSetting } from "./ArrearsSetting";
 import { CreditArrangementManaged } from "./CreditArrangementManaged";
-import { FrequencyOptionYearly } from "./FrequencyOption";
 import { InterestCalculationMethod } from "./InterestCalculationMethod";
 import { InterestDayInYear } from "./InterestDayInYear";
 import { InterestRate } from "./InterestRate";
@@ -11,56 +10,43 @@ import { ValueConstraint } from "./ValueConstraint";
 
 export class LoanProduct extends Product {
 
-    loanMin: number = 0.0;
-    loanMax: number = 0.0;
-    loanDefault: number = 0.0;
-    
-    underCreditArrangementManaged: CreditArrangementManaged | null = null;
-    
-    interestRate: LoanInterestRate | null = null;
-    repaymentScheduling: RepaymentScheduling | null = null;
-    repaymentCollection: RepaymentCollection | null = null;
-    arrearsSetting: ArrearsSetting | null = null;
-    penaltySetting: PenaltySetting | null = null;
+    loanValues: ValueConstraint[] = [];
+
+    underCreditArrangementManaged: CreditArrangementManaged | null = CreditArrangementManaged.OPTIONAL;
+
+    interestRate: LoanInterestRate | null = new LoanInterestRate();
+    repaymentScheduling: RepaymentScheduling | null = new RepaymentScheduling();
+    repaymentCollection: RepaymentCollection | null = new RepaymentCollection();
+    arrearsSetting: ArrearsSetting | null = new ArrearsSetting();
+    penaltySetting: PenaltySetting | null = new PenaltySetting();
 
     closeDormantAccounts: boolean = false;
     lockArrearsAccounts: boolean = false;
     capCharges: boolean = false;
 
-    percentGuarantors: boolean | null = false;
-    percentCollateral: boolean | null = false;
+    enableGuarantors = false;
+    enableCollateral = false;
+    percentSecurityPerLoan: number = 0.0;
 }
 
 export class LoanInterestRate implements InterestRate {
-    interestCalculationMethod: InterestCalculationMethod = InterestCalculationMethod.PERCENTAGE_PER_YEAR;
+    interestCalculationMethod: LoanInterestCalculationMethod = LoanInterestCalculationMethod.FLAT;
     accruedInterestPostingFrequency: AccruedInterestPostingFrequency = AccruedInterestPostingFrequency.REPAYMENT;
     interestType: LoanInterestType = LoanInterestType.CAPITALIZED;
+    interestCalculationPoint: InterestCalculationMethod | null = InterestCalculationMethod.PERCENTAGE_PER_MONTH;
+    percentPerDay = 0;
     interestDayInYear: InterestDayInYear = InterestDayInYear.FIXED_365_DAYS;
     /**
      * Interest Rate Constraints (%) for fixed interest rate. <br/>
      * Interest Spread Constraints (%) for index rate source.
      */
-    interestRateConstraint: ValueConstraint | null = null;
+    interestRateConstraints: ValueConstraint[] = [];
     interestRateIndexSource = "";
     repaymentsInterestCalculation: RepaymentsInterestCalculation | null = RepaymentsInterestCalculation.ACTUAL_NUMBER_OF_DAYS;
+}
 
-    /**
-     * Interest Rate Floor (%).
-     */
-    rateFloor: number | null = 0.0;
-    /**
-     * Interest Rate Ceiling (%).
-     */
-    rateCeiling: number | null = 0.0;
-
-    /**
-     * Interest Rate Review Frequency.
-     */
-    reviewFrequency: number | null = 0;
-    /**
-     * Interest Rate Review Frequency type as Days|Weeks|Months.
-     */
-    reviewFrequencyType: FrequencyOptionYearly = FrequencyOptionYearly.MONTH;
+export enum LoanInterestCalculationMethod {
+    FLAT = "FLAT", DECLINING_BALANCE = "DECLINING_BALANCE", DECLINING_BALANCE_DISCOUNTED = "DECLINING_BALANCE_DISCOUNTED"
 }
 
 export enum AccruedInterestPostingFrequency {
