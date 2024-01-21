@@ -1,8 +1,10 @@
 package tech.corefinance.common.aop;
 
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.slf4j.Logger;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +16,7 @@ import java.util.LinkedList;
 @Aspect
 @Component
 @ConditionalOnProperty(name = "tech.corefinance.log.enabled.services", havingValue = "true", matchIfMissing = true)
+@Slf4j
 public class ServiceLogging extends MethodDataLoging {
 
     public ServiceLogging() {
@@ -42,4 +45,8 @@ public class ServiceLogging extends MethodDataLoging {
         return doLogging(joinPoint);
     }
 
+    @Override
+    protected Logger getLog() {
+        return log;
+    }
 }

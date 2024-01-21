@@ -93,6 +93,13 @@
           <mat-form-field *ngIf="addDepositProductForm.value.newAccountSetting?.type==newAccountIdTypeEnum.INCREASEMENT">
             <input type="number" matInput placeholder="{{languageService.formatLanguage('product.increasementStartingFrom', [])}}" formControlName="increasementStartingFrom">
           </mat-form-field>
+
+          <mat-label>{{languageService.formatLanguage('product.accountInitState', [])}}:&nbsp;</mat-label>
+          <mat-form-field appearance="fill" color="primary">
+              <mat-select required formControlName="initialState">
+                  <mat-option *ngFor="let state of allAccountStates" [value]="state">{{languageService.formatLanguage('product.accountInitState_' + state, [])}}</mat-option>
+              </mat-select>
+          </mat-form-field>
         </mat-expansion-panel>
 
         <mat-expansion-panel hideToggle="false" expanded="true">
@@ -100,7 +107,7 @@
             <mat-panel-title>{{languageService.formatLanguage('product.currencies', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
           </mat-expansion-panel-header>
-          <app-currencies-selection formControlName="currencies"></app-currencies-selection>
+          <app-currencies-selection formControlName="currencies" (ngModelChange)="currenciesChanged();"></app-currencies-selection>
         </mat-expansion-panel>
 
         <mat-expansion-panel hideToggle>
@@ -162,9 +169,11 @@
             {{languageService.formatLanguage('depositProduct.allowOverdrafts', [])}}
           </mat-checkbox>
           <div *ngIf="addDepositProductForm.value.allowOverdrafts">
-            <mat-label>&nbsp;{{languageService.formatLanguage('depositProduct.overdraftsLimit', [])}}:&nbsp;</mat-label>
-            <app-currency-value-input [supportedCurrencies]="addDepositProductForm.value.currencies ? addDepositProductForm.value.currencies : []"
-              formControlName="maxOverdraftLimit"></app-currency-value-input>
+            <div>
+              <mat-label>&nbsp;{{languageService.formatLanguage('depositProduct.overdraftsLimit', [])}}:&nbsp;</mat-label>
+              <app-currency-value-input [supportedCurrencies]="addDepositProductForm.value.currencies ? addDepositProductForm.value.currencies : []"
+                formControlName="maxOverdraftLimit"></app-currency-value-input>
+            </div>
 
             <mat-label>{{languageService.formatLanguage('creditArrangementManaged.label', [])}}:&nbsp;</mat-label>
             <mat-form-field appearance="fill" color="primary">

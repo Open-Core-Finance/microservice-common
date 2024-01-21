@@ -5,6 +5,10 @@ import {ProductCategoryType} from "../../classes/products/ProductCategory";
 import { GeneralProductAddComponent } from '../GeneralProductAddComponent';
 import { LoanProduct } from 'src/app/classes/products/LoanProduct';
 import { ProductAvailability, ProductFee, ProductNewAccountSetting } from 'src/app/classes/products/Product';
+import { CurrencyLimitValue, ValueConstraint } from 'src/app/classes/products/ValueConstraint';
+import { CreditArrangementManaged } from 'src/app/classes/products/CreditArrangementManaged';
+import { PenaltyCalculationMethod } from 'src/app/classes/products/PenaltySetting';
+import { ArrearsDaysCalculatedFrom } from 'src/app/classes/products/ArrearsSetting';
 
 @Component({
   selector: 'app-add-loan-product',
@@ -19,9 +23,28 @@ export class AddLoanProductComponent extends GeneralProductAddComponent<LoanProd
       productAvailabilities: new FormControl<ProductAvailability[]>([]),
       newAccountSetting: this.formBuilder.group(new ProductNewAccountSetting()),
       productFees: new FormControl<ProductFee[]>([]),
-      currencies: new FormControl<string[]>([])
+      currencies: new FormControl<string[]>([]),
+      loanValues: new FormControl<ValueConstraint[]>([]),
+      penaltySetting: new FormGroup({
+        calculationMethod: new FormControl(PenaltyCalculationMethod.NONE),
+        penaltyTolerancePeriod: new FormControl(1),
+        penaltyRateConstraints: new FormControl<ValueConstraint[]>([])
+      }),
+      arrearsSetting: new FormGroup({
+        includeNonWorkingDay: new FormControl(false),
+        daysCalculatedFrom: new FormControl(ArrearsDaysCalculatedFrom.OLDEST_LATE_REPAYMENT),
+        tolerancePeriods: new FormControl<ValueConstraint[]>([]),
+        toleranceAmounts: new FormControl<ValueConstraint[]>([]),
+        floors: new FormControl<CurrencyLimitValue[]>([]),
+      })
     })
   );
+
+  creditArrangementManagedEnum = CreditArrangementManaged;
+  penaltyCalculationMethodEnum = PenaltyCalculationMethod;
+  allPenaltyCalculationMethods = Object.keys(PenaltyCalculationMethod);
+  arrearsDaysCalculatedFromEnum = ArrearsDaysCalculatedFrom;
+  allArrearsDaysCalculatedFroms = Object.keys(ArrearsDaysCalculatedFrom);
 
   protected override getProductCategoryType(): ProductCategoryType {
     return ProductCategoryType.LOAN;
@@ -34,5 +57,36 @@ export class AddLoanProductComponent extends GeneralProductAddComponent<LoanProd
   }
   protected override newEmptyEntity(): LoanProduct {
     return new LoanProduct();
+  }
+
+  protected override currenciesChanged() {
+    super.currenciesChanged();
+    if (this.addLoanProductForm.value.loanValues) {
+      const loanValues = this.addLoanProductForm.value.loanValues;
+      this.cleanUpConstraints(loanValues);
+      this.addMissingConstraints(loanValues, new ValueConstraint());
+    }
+    const pennaltyForm = this.addLoanProductForm.controls.penaltySetting;
+    if (pennaltyForm.value.penaltyRateConstraints) {
+      const penaltyConstraints: ValueConstraint[] = pennaltyForm.value.penaltyRateConstraints;
+      this.cleanUpConstraints(penaltyConstraints);
+      this.addMissingConstraints(penaltyConstraints, new ValueConstraint());
+    }
+    const arrearsSettingForm = this.addLoanProductForm.controls.arrearsSetting;
+    if (arrearsSettingForm.value.toleranceAmounts) {
+      const toleranceAmounts: ValueConstraint[] = arrearsSettingForm.value.toleranceAmounts;
+      this.cleanUpConstraints(toleranceAmounts);
+      this.addMissingConstraints(toleranceAmounts, new ValueConstraint());
+    }
+    if (arrearsSettingForm.value.tolerancePeriods) {
+      const tolerancePeriods: ValueConstraint[] = arrearsSettingForm.value.tolerancePeriods;
+      this.cleanUpConstraints(tolerancePeriods);
+      this.addMissingConstraints(tolerancePeriods, new ValueConstraint());
+    }
+    if (arrearsSettingForm.value.floors) {
+      const floors = arrearsSettingForm.value.floors;
+      this.cleanUpConstraints(floors);
+      this.addMissingConstraints(floors, new CurrencyLimitValue());
+    }
   }
 }

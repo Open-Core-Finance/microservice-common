@@ -3,12 +3,14 @@ package tech.corefinance.product.model;
 import lombok.Data;
 import tech.corefinance.product.enums.ArrearsDaysCalculatedFrom;
 
+import java.util.List;
+
 @Data
 public class ArrearsSetting {
     /**
      * Arrears Tolerance Period in Days.
      */
-    private ValueConstraint tolerancePeriod;
+    private List<ValueConstraint> tolerancePeriods;
     /**
      * Include/Exclude Non-Working Days in Arrears Tolerance Period and Penalty Calculation Method.
      */
@@ -20,9 +22,9 @@ public class ArrearsSetting {
     /**
      * Arrears Tolerance Amount (% of Outstanding Principal).
      */
-    private ValueConstraint toleranceAmount;
+    private List<ValueConstraint> toleranceAmounts;
     /**
      * With a floor (minimum).
      */
-    private Double floor;
+    private List<CurrencyLimitValue> floors;
 }

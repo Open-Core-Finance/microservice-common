@@ -101,6 +101,7 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
             } else {
                 logger.info("Entity not found! Creating new entity...");
                 entity = createEntityObject();
+                entity.setId(dto.getEntityId());
             }
         } else {
             logger.info("Entity ID empty! Creating new entity...");

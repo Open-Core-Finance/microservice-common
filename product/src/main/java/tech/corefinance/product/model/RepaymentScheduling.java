@@ -1,15 +1,13 @@
 package tech.corefinance.product.model;
 
 import lombok.Data;
-import tech.corefinance.product.enums.FrequencyOption;
-import tech.corefinance.product.enums.NonWorkingDaysRescheduling;
-import tech.corefinance.product.enums.RepaymentScheduleRounding;
-import tech.corefinance.product.enums.ShortMonthHandling;
+import tech.corefinance.product.enums.*;
 
 import java.util.List;
 
 @Data
 public class RepaymentScheduling {
+    private RepaymentSchedulingMethod repaymentMethod;
     /**
      * Interval repayment scheduling value.
      */
@@ -24,26 +22,25 @@ public class RepaymentScheduling {
     private List<Integer> repaymentDays;
 
     private ShortMonthHandling shortMonthHandling;
-    private ValueConstraint installmentsConstraint;
+    private List<ValueConstraint> installmentsConstraints;
     /**
      * Automatically add a default offset in days to the first installment due date and specify
      * the minimum and maximum days that can be added to the first installment date.
      */
-    private ValueConstraint firstDueDateOffsetConstraint;
+    private List<ValueConstraint> firstDueDateOffsetConstraints;
     /**
      * Collect Principal Every X Repayments.
      */
     private Integer collectPrincipalEveryRepayments;
+
+    private GracePeriodType gracePeriodType;
     /**
      * Principal Grace Period. If this option is not null then Pure Grace Period must be null.
      */
-    private ValueConstraint principalGracePeriod;
-    /**
-     * Pure Grace Period. If this option is not null then Principal Grace Period must be null.
-     */
-    private ValueConstraint pureGracePeriod;
+    private List<ValueConstraint> gracePeriodConstraints;
 
     private RepaymentScheduleRounding scheduleRounding;
+    private RepaymentCurrencyRounding currencyRounding;
 
     private NonWorkingDaysRescheduling nonWorkingDaysRescheduling;
 

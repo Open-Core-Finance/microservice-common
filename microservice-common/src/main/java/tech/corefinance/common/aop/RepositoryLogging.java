@@ -1,8 +1,10 @@
 package tech.corefinance.common.aop;
 
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -15,6 +17,7 @@ import java.util.List;
  */
 @Aspect
 @Component
+@Slf4j
 @ConditionalOnProperty(name = "tech.corefinance.log.enabled.repositories", havingValue = "true", matchIfMissing = true)
 public class RepositoryLogging extends MethodDataLoging {
 
@@ -44,4 +47,8 @@ public class RepositoryLogging extends MethodDataLoging {
         return doLogging(joinPoint);
     }
 
+    @Override
+    protected Logger getLog() {
+        return log;
+    }
 }

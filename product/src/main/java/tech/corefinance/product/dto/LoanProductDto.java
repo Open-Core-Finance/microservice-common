@@ -5,12 +5,12 @@ import lombok.EqualsAndHashCode;
 import tech.corefinance.product.enums.CreditArrangementManaged;
 import tech.corefinance.product.model.*;
 
+import java.util.List;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class LoanProductDto extends ProductDto {
-    private double loanMin;
-    private double loanMax;
-    private double loanDefault;
+    private List<ValueConstraint> loanValues;
     private CreditArrangementManaged underCreditArrangementManaged;
     private LoanInterestRate interestRate;
     private RepaymentScheduling repaymentScheduling;
@@ -22,6 +22,7 @@ public class LoanProductDto extends ProductDto {
     private boolean lockArrearsAccounts;
     private boolean capCharges;
 
-    private Double percentGuarantors;
-    private Double percentCollateral;
+    private Double percentSecurityPerLoan;
+    private boolean enableGuarantors;
+    private boolean enableCollateral;
 }

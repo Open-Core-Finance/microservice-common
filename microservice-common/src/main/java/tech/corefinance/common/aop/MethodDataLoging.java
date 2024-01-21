@@ -1,9 +1,9 @@
 package tech.corefinance.common.aop;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import tech.corefinance.common.util.CoreFinanceUtil;
 
@@ -13,7 +13,6 @@ import java.util.List;
 /**
  * Abstract method call logging.
  */
-@Slf4j
 public abstract class MethodDataLoging {
 
     @Autowired
@@ -21,6 +20,8 @@ public abstract class MethodDataLoging {
     @Autowired
     protected ObjectMapper objectMapper;
     private List<String> excludeClasses;
+
+    protected abstract Logger getLog();
 
     public MethodDataLoging(List<String> excludeClasses) {
         this.excludeClasses = excludeClasses;
@@ -41,6 +42,7 @@ public abstract class MethodDataLoging {
      * @throws Throwable Method execption or error.
      */
     public Object doLogging(ProceedingJoinPoint joinPoint) throws Throwable {
+        var log = getLog();
         // Advice
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
 

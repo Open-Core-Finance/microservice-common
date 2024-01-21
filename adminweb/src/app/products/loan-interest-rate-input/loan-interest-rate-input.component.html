@@ -1,0 +1,73 @@
+<div>
+    <mat-label>{{languageService.formatLanguage('loanProduct.interestRate.rateCalculationMethod', [])}}&nbsp;</mat-label>
+    <mat-form-field appearance="fill" color="primary">
+        <mat-select required [(ngModel)]="value.interestCalculationMethod">
+            <mat-option *ngFor="let method of allLoanCalculationMethods" [value]="method">
+                {{languageService.formatLanguage('loanProduct.interestRate.rateCalculationMethod_' + method, [])}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-label>{{languageService.formatLanguage('loanProduct.interestRate.accruedInterestPostingFrequency', [])}}&nbsp;</mat-label>
+    <mat-form-field appearance="fill" color="primary">
+        <mat-select required [(ngModel)]="value.accruedInterestPostingFrequency">
+            <mat-option *ngFor="let frequency of allPostingFrequency" [value]="frequency">
+                {{languageService.formatLanguage('loanProduct.interestRate.accruedInterestPostingFrequency_' + frequency, [])}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <div>
+        <mat-label>{{languageService.formatLanguage('loanProduct.interestRate.type', [])}}&nbsp;</mat-label>
+        <mat-form-field appearance="fill" color="primary">
+            <mat-select required [(ngModel)]="value.interestType">
+                <mat-option *ngFor="let type of allInterestTypes" [value]="type">
+                    {{languageService.formatLanguage('loanProduct.interestRate.type_' + type, [])}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div>
+        <mat-label>{{languageService.formatLanguage('loanProduct.interestRate.rateCalculationPoint', [])}}&nbsp;</mat-label>
+        <mat-form-field appearance="fill" color="primary">
+            <mat-select required [(ngModel)]="value.interestCalculationPoint">
+                <mat-option *ngFor="let method of allCalculationMethods" [value]="method">
+                    {{languageService.formatLanguage('loanProduct.interestRate.rateCalculationPoint_' + method, [])}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill" color="primary" *ngIf="value.interestCalculationPoint == interestCalculationMethodEnum.PERCENTAGE_PER_X_DAYS">
+            <input type="number" matInput placeholder="{{languageService.formatLanguage('loanProduct.interestRate.perDays', [])}}" [(ngModel)]="value.percentPerDay">
+        </mat-form-field>
+        <mat-label *ngIf="value.interestCalculationPoint == interestCalculationMethodEnum.PERCENTAGE_PER_X_DAYS">&nbsp;{{languageService.formatLanguage('loanProduct.interestRate.perDays', [])}}</mat-label>
+    </div>
+
+    <app-value-constraints-input labelKey="depositProduct.interestRate.interestRateConstraints" labelKeyDefaultVal="loanProduct.loanDefault"
+            labelKeyMaxVal="loanProduct.loanMax" labelKeyMinVal="loanProduct.loanMin" [value]="value.interestRateConstraints"
+            *ngIf="value.interestRateConstraints.length > 0">
+    </app-value-constraints-input>
+
+    <div>
+        <mat-label>{{languageService.formatLanguage('loanProduct.interestRate.dayInYear', [])}}&nbsp;</mat-label>
+        <mat-form-field appearance="fill" color="primary">
+            <mat-select required [(ngModel)]="value.interestDayInYear">
+                <mat-option *ngFor="let cal of allDayInYearOption" [value]="cal">
+                    {{languageService.formatLanguage('loanProduct.interestRate.dayInYear_' + cal, [])}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div>
+        <mat-label>{{languageService.formatLanguage('loanProduct.interestRate.repaymentsInterestCalculation', [])}}&nbsp;</mat-label>
+        <mat-form-field appearance="fill" color="primary">
+            <mat-select required [(ngModel)]="value.repaymentsInterestCalculation">
+                <mat-option *ngFor="let type of allRepaymentsInterestCalculations" [value]="type">
+                    {{languageService.formatLanguage('loanProduct.interestRate.repaymentsInterestCalculation_' + type, [])}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    
+</div>

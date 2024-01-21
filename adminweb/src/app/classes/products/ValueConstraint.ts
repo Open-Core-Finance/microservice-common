@@ -1,6 +1,9 @@
-export class ValueConstraint {
+export class CurrencyBasesValue {
     currencyId: string = "";
     currencyName: string = "";
+}
+
+export class ValueConstraint extends CurrencyBasesValue {
     /**
      * Min amount of money.
      */
@@ -15,8 +18,6 @@ export class ValueConstraint {
     defaultVal: number | null= 0.0;
 }
 
-export class CurrencyLimitValue {
-    currencyId: string = "";
-    currencyName: string = "";
+export class CurrencyLimitValue extends CurrencyBasesValue {
     limit = 0.0;
 }

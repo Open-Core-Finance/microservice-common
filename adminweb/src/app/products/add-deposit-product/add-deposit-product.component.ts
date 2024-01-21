@@ -3,7 +3,7 @@ import {FormControl, FormGroup} from "@angular/forms";
 import {environment} from "../../../environments/environment";
 import {DepositProduct} from "../../classes/products/DepositProduct";
 import { ProductAvailability, ProductFee, ProductNewAccountSetting} from "../../classes/products/Product";
-import {CurrencyLimitValue} from "../../classes/products/ValueConstraint";
+import {CurrencyLimitValue, ValueConstraint} from "../../classes/products/ValueConstraint";
 import {WithdrawalLimit} from "../../classes/products/WithdrawalLimit";
 import {ProductCategoryType} from "../../classes/products/ProductCategory";
 import { DepositLimit } from 'src/app/classes/products/DepositLimit';
@@ -52,36 +52,12 @@ export class AddDepositProductComponent extends GeneralProductAddComponent<Depos
   }
 
   protected override currenciesChanged(): void {
-    const formValue = this.addDepositProductForm.value;
-    if (formValue.currencies) {
-      for (let i = 0; i < this.currencies.length; i++) {
-        const c = this.currencies[i];
-        for (let currencyId of formValue.currencies) {
-          if (currencyId == c.id) {
-            this.checkCurrencyChanged(c);
-            break;
-          }
-        }
-      }
+    super.currenciesChanged();
+    if (this.addDepositProductForm.value.maxOverdraftLimit) {
+      const maxOverdraftLimit = this.addDepositProductForm.value.maxOverdraftLimit;
+      this.cleanUpConstraints(maxOverdraftLimit);
+      this.addMissingConstraints(maxOverdraftLimit, new CurrencyLimitValue());
     }
   }
 
-  private checkCurrencyChanged(currency: Currency) {
-    const formValue = this.addDepositProductForm.value;
-    let found = false;
-    let overdraftsLimits: CurrencyLimitValue[] = formValue.maxOverdraftLimit || [];
-    for (const limits of overdraftsLimits) {
-      if (limits.currencyId == currency.id) {
-        found = true;
-        break;
-      }
-    }
-    if (!found) {
-      var currencyValue = new CurrencyLimitValue();
-      currencyValue.currencyId = currency.id;
-      currencyValue.currencyName = currency.name;
-      overdraftsLimits.push(currencyValue);
-    }
-    this.addDepositProductForm.controls.maxOverdraftLimit.setValue(overdraftsLimits);
-  }
 }

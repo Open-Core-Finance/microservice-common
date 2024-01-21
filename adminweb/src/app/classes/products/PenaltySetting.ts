@@ -7,13 +7,32 @@ export class PenaltySetting {
      * 3 => (Overdue Principal + Overdue Interest) * # of Late Days * Penalty Rate
      * 4 => Outstanding Principal * # of Late Days * Penalty Rate
      */
-    calculationMethod: number = 1;
+    calculationMethod: PenaltyCalculationMethod = PenaltyCalculationMethod.NONE;
     /**
      * Penalty Tolerance Period X Days.
      */
-    penaltyTolerancePeriod: number | null = null;
+    penaltyTolerancePeriod: number | null = 1;
     /**
      * Penalty Rate Constraints (%).
      */
-    penaltyRateConstraint: ValueConstraint | null = null;
+    penaltyRateConstraints: ValueConstraint[] = [];
+}
+
+export enum PenaltyCalculationMethod {
+    /**
+     * No Penalty.
+     */
+    NONE = "NONE",
+    /**
+     * Overdue Principal * # of Late Days * Penalty Rate.
+     */
+    OVERDUE_BALANCE = "OVERDUE_BALANCE",
+    /**
+     * (Overdue Principal + Overdue Interest) * # of Late Days * Penalty Rate.
+     */
+    OVERDUE_BALANCE_AND_INTEREST = "OVERDUE_BALANCE_AND_INTEREST",
+    /**
+     * Outstanding Principal * # of Late Days * Penalty Rate.
+     */
+    OUTSTANDING_PRINCIPAL = "OUTSTANDING_PRINCIPAL"
 }

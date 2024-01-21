@@ -1,9 +1,6 @@
 package tech.corefinance.product.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -47,39 +44,53 @@ public class DepositProduct extends Product {
      * Interest Rate.
      */
     @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "interest_rate")
     private DepositInterestRate interestRate;
 
     // Internal control
+    @Column(name = "days_to_set_to_dormant")
     private Integer daysToSetToDormant;
 
     /**
      * Deposit transaction limits.
      */
     @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "deposit_limits")
     private List<DepositLimit> depositLimits;
     /**
      * Withdrawal Limits.
      */
     @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "withdrawal_limits")
     private List<WithdrawalLimit> withdrawalLimits;
     /**
      * Early Closure Period.
      */
     @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "early_closure_period")
     private Integer earlyClosurePeriod;
 
+    @Column(name = "allow_overdrafts")
     private Boolean allowOverdrafts;
     @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "overdrafts_interest")
     private DepositInterestRate overdraftsInterest;
     @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "max_overdraft_limit")
     private List<CurrencyLimitValue> maxOverdraftLimit;
     @Enumerated(EnumType.STRING)
+    @Column(name = "overdrafts_under_credit_arrangement_managed")
     private CreditArrangementManaged overdraftsUnderCreditArrangementManaged;
 
+    @Column(name = "enable_term_deposit")
     private boolean enableTermDeposit;
     @Enumerated(EnumType.STRING)
+    @Column(name = "term_unit")
     private FrequencyOptionYearly termUnit;
+    @Column(name = "min_term_length")
     private Integer minTermLength;
+    @Column(name = "max_term_length")
     private Integer maxTermLength;
+    @Column(name = "default_term_length")
     private Integer defaultTermLength;
 }

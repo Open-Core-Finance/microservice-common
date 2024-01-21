@@ -44,6 +44,7 @@ export class CurrencyValueInputComponent implements OnInit, ControlValueAccessor
 
   writeValue(value: CurrencyLimitValue[]): void {
     this.values = value;
+    this.populateCurrenciesToUi(this.lastSupportedCurrencies ? this.lastSupportedCurrencies : []);
   }
  
   registerOnChange(fn: any): void {

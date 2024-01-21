@@ -84,16 +84,21 @@ export class DepositInterestRateInputComponent implements OnInit, ControlValueAc
 
   private populateCurrenciesToUi(supportedCurrencies: string[]) {
     this.currenciesToDisplay = [];
-    this.currencies.forEach((value, index, arr) => {
-      for(let  i = 0; i < supportedCurrencies.length; i++) {
-        const c = supportedCurrencies[i];
-        if (c == value.id) {
-          this.currenciesToDisplay.push(value);
-          this.checkAndUpdateCurrency(value);
-          break;
+    if (supportedCurrencies.length > 0) {
+      this.currencies.forEach((value, index, arr) => {
+        for(let  i = 0; i < supportedCurrencies.length; i++) {
+          const c = supportedCurrencies[i];
+          if (c == value.id) {
+            this.currenciesToDisplay.push(value);
+            this.checkAndUpdateCurrency(value);
+            break;
+          }
         }
-      }
-    });
+      });
+    } else {
+      this.value.interestRateConstraints = [];
+      this.value.interestItems = [];
+    }
   }
 
   private checkAndUpdateCurrency(currency: Currency) {

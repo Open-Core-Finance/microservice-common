@@ -1,4 +1,5 @@
 import {User} from "../User";
+import { AccountState } from "../accounts/AccountState";
 
 export abstract class Product {
     id: string = "";
@@ -114,16 +115,6 @@ export class ProductNewAccountSetting {
     randomPatternTemplate: string = "@@@$#####";
     increasementStartingFrom: number = 0;
     initialState: AccountState = AccountState.NEW;
-}
-
-export enum AccountState {
-    PENDING_APPROVAL = "PENDING_APPROVAL",
-    PARTIAL_APPLICATION = "PARTIAL_APPLICATION",
-    APPROVED = "APPROVED",
-    NEW = "NEW",
-    DORMANT = "DORMANT",
-    CLOSED = "CLOSED",
-    OPEN = "OPEN"
 }
 
 export enum ProductNewAccountSettingType {

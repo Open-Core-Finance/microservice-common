@@ -1,0 +1,76 @@
+<div>
+    <div>
+        <mat-label>{{languageService.formatLanguage('repayment.repaymentMethod', [])}}:&nbsp;</mat-label>
+        <mat-form-field appearance="fill" color="primary">
+            <mat-select required [(ngModel)]="value.repaymentHorizontal">
+                <mat-option [value]="true">
+                    {{languageService.formatLanguage('repayment.repaymentMethod_HORIZONTAL', [])}}
+                </mat-option>
+                <mat-option [value]="false">
+                    {{languageService.formatLanguage('repayment.repaymentMethod_VERTICAL', [])}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-label>{{languageService.formatLanguage('repayment.acceptPrePayments', [])}}:&nbsp;</mat-label>
+        <mat-form-field appearance="fill" color="primary">
+            <mat-select required [(ngModel)]="value.acceptPrePayments">
+                <mat-option [value]="true">
+                    {{languageService.formatLanguage('repayment.acceptPrePayments_TRUE', [])}}
+                </mat-option>
+                <mat-option [value]="false">
+                    {{languageService.formatLanguage('repayment.acceptPrePayments_FALSE', [])}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div *ngIf="value.acceptPrePayments">
+        <mat-label>{{languageService.formatLanguage('repayment.autoApplyInterestPrePayments', [])}}:&nbsp;</mat-label>
+        <mat-form-field appearance="fill" color="primary">
+            <mat-select required [(ngModel)]="value.autoApplyInterestPrePayments">
+                <mat-option [value]="true">
+                    {{languageService.formatLanguage('repayment.autoApplyInterestPrePayments_TRUE', [])}}
+                </mat-option>
+                <mat-option [value]="false">
+                {{languageService.formatLanguage('repayment.autoApplyInterestPrePayments_FALSE', [])}}
+            </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div *ngIf="value.acceptPrePayments">
+        <mat-label>{{languageService.formatLanguage('repayment.prePaymentRecalculation', [])}}:&nbsp;</mat-label>
+        <mat-form-field appearance="fill" color="primary">
+            <mat-select required [(ngModel)]="value.prePaymentRecalculation">
+                <mat-option *ngFor="let option of allPrePaymentRecalculations" [value]="option">
+                    {{languageService.formatLanguage('repayment.prePaymentRecalculation_' + option, [])}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div *ngIf="value.acceptPrePayments">
+        <mat-label>{{languageService.formatLanguage('repayment.acceptPrepaymentFutureInterest', [])}}:&nbsp;</mat-label>
+        <mat-form-field appearance="fill" color="primary">
+            <mat-select required [(ngModel)]="value.autoApplyInterestPrePayments">
+                <mat-option [value]="false">
+                    {{languageService.formatLanguage('repayment.acceptPrepaymentFutureInterest_FALSE', [])}}
+                </mat-option>
+                <mat-option [value]="true">
+                    {{languageService.formatLanguage('repayment.acceptPrepaymentFutureInterest_TRUE', [])}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    
+    <div *ngIf="value.repaymentTypesOrder.length > 0">
+        <mat-label>{{languageService.formatLanguage('repayment.repaymentTypesOrder', [])}}:&nbsp;</mat-label>
+        <div cdkDropList class="repayment-type-list" (cdkDropListDropped)="dropType($event)">
+            @for (type of value.repaymentTypesOrder; track type) {
+                <div class="type-box" cdkDrag>{{type}}</div>
+            }
+        </div>
+    </div>
+</div>
