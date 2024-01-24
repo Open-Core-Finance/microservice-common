@@ -77,7 +77,6 @@ dependencies {
     // security
     api group: 'com.auth0', name: 'java-jwt', version: "$javaJwtVersion"
 
-
     // Compile only
     compileOnly ('org.springframework.boot:spring-boot-starter-data-mongodb') {
         // Exclude because current version of snakeyaml have vulnerabilities. Need re-define.

@@ -63,6 +63,8 @@ tech:
         auto-response-encoding: true
         trace-id-filter: true
         tenant: true
+      default-response-charset: utf-8
+      generic-exception-handling: true
     log:
       enabled:
         services: true

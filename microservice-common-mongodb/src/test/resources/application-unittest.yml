@@ -61,6 +61,11 @@ tech:
         internal-api:
           file-name-regex: classpath:initial/*internal_api*.json
           replace-if-existed: true
+    audit:
+      enabled:
+        zoned-date-time: true
+        basic-user: true
+        delete-track: true
 export:
   format:
     date: yyyy/MM/dd

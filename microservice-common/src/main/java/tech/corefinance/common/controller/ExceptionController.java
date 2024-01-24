@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.*;
 import org.springframework.lang.Nullable;
 import org.springframework.security.access.AccessDeniedException;
@@ -26,6 +27,8 @@ import java.util.NoSuchElementException;
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
 @Slf4j
+@ConditionalOnProperty(prefix = "tech.corefinance.common", name = "generic-exception-handling", havingValue = "true",
+        matchIfMissing = true)
 public class ExceptionController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {ServiceProcessingException.class})

@@ -41,7 +41,8 @@ public class ExceptionControllerTest {
     public void test_handleJsonException() throws Exception {
         mockMvc.perform(get("/test/api/jsonerror")).andExpect((result) -> {
             MockHttpServletResponse response = result.getResponse();
-            assertEquals("{\"status\": 1, \"statusCode\": \"invalid_input_or_response\", \"result\": {}}", response.getContentAsString());
+            assertEquals("{\"status\": 1, \"statusCode\": \"invalid_input_or_response\", " +
+                    "\"result\": [\"invalid_input_or_response\"]}", response.getContentAsString());
         });
     }
 
@@ -50,13 +51,13 @@ public class ExceptionControllerTest {
         String message = "this is message";
         mockMvc.perform(get("/test/api/serviceErrorWithMessage").param("errorMessage", message)).andExpect((result) -> {
             MockHttpServletResponse response = result.getResponse();
-            assertEquals("{\"statusCode\":\"" + message + "\",\"status\":1}", response.getContentAsString());
+            assertEquals("{\"statusCode\":\"" + message + "\",\"status\":1,\"result\":[\"this is message\"]}", response.getContentAsString());
         });
     }
 
     @Test
     public void test_handleProcessingException_MessageNull() throws Exception {
-        String message = "{\"statusCode\":\"system_error\",\"status\":1,\"result\":\"\"}";
+        String message = "{\"statusCode\":\"system_error\",\"status\":1,\"result\":[\"\"]}";
         mockMvc.perform(get("/test/api/serviceErrorWithMessage")).andExpect((result) -> {
             MockHttpServletResponse response = result.getResponse();
             assertEquals(message, response.getContentAsString());
@@ -65,7 +66,7 @@ public class ExceptionControllerTest {
 
     @Test
     public void test_handleProcessingException_MessageBlank() throws Exception {
-        String message = "{\"statusCode\":\"system_error\",\"status\":1,\"result\":\"\"}";
+        String message = "{\"statusCode\":\"system_error\",\"status\":1,\"result\":[\"\"]}";
         mockMvc.perform(get("/test/api/serviceErrorWithMessage").param("errorMessage", " ")).andExpect((result) -> {
             MockHttpServletResponse response = result.getResponse();
             assertEquals(message, response.getContentAsString());
@@ -76,26 +77,28 @@ public class ExceptionControllerTest {
     public void test_handleProcessingException_HaveMessageAndNoOrigin() throws Exception {
         String message = "this is message";
         mockMvc.perform(get("/test/api/serviceErrorWithMessageNoCause").param("errorMessage", message)).andExpect(
-                content().string(Is.is("{\"statusCode\":\"" + message + "\",\"status\":1}")));
+                content().string(
+                        Is.is("{\"statusCode\":\"" + message + "\",\"status\":1,\"result\":[\"" + message + "\"]}")));
     }
 
     @Test
     public void test_handleProcessingException_runtimeException() throws Exception {
-        String message = "{\"statusCode\":\"system_error\",\"status\":1}";
+        String message = "{\"statusCode\":\"system_error\",\"status\":1,\"result\":[null]}";
         mockMvc.perform(get("/test/api/runtimeException")).andExpect(status().isInternalServerError()).andExpect(
                 content().string(Is.is(message)));
     }
 
     @Test
     public void test_badRequest() throws Exception {
-        String message = "{\"statusCode\":\"bad_request\",\"status\":1}";
+        String message = "{\"statusCode\":\"bad_request\",\"status\":1,\"result\":[null]}";
         mockMvc.perform(get("/test/api/illegalArgumentException")).andExpect(status().isBadRequest()).andExpect(
                 content().string(Is.is(message)));
     }
 
     @Test
     public void test_accessDenied() throws Exception {
-        String message = "{\"statusCode\":\"access_denied\",\"status\":1}";
-        mockMvc.perform(get("/test/api/accessDenied")).andExpect(status().isForbidden()).andExpect(content().string(Is.is(message)));
+        String message = "{\"statusCode\":\"access_denied\",\"status\":1,\"result\":[null]}";
+        mockMvc.perform(get("/test/api/accessDenied")).andExpect(status().isForbidden())
+                .andExpect(content().string(Is.is(message)));
     }
 }
