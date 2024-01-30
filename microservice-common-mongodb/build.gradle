@@ -65,8 +65,8 @@ dependencies {
     api ('org.springframework.boot:spring-boot-starter-data-mongodb')
 
     // Internal
-    // implementation group: 'tech.corefinance', name: 'microservice-common', version: "${internalCommonVersion}"
-    implementation project(":microservice-common")
+    implementation group: 'tech.corefinance', name: 'microservice-common', version: "${internalCommonVersion}"
+    // implementation project(":microservice-common")
 
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

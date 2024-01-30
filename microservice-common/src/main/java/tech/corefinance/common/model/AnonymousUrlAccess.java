@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class AnonymousUrlAccess implements GenericModel<String> {
     @Id
     @jakarta.persistence.Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     private String url;

@@ -51,6 +51,9 @@ tech:
         zoned-date-time-to-string: true
         zoned-date-time-to-local-date-time: true
         zoned-date-time-to-date: true
+      userprofile:
+        default-password-authen: true
+        enable-index-controller: true
     common:
       filter-ordered:
         authen-filter: 0
@@ -79,6 +82,7 @@ tech:
       private-key: classpath:private_key.der
       no-authen-urls:
         - /
+        - /index
         - /void
         - /parserConfigurationException
         - /throwable

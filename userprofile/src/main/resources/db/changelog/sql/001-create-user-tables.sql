@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS user_profile
     password character varying(255),
     phone_number character varying(255),
     username character varying(255),
-    role_id character varying(255),
+    additional_attributes jsonb,
     CONSTRAINT user_profile_pkey PRIMARY KEY (id),
     CONSTRAINT user_profile_gender_check CHECK (gender::text = ANY (ARRAY['MALE'::character varying, 'FEMALE'::character varying, 'UNKNOWN'::character varying]::text[]))
 );
@@ -68,6 +68,7 @@ CREATE TABLE IF NOT EXISTS attempted_login
     enabled boolean NOT NULL,
     ip_address character varying(255),
     user_agent character varying(255),
+    additional_info jsonb,
     CONSTRAINT attempted_login_pkey PRIMARY KEY (id),
     CONSTRAINT attempted_login_app_platform_check CHECK (app_platform::text = ANY (ARRAY['UNKNOWN'::character varying, 'IOS'::character varying, 'ANDROID'::character varying, 'WEB'::character varying]::text[]))
 );
@@ -81,6 +82,9 @@ CREATE TABLE IF NOT EXISTS login_session
     valid_token boolean,
     user_profile_id character varying(255),
     verify_key character varying(255),
+    additional_info jsonb,
+    input_account character varying(255),
+    input_password character varying(255),
     CONSTRAINT login_session_pkey PRIMARY KEY (id),
     CONSTRAINT fkb96uupl2xe8shjn1sca7mvijk FOREIGN KEY (user_profile_id)
         REFERENCES user_profile (id) MATCH SIMPLE
@@ -93,6 +97,7 @@ CREATE TABLE IF NOT EXISTS role
     id character varying(255) NOT NULL,
     name character varying(255),
     tenant_id character varying(255),
+    additional_attributes jsonb,
     CONSTRAINT role_pkey PRIMARY KEY (id)
 );
 

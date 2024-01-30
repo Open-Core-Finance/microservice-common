@@ -5,11 +5,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import tech.corefinance.common.model.CreateUpdateDto;
 import tech.corefinance.common.model.GenericModel;
 
 import java.sql.Types;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Entity
 @Table(name = "login_session")
@@ -17,7 +19,7 @@ import java.time.LocalDateTime;
 public class LoginSession implements GenericModel<String>, CreateUpdateDto<String> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     @Column(name = "login_time")
     private LocalDateTime loginTime;
@@ -37,6 +39,15 @@ public class LoginSession implements GenericModel<String>, CreateUpdateDto<Strin
     @JsonBackReference
     @JsonIgnore
     private UserProfile userProfile;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "additional_info")
+    private Map<String, Object> additionalInfo;
+
+    @Column(name = "input_account")
+    private String inputAccount;
+    @Column(name = "input_password")
+    private String inputPassword;
 
     public LoginSession() {
         this.loginTime = LocalDateTime.now();

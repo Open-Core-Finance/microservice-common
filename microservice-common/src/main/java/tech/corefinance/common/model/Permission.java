@@ -16,7 +16,7 @@ public class Permission implements GenericModel<String> {
     public static final String ANY_ROLE_APPLIED_VALUE = "ANY";
     @Id
     @jakarta.persistence.Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     @NotNull
     @Column(name = "role_id")

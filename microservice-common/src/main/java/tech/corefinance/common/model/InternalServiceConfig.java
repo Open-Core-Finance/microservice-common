@@ -17,7 +17,7 @@ import java.time.ZonedDateTime;
 public class InternalServiceConfig implements GenericModel<String> {
     @Id
     @jakarta.persistence.Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     @NotNull
     @Column(name = "service_name")

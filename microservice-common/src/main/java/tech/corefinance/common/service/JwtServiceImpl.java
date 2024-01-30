@@ -41,7 +41,6 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 @Service
 @ConditionalOnProperty(prefix = "tech.corefinance.security.jwt.enabled", name = "common", matchIfMissing = true,
@@ -152,7 +151,7 @@ public class JwtServiceImpl implements JwtService {
             builder.withClaim(key, (List<?>) value);
         } else if (Collection.class.isAssignableFrom(valueClzz)) {
             log.debug("Collection value to sign {}", value);
-            builder.withClaim(key, ((Collection<?>) value).stream().collect(Collectors.toList()));
+            builder.withClaim(key, new ArrayList<Object>(((Collection<?>) value)));
         } else if (Map.class.isAssignableFrom(valueClzz)) {
             log.debug("Map value to sign {}", value);
             builder.withClaim(key, (Map<String, ?>) value);
@@ -193,7 +192,7 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public Map<String, JwtTokenDto> retreiveTokenFromRequest(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
+    public Map<String, JwtTokenDto> retrieveTokenFromRequest(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
             throws IOException {
         // Get token and device ID in parameters
         log.debug("Retrieving data from request");
@@ -235,20 +234,20 @@ public class JwtServiceImpl implements JwtService {
         putFieldData(jwtTokenDto, clzz, jwtData);
         // Additional data
         log.debug("Put addition data to login token");
-        jwtTokenDto.getAdditionalInfo().entrySet().forEach( d -> jwtData.put(d.getKey(), d.getValue()));
+        jwtData.putAll(jwtTokenDto.getAdditionalInfo());
         log.info("Login token before add custom attributes [{}]", jwtData);
         jwtData.put("expiredIn", System.currentTimeMillis() + jwtConfiguration.getExpiration() * 1000);
         jwtData.put(CommonConstants.ATTRIBUTE_NAME_APP_VERSION, objectMapper.writeValueAsString(jwtTokenDto.getAppVersion()));
         log.debug("Original role in school {}", jwtTokenDto.getUserRoles());
-        LinkedList<String> userRoles = new LinkedList<>();
-        userRoles.addAll(jwtTokenDto.getUserRoles().stream().map(r -> {
+        LinkedList<String> userRoles = new LinkedList<>(jwtTokenDto.getUserRoles().stream().map(r -> {
             try {
                 return objectMapper.writeValueAsString(r);
             } catch (JsonProcessingException e) {
                 throw new ServiceProcessingException("error_sign_login_token", e);
             }
-        }).collect(Collectors.toList()));
+        }).toList());
         jwtData.put("userRoles", userRoles);
+        jwtData.remove("additionalInfo");
         log.info("Login token before sign {}", jwtData);
         return jwtData;
     }
@@ -291,13 +290,13 @@ public class JwtServiceImpl implements JwtService {
         if (StringUtils.isBlank(token)) {
             throw new ServiceProcessingException("Login handling error!!!");
         }
-        refreshJwtData.put("loginToken", token);
+        // refreshJwtData.put("loginToken", token);
         refreshJwtData.put(CommonConstants.ATTRIBUTE_NAME_DEVICE_ID, jwtTokenDto.getDeviceId());
         refreshJwtData.put(CommonConstants.ATTRIBUTE_NAME_IP_ADDRESS, jwtTokenDto.getLoginIpAddr());
         refreshJwtData.put(CommonConstants.ATTRIBUTE_NAME_APP_PLATFORM, jwtTokenDto.getAppPlatform().name());
         refreshJwtData.put(CommonConstants.ATTRIBUTE_NAME_APP_VERSION, objectMapper.writeValueAsString(jwtTokenDto.getAppVersion()));
         log.debug("Put addition data to refresh token");
-        jwtTokenDto.getAdditionalInfo().entrySet().forEach( d -> refreshJwtData.put(d.getKey(), d.getValue()));
+        refreshJwtData.putAll(jwtTokenDto.getAdditionalInfo());
         return refreshJwtData;
     }
 

@@ -73,7 +73,7 @@ public class JwtServiceTest {
     @Test
     public void test_retreiveTokenFromRequest_InvalidTokenLength() throws IOException {
         request.addHeader(HttpHeaders.AUTHORIZATION, "test");
-        Map<String, JwtTokenDto> map = jwtService.retreiveTokenFromRequest(request, response);
+        Map<String, JwtTokenDto> map = jwtService.retrieveTokenFromRequest(request, response);
         JwtTokenDto jwtTokenDto = null;
         Set<String> set = map.keySet();
         for (String key : set){
@@ -84,7 +84,7 @@ public class JwtServiceTest {
 
     @Test
     public void test_retreiveTokenFromRequest_NoData() throws IOException {
-        Map<String, JwtTokenDto> map = jwtService.retreiveTokenFromRequest(request, response);
+        Map<String, JwtTokenDto> map = jwtService.retrieveTokenFromRequest(request, response);
         JwtTokenDto jwtTokenDto = null;
         Set<String> set = map.keySet();
         for (String key : set){
@@ -105,7 +105,7 @@ public class JwtServiceTest {
         request.addHeader(HttpHeaders.AUTHORIZATION, CommonConstants.BEARER_PREFIX + token);
         request.addHeader(CommonConstants.EXTERNAL_IP_ADDRESS, "127.0.1.1");
         request.addHeader(CommonConstants.DEVICE_ID, deviceId);
-        Map<String, JwtTokenDto> map = jwtService.retreiveTokenFromRequest(request, response);
+        Map<String, JwtTokenDto> map = jwtService.retrieveTokenFromRequest(request, response);
         JwtTokenDto jwtTokenDto = null;
         Set<String> set = map.keySet();
         for (String key : set){
@@ -126,7 +126,7 @@ public class JwtServiceTest {
         request.addHeader(HttpHeaders.AUTHORIZATION, CommonConstants.BEARER_PREFIX + token);
         request.addHeader(CommonConstants.EXTERNAL_IP_ADDRESS, "127.0.1.1");
         request.addHeader(CommonConstants.DEVICE_ID, "In-correct DeviceID");
-        assertThrows(JWTVerificationException.class, () -> jwtService.retreiveTokenFromRequest(request, response));
+        assertThrows(JWTVerificationException.class, () -> jwtService.retrieveTokenFromRequest(request, response));
     }
 
     @Test
@@ -140,7 +140,7 @@ public class JwtServiceTest {
         String token = jwtService.buildLoginToken(loginInfo);
         request.addHeader(HttpHeaders.AUTHORIZATION, CommonConstants.BEARER_PREFIX + token);
         request.addHeader(CommonConstants.DEVICE_ID, "anydevice");
-        assertThrows(JWTVerificationException.class, () -> jwtService.retreiveTokenFromRequest(request, response));
+        assertThrows(JWTVerificationException.class, () -> jwtService.retrieveTokenFromRequest(request, response));
     }
 
     @Test
@@ -158,7 +158,7 @@ public class JwtServiceTest {
         JwtService jwtService2 = new JwtServiceImpl("classpath:public_key.der", "", resourceLoader);
         PowerMockito.field(JwtServiceImpl.class, "objectMapper").set(jwtService2, objectMapper);
         PowerMockito.field(JwtServiceImpl.class, "jwtConfiguration").set(jwtService2, jwtConfiguration);
-        assertNotNull(jwtService2.retreiveTokenFromRequest(request, response));
+        assertNotNull(jwtService2.retrieveTokenFromRequest(request, response));
         assertThrows(SignatureGenerationException.class, () -> jwtService2.sign(new HashMap<>()));
     }
 

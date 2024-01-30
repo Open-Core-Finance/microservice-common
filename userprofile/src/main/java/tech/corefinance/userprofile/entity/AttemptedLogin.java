@@ -11,6 +11,7 @@ import tech.corefinance.common.model.CreateUpdateDto;
 import tech.corefinance.common.model.GenericModel;
 
 import java.time.LocalDate;
+import java.util.Map;
 
 @Entity
 @Table(name = "attempted_login")
@@ -18,7 +19,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class AttemptedLogin implements GenericModel<String>, CreateUpdateDto<String> {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     private String account;
     @Column(name = "ip_address")
@@ -37,9 +38,12 @@ public class AttemptedLogin implements GenericModel<String>, CreateUpdateDto<Str
     @Column(name = "app_version")
     @JdbcTypeCode(SqlTypes.JSON)
     private AppVersion appVersion;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "additional_info")
+    private Map<String, Object> additionalInfo;
 
     public AttemptedLogin(String account, String ipAddress, String userAgent, String deviceToken, String clientAppId,
-                          AppPlatform appPlatform, AppVersion appVersion) {
+                          AppPlatform appPlatform, AppVersion appVersion, Map<String, Object> additionalInfo) {
         this.account = account;
         this.ipAddress = ipAddress;
         this.userAgent = userAgent;
@@ -49,5 +53,6 @@ public class AttemptedLogin implements GenericModel<String>, CreateUpdateDto<Str
         this.clientAppId = clientAppId;
         this.appPlatform = appPlatform;
         this.appVersion = appVersion;
+        this.additionalInfo = additionalInfo;
     }
 }
