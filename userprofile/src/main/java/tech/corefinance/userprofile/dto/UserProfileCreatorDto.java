@@ -5,6 +5,7 @@ import tech.corefinance.common.enums.Gender;
 import tech.corefinance.common.model.CreateUpdateDto;
 
 import java.time.LocalDate;
+import java.util.Map;
 
 @Data
 public class UserProfileCreatorDto implements CreateUpdateDto<String> {
@@ -21,4 +22,5 @@ public class UserProfileCreatorDto implements CreateUpdateDto<String> {
     private String displayName;
     private String password;
     private String repeatPassword;
+    private Map<String, Object> additionalAttributes;
 }

@@ -55,6 +55,10 @@ dependencyManagement {
 
 jar {
     archiveClassifier = ""
+    exclude("*.der")
+    exclude("logback.xml")
+    exclude("application.yaml")
+    exclude("db")
 }
 
 bootJar {
@@ -67,10 +71,10 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
 
     // Internal
-    implementation project(":microservice-common")
-    implementation project(":microservice-common-jpa")
-    // implementation group: 'tech.corefinance', name: 'microservice-common', version: "${internalCommonVersion}"
-    // implementation group: 'tech.corefinance', name: 'microservice-common-jpa', version: "${internalCommonJpaVersion}"
+//    implementation project(":microservice-common")
+//    implementation project(":microservice-common-jpa")
+     implementation group: 'tech.corefinance', name: 'microservice-common', version: "${internalCommonVersion}"
+     implementation group: 'tech.corefinance', name: 'microservice-common-jpa', version: "${internalCommonJpaVersion}"
 
     // Database
     implementation group: 'org.postgresql', name: 'postgresql', version: "${postgresqlVersion}"

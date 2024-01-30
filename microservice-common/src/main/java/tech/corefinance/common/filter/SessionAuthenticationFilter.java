@@ -46,7 +46,7 @@ public class SessionAuthenticationFilter extends OncePerRequestFilter implements
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         try {
-            Map<String, JwtTokenDto> map = jwtService.retreiveTokenFromRequest(request, response);
+            Map<String, JwtTokenDto> map = jwtService.retrieveTokenFromRequest(request, response);
             String tokenString = "";
             JwtTokenDto jwtTokenDto = null;
             Set<String> set = map.keySet();

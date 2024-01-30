@@ -54,7 +54,7 @@ public interface JwtService {
      * @return JwtTokenDto Object
      * @throws IOException When read fail
      */
-    Map<String, JwtTokenDto> retreiveTokenFromRequest(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException;
+    Map<String, JwtTokenDto> retrieveTokenFromRequest(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException;
     /**
      * Build JWT token for login info
      * @param jwtTokenDto Token DTO
@@ -75,10 +75,10 @@ public interface JwtService {
         log.debug("Login mode [{}]", loginMode);
         return switch (loginMode) {
             case CommonConstants.JWT_VERIFY_MODE_SINGLE_LOGIN -> jwtTokenDto.getUserId();
-            case CommonConstants.JWT_VERIFY_MODE_SINGLE_LOGIN_PER_APP -> new StringBuilder().append(jwtTokenDto.getUserId())
-                    .append("||APP||").append(jwtTokenDto.getClientAppId()).toString();
-            case CommonConstants.JWT_VERIFY_MODE_SINGLE_LOGIN_PER_DEVICE -> new StringBuilder().append(jwtTokenDto.getUserId())
-                    .append("||DEVICE||").append(jwtTokenDto.getDeviceId()).toString();
+            case CommonConstants.JWT_VERIFY_MODE_SINGLE_LOGIN_PER_APP ->
+                    jwtTokenDto.getUserId() + "||APP||" + jwtTokenDto.getClientAppId();
+            case CommonConstants.JWT_VERIFY_MODE_SINGLE_LOGIN_PER_DEVICE ->
+                    jwtTokenDto.getUserId() + "||DEVICE||" + jwtTokenDto.getDeviceId();
             default -> jwtTokenDto.getLoginId();
         };
     }

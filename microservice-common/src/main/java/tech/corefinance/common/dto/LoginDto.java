@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -27,4 +28,5 @@ public class LoginDto {
     private String email;
     private LocalDate birthday;
     private String phoneNumber;
+    private Map<String, Object> additionalInfo;
 }

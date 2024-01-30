@@ -42,6 +42,7 @@ public final class CommonConstants {
             .append(DEFAULT_VERSION_NUMBER_SEPARATOR).append("0").append(DEFAULT_VERSION_BUILD_SEPARATOR).append("ALPHA").toString();
     public static final String DEFAULT_APP_PLATFORM_STRING = "WEB";
     public static final String DEFAULT_CLIENT_APP_ID = "1";
+    public static final String UNKNOWN_DEVICE_ID = "UNKNOWN";
     public static final String LOGBACK_FILE_PATH_KEY = "logFilePath";
     public static final String LOGBACK_FILE_NAME_KEY = "logFileName";
     public static final String LOGBACK_FILE_PATH_DEFAULT = "logs";

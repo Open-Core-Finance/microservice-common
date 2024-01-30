@@ -3,11 +3,14 @@ package tech.corefinance.userprofile.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import tech.corefinance.common.enums.Gender;
 import tech.corefinance.common.model.GenericModel;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "user_profile")
@@ -15,7 +18,7 @@ import java.util.List;
 public class UserProfile implements GenericModel<String> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     @Column(name = "first_name")
     private String firstName;
@@ -43,4 +46,8 @@ public class UserProfile implements GenericModel<String> {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private List<Role> roles;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "additional_attributes")
+    private Map<String, Object> additionalAttributes;
 }

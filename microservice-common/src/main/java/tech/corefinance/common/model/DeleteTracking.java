@@ -21,7 +21,7 @@ public class DeleteTracking {
 
     @Id
     @jakarta.persistence.Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @Column(name = "entity_class_name")

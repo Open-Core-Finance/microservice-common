@@ -22,7 +22,7 @@ public class ResourceAction implements GenericModel<String> {
 
     @Id
     @jakarta.persistence.Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     @Column(name = "resource_type")
     private String resourceType;

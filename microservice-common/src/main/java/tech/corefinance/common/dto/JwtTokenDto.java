@@ -5,6 +5,7 @@ import tech.corefinance.common.model.AppVersion;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -54,7 +55,7 @@ public class JwtTokenDto {
 
     private String tenantId;
 
-    private Map<String, String> additionalInfo;
+    private Map<String, Serializable> additionalInfo;
 
     public JwtTokenDto() {
         this.loginId = UUID.randomUUID().toString();
