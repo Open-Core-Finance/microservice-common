@@ -61,6 +61,8 @@ public class JwtServiceImpl implements JwtService {
     private ObjectMapper objectMapper;
     @Autowired(required = false)
     private List<JwtVerifyAddOn> jwtVerifyAddOns;
+    @Autowired
+    private JwtTokenParser jwtTokenParser;
 
     public JwtServiceImpl(@Value("${tech.corefinance.security.public-key}") String publicKey,
                           @Value("${tech.corefinance.security.private-key:}") String privateKey,
@@ -210,7 +212,7 @@ public class JwtServiceImpl implements JwtService {
                 String token = authorizationHeader.substring(CommonConstants.BEARER_PREFIX.length());
                 DecodedJWT decodedJWT = verify(token, deviceId, ipAddress);
                 String json = new String(Base64.getDecoder().decode(decodedJWT.getPayload().getBytes()), StandardCharsets.UTF_8);
-                jwtTokenDto = objectMapper.readValue(json, JwtTokenDto.class);
+                jwtTokenDto = jwtTokenParser.parse(json);
                 jwtTokenDto.setOriginalToken(token);
                 log.debug("Decoded token [{}]", jwtTokenDto);
                 jwtTokenDto = additionalJwtVerifyStep(jwtTokenDto, token, deviceId, ipAddress);

@@ -3,6 +3,8 @@ package tech.corefinance.userprofile.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import tech.corefinance.common.model.GenericModel;
@@ -28,6 +30,8 @@ public class Role implements GenericModel<String> {
             inverseJoinColumns = @JoinColumn(name = "user_profile_id")
     )
     @JsonIgnore
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private List<UserProfile> userProfiles;
 
     @JdbcTypeCode(SqlTypes.JSON)

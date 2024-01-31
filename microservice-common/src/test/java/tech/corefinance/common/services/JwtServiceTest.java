@@ -30,6 +30,7 @@ import tech.corefinance.common.model.AppVersion;
 import tech.corefinance.common.repository.ResourceActionRepository;
 import tech.corefinance.common.service.JwtService;
 import tech.corefinance.common.service.JwtServiceImpl;
+import tech.corefinance.common.service.JwtTokenParserImpl;
 import tech.corefinance.common.test.support.app.TestCommonApplication;
 import tech.corefinance.common.test.support.model.RoleTest;
 import tech.corefinance.common.test.support.model.UserTest;
@@ -71,7 +72,7 @@ public class JwtServiceTest {
     }
 
     @Test
-    public void test_retreiveTokenFromRequest_InvalidTokenLength() throws IOException {
+    public void test_retrieveTokenFromRequest_InvalidTokenLength() throws IOException {
         request.addHeader(HttpHeaders.AUTHORIZATION, "test");
         Map<String, JwtTokenDto> map = jwtService.retrieveTokenFromRequest(request, response);
         JwtTokenDto jwtTokenDto = null;
@@ -83,7 +84,7 @@ public class JwtServiceTest {
     }
 
     @Test
-    public void test_retreiveTokenFromRequest_NoData() throws IOException {
+    public void test_retrieveTokenFromRequest_NoData() throws IOException {
         Map<String, JwtTokenDto> map = jwtService.retrieveTokenFromRequest(request, response);
         JwtTokenDto jwtTokenDto = null;
         Set<String> set = map.keySet();
@@ -94,7 +95,7 @@ public class JwtServiceTest {
     }
 
     @Test
-    public void test_retreiveTokenFromRequest_withExternalIpHeader() throws IOException {
+    public void test_retrieveTokenFromRequest_withExternalIpHeader() throws IOException {
         String deviceId = "Test-Device";
         UserTest admin = new UserTest("admin@email.com", "admin", "", "", "");
         admin.addRoleInSchool(new UserRoleDto("school", "01", "admin"));
@@ -115,7 +116,7 @@ public class JwtServiceTest {
     }
 
     @Test
-    public void test_retreiveTokenFromRequest_withExternalIpHeader_IpNotMatched() throws JsonProcessingException {
+    public void test_retrieveTokenFromRequest_withExternalIpHeader_IpNotMatched() throws JsonProcessingException {
         String deviceId = "Test-Device";
         UserTest admin = new UserTest("admin@email.com", "admin", "", "", "");
         admin.addRoleInSchool(new UserRoleDto("school", "01", "admin"));
@@ -130,7 +131,7 @@ public class JwtServiceTest {
     }
 
     @Test
-    public void test_retreiveTokenFromRequest_deviceIdNotMatched() throws JsonProcessingException {
+    public void test_retrieveTokenFromRequest_deviceIdNotMatched() throws JsonProcessingException {
         String deviceId = "Test-Device";
         UserTest admin = new UserTest("admin@email.com", "admin", "", "", "");
         admin.addRoleInSchool(new UserRoleDto("school", "01", "admin"));
@@ -144,7 +145,7 @@ public class JwtServiceTest {
     }
 
     @Test
-    public void test_retreiveTokenFromRequest_NoPrivateKey() throws Exception {
+    public void test_retrieveTokenFromRequest_NoPrivateKey() throws Exception {
         String deviceId = "Test-Device";
         UserTest admin = new UserTest("admin@email.com", "admin", "", "", "");
         admin.addRoleInSchool(new UserRoleDto("school", "01", "admin"));
@@ -158,6 +159,8 @@ public class JwtServiceTest {
         JwtService jwtService2 = new JwtServiceImpl("classpath:public_key.der", "", resourceLoader);
         PowerMockito.field(JwtServiceImpl.class, "objectMapper").set(jwtService2, objectMapper);
         PowerMockito.field(JwtServiceImpl.class, "jwtConfiguration").set(jwtService2, jwtConfiguration);
+        var jwtTokenParser = new JwtTokenParserImpl(objectMapper);
+        PowerMockito.field(JwtServiceImpl.class, "jwtTokenParser").set(jwtService2, jwtTokenParser);
         assertNotNull(jwtService2.retrieveTokenFromRequest(request, response));
         assertThrows(SignatureGenerationException.class, () -> jwtService2.sign(new HashMap<>()));
     }
