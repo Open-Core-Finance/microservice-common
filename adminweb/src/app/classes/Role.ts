@@ -1,7 +1,8 @@
-import { UserRole } from "./LoginSession";
+import { GeneralModel, ListableItem } from "./CommonClasses";
 import { Organization } from "./Organization";
 
-export class Role {
+export class Role implements GeneralModel<string>, ListableItem {
+    index = 0;
     id: string;
     name:string;
     tenantId: string | null;

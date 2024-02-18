@@ -15,6 +15,7 @@ public interface PermissionRepository extends CommonResourceRepository<Permissio
 
     List<Permission> findAllByRoleIdAndResourceType(String roleId, String resourceType, Sort sort);
 
-    List<Permission> findByRoleId(String roleId);
+    List<Permission> findByRoleIdIn(Iterable<String> roleIds);
 
+    void deleteAllByRoleIdIn(Iterable<? extends String> roleIds);
 }

@@ -11,6 +11,10 @@ import { environment } from 'src/environments/environment';
 })
 export class ExchangeRateComponent extends TableComponent<ExchangeRate> {
 
+  override permissionResourceName(): string {
+    return "exchangerate";
+  }
+
   override buildTableColumns(): string[] {
     return ["index", "id", "name", "sellRate", "buyRate", "action"];
   }

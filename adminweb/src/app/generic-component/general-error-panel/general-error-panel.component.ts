@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, Input } from '@angular/core';
 import { LanguageService } from 'src/app/services/language.service';
-import { UserMessage } from 'src/app/classes/UserMessage';
+import { MessageItem, UserMessage } from 'src/app/classes/UserMessage';
 
 @Component({
   selector: 'app-general-error-panel',
@@ -55,6 +55,15 @@ export class GeneralErrorPanelComponent implements AfterViewInit {
     this._successPrefix = successPrefix;
     if (this._errorPrefix == "" && this._successPrefix != "") {
       this._errorPrefix = this._successPrefix.replace("error", "success");
+    }
+  }
+
+  buildMessage(prefix: string, item: any): string {
+    if (item instanceof MessageItem) {
+      var msg = (item as MessageItem);
+      return this.languageService.formatLanguage(prefix + msg.key, msg.data);
+    } else {
+      return this.languageService.formatLanguage(prefix + item, []);
     }
   }
 }

@@ -18,8 +18,8 @@ export class HeaderComponent {
 
   constructor(public languageService: LanguageService, private router: Router, public authenticationService: AuthenticationService) {
     const that = this;
-    languageService.languageDataObservable.subscribe(languageData => that.refreshLanguage(languageData));
-    authenticationService.currentSession.subscribe(session => this.loginSession = session);
+    languageService.languageDataSubject.subscribe(languageData => that.refreshLanguage(languageData));
+    authenticationService.currentSessionSubject.subscribe(session => this.loginSession = session);
     that.loginSession = authenticationService.currentSessionValue;
   }
 

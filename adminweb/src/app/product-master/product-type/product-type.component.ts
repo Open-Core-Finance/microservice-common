@@ -12,6 +12,10 @@ import {ProductType} from "../../classes/products/ProductType";
 })
 export class ProductTypeComponent extends TableComponent<ProductType> {
 
+  override permissionResourceName(): string {
+    return "producttype";
+  }
+
   override buildTableColumns(): string[] {
     return ["index", "id", "name", "type", "action"];
   }

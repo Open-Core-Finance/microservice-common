@@ -4,12 +4,12 @@
 
 <div *ngIf="message['success'] && message['success'].length > 0" class="success-container">
     <div class="success" *ngFor="let succ of message['success']">
-        {{languageService.formatLanguage(successPrefix + succ, [])}}
+        {{buildMessage(successPrefix, succ)}}
     </div>
 </div>
 
 <div *ngIf="message['error'] && message['error'].length > 0" class="error-container">
     <div class="error" *ngFor="let err of message['error']">
-        {{languageService.formatLanguage(errorPrefix + err, [])}}
+        {{buildMessage(errorPrefix, err)}}
     </div>
 </div>

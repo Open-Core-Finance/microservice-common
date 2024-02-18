@@ -2,7 +2,7 @@ import { GeneralModel, ListableItem } from "./CommonClasses";
 import { Currency } from "./Currency";
 import { DayOfWeek } from "./DayOfWeek";
 
-export class Organization implements ListableItem, GeneralModel {
+export class Organization implements ListableItem, GeneralModel<string> {
     id: string = "";
     name: string = "";
     index: number = 0;

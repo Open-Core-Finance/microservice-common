@@ -1,10 +1,14 @@
 package tech.corefinance.common.service;
 
 import jakarta.validation.constraints.NotNull;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
+import tech.corefinance.common.dto.UserRoleDto;
 import tech.corefinance.common.model.Permission;
 import tech.corefinance.common.model.ResourceAction;
 import tech.corefinance.common.repository.PermissionRepository;
+
+import java.util.List;
 
 public interface PermissionService extends CommonService<String, Permission, PermissionRepository> {
 
@@ -28,4 +32,8 @@ public interface PermissionService extends CommonService<String, Permission, Per
     default @NotNull Permission createEntityObject() {
         return new Permission();
     }
+
+    List<Permission> loadByRoles(List<String> userRoles);
+
+    List<Permission> overrideByRoles(String roleId, List<Permission> permissions);
 }

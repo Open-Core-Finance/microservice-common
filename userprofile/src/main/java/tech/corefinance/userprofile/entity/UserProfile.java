@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import tech.corefinance.common.enums.Gender;
@@ -24,6 +23,8 @@ public class UserProfile implements GenericModel<String> {
     private String id;
     @Column(name = "first_name")
     private String firstName;
+    @Column(name = "middle_name")
+    private String middleName;
     @Column(name = "last_name")
     private String lastName;
     @Enumerated(EnumType.STRING)

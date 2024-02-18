@@ -14,7 +14,36 @@
       "selectRole": "Chọn role để đăng nhập"
   },
   "user": {
-      "welcome": "Xin chào ${0}!"
+      "welcome": "Xin chào ${0}!",
+      "username": "Username",
+      "email": "Email",
+      "firstName": "Tên",
+      "lastName": "Họ",
+      "middleName": "Tên đệm",
+      "displayName": "Tên hiển thị",
+      "gender": "Giới tính",
+      "gender_MALE": "Nam",
+      "gender_FEMALE": "Nữ",
+      "gender_UNKNOWN": "Chưa rõ",
+      "birthday": "Ngày sinh",
+      "activated": "Hoạt động",
+      "address": "Địa chỉ",
+      "phoneNumber":"Số đt",
+      "roles": "Vai trò",
+      "additionalAttributes": "Thông tin thêm",
+      "deleteConfirmContent": "Bạn có chắc muốn xóa thành viên ${0}?",
+      "deleteConfirmTitle": "Xác nhận xóa thành viên",
+      "addTitle": "Thêm thành viên",
+      "error": {
+          "user_disablked": "Thành viên đã bị vô hiệu hoá. Xin hãy liên hệ administrator để kích hoạt lại.",
+          "first_name_empty": "Tên không được bỏ trống.",
+          "email_empty": "Email không được bỏ trống.",
+          "username_empty": "Username không được bỏ trống."
+      },
+      "success": {
+        "add_successfull": "Thành viên đã được tạo thành công!",
+        "update_successfull": "Thành viên đã được cập nhật thành công!"
+      }
   },
   "menu": {
       "groupSystem": "Hệ thống",
@@ -25,19 +54,21 @@
       "organizationDetails": "Thông tin tổ chức",
       "holidays": "Ngày lễ",
       "branches": "Chi nhánh",
-      "exchangeRate": "Exchange rate",
+      "exchangeRate": "Tỷ giá",
       "rate": "Lãi xuất",
       "rateSource": "Nguồn lãi",
-      "productCategory": "Product category",
-      "productType": "Product type",
-      "depositProduct": "Deposit product",
-      "loanProduct": "Loan product",
-      "glProduct": "GL product",
-      "cryptoProduct": "Crypto product",
-      "groupProduct": "Product",
+      "productCategory": "Chuyên mục sản phẩm",
+      "productType": "Loại sản phẩm",
+      "depositProduct": "Sản phẩm tiền gửi",
+      "loanProduct": "Sản phẩm vay",
+      "glProduct": "Sản phẩm GL",
+      "cryptoProduct": "Sản phẩm Crypto",
+      "groupProduct": "Sản phẩm",
       "groupAccount": "Tài khoản",
       "groupMaster": "Master data",
-      "groupUam": "UAM"
+      "groupUam": "UAM",
+      "user": "Người dùng",
+      "role": "Vai trò"
   },
   "organization": {
       "id": "Mã số",
@@ -235,12 +266,12 @@
     "lastModifyDate": "Lần sửa cuối",
     "availabilities": "Product availabilities",
     "availableTo": "Available to",
-    "availableMode_ALL_BRANCHES": "All branches",
+    "availableMode_ALL_BRANCHES": "Tất cả chi nhánh",
     "availableMode_ALL_CLIENTS": "All clients",
-    "availableMode_ALL_GROUPS": "All groups",
+    "availableMode_ALL_GROUPS": "Tất cả nhóm",
     "availableMode_SPECIFIC_CLIENTS": "Specific clients",
-    "availableMode_SPECIFIC_BRANCHES": "Specific branches",
-    "availableMode_SPECIFIC_GROUPS": "Specific groups",
+    "availableMode_SPECIFIC_BRANCHES": "Chi nhánh cụ thể",
+    "availableMode_SPECIFIC_GROUPS": "Nhóm cụ thể",
     "newAccountSetting": "Cấu hình cho tài khoản mới",
     "idType": "Tạo mã số",
     "idType_INCREASEMENT": "Mã số tăng dần",
@@ -248,7 +279,7 @@
     "patternUsingLabel": "theo mẫu",
     "increasementStartingFrom": "bắt đầu từ",
     "currencies": "Tiền tệ",
-    "productFees": "Product fees",
+    "productFees": "Phí sản phẩm",
     "error": {
       "no_currency_selected": "Xin hãy chọn ít nhất 1 đơn vị tiền tệ để tiếp tục!"
     },
@@ -579,5 +610,59 @@
     "repaymentTypesOrder_PENALTY": "Penalty",
     "repaymentTypesOrder_INTEREST": "Interest",
     "repaymentTypesOrder_PRINCIPAL": "Principal"
+  },
+  "role": {
+    "id": "Role ID",
+    "name": "Tên role",
+    "addTitle": "Thêm role",
+    "error": {
+        "id_empty": "Role ID không được bỏ trống!",
+        "name_empty": "Tên role không được bỏ trống!"
+    },
+    "success": {
+      "add_successfull": "Role đã được tạo thành công!",
+      "update_successfull": "Role đã được cập nhật thành công!"
+    }
+  },
+  "permission": {
+    "configureForRole": "Configuring permission for role \"${0}\"",
+    "permissionTab_authen": "Authentication",
+    "permissionTab_kyc": "KYC",
+    "permissionTab_sanction": "Sanction",
+    "resourceCategory": {
+      "role": "Manage Roles",
+      "userprofile": "Manage Users",
+      "lastmodifymaster": "Last modify master",
+      "manage": "System managing",
+      "metadataheader": "Metadata management",
+      "permission": "Permission configure",
+      "premiumworldcheck": "Premium world check",
+      "riskclassificationrule": "Risk rules",
+      "risklevel": "Risk levels",
+      "webservicelog": "Web service logs",
+      "application": "Applications",
+      "country": "Countries",
+      "customerstatus": "Customer statuses",
+      "sanction": "Sanctions"
+    },
+    "actionItem": {
+      "add_role_POST": "Add new role",
+      "update_role_PUT": "Update existing role",
+      "delete_role_DELETE": "Delete role",
+      "view_role_GET": "View role info",
+      "list_role_POST": "List all roles",
+      "add_userprofile_POST": "Add new user",
+      "delete_userprofile_DELETE": "Delete user",
+      "list_userprofile_POST": "List all user",
+      "update_userprofile_PUT": "Update existing user",
+      "view_userprofile_GET": "View user details",
+      "add_permission_POST": "Add permission",
+      "delete_permission_DELETE": "Delete permission",
+      "list_permission_POST": "List permissions",
+      "update_permission_PUT": "Update permission",
+      "view_permission_GET": "View permission details",
+      "load_by_role_permission_POST": "Load permissions by roles",
+      "override_by_role_permission_PUT": "Override role's permissons"
+    }
   }
 }

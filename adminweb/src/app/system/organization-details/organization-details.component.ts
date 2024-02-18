@@ -45,7 +45,8 @@ export class OrganizationDetailsComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit(): void {
-    this.organizationSubscription = this.organizationService.organizationObservable.subscribe( org => {
+    this.organizationSubscription?.unsubscribe();
+    this.organizationSubscription = this.organizationService.organizationSubject.subscribe( org => {
       this.viewItem = org;
     });
   }

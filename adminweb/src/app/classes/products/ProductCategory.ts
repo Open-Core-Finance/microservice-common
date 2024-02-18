@@ -1,4 +1,6 @@
-export class ProductCategory {
+import { GeneralModel, ListableItem } from "../CommonClasses";
+
+export class ProductCategory implements GeneralModel<string>, ListableItem {
     id: string = "";
     name: string = "";
     index: number = 0;

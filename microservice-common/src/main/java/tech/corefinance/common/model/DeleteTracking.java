@@ -17,7 +17,7 @@ import java.time.ZonedDateTime;
 @Document("delete_tracking")
 @Table(name = "delete_tracking")
 @Entity
-public class DeleteTracking {
+public class DeleteTracking implements ModifiedDateTrackedEntity<ZonedDateTime>, AuditableEntity<BasicUserDto> {
 
     @Id
     @jakarta.persistence.Id

@@ -167,8 +167,14 @@ public class JwtServiceImpl implements JwtService {
         log.debug("Verifying token [{}] with device [{}] and IP [{}]", token, deviceId, ipaddress);
         DecodedJWT decodedJWT = verifier.verify(token);
         log.debug("Decoded JWT [{}]", decodedJWT);
-        if (!deviceId.equalsIgnoreCase(decodedJWT.getClaim(CommonConstants.ATTRIBUTE_NAME_DEVICE_ID).asString())) {
-            throw new JWTVerificationException("Device ID miss matched in token and request!!");
+        if (deviceId == null) {
+            if (decodedJWT.getClaim(CommonConstants.ATTRIBUTE_NAME_DEVICE_ID).asString() != null) {
+                throw new JWTVerificationException("Device ID missing in request but existed in token!!");
+            }
+        } else {
+            if (!deviceId.equalsIgnoreCase(decodedJWT.getClaim(CommonConstants.ATTRIBUTE_NAME_DEVICE_ID).asString())) {
+                throw new JWTVerificationException("Device ID miss matched in token and request!!");
+            }
         }
         if (!ipaddress.equalsIgnoreCase(decodedJWT.getClaim(CommonConstants.ATTRIBUTE_NAME_IP_ADDRESS).asString())) {
             throw new JWTVerificationException("IP Address miss matched in token and request!!");

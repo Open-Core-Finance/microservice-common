@@ -12,6 +12,10 @@ import { environment } from 'src/environments/environment';
 })
 export class BranchComponent extends TableComponent<Branch> {
 
+  override permissionResourceName(): string {
+    return "branch";
+  }
+
   override buildTableColumns(): string[] {
     return ["index", "id", "name", "phoneNumber", "email", "action"];
   }

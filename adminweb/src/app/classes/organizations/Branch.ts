@@ -1,7 +1,8 @@
+import { GeneralModel, ListableItem } from "../CommonClasses";
 import { DayOfWeek } from "../DayOfWeek";
 import {User} from "../User";
 
-export class Branch {
+export class Branch implements GeneralModel<string>, ListableItem {
   id: string = "";
   name: string = "";
   index: number = 0;

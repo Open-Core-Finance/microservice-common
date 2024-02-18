@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS user_profile
     display_name character varying(255),
     email character varying(255),
     first_name character varying(255),
+    middle_name character varying(255),
     gender character varying(255),
     last_name character varying(255),
     password character varying(255),

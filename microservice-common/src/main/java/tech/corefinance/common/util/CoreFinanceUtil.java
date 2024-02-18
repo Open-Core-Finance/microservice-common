@@ -8,13 +8,16 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.hibernate.type.internal.ParameterizedTypeImpl;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,8 +37,8 @@ import tech.corefinance.common.service.ProxyUnbox;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.*;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -48,7 +51,8 @@ public class CoreFinanceUtil {
     private static final String PARSING_JSON_FAILURE_LOG = "Parsing json failure! object: {}, error: {}";
     private static final List<Class<?>> LIST_IGNORE_LOGGING =
             List.of(ServletRequest.class, ServletResponse.class, HttpSession.class,
-                    Servlet.class, MultipartFile.class, byte[].class, File.class, InputStream.class);
+                    Servlet.class, MultipartFile.class, byte[].class, File.class, InputStream.class,
+                    Class.class, Method.class, Field.class);
 
     @Autowired
     private ResourcePatternResolver resourcePatternResolver;
@@ -292,5 +296,61 @@ public class CoreFinanceUtil {
             firstCloseCurlyBracketIndex = url.indexOf("}");
         }
         return url;
+    }
+
+    public AccessibleObject findAnnotatedField(Object obj, Class<?> objClass,
+                                               Class<? extends Annotation> annotationClass)
+            throws NoSuchFieldException {
+        return findAnnotatedFieldOrName(obj, objClass, annotationClass, null);
+    }
+
+    public AccessibleObject findAnnotatedFieldOrName(Object obj, Class<?> objClass,
+                                                     Class<? extends Annotation> annotationClass, String fieldName)
+            throws NoSuchFieldException {
+        Method[] methods = ReflectionUtils.getAllDeclaredMethods(objClass);
+        for (var method : methods) {
+            var createdByAnn = method.getAnnotation(annotationClass);
+            if (createdByAnn != null) {
+                return method;
+            }
+        }
+        Field[] fields = objClass.getDeclaredFields();
+        for (var field : fields) {
+            var createdByAnn = field.getAnnotation(CreatedBy.class);
+            if (createdByAnn != null) {
+                return field;
+            }
+        }
+        if (StringUtils.hasText(fieldName)) {
+            String setMethodName = Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
+            for (var method : methods) {
+                if (method.getName().equalsIgnoreCase(setMethodName)) {
+                    return method;
+                }
+            }
+            return objClass.getField(fieldName);
+        }
+        return null;
+    }
+
+    public Method findGetterBySetter(Object obj, Class<?> objClass, Method setter)
+            throws NoSuchMethodException {
+        var setterName = setter.getName();
+        if (setterName.startsWith("set")) {
+            var getterName = setterName.replace("set", "get");
+            return objClass.getDeclaredMethod(getterName);
+        }
+        return null;
+    }
+
+    public void triggerSetFieldValue(AccessibleObject accessibleObject, Object obj, Class<?> objClass, Object value)
+            throws ReflectiveOperationException {
+        if (accessibleObject instanceof Field f) {
+            f.set(obj, value);
+        } else if (accessibleObject instanceof Method m) {
+            m.invoke(obj, value);
+        } else {
+            throw new NoSuchFieldException();
+        }
     }
 }

@@ -40,13 +40,9 @@ export class AppComponent implements OnDestroy, OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.sessionSubscription?.unsubscribe();
-    this.sessionSubscription = this.authenticationService.currentSession.subscribe(session => this.loginSession = session);
+    this.sessionSubscription = this.authenticationService.currentSessionSubject.subscribe(session => this.loginSession = session);
     this.selectedRoleSubscription?.unsubscribe();
-    this.selectedRoleSubscription = this.authenticationService.selectedRoleObservable.subscribe(r => {
-      if (r != null) {
-        this.selectedRole = r;
-      }
-    });
+    this.selectedRoleSubscription = this.authenticationService.selectedRoleSubject.subscribe(r => this.selectedRole = r);
     this.rebuildMenuItems();
   }
 
@@ -139,7 +135,7 @@ export class AppComponent implements OnDestroy, OnInit, AfterViewInit {
     const that = this;
     const languageMenu = new  MenuGroup("", new StaticTextLabelProvider("Language"), [], null);
     this.languageSubscription?.unsubscribe();
-    this.languageSubscription = this.languageService.languageListObservable.subscribe( langs => {
+    this.languageSubscription = this.languageService.languageListSubject.subscribe( langs => {
       languageMenu.items = [];
       for (var item of langs) {
         const langMenuItem = new LanguageMenuItem(new StaticTextLabelProvider(item.name), item.languageKey, item, null)
@@ -159,7 +155,11 @@ export class AppComponent implements OnDestroy, OnInit, AfterViewInit {
 
   private get uamMenu(): MenuGroup {
     const languageService = this.languageService;
-    return new MenuGroup("", new LanguageKeyLabelProvider(languageService, "menu.groupUam", []), [], null);
+    const userManagementItem = new MenuItem(environment.frontEndUrl.userManagement, new LanguageKeyLabelProvider(languageService, "menu.user", []), "", "person", null);
+    const roleManagementItem = new MenuItem(environment.frontEndUrl.roleManagement,
+        new LanguageKeyLabelProvider(languageService, "menu.role", []), "", "user_attributes", null);
+    return new MenuGroup("", new LanguageKeyLabelProvider(languageService, "menu.groupUam", []),
+      [userManagementItem, roleManagementItem], null);
   }
 
   ngAfterViewInit(): void {

@@ -1,4 +1,4 @@
-<mat-drawer-container class="container" autosize *ngIf="loginSession" hasBackdrop="false">
+<mat-drawer-container class="container" autosize *ngIf="loginSession && selectedRole" hasBackdrop="false">
     <mat-drawer #drawer mode="side" opened="true">
         <app-left-menu [menuGroups]="menuGroups" (menuClosedEmitter)="toggleMenuClicked()" #leftMenu></app-left-menu>
     </mat-drawer>
@@ -8,6 +8,6 @@
     </mat-drawer-content>
 </mat-drawer-container>
 
-<div *ngIf="!loginSession">
+<div *ngIf="!loginSession || !selectedRole">
     <router-outlet #routerOutlet (activate)="onActive($event)"></router-outlet>
 </div>

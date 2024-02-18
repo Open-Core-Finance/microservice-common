@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {environment} from "../../environments/environment";
 import {Order, OrderDirection, Paging} from '../classes/Paging';
 import {RestService} from '../services/rest.service';
@@ -18,11 +18,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { OrganizationService } from '../services/organization.service';
 import { ConfirmDialogComponent, ConfirmDialogModel } from './confirm-dialog/confirm-dialog.component';
 import { GeneralModel } from '../classes/CommonClasses';
+import { PermissionService } from '../services/permission.service';
+import { AccessControl, Permission, ResourceAction } from '../classes/Permission';
 
 @Component({
     template: ''
 })
-export abstract class TableComponent<T extends GeneralModel> implements AfterViewInit, OnInit {
+export abstract class TableComponent<T extends GeneralModel<any>> implements AfterViewInit, OnInit {
+
+    public static NO_LIST_PERMISSION_ERROR_CODE = "permission_list_error";
 
     public paging: Paging | null = null;
     public message: UserMessage = new UserMessage([], []);
@@ -42,17 +46,21 @@ export abstract class TableComponent<T extends GeneralModel> implements AfterVie
 
     @ViewChild(MatSort) sort: MatSort = new MatSort();
 
-    private _messageSubscription: Subscription | null = null;
     private _sessionSubscription: Subscription | null = null;
     private _languageSubscription: Subscription | null = null;
     private _organizationSubscription: Subscription | null | undefined = null;
     private _sortSubscription: Subscription | null = null;
     private _deleteSubscription: Subscription | null = null;
+    private _permissionSubscription: Subscription | null = null;
+    private _permissionConfigSubscription: Subscription | null = null;
+
+    currentModulePermissions: Permission[] = [];
 
     public constructor(protected restService: RestService, public auth: AuthenticationService,
                           protected http: HttpClient, protected router: Router, public languageService: LanguageService,
                           protected commonService: CommonService, public dialog: MatDialog,
-                          protected organizationService: OrganizationService) {
+                          protected organizationService: OrganizationService,
+                          protected permissionService: PermissionService, protected changeDetector: ChangeDetectorRef) {
         this.clearMessages();
         this.sortFields = [];
         this.searchText = "";
@@ -64,11 +72,18 @@ export abstract class TableComponent<T extends GeneralModel> implements AfterVie
     }
 
     ngOnInit(): void {
-        this._sessionSubscription = this.auth.currentSession.subscribe(x =>  this.loginSession = x);
-        this._languageSubscription = this.languageService.languageDataObservable.subscribe( languageData => this.refreshLanguage(languageData));
-        this._organizationSubscription = this.organizationService.organizationObservable?.subscribe(s => {
+        this._sessionSubscription?.unsubscribe();
+        this._sessionSubscription = this.auth.currentSessionSubject.subscribe(x =>  this.loginSession = x);
+        this._languageSubscription?.unsubscribe();
+        this._languageSubscription = this.languageService.languageDataSubject.subscribe( languageData => this.refreshLanguage(languageData));
+        this._organizationSubscription?.unsubscribe();
+        this._organizationSubscription = this.organizationService.organizationSubject.subscribe(s => {
             if (s) this.customData['organizationId'] = s.id;
         });
+        this._permissionSubscription?.unsubscribe();
+        this._permissionSubscription = this.permissionService.currentUserPermissionSubject.subscribe(p => this.permissionReloaded(p));
+        this._permissionConfigSubscription?.unsubscribe();
+        this._permissionConfigSubscription = this.permissionService.permissionConfigSubject.subscribe(p => this.permissionReloaded(this.permissionService.currentUserPermissions));
     }
 
     ngAfterViewInit() {
@@ -82,12 +97,13 @@ export abstract class TableComponent<T extends GeneralModel> implements AfterVie
     }
 
     ngOnDestroy() {
-        this._messageSubscription?.unsubscribe();
         this._sessionSubscription?.unsubscribe();
         this._languageSubscription?.unsubscribe();
         this._organizationSubscription?.unsubscribe();
         this._sortSubscription?.unsubscribe();
         this._deleteSubscription?.unsubscribe();
+        this._permissionSubscription?.unsubscribe();
+        this._permissionConfigSubscription?.unsubscribe();
     }
 
     reloadData() {
@@ -101,6 +117,10 @@ export abstract class TableComponent<T extends GeneralModel> implements AfterVie
     getData(pageNumber: number, orders: Order[], customData: any) {
         this.isLoadingResults = true;
         this.clearMessages();
+        if (!this.canViewList()) {
+            this.message.error.push(TableComponent.NO_LIST_PERMISSION_ERROR_CODE);
+            this.changeDetector.detectChanges();
+        }
         this.paging = null;
         const headers = this.restService.initRequestHeaders();
         let body = {
@@ -247,5 +267,55 @@ export abstract class TableComponent<T extends GeneralModel> implements AfterVie
         result.pageIndex = 0;
         result.length = 0;
         return result;
+    }
+
+    abstract permissionResourceName(): string;
+
+    permissionReloaded(permissions: Permission[]) {
+        this.currentModulePermissions = [];
+        for (let p of permissions) {
+            if (this.getServiceUrl().indexOf(p.serviceUrl) >= 0 && p.resourceType.toLowerCase() == this.permissionResourceName().toLowerCase()) {
+                this.currentModulePermissions.push(p);
+            }
+        }
+        if (this.canViewList()) {
+            var err = this.message.error;
+            for(let i = 0; i < err.length; i++) {
+                if (err[i] == TableComponent.NO_LIST_PERMISSION_ERROR_CODE) {
+                    err.splice(i, 1);
+                    i--;
+                }
+            }
+        }
+    }
+
+    canViewList(): boolean {
+        return this.canDoAction(ResourceAction.COMMON_ACTION_LIST);
+    }
+
+    canAddItem(): boolean {
+        return this.canDoAction(ResourceAction.COMMON_ACTION_ADD);
+    }
+
+    canUpdateItem(): boolean {
+        return this.canDoAction(ResourceAction.COMMON_ACTION_UPDATE);
+    }
+
+    canDeleteItem(): boolean {
+        return this.canDoAction(ResourceAction.COMMON_ACTION_DELETE);
+    }
+
+    canDoAction(action: string) {
+        const a: ResourceAction | null = this.permissionService.filterResourceActionByResourceNameAndAction(
+            this.permissionService.currentPermissionConfigs, this.permissionResourceName(), action
+        );
+        if (a != null) {
+            for (let p of this.currentModulePermissions) {
+                if (this.permissionService.checkPatternMatched(a, p)) {
+                    return p.control != AccessControl.DENIED;
+                }
+            }
+        }
+        return environment.defaultPermissionIfNull != AccessControl.DENIED;
     }
 }

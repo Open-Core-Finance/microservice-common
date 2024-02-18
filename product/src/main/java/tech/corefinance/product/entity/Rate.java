@@ -8,13 +8,14 @@ import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-import tech.corefinance.common.audit.AuditableEntity;
 import tech.corefinance.common.audit.EntityBasicUserAuditorListener;
 import tech.corefinance.common.audit.EntityDeleteListener;
 import tech.corefinance.common.audit.EntityZonedDateTimeAuditListener;
 import tech.corefinance.common.dto.BasicUserDto;
+import tech.corefinance.common.model.AuditableEntity;
 import tech.corefinance.common.model.CreateUpdateDto;
 import tech.corefinance.common.model.GenericModel;
+import tech.corefinance.common.model.ModifiedDateTrackedEntity;
 import tech.corefinance.product.enums.RateType;
 
 import java.time.ZonedDateTime;
@@ -23,7 +24,8 @@ import java.time.ZonedDateTime;
 @Table(name = "rate")
 @Data
 @EntityListeners({EntityBasicUserAuditorListener.class, EntityZonedDateTimeAuditListener.class, EntityDeleteListener.class})
-public class Rate implements GenericModel<String>, CreateUpdateDto<String>, AuditableEntity<ZonedDateTime, BasicUserDto> {
+public class Rate implements GenericModel<String>, CreateUpdateDto<String>,
+        AuditableEntity<BasicUserDto>, ModifiedDateTrackedEntity<ZonedDateTime> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

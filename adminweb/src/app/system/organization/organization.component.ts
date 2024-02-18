@@ -12,6 +12,10 @@ import {AppComponent} from "../../app.component";
 })
 export class OrganizationComponent extends TableComponent<Organization> {
 
+  override permissionResourceName(): string {
+    return "organization";
+  }
+
   parent: AppComponent | undefined;
 
   override buildTableColumns(): string[] {

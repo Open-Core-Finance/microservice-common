@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {AppPlatform, LoginSession} from "../classes/LoginSession";
-import {UserMessage} from "../classes/UserMessage";
+import {UserMessage, MessageItem} from "../classes/UserMessage";
 import {BehaviorSubject} from "rxjs";
 import {GeneralApiResponse} from "../classes/GeneralApiResponse";
 import {LanguageService} from "./language.service";
@@ -19,7 +19,7 @@ export class RestService {
     siteUrl: string;
 
     constructor(private http: HttpClient, private languageService: LanguageService, private organizationService: OrganizationService) {
-        languageService.languageDataObservable.subscribe(languageData => {
+        languageService.languageDataSubject.subscribe(languageData => {
             this.languageData = languageData;
         });
         this.siteUrl = window.location.href.replace("/index.html", "");
@@ -60,20 +60,38 @@ export class RestService {
     }
 
     handleRestError(data: any, message: UserMessage) {
-        if (data.error) {
+        var errArr = message['error'];
+        if (data.errorKeysWithData) {
+            this.mapError(message, data.errorKeysWithData);
+        } else if (data.statusText) {
+            errArr.push(data.statusText);
+        } else if (data.error) {
             var err = data.error;
-            if (err.result) {
-              message['error'].push(err.result as string[]);
+            if (data.errorKeysWithData) {
+                this.mapError(message, data.errorKeysWithData);
+            } else if (err.result) {
+                errArr.push(err.result as string[]);
             } else if (err.statusText) {
-              message['error'].push(err.statusText);
+                errArr.push(err.statusText);
             } else if (err.statusCode) {
-              message['error'].push(err.statusCode);
+                errArr.push(err.statusCode);
             } else {
-              message['error'].push("Unknown error: " + JSON.stringify(err));
+                errArr.push("Unknown error: " + JSON.stringify(err));
             }
         } else {
-            message['error'].push("Unknown error: " + JSON.stringify(data));
+            errArr.push("Unknown error: " + JSON.stringify(data));
         }
+    }
+
+    private mapError(message: UserMessage, errorKeys: any) {
+        var errArr = message['error'];
+        Object.keys(errorKeys).forEach( key => {
+            const value = errorKeys[key] as string[];
+            const errorItem = new MessageItem;
+            errorItem.key = key;
+            errorItem.data = value;
+            errArr.push(errorItem);
+        });
     }
 
     extractSingleErrorMsg(err: any) {

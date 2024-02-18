@@ -11,6 +11,10 @@ import { LoanProduct } from 'src/app/classes/products/LoanProduct';
 })
 export class LoanProductComponent extends TableComponent<LoanProduct> {
 
+  override permissionResourceName(): string {
+    return "loanproduct";
+  }
+
   override buildTableColumns(): string[] {
     return ["index", "id", "name", "category", "type", "lastModifyDate", "activated", "action"];
   }

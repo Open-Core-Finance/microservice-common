@@ -32,8 +32,13 @@ public class TestPermissionRepository implements PermissionRepository {
     }
 
     @Override
-    public List<Permission> findByRoleId(String roleId) {
+    public List<Permission> findByRoleIdIn(Iterable<String> roleIds) {
         return new LinkedList<>();
+    }
+
+    @Override
+    public void deleteAllByRoleIdIn(Iterable<? extends String> roleIds) {
+
     }
 
     @Override

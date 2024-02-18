@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from "rxjs";
+import { Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject, Subscription } from "rxjs";
 import { LanguageItem } from "../classes/LanguageItem";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Order, OrderDirection } from "../classes/Paging";
@@ -9,16 +9,15 @@ import { AppSettings } from '../classes/AppSetting';
 @Injectable({
     providedIn: 'root'
 })
-export class LanguageService {
+export class LanguageService implements OnDestroy {
 
-    private languageSubject: BehaviorSubject<LanguageItem>;
-    public languageObservable: Observable<LanguageItem>;
-    private languageDataSubject: BehaviorSubject<Record<string, any>>;
-    public languageDataObservable: Observable<Record<string, any>>;
+    public languageSubject: BehaviorSubject<LanguageItem>;
+    public languageDataSubject: BehaviorSubject<Record<string, any>>;
     public languageData: Record<string, any>;
-    private languageListSubject: BehaviorSubject<LanguageItem[]>;
-    public languageListObservable: Observable<LanguageItem[]>;
+    public languageListSubject: BehaviorSubject<LanguageItem[]>;
     public selectedLanguage: LanguageItem = AppSettings.LANGUAGE_DEFAULT;
+
+    private languageSubscription: Subscription | undefined;
 
     constructor(private http: HttpClient, private commonService: CommonService) {
         try {
@@ -34,17 +33,19 @@ export class LanguageService {
             console.log(e);
         }
         this.languageSubject = new BehaviorSubject<LanguageItem>(this.selectedLanguage);
-        this.languageObservable = this.languageSubject.asObservable();
         this.languageData = {};
         this.changeLanguage(this.selectedLanguage);
         this.languageDataSubject = new BehaviorSubject<Record<string, any>>(this.languageData);
-        this.languageDataObservable = this.languageDataSubject.asObservable();
-        this.languageDataObservable.subscribe(lang => {
+        this.languageSubscription?.unsubscribe();
+        this.languageSubscription = this.languageDataSubject.subscribe(lang => {
             this.languageData = lang;
         })
         this.languageListSubject = new BehaviorSubject<LanguageItem[]>([]);
-        this.languageListObservable = this.languageListSubject.asObservable();
         this.loadAllLanguages();
+    }
+
+    ngOnDestroy(): void {
+        this.languageSubscription?.unsubscribe();
     }
 
     changeLanguage(languageItem: LanguageItem) {

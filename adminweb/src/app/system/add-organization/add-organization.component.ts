@@ -56,7 +56,7 @@ export class AddOrganizationComponent extends GeneralEntityAddComponent<Organiza
     protected override organizationService: OrganizationService, private entitiesService: EntitiesService) {
       super(languageService, commonService, restService, http, formBuilder, organizationService);
       this.currencySubscription?.unsubscribe();
-      this.currencySubscription = entitiesService.organizationObservableMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.subscribe(
+      this.currencySubscription = entitiesService.entitySubjectMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.subscribe(
          currencies => this.currencies = currencies
       );
   }

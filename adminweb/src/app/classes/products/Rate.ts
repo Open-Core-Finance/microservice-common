@@ -1,4 +1,6 @@
-export class Rate {
+import { GeneralModel, ListableItem } from "../CommonClasses";
+
+export class Rate implements GeneralModel<string>, ListableItem {
     id: string = "";
     note: string = "";
     index: number = 0;

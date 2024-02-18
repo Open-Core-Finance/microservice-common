@@ -10,6 +10,10 @@ import { GlProduct } from 'src/app/classes/products/GlProduct';
   styleUrl: './gl-product.component.sass'
 })
 export class GlProductComponent extends TableComponent<GlProduct> {
+  
+  override permissionResourceName(): string {
+    return "glproduct";
+  }
 
   override buildTableColumns(): string[] {
     return ["index", "id", "name", "category", "type", "lastModifyDate", "activated", "action"];

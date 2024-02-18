@@ -70,14 +70,9 @@ dependencies {
 
     // Database
     implementation group: 'org.postgresql', name: 'postgresql', version: "${postgresqlVersion}"
-    api (group: 'org.hibernate', name: 'hibernate-entitymanager', version: "${hibernateVersion}") {
-        exclude group: 'javax.persistence', module: 'javax.persistence-api'
-        exclude group: 'javax.activation', module: 'javax.activation-api'
-        exclude group: 'javax.xml.bind', module: 'jaxb-api'
-        exclude group: 'org.hibernate', module: 'hibernate-core'
-    }
     api group: 'org.hibernate.validator', name: 'hibernate-validator', version: "${hibernateValidatorVersion}"
-    api group: 'org.hibernate.orm', name: 'hibernate-hikaricp', version: "${hibernateHikaricpVersion}"
+    api group: 'org.hibernate.orm', name: 'hibernate-hikaricp', version: "${hibernateVersion}"
+    api group: 'org.hibernate', name: 'hibernate-entitymanager', version: "${hibernateEntitymanagerVersion}"
     // Liquibase
     api group: 'org.liquibase', name: 'liquibase-core', version: "${liquibaseVersion}"
 

@@ -14,7 +14,7 @@ export class LanguageKeyLabelProvider implements LabelProvider {
     constructor(private languageService: LanguageService, labelKey: string, labelParameters: any[]) {
         this.labelKey = labelKey;
         this.labelParameters = labelParameters;
-        languageService.languageDataObservable.subscribe(languageData => this.refreshLanguage(languageData));
+        languageService.languageDataSubject.subscribe(languageData => this.refreshLanguage(languageData));
     }
 
     getLabel(): string {
@@ -30,7 +30,7 @@ export class OrganizationNameLabelProvider implements LabelProvider {
     organization: Organization | null = null;
 
     constructor(private organizationService: OrganizationService) {
-        organizationService.organizationObservable.subscribe( organization => this.organization = organization);
+        organizationService.organizationSubject.subscribe( organization => this.organization = organization);
     }
 
     getLabel(): string {

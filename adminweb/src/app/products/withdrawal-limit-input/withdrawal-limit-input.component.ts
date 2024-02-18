@@ -11,6 +11,7 @@ import { HttpClient } from '@angular/common/http';
 import { GeneralApiResponse } from 'src/app/classes/GeneralApiResponse';
 import { environment } from 'src/environments/environment';
 import { RestService } from 'src/app/services/rest.service';
+import { CommonService } from 'src/app/services/common.service';
 
 @Component({
   selector: 'app-withdrawal-limit-input',
@@ -35,9 +36,10 @@ export class WithdrawalLimitInputComponent implements OnInit, ControlValueAccess
   allTypes = Object.keys(WithdrawalLimitType);
   channels: WithdrawalChannel[] = [];
 
-  public constructor(public languageService: LanguageService, private entityService: EntitiesService, private http: HttpClient, private restService: RestService) {
+  public constructor(public languageService: LanguageService, private entityService: EntitiesService,
+    private http: HttpClient, private restService: RestService, private commonService: CommonService) {
     this.currenciesSubscription?.unsubscribe();
-    this.currenciesSubscription = this.entityService.organizationObservableMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.subscribe( c => {
+    this.currenciesSubscription = this.entityService.entitySubjectMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.subscribe( c => {
       this.currencies = c;
       if (this.lastSupportedCurrencies) {
         this.populateCurrenciesToUi(this.lastSupportedCurrencies);
@@ -51,7 +53,8 @@ export class WithdrawalLimitInputComponent implements OnInit, ControlValueAccess
 
   ngOnInit(): void {
     let headers = this.restService.initRequestHeaders();
-    this.http.post<GeneralApiResponse>(environment.apiUrl.withdrawalChannel + "/", {pageSize: -1, pageIndex: -1}, { headers}).subscribe({
+    const requestBody = this.commonService.buildPostStringBody({pageSize: -1, pageIndex: -1});
+    this.http.post<GeneralApiResponse>(environment.apiUrl.withdrawalChannel + "/", requestBody, { headers}).subscribe({
         next: (data: GeneralApiResponse) => {
             if (data.status === 0) {
                 this.channels = (data.result as WithdrawalChannel[]);

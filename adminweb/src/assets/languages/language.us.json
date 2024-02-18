@@ -14,7 +14,36 @@
       "selectRole": "Select role to login"
   },
   "user": {
-      "welcome": "Welcome ${0}!"
+      "welcome": "Welcome ${0}!",
+      "username": "Username",
+      "email": "Email",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "middleName": "Middle name",
+      "displayName": "Display name",
+      "gender": "Gender",
+      "gender_MALE": "Male",
+      "gender_FEMALE": "Female",
+      "gender_UNKNOWN": "Unknown",
+      "birthday": "Date of birth",
+      "activated": "Activated",
+      "address": "Address",
+      "phoneNumber":"Phone number",
+      "roles": "Roles",
+      "additionalAttributes": "Additional Info",
+      "deleteConfirmContent": "Are you sure to delete user ${0}?",
+      "deleteConfirmTitle": "Confirm delete user",
+      "addTitle": "Add user",
+      "error": {
+          "user_disablked": "User was disabled. Please contact administrator to unlock.",
+          "first_name_empty": "First name cannot be empty.",
+          "email_empty": "Email cannot be empty.",
+          "username_empty": "Username cannot be empty."
+      },
+      "success": {
+        "add_successfull": "User added successfully!",
+        "update_successfull": "User updated successfully!"
+      }
   },
   "menu": {
       "groupSystem": "System",
@@ -37,7 +66,9 @@
       "groupProduct": "Product",
       "groupAccount": "Account",
       "groupMaster": "Master data",
-      "groupUam": "UAM"
+      "groupUam": "UAM",
+      "user": "Users",
+      "role": "Roles"
   },
   "organization": {
       "id": "ID",
@@ -579,5 +610,59 @@
     "repaymentTypesOrder_PENALTY": "Penalty",
     "repaymentTypesOrder_INTEREST": "Interest",
     "repaymentTypesOrder_PRINCIPAL": "Principal"
+  },
+  "role": {
+    "id": "Role ID",
+    "name": "Role name",
+    "addTitle": "Add role",
+    "error": {
+        "id_empty": "Role ID cannot be empty!",
+        "name_empty": "Role name cannot be empty!"
+    },
+    "success": {
+      "add_successfull": "Role added successfully!",
+      "update_successfull": "Role updated successfully!"
+    }
+  },
+  "permission": {
+    "configureForRole": "Configuring permission for role \"${0}\"",
+    "permissionTab_authen": "Authentication",
+    "permissionTab_kyc": "KYC",
+    "permissionTab_sanction": "Sanction",
+    "resourceCategory": {
+      "role": "Manage Roles",
+      "userprofile": "Manage Users",
+      "lastmodifymaster": "Last modify master",
+      "manage": "System managing",
+      "metadataheader": "Metadata management",
+      "permission": "Permission configure",
+      "premiumworldcheck": "Premium world check",
+      "riskclassificationrule": "Risk rules",
+      "risklevel": "Risk levels",
+      "webservicelog": "Web service logs",
+      "application": "Applications",
+      "country": "Countries",
+      "customerstatus": "Customer statuses",
+      "sanction": "Sanctions"
+    },
+    "actionItem": {
+      "add_role_POST": "Add new role",
+      "update_role_PUT": "Update existing role",
+      "delete_role_DELETE": "Delete role",
+      "view_role_GET": "View role info",
+      "list_role_POST": "List all roles",
+      "add_userprofile_POST": "Add new user",
+      "delete_userprofile_DELETE": "Delete user",
+      "list_userprofile_POST": "List all user",
+      "update_userprofile_PUT": "Update existing user",
+      "view_userprofile_GET": "View user details",
+      "add_permission_POST": "Add permission",
+      "delete_permission_DELETE": "Delete permission",
+      "list_permission_POST": "List permissions",
+      "update_permission_PUT": "Update permission",
+      "view_permission_GET": "View permission details",
+      "load_by_role_permission_POST": "Load permissions by roles",
+      "override_by_role_permission_PUT": "Override role's permissons"
+    }
   }
 }

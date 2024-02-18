@@ -8,9 +8,11 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import tech.corefinance.common.dto.BasicUserDto;
+import tech.corefinance.common.model.AuditableEntity;
 import tech.corefinance.common.model.CreateUpdateDto;
 import tech.corefinance.common.model.GenericModel;
 import tech.corefinance.common.audit.*;
+import tech.corefinance.common.model.ModifiedDateTrackedEntity;
 
 import java.time.DayOfWeek;
 import java.time.ZonedDateTime;
@@ -20,7 +22,8 @@ import java.util.List;
 @Entity
 @Table(name = "branch")
 @EntityListeners({EntityBasicUserAuditorListener.class, EntityZonedDateTimeAuditListener.class, EntityDeleteListener.class})
-public class Branch implements GenericModel<String>, CreateUpdateDto<String>, AuditableEntity<ZonedDateTime, BasicUserDto> {
+public class Branch implements GenericModel<String>, CreateUpdateDto<String>,
+        AuditableEntity<BasicUserDto>, ModifiedDateTrackedEntity<ZonedDateTime> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;

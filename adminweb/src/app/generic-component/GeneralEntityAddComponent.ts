@@ -12,7 +12,7 @@ import { OrganizationService } from "../services/organization.service";
 @Component({
     template: ''
 })
-export abstract class GeneralEntityAddComponent<T extends GeneralModel>{
+export abstract class GeneralEntityAddComponent<T extends GeneralModel<any>> {
   @Output() cancel = new EventEmitter();
   @Output() save = new EventEmitter();
   _addingItem: T | null = null;
@@ -45,7 +45,7 @@ export abstract class GeneralEntityAddComponent<T extends GeneralModel>{
     this.clearMessages();
     const formData = this.getAddForm().value;
     this.validateFormData(formData);
-    if (this.commonService.isNullOrEmpty(formData.id)) {
+    if (this.canDeleteFormId(formData.id)) {
       delete formData.id;
     }
     if (this.message['error'].length < 1) {
@@ -83,6 +83,15 @@ export abstract class GeneralEntityAddComponent<T extends GeneralModel>{
         });
       }
     }
+  }
+
+  canDeleteFormId(id: any): boolean {
+    if (typeof id == 'number') {
+      return ((id as number) < 1)
+    } else if (typeof id == 'string') {
+      return this.commonService.isNullOrEmpty(id);
+    }
+    return false;
   }
 
   @Input() set addingItem(item: T| null) {
