@@ -1,0 +1,68 @@
+<div>
+  <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+
+  <app-add-user (cancel)="cancelAdd($event)" *ngIf="addMode" (save)="submitAdd($event)" [addingItem]="addingItem"></app-add-user>
+
+  <app-general-error-panel [message]="message" errorPrefix="user.error."></app-general-error-panel>
+
+  <table mat-table [dataSource]="tableData" matSort matSortActive="id" matSortDisableClear matSortDirection="asc"
+    *ngIf="!addMode">
+    
+      <!-- Number Column -->
+      <ng-container matColumnDef="index">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="no-column">{{languageService.formatLanguage("numberInList", [])}}</th>
+        <td mat-cell *matCellDef="let element" class="no-column">{{element.index}} </td>
+      </ng-container>
+    
+      <ng-container matColumnDef="firstName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="id-col">{{languageService.formatLanguage("user.firstName", [])}}</th>
+          <td mat-cell *matCellDef="let element" class="id-col">{{element.firstName}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="lastName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{languageService.formatLanguage("user.lastName", [])}}</th>
+        <td mat-cell *matCellDef="let element">{{element.lastName}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="username">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{languageService.formatLanguage("user.username", [])}}</th>
+        <td mat-cell *matCellDef="let element">{{element.username}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{languageService.formatLanguage("user.email", [])}}</th>
+          <td mat-cell *matCellDef="let element">{{element.email}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="activated">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{languageService.formatLanguage("user.activated", [])}}</th>
+          <td mat-cell *matCellDef="let element">{{element.activated}} </td>
+      </ng-container>
+
+      <!-- Action Column -->
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef>
+          {{languageService.formatLanguage("action.action", [])}}
+          <mat-icon aria-hidden="false" fontIcon="add" (click)="addClick($event)" *ngIf="canAddItem()"></mat-icon>
+          <mat-icon aria-hidden="false" fontIcon="refresh" (click)="reloadData()"></mat-icon>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <mat-icon aria-hidden="false" fontIcon="edit" (click)="editClick($event, element)" *ngIf="canUpdateItem()"></mat-icon>
+          <mat-icon aria-hidden="false" fontIcon="delete" (click)="showDeleteModel(element)" *ngIf="canDeleteItem()"></mat-icon>
+        </td>
+      </ng-container>
+    
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="7">
+          {{languageService.formatLanguage("tableNoData", [])}}
+        </td>
+      </tr>
+  </table>
+
+  <mat-paginator #paginator *ngIf="pageEvent.length > 0 && !addMode" [pageIndex]="pageEvent.pageIndex"
+                (page)="handlePageEvent($event)" [length]="pageEvent.length" [pageSize]="pageEvent.pageSize"
+                [showFirstLastButtons]="true" [pageSizeOptions]="pageSizeOptions" [hidePageSize]="false">
+  </mat-paginator>
+</div>

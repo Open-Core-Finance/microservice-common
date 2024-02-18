@@ -8,6 +8,7 @@ import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import tech.corefinance.common.context.TenantContext;
+import tech.corefinance.common.controller.ResourceActionController;
 import tech.corefinance.product.controller.CurrencyController;
 import tech.corefinance.product.controller.OrganizationController;
 
@@ -19,7 +20,8 @@ import java.util.List;
 @Slf4j
 public class TenantIgnoreFilter implements Filter, Ordered {
 
-    private static List<Class<?>> controllerToIgnoreTenant = List.of(OrganizationController.class, CurrencyController.class);
+    private static List<Class<?>> controllerToIgnoreTenant = List.of(OrganizationController.class, CurrencyController.class,
+            ResourceActionController.class);
     private List<String> listApplyUrls = new LinkedList<>();
     
     @PostConstruct

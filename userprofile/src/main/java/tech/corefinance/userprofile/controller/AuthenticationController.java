@@ -32,7 +32,7 @@ public class AuthenticationController {
             @RequestHeader(name = HEADER_KEY_APP_PLATFORM, defaultValue = DEFAULT_APP_PLATFORM_STRING)
             AppPlatform appPlatform,
             @RequestHeader(name = HEADER_KEY_APP_VERSION, defaultValue = DEFAULT_VERSION_JSON) AppVersion appVersion,
-            @RequestHeader(name = DEVICE_ID, defaultValue = UNKNOWN_DEVICE_ID) String deviceId, HttpServletRequest request,
+            @RequestHeader(name = DEVICE_ID, required = false) String deviceId, HttpServletRequest request,
             @RequestParam("username") String username, @RequestParam("password") String password)
             throws Exception {
         LoginDto dto = authenService.login(username, password, deviceId, clientAppId, appPlatform, appVersion, request);
@@ -53,7 +53,7 @@ public class AuthenticationController {
             @RequestHeader(name = HEADER_KEY_APP_PLATFORM, defaultValue = DEFAULT_APP_PLATFORM_STRING)
             AppPlatform appPlatform,
             @RequestHeader(name = HEADER_KEY_APP_VERSION, defaultValue = DEFAULT_VERSION_JSON) AppVersion appVersion,
-            @RequestHeader(name = DEVICE_ID, defaultValue = UNKNOWN_DEVICE_ID) String deviceId,
+            @RequestHeader(name = DEVICE_ID, required = false) String deviceId,
             HttpServletRequest request, RefreshTokenRequestDto refreshTokenRequestDto) throws Exception {
         LoginDto dto = authenService.refreshToken(refreshTokenRequestDto.getLoginId(),
                 refreshTokenRequestDto.getRefreshToken(), deviceId,

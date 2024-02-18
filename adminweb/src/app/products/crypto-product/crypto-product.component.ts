@@ -11,6 +11,10 @@ import { CryptoProduct } from 'src/app/classes/products/CryptoProduct';
 })
 export class CryptoProductComponent extends TableComponent<CryptoProduct> {
 
+  override permissionResourceName(): string {
+    return "cryptoproduct";
+  }
+
   override buildTableColumns(): string[] {
     return ["index", "id", "name", "category", "type", "lastModifyDate", "activated", "action"];
   }

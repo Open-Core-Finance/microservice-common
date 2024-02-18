@@ -27,5 +27,5 @@ public enum AccessControl {
     /**
      * Skip framework permission check.
      */
-    MANUAL_CHECK;
+    MANUAL_CHECK
 }

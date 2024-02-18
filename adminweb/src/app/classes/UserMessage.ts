@@ -19,4 +19,9 @@ export class UserMessage {
       this.clearSuccess();
       this.clearError();
     }
-  }
+}
+
+export class MessageItem {
+  key: string = "";
+  data: string[] = [];
+}

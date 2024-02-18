@@ -34,7 +34,6 @@ import { HeaderComponent } from './header/header.component';
 import { LeftMenuComponent } from './left-menu/left-menu.component';
 import { SettingsComponent } from './settings/settings.component';
 import { OrganizationComponent } from './system/organization/organization.component';
-import { RoleComponent } from './system/role/role.component';
 import { AddOrganizationComponent } from './system/add-organization/add-organization.component';
 import { ConfirmDialogComponent } from './generic-component/confirm-dialog/confirm-dialog.component';
 import { CurrenyComponent } from './system/curreny/curreny.component';
@@ -77,6 +76,7 @@ import { LoanRepaymentSchedulingInputComponent } from './products/loan-repayment
 import { ValueConstraintsInputComponent } from './products/value-constraints-input/value-constraints-input.component';
 import { LoanRepaymentCollectionInputComponent } from './products/loan-repayment-collection-input/loan-repayment-collection-input.component';
 import { CdkDropList, CdkDrag} from '@angular/cdk/drag-drop';
+import { SharedModule } from './generic-component/SharedModule';
 
 @NgModule({
   declarations: [
@@ -86,9 +86,8 @@ import { CdkDropList, CdkDrag} from '@angular/cdk/drag-drop';
     LeftMenuComponent,
     SettingsComponent,
     OrganizationComponent, AddOrganizationComponent, OrganizationDetailsComponent,
-    ConfirmDialogComponent,
     CurrenyComponent,
-    RoleComponent, AddCurrenyComponent,
+    AddCurrenyComponent,
     HolidayComponent, AddHolidayComponent,
     BranchComponent, AddBranchComponent,
     ProductCategoryComponent, AddProductCategoryComponent,
@@ -99,12 +98,12 @@ import { CdkDropList, CdkDrag} from '@angular/cdk/drag-drop';
     ProductTypeComponent, AddProductTypeComponent, ProductFeeInputComponent,
     AddGlProductComponent, GlProductComponent, CurrencyValueInputComponent,
     AddCryptoProductComponent, CryptoProductComponent, LoanRepaymentCollectionInputComponent,
-    AddLoanProductComponent, LoanProductComponent, GeneralErrorPanelComponent,
+    AddLoanProductComponent, LoanProductComponent,
     DepositInterestRateInputComponent, DepositLimitInputComponent, WithdrawalLimitInputComponent,
     LoanInterestRateInputComponent, LoanRepaymentSchedulingInputComponent, ValueConstraintsInputComponent
   ],
   imports: [
-    BrowserModule, FormsModule, ReactiveFormsModule,
+    BrowserModule, FormsModule, ReactiveFormsModule, SharedModule,
     AppRoutingModule, HttpClientModule,
     BrowserAnimationsModule, MatTooltipModule,
     MatButtonModule, MatInputModule, MatMenuModule, MatIconModule, MatCardModule, MatSelectModule,

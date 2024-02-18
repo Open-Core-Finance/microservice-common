@@ -1,0 +1,57 @@
+<div class="add-item-page">
+    <div class="title-bar">
+        <mat-icon aria-hidden="false" fontIcon="grade" class="material-symbols-outlined title-icon"></mat-icon>
+        <span class="title">
+            {{languageService.formatLanguage("permission.configureForRole", [_selectedRole?.name])}}:
+        </span>
+    </div>
+    <form>
+        <mat-tab-group>
+            <mat-tab *ngFor="let perGrp of permissionGroups" label="{{languageService.formatLanguage('permission.permissionTab_' + perGrp, [])}}">
+                <div class="content-panel">
+                    <div *ngFor="let permissionConfig of permissionConfigs.get(perGrp)">
+                        <div class="generic-simple-panel">
+                            <div class="panel-header">
+                                <span>{{languageService.formatLanguage("permission.resourceCategory." + permissionConfig.resourceName, [])}}</span>
+                                <mat-checkbox class="category-check-all" [checked]="permissionConfig.selected" (change)="checkAllForResourceClicked($event, permissionConfig)">Check all</mat-checkbox>
+                            </div>
+                            <div class="panel-body">
+                                <mat-selection-list>
+                                    <mat-list-option [selected]="action.selected" *ngFor="let action of permissionConfig.actions"
+                                        (selectedChange)="checkActionItemClicked($event, action, permissionConfig)">
+                                        {{buildPermissonItemLabel(action)}}
+                                    </mat-list-option>
+                                </mat-selection-list>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </form>
+    <!-- <div class="content-panel">
+        <div *ngFor="let permissionConfig of permissionConfigs" class="generic-simple-panel">
+            <div class="panel-header">
+                <span>{{languageService.formatLanguage("permission.resourceCategory." + permissionConfig.resourceName, [])}}</span>
+                <mat-checkbox class="category-check-all" [checked]="permissionConfig.selected">Check all</mat-checkbox>
+            </div>
+            <div class="panel-body">
+                <mat-selection-list>
+                    <mat-list-option [selected]="action.selected" *ngFor="let action of permissionConfig.actions">
+                        {{buildPermissonItemLabel(action)}}
+                    </mat-list-option>
+                </mat-selection-list>
+            </div>
+        </div>
+    </div> -->
+    <div>
+        <div class="button-bar">
+            <button mat-raised-button color="primary" (click)="saveClick($event);">
+              {{languageService.formatLanguage('action.save', [])}}
+            </button>
+            <button mat-raised-button color="warn" (click)="cancelClick($event);">
+              {{languageService.formatLanguage('action.cancel', [])}}
+            </button>
+        </div>
+    </div>
+</div>

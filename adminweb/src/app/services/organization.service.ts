@@ -1,8 +1,6 @@
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
 import { Organization } from '../classes/Organization';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { Observable } from 'rxjs/internal/Observable';
-import { Subscription } from 'rxjs';
 import { AppSettings } from '../classes/AppSetting';
 
 @Injectable({
@@ -10,13 +8,11 @@ import { AppSettings } from '../classes/AppSetting';
 })
 export class OrganizationService implements OnInit, OnDestroy {
 
-  private organizationSubject: BehaviorSubject<Organization | null>;
-  public organizationObservable: Observable<Organization | null>;
+  public organizationSubject: BehaviorSubject<Organization | null>;
 
   constructor() {
     const savedOrg = this.organization;
     this.organizationSubject = new BehaviorSubject<Organization | null>(savedOrg);
-    this.organizationObservable = this.organizationSubject.asObservable();
   }
 
   ngOnDestroy(): void {

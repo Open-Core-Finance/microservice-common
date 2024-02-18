@@ -1,0 +1,54 @@
+<div class="add-item-page">
+    <mat-card>
+        <mat-card-title>
+            {{languageService.formatLanguage('user.addTitle', [])}}
+        </mat-card-title>
+        <mat-card-content>
+            <form [formGroup]="addForm">
+                <mat-form-field class="full-width" appearance="fill" color="primary">
+                    <input type="text" matInput placeholder="{{languageService.formatLanguage('user.username', [])}}" formControlName="username" required>
+                </mat-form-field>
+                <mat-form-field class="full-width" appearance="fill" color="primary">
+                    <input type="text" matInput placeholder="{{languageService.formatLanguage('user.email', [])}}" formControlName="email" required>
+                </mat-form-field>
+                <mat-form-field class="full-width" appearance="fill" color="primary">
+                    <input type="text" matInput placeholder="{{languageService.formatLanguage('user.firstName', [])}}" formControlName="firstName" required>
+                </mat-form-field>
+                <mat-form-field class="full-width" appearance="fill" color="primary">
+                    <input type="text" matInput placeholder="{{languageService.formatLanguage('user.middleName', [])}}" formControlName="middleName" >
+                </mat-form-field>
+                <mat-form-field class="full-width" appearance="fill" color="primary">
+                    <input type="text" matInput placeholder="{{languageService.formatLanguage('user.lastName', [])}}" formControlName="lastName" required>
+                </mat-form-field>
+                <mat-form-field class="full-width" appearance="fill" color="primary">
+                    <input type="text" matInput placeholder="{{languageService.formatLanguage('user.displayName', [])}}" formControlName="displayName" required>
+                </mat-form-field>
+                <mat-form-field class="full-width" appearance="fill" color="primary">
+                    <input type="text" matInput placeholder="{{languageService.formatLanguage('user.phoneNumber', [])}}" formControlName="phoneNumber" required>
+                </mat-form-field>
+                <mat-form-field class="full-width" appearance="fill" color="primary">
+                    <input type="text" matInput placeholder="{{languageService.formatLanguage('user.address', [])}}" formControlName="address" required>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-select required formControlName="gender">
+                        <mat-option *ngFor="let g of allGenders" [value]="g">{{languageService.formatLanguage("user.gender_" + g, [])}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <app-general-error-panel [message]="message" errorPrefix="user.error."></app-general-error-panel>
+                
+            </form>
+        </mat-card-content>
+
+        <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="saveClick($event);">
+                {{languageService.formatLanguage('action.save', [])}}
+            </button>
+            <button mat-raised-button color="warn" (click)="cancelClick($event);">
+                {{languageService.formatLanguage('action.cancel', [])}}
+            </button>
+        </mat-card-actions>
+
+    </mat-card>
+
+</div>

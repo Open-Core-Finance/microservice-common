@@ -13,6 +13,10 @@ import { environment } from 'src/environments/environment';
 })
 export class CurrenyComponent extends TableComponent<Currency> {
 
+  override permissionResourceName(): string {
+    return "currency";
+  }
+
   override buildTableColumns(): string[] {
     return ["index", "id", "name", "symbol", "decimalMark", "symbolAtBeginning", "action"];
   }

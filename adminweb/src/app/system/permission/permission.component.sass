@@ -1,0 +1,15 @@
+.generic-simple-panel
+    .panel-header
+        ::ng-deep .mdc-checkbox
+            .mdc-checkbox__native-control:enabled:not(:checked):not(:indeterminate):not([data-indeterminate=true])~.mdc-checkbox__background
+                border-color: white
+            .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background,
+            .mdc-checkbox__native-control:enabled:indeterminate~.mdc-checkbox__background,
+            .mdc-checkbox__native-control[data-indeterminate=true]:enabled~.mdc-checkbox__background
+                border-color: blue
+        ::ng-deep .mdc-form-field
+            color: white
+
+.content-panel
+    display: flex
+    flex-wrap: wrap

@@ -1,6 +1,6 @@
 import { GeneralModel, ListableItem } from "./CommonClasses";
 
-export class Currency implements GeneralModel, ListableItem {
+export class Currency implements GeneralModel<string>, ListableItem {
     index: number = 0;
     id: string = "";
     name: string = "";

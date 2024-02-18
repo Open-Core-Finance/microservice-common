@@ -1,11 +1,11 @@
 import { Injectable, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { Observable } from 'rxjs/internal/Observable';
 import { RestService } from './rest.service';
 import { environment } from 'src/environments/environment';
 import { GeneralApiResponse } from '../classes/GeneralApiResponse';
 import { HttpClient } from '@angular/common/http';
 import { Currency } from '../classes/Currency';
+import { CommonService } from './common.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,15 +15,10 @@ export class EntitiesService implements OnInit {
 
     public entitySubjectMap: Map<string, BehaviorSubject<any[]> | undefined> = 
         new Map<string, BehaviorSubject<any[]> | undefined>();
-    public organizationObservableMap: Map<string, Observable<any[]> | undefined> =
-        new Map<string, Observable<any[]> | undefined>();
 
-    constructor(private restService: RestService, private http: HttpClient) {
+    constructor(private restService: RestService, private http: HttpClient, private commonService: CommonService) {
         // Currency
         this.entitySubjectMap.set(EntitiesService.ENTITY_TYPE_CURRENCY, new BehaviorSubject<any[]>([]));
-        this.organizationObservableMap.set(EntitiesService.ENTITY_TYPE_CURRENCY, 
-            this.entitySubjectMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.asObservable()
-        );
         // Init
         this.ngOnInit();
     }
@@ -31,7 +26,7 @@ export class EntitiesService implements OnInit {
     ngOnInit(): void {
         let headers = this.restService.initRequestHeaders();
         const serviceUrl = environment.apiUrl.currency + "/";
-        const requestBody = {pageSize: -1, pageIndex: -1};
+        const requestBody = this.commonService.buildPostStringBody({pageSize: -1, pageIndex: -1});
         this.http.post<GeneralApiResponse>(serviceUrl, requestBody, { headers }).subscribe({
             next: (data: GeneralApiResponse) => {
                 if (data.status === 0) {

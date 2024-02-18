@@ -12,6 +12,10 @@ import { formatDate } from '@angular/common';
 })
 export class HolidayComponent extends TableComponent<Holiday> {
 
+  override permissionResourceName(): string {
+    return "holiday";
+  }
+
   override buildTableColumns(): string[] {
     return ["index", "id", "description", "holidayDate", "repeatYearly", "action"];
   }

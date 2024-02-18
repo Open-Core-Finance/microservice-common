@@ -11,6 +11,10 @@ import { environment } from 'src/environments/environment';
 })
 export class RateSourceComponent extends TableComponent<RateSource> {
 
+  override permissionResourceName(): string {
+    return "ratesource";
+  }
+
   override buildTableColumns(): string[] {
     return ["index", "id", "name", "type", "note", "action"];
   }

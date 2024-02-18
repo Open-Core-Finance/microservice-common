@@ -50,11 +50,11 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const that = this;
-    this.languageSubscription = this.languageService.languageDataObservable.subscribe(languageData => that.refreshLanguage(languageData));
-    this.languageListSubscription = this.languageService.languageListObservable.subscribe( list => this.languageList = list);
+    this.languageSubscription = this.languageService.languageDataSubject.subscribe(languageData => that.refreshLanguage(languageData));
+    this.languageListSubscription = this.languageService.languageListSubject.subscribe( list => this.languageList = list);
     this.changeLanguage(this.languageService.selectedLanguage);
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'];
-    this.roleListSubscription = this.auth.roleListObservable.subscribe(list => {
+    this.roleListSubscription = this.auth.roleListSubject.subscribe(list => {
       if (list.length > 0) {
         this.isLoading = false;
         this.clearMessages();
@@ -64,7 +64,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.auth.saveSelectedRole(this.roleList[0]);
       }
     });
-    this.selectedRoleSubscription = this.auth.selectedRoleObservable.subscribe( role => {
+    this.selectedRoleSubscription = this.auth.selectedRoleSubject.subscribe( (role: Role | null) => {
       if (role != null) {
         let urlToNavigate: string;
         if (role.organization == null) {

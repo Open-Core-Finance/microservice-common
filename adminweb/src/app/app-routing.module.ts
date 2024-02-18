@@ -18,6 +18,8 @@ import {ProductTypeComponent} from "./product-master/product-type/product-type.c
 import { GlProductComponent } from './products/gl-product/gl-product.component';
 import { CryptoProductComponent } from './products/crypto-product/crypto-product.component';
 import { LoanProductComponent } from './products/loan-product/loan-product.component';
+import { UserComponent } from './system/user/user.component';
+import { RoleComponent } from './system/role/role.component';
 
 const routes: Routes = [
   { path: '', redirectTo: environment.frontEndUrl.organizations, pathMatch: 'full'},
@@ -36,7 +38,9 @@ const routes: Routes = [
   { path: environment.frontEndUrl.depositProducts, component: DepositProductComponent, canActivate: [AuthGuard] },
   { path: environment.frontEndUrl.glProducts, component: GlProductComponent, canActivate: [AuthGuard] },
   { path: environment.frontEndUrl.cryptoProducts, component: CryptoProductComponent, canActivate: [AuthGuard] },
-  { path: environment.frontEndUrl.loanProducts, component: LoanProductComponent, canActivate: [AuthGuard] }
+  { path: environment.frontEndUrl.loanProducts, component: LoanProductComponent, canActivate: [AuthGuard] },
+  { path: environment.frontEndUrl.userManagement, component: UserComponent, canActivate: [AuthGuard] },
+  { path: environment.frontEndUrl.roleManagement, component: RoleComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({

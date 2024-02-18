@@ -1,4 +1,6 @@
-export class ExchangeRate {
+import { GeneralModel, ListableItem } from "../CommonClasses";
+
+export class ExchangeRate implements GeneralModel<string>, ListableItem {
     id: string = "";
     name: string = "";
     index: number = 0;

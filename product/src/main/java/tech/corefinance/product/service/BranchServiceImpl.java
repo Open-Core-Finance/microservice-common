@@ -1,10 +1,8 @@
 package tech.corefinance.product.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.query.criteria.internal.ValueHandlerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tech.corefinance.common.context.TenantContext;
 import tech.corefinance.common.ex.ServiceProcessingException;
@@ -38,7 +36,7 @@ public class BranchServiceImpl implements BranchService {
         if (dest.isInheritNonWorkingDays()) {
             var errorMarker = new ErrorHolder(null);
             // Start a virtual thread to run a task
-            Thread thread = Thread.ofVirtual().start(() -> {
+            Thread thread = new Thread(() -> {
                 try {
                     tenantContext.clearTenantId();
                     var org = organizationRepository.findById(currentTenant).orElseThrow(() ->
@@ -50,6 +48,7 @@ public class BranchServiceImpl implements BranchService {
                     tenantContext.setTenantId(currentTenant);
                 }
             });
+            thread.start();
             try {
                 thread.join();
             } catch (InterruptedException e) {

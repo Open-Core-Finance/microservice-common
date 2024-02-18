@@ -34,7 +34,7 @@ export class LoanRepaymentCollectionInputComponent implements OnInit, ControlVal
 
   public constructor(public languageService: LanguageService, private entityService: EntitiesService) {
     this.currenciesSubscription?.unsubscribe();
-    this.currenciesSubscription = this.entityService.organizationObservableMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.subscribe( c => {
+    this.currenciesSubscription = this.entityService.entitySubjectMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.subscribe( c => {
       this.currencies = c;
       if (this.lastSupportedCurrencies) {
         this.populateCurrenciesToUi(this.lastSupportedCurrencies);

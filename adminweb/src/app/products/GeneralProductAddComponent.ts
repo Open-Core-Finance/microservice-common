@@ -82,7 +82,7 @@ export abstract class GeneralProductAddComponent<T extends Product> extends Gene
             }, error: (data: any) => this.restService.handleRestError(data, this.message)
         });
         this.organizationSubscription?.unsubscribe();
-        this.organizationSubscription = this.organizationService.organizationObservable.subscribe( org => {
+        this.organizationSubscription = this.organizationService.organizationSubject.subscribe( org => {
             this.lastOrganization = org;
             const addForm = this.getAddForm();
             if (!addForm.value.currencies || addForm.value.currencies.length < 1) {
@@ -91,7 +91,7 @@ export abstract class GeneralProductAddComponent<T extends Product> extends Gene
             }
         });
         this.currenciesSubscription?.unsubscribe();
-        this.currenciesSubscription = this.entityService.organizationObservableMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.subscribe( c => {
+        this.currenciesSubscription = this.entityService.entitySubjectMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.subscribe( c => {
             this.currencies = c;
             this.currenciesChanged();
         });

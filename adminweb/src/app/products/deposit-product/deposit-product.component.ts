@@ -11,6 +11,10 @@ import {DepositProduct} from "../../classes/products/DepositProduct";
 })
 export class DepositProductComponent extends TableComponent<DepositProduct> {
 
+  override permissionResourceName(): string {
+    return "depositproduct";
+  }
+
   override buildTableColumns(): string[] {
     return ["index", "id", "name", "category", "type", "lastModifyDate", "activated", "action"];
   }

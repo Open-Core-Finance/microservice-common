@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Document("resource_action")
 @Table(name = "resource_action")
 @Entity
-public class ResourceAction implements GenericModel<String> {
+public class ResourceAction implements CreateUpdateDto<String>, GenericModel<String> {
     public static final String COMMON_ACTION_ADD = "add";
     public static final String COMMON_ACTION_UPDATE = "update";
     public static final String COMMON_ACTION_DELETE = "delete";

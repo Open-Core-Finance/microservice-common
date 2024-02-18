@@ -11,6 +11,10 @@ import { environment } from 'src/environments/environment';
 })
 export class ProductCategoryComponent extends TableComponent<ProductCategory> {
 
+  override permissionResourceName(): string {
+    return "productcategory";
+  }
+
   override buildTableColumns(): string[] {
     return ["index", "id", "name", "type", "action"];
   }

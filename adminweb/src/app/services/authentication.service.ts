@@ -17,14 +17,11 @@ import { UserMessage } from '../classes/UserMessage';
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService implements OnDestroy, OnInit {
 
-    private currentSessionSubject!: BehaviorSubject<LoginSession | null>;
-    private selectedRoleSubject!: BehaviorSubject<Role | null>;
-    private roleListSubject: BehaviorSubject<Role[]> = new BehaviorSubject<Role[]>([]);
+    public currentSessionSubject!: BehaviorSubject<LoginSession | null>;
+    public selectedRoleSubject!: BehaviorSubject<Role | null>;
+    public roleListSubject: BehaviorSubject<Role[]> = new BehaviorSubject<Role[]>([]);
 
-    public currentSession!: Observable<LoginSession | null>;
     refreshInterval: Observable<number>;
-    selectedRoleObservable!: Observable<Role | null>;
-    roleListObservable = this.roleListSubject.asObservable();
 
     refreshIntervalSubscription: Subscription | null = null;
     loginSubscription!: Subscription;
@@ -42,10 +39,8 @@ export class AuthenticationService implements OnDestroy, OnInit {
         } else {
           this.currentSessionSubject = new BehaviorSubject<LoginSession | null>(null);
         }
-        this.currentSession = this.currentSessionSubject.asObservable();
         // Selected role
         this.selectedRoleSubject = new BehaviorSubject<Role | null>(this.selectedRoleValue);
-        this.selectedRoleObservable = this.selectedRoleSubject.asObservable();
     }
 
     ngOnInit(): void {
