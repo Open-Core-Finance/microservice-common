@@ -56,9 +56,11 @@ dependencyManagement {
 jar {
     archiveClassifier = ""
     exclude("*.der")
-    exclude("logback.xml")
-    exclude("application.yaml")
+    exclude("*.xml")
+    exclude("*.yaml")
     exclude("db")
+    exclude("resources")
+    exclude("tech/corefinance/product/ProductApplication.class")
 }
 
 bootJar {
@@ -172,10 +174,10 @@ publishing {
             artifact javadocJar
 
             pom {
-                name = 'Microservice Common'
-                description = 'Common module for microservices of Open Core Finance project.'
+                name = 'Core finance product'
+                description = 'Product microservice.'
                 url = 'https://corefinance.tech/'
-                properties = [ "lib.name": "microservice-common" ]
+                properties = [ "lib.name": "product" ]
                 licenses {
                     license {
                         name = 'The Apache License, Version 2.0'
@@ -190,9 +192,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection = 'scm:git:ssh://git@github.com:Open-Core-Finance/microservice-common.git'
-                    developerConnection = 'scm:git:ssh://git@github.com:Open-Core-Finance/microservice-common.git'
-                    url = 'https://github.com/Open-Core-Finance/microservice-common'
+                    connection = 'scm:git:ssh://git@github.com:Open-Core-Finance/corefinance.git'
+                    developerConnection = 'scm:git:ssh://git@github.com:Open-Core-Finance/corefinance.git'
+                    url = 'https://github.com/Open-Core-Finance/corefinance'
                 }
             }
         }
