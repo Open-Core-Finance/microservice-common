@@ -18,7 +18,7 @@ import java.io.File;
 public class ProductApplication {
 
     public static void main(String[] args) {
-        String logFileNameDefault = "core_finance";
+        String logFileNameDefault = "core_finance_product";
         if (!StringUtils.hasText(System.getProperty(CommonConstants.LOGBACK_FILE_PATH_KEY))) {
             System.setProperty(CommonConstants.LOGBACK_FILE_PATH_KEY, CommonConstants.LOGBACK_FILE_PATH_DEFAULT);
         }
