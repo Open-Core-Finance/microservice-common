@@ -6,8 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-import tech.corefinance.product.enums.CreditArrangementManaged;
-import tech.corefinance.product.model.*;
+import tech.corefinance.product.common.enums.CreditArrangementManaged;
+import tech.corefinance.product.common.model.*;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class LoanProduct extends Product {
     @JdbcTypeCode(SqlTypes.JSON)
     @NotNull
     @Column(name = "interest_rate")
-    private LoanInterestRate interestRate;
+    private LoanProductInterestRate interestRate;
     @JdbcTypeCode(SqlTypes.JSON)
     @NotNull
     @Column(name = "repayment_scheduling")

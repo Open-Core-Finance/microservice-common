@@ -1,5 +1,6 @@
 package tech.corefinance.account.loan.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Table;
@@ -19,5 +20,6 @@ import tech.corefinance.common.enums.CustomAuditorField;
 @CustomAuditor(createdByType = CustomAuditorField.BASIC_USER_JSON, lastModifiedByType = CustomAuditorField.BASIC_USER_JSON)
 @EntityListeners({EntityBasicUserAuditorListener.class, EntityZonedDateTimeAuditListener.class, EntityDeleteListener.class})
 public class LoanAccount extends Account {
-
+    @Column(name = "customer_id")
+    private Long customerId;
 }

@@ -14,7 +14,8 @@ CREATE TABLE IF NOT EXISTS loan_account
     last_modified_date timestamp with time zone,
     created_by jsonb,
     last_modified_by jsonb,
-    supported_currencies character varying[] NOT NULL
+    supported_currencies character varying[] NOT NULL,
+    customer_id bigint NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS account_balance (

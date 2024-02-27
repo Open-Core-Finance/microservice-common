@@ -10,7 +10,7 @@ import tech.corefinance.common.controller.CrudController;
 import tech.corefinance.common.dto.GeneralApiResponse;
 import tech.corefinance.common.service.CommonService;
 import tech.corefinance.product.entity.ProductType;
-import tech.corefinance.product.enums.ProductCategoryType;
+import tech.corefinance.product.common.enums.ProductCategoryType;
 import tech.corefinance.product.service.ProductTypeService;
 
 import java.util.List;

@@ -2,12 +2,12 @@ package tech.corefinance.product.dto;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import tech.corefinance.product.enums.CreditArrangementManaged;
-import tech.corefinance.product.enums.FrequencyOptionYearly;
-import tech.corefinance.product.model.CurrencyLimitValue;
-import tech.corefinance.product.model.DepositInterestRate;
-import tech.corefinance.product.model.DepositLimit;
-import tech.corefinance.product.model.WithdrawalLimit;
+import tech.corefinance.product.common.enums.CreditArrangementManaged;
+import tech.corefinance.product.common.enums.FrequencyOptionYearly;
+import tech.corefinance.product.common.model.CurrencyValue;
+import tech.corefinance.product.common.model.DepositProductInterestRate;
+import tech.corefinance.product.common.model.DepositLimit;
+import tech.corefinance.product.common.model.WithdrawalLimit;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class DepositProductDto extends ProductDto {
      * Interest Rate.
      */
     private boolean enableInterestRate;
-    private DepositInterestRate interestRate;
+    private DepositProductInterestRate interestRate;
 
     // Internal control
     private boolean autoSetAsDormant;
@@ -39,8 +39,8 @@ public class DepositProductDto extends ProductDto {
     private Integer earlyClosurePeriod;
 
     private Boolean allowOverdrafts;
-    private DepositInterestRate overdraftsInterest;
-    private List<CurrencyLimitValue> maxOverdraftLimits;
+    private DepositProductInterestRate overdraftsInterest;
+    private List<CurrencyValue> maxOverdraftLimits;
     private CreditArrangementManaged overdraftsUnderCreditArrangementManaged;
 
     private boolean enableTermDeposit;

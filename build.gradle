@@ -1,5 +1,267 @@
+/**
+ * Define build script dependencies.
+ */
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        dependencies {
+            classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootPluginVersion")
+        }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootPluginVersion")
+        classpath "io.spring.gradle:dependency-management-plugin:$springDependenciesManagementVersion"
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:latest.release"
+        classpath "io.freefair.gradle:lombok-plugin:latest.release"
+    }
+}
+
+plugins {
+    id 'org.springframework.boot' version "$springBootPluginVersion" apply false
+    id 'io.spring.dependency-management' version "$springDependenciesManagementVersion" apply false
+    id "io.freefair.lombok" version "${lombokPluginVersion}" apply false
+    id "org.sonarqube" version "${sonarqubePluginVersion}" apply false
+    id("org.hibernate.orm") version "${hibernatePluginVersion}" apply false
+}
+
+// Include credential if any.
 if (new File("artifact-credential.gradle").exists()) {
     apply from: 'artifact-credential.gradle'
 } else {
     apply from: 'artifact-credential-sample.gradle'
+}
+
+def listJavaLibrariesProject = [
+    "microservice-common", "microservice-common-jpa", "microservice-common-mongodb",
+    "common-account", "common-product"
+]
+
+configure(subprojects) {
+    buildscript {
+        repositories {
+            mavenLocal()
+            mavenCentral()
+            dependencies {
+                classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootPluginVersion")
+            }
+        }
+        dependencies {
+            classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootPluginVersion")
+            classpath "io.spring.gradle:dependency-management-plugin:$springDependenciesManagementVersion"
+            classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:latest.release"
+            classpath "io.freefair.gradle:lombok-plugin:latest.release"
+        }
+    }
+
+    def isLib = false;
+    for (def libPro : listJavaLibrariesProject) {
+        if (libPro == project.name) {
+            isLib = true;
+            break;
+        }
+    }
+
+    // Sub projects plugin
+    apply plugin: 'io.spring.dependency-management'
+    if (!isLib) {
+        apply plugin: 'org.springframework.boot'
+    }
+    apply plugin: 'java-library'
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
+    apply plugin: 'application'
+    apply plugin: 'io.freefair.lombok'
+    apply plugin: 'org.sonarqube'
+    apply plugin: 'maven-publish'
+    apply plugin: 'signing'
+    apply plugin: 'org.hibernate.orm'
+
+    // Sub projects version
+    group = "${applicationGroup}"
+    version = "${applicationVersion}"
+
+    // Sub projects java version
+    sourceCompatibility = javaSourceCompatibility
+    targetCompatibility = javaSourceCompatibility
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(javaSourceCompatibility))
+        }
+    }
+
+    // Sub projects repositories
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven {
+            url = "https://s01.oss.sonatype.org/content/groups/public/"
+        }
+    }
+
+    // Sub projects dependencies management
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.boot:spring-boot-dependencies:$springBootPluginVersion"
+            mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+        }
+    }
+
+    // Sub projects jar config
+    jar {
+        archiveClassifier = ""
+        exclude("*.der")
+        exclude("*.xml")
+        exclude("*.yaml")
+        exclude("db")
+        exclude("resources")
+        exclude("**/*Application.class")
+    }
+
+    if (project.hasProperty('bootJar')) {
+        bootJar {
+            archiveClassifier = "boot"
+            enabled = true
+        }
+    }
+
+    jacoco {
+        toolVersion = "${jacocoToolVersion}"
+        reportsDirectory = layout.buildDirectory.dir("jacoco").get()
+    }
+
+    test {
+        useJUnitPlatform()
+
+        // report is always generated after tests run
+        finalizedBy jacocoTestReport
+
+        jacoco {
+            classDumpDir = layout.buildDirectory.file("jacoco/classpathdumps").get().asFile
+            enabled = true
+            destinationFile = layout.buildDirectory.file("jacoco/${name}.exec").get().asFile
+            includes = []
+            excludes = []
+            excludeClassLoaders = []
+            includeNoLocationClasses = false
+            sessionId = UUID.randomUUID().toString()
+            dumpOnExit = true
+            classDumpDir = null
+            output = JacocoTaskExtension.Output.FILE
+            address = "localhost"
+            port = 6300
+            jmx = false
+        }
+    }
+
+    jacocoTestReport {
+        // tests are required to run before generating the report
+        dependsOn test
+        mustRunAfter test
+
+        reports {
+            html.required = true
+            xml.required = true
+            csv.required = true
+            html.outputLocation = layout.buildDirectory.dir("jacoco/html").get().asFile
+            xml.outputLocation = layout.buildDirectory.file("jacoco/jacoco-report.xml").get().asFile
+            csv.outputLocation = layout.buildDirectory.file("jacoco/jacoco-report.csv").get().asFile
+        }
+
+        afterEvaluate {
+            getClassDirectories().setFrom(classDirectories.files.collect {
+                fileTree(dir: it, exclude: ['**/ex/*', '**/pojo/*', '**/model/*', '**/dto/*', '**/config/*'])
+            })
+        }
+    }
+
+    javadoc {
+        exclude("**/InternalServiceConfig#InternalServiceConfig")
+        options.addStringOption('Xdoclint:none', '-quiet')
+    }
+
+    tasks.register('javadocJar', Jar) {
+        dependsOn javadoc
+        from javadoc.destinationDir
+        archiveClassifier = 'javadoc'
+        description = "Creates a Javadoc Jar for ${project.name}"
+    }
+
+    tasks.register('sourcesJar', Jar) {
+        dependsOn classes
+        archiveClassifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    artifacts {
+        archives javadocJar, sourcesJar
+    }
+
+    publishing {
+        repositories {
+            maven {
+                url = version.endsWith('SNAPSHOT') ? "${artifactSnapshotUrl}" : "${artifactReleaseUrl}"
+                credentials {
+                    username = "${artifactUsername}"
+                    password = "${artifactPassword}"
+                }
+                allowInsecureProtocol = true
+            }
+        }
+        publications {
+            group = group
+            version = version
+
+            mavenJava(MavenPublication) {
+                from components.java
+                artifact sourcesJar
+                artifact javadocJar
+
+                pom {
+                    name = "Core finance ${project.name}"
+                    description = "Core finance ${project.name}."
+                    url = 'https://corefinance.tech/'
+                    properties = [ "lib.name": "${project.name}" ]
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = 'dbaotrung'
+                            name = 'Trung Doan'
+                            email = 'doanbaotrung@gmail.com'
+                        }
+                    }
+                    scm {
+                        connection = 'scm:git:ssh://git@github.com:Open-Core-Finance/corefinance.git'
+                        developerConnection = 'scm:git:ssh://git@github.com:Open-Core-Finance/corefinance.git'
+                        url = 'https://github.com/Open-Core-Finance/corefinance'
+                    }
+                }
+            }
+        }
+    }
+
+    publish.dependsOn(':build')
+    publish.mustRunAfter(':build')
+
+    signing {
+        sign publishing.publications
+    }
+
+    if (!isLib) {
+        println("Configuring for project ${project.name}...")
+        sourceSets {
+            main {
+                resources {
+                    srcDirs = [ '../share-resources/main-app-resources' ]
+                    srcDirs += [ projectDir.absolutePath + "/src/main/resources" ]
+                }
+            }
+        }
+        println sourceSets.main.resources.srcDirs
+    }
 }

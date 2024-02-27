@@ -1,3 +1,0 @@
-spring.datasource.hikari.data-source-properties:
-        socketFactory: com.google.cloud.sql.postgres.SocketFactory
-        cloudSqlInstance: corefinance:asia-southeast2:corefinance

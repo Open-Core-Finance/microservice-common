@@ -2,8 +2,8 @@ package tech.corefinance.product.dto;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import tech.corefinance.product.enums.CreditArrangementManaged;
-import tech.corefinance.product.model.*;
+import tech.corefinance.product.common.enums.CreditArrangementManaged;
+import tech.corefinance.product.common.model.*;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
 public class LoanProductDto extends ProductDto {
     private List<ValueConstraint> loanValues;
     private CreditArrangementManaged underCreditArrangementManaged;
-    private LoanInterestRate interestRate;
+    private LoanProductInterestRate interestRate;
     private RepaymentScheduling repaymentScheduling;
     private RepaymentCollection repaymentCollection;
     private ArrearsSetting arrearsSetting;

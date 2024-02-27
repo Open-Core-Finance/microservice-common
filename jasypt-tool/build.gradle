@@ -1,0 +1,5 @@
+
+dependencies {
+    // Internal
+    implementation project(":microservice-common")
+}

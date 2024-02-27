@@ -16,7 +16,7 @@ import tech.corefinance.common.model.AuditableEntity;
 import tech.corefinance.common.model.CreateUpdateDto;
 import tech.corefinance.common.model.GenericModel;
 import tech.corefinance.common.model.ModifiedDateTrackedEntity;
-import tech.corefinance.product.enums.RateType;
+import tech.corefinance.product.common.enums.RateType;
 
 import java.time.ZonedDateTime;
 

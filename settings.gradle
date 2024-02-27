@@ -1,4 +1,4 @@
 rootProject.name = 'corefinance'
 include "microservice-common", "microservice-common-jpa", "microservice-common-mongodb"
-include "userprofile", "product", "adminweb", "gl-account", "customer", "common-account"
-include "deposit-account", "loan-account"
+include "userprofile", "product", "gl-account", "customer", "common-account"
+include "deposit-account", "loan-account", "common-product", "jasypt-tool"

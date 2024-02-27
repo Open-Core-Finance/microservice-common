@@ -11,7 +11,7 @@ import tech.corefinance.common.controller.CrudServiceAndController;
 import tech.corefinance.common.dto.GeneralApiResponse;
 import tech.corefinance.common.service.CommonService;
 import tech.corefinance.product.entity.ProductCategory;
-import tech.corefinance.product.enums.ProductCategoryType;
+import tech.corefinance.product.common.enums.ProductCategoryType;
 import tech.corefinance.product.repository.ProductCategoryRepository;
 import tech.corefinance.product.service.ProductCategoryService;
 

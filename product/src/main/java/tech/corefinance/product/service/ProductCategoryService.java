@@ -2,7 +2,7 @@ package tech.corefinance.product.service;
 
 import tech.corefinance.common.service.CommonService;
 import tech.corefinance.product.entity.ProductCategory;
-import tech.corefinance.product.enums.ProductCategoryType;
+import tech.corefinance.product.common.enums.ProductCategoryType;
 import tech.corefinance.product.repository.ProductCategoryRepository;
 
 import java.util.List;
