@@ -1,0 +1,14 @@
+
+dependencies {
+    // Spring boot
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+
+    // Internal
+    implementation project(":microservice-common")
+    implementation project(":microservice-common-jpa")
+
+    // Test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: "${powerMockitoVersion}"
+    testImplementation group: 'de.flapdoodle.embed', name: 'de.flapdoodle.embed.mongo', version: "${embededMongoVersion}"
+}

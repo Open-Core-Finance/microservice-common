@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import tech.corefinance.common.model.CreateUpdateDto;
 import tech.corefinance.common.model.GenericModel;
-import tech.corefinance.product.enums.ProductCategoryType;
+import tech.corefinance.product.common.enums.ProductCategoryType;
 
 @Entity
 @Table(name = "product_type")

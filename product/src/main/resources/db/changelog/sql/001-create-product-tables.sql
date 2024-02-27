@@ -162,7 +162,7 @@ CREATE TABLE IF NOT EXISTS deposit_product
     days_to_set_to_dormant integer,
     default_term_length integer,
     deposit_limits jsonb,
-    early_closure_period jsonb,
+    early_closure_period integer,
     interest_rate jsonb,
     max_overdraft_limit jsonb,
     max_term_length integer,

@@ -5,7 +5,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd">
 
     <!-- Include your SQL change log files here -->
-    <include file="classpath:db/changelog/sql/001-create-basic-tables.sql"/>
+    <include file="classpath:db/changelog/sql/001-create-product-tables.sql"/>
     <include file="classpath:db/changelog/sql/002-no-authen-access-urls.sql"/>
     <include file="classpath:db/changelog/sql/003-organization-details.sql"/>
     <include file="classpath:db/changelog/sql/004-permissions.sql"/>

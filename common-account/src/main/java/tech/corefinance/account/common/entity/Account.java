@@ -9,11 +9,11 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import tech.corefinance.account.common.model.AccountFee;
-import tech.corefinance.account.common.model.AccountStatus;
 import tech.corefinance.common.dto.BasicUserDto;
 import tech.corefinance.common.model.AuditableEntity;
 import tech.corefinance.common.model.GenericModel;
 import tech.corefinance.common.model.ModifiedDateTrackedEntity;
+import tech.corefinance.product.common.enums.AccountState;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -46,7 +46,7 @@ public class Account implements GenericModel<String>, AuditableEntity<BasicUserD
     private String type;
     private String description;
     @Enumerated(EnumType.STRING)
-    private AccountStatus status;
+    private AccountState status;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "account_fees")

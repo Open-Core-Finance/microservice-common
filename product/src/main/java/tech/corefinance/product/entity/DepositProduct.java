@@ -5,9 +5,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-import tech.corefinance.product.enums.CreditArrangementManaged;
-import tech.corefinance.product.enums.FrequencyOptionYearly;
-import tech.corefinance.product.model.*;
+import tech.corefinance.product.common.enums.CreditArrangementManaged;
+import tech.corefinance.product.common.enums.FrequencyOptionYearly;
+import tech.corefinance.product.common.model.CurrencyValue;
+import tech.corefinance.product.common.model.DepositProductInterestRate;
+import tech.corefinance.product.common.model.DepositLimit;
+import tech.corefinance.product.common.model.WithdrawalLimit;
 
 import java.util.List;
 
@@ -40,12 +43,16 @@ import java.util.List;
 @Table(name = "deposit_product")
 @EqualsAndHashCode(callSuper = true)
 public class DepositProduct extends Product {
+
+    @Column(name = "allow_deposit_after_maturity_date")
+    private boolean allowDepositAfterMaturityDate;
+
     /**
      * Interest Rate.
      */
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "interest_rate")
-    private DepositInterestRate interestRate;
+    private DepositProductInterestRate interestRate;
 
     // Internal control
     @Column(name = "days_to_set_to_dormant")
@@ -74,10 +81,10 @@ public class DepositProduct extends Product {
     private Boolean allowOverdrafts;
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "overdrafts_interest")
-    private DepositInterestRate overdraftsInterest;
+    private DepositProductInterestRate overdraftsInterest;
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "max_overdraft_limit")
-    private List<CurrencyLimitValue> maxOverdraftLimit;
+    private List<CurrencyValue> maxOverdraftLimit;
     @Enumerated(EnumType.STRING)
     @Column(name = "overdrafts_under_credit_arrangement_managed")
     private CreditArrangementManaged overdraftsUnderCreditArrangementManaged;

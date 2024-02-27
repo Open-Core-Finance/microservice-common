@@ -14,7 +14,21 @@ CREATE TABLE IF NOT EXISTS deposit_account
     last_modified_date timestamp with time zone,
     created_by jsonb,
     last_modified_by jsonb,
-    supported_currencies character varying[] NOT NULL
+    supported_currencies character varying[] NOT NULL,
+    customer_id bigint NOT NULL,
+    allow_deposit_after_maturity_date boolean NOT NULL default false,
+    allow_overdrafts boolean NOT NULL default false,
+    days_to_set_to_dormant integer,
+    term_length integer,
+    deposit_limits jsonb,
+    early_closure_period integer,
+    interest_rate jsonb,
+    max_overdraft_limit jsonb,
+    overdrafts_interest jsonb,
+    overdrafts_under_credit_arrangement_managed character varying(255),
+    term_unit character varying(255),
+    withdrawal_limits jsonb,
+    enable_term_deposit boolean NOT NULL default false
 );
 
 CREATE TABLE IF NOT EXISTS account_balance (

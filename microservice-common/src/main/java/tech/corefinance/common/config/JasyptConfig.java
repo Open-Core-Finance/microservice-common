@@ -39,6 +39,7 @@ public class JasyptConfig {
         config.setProviderName(providerName);
         config.setStringOutputType(stringOutputType);
         encryptor.setConfig(config);
+//        log.error("Encrypted of postgres is [{}]", encryptor.encrypt("postgres"));
         return encryptor;
     }
 
