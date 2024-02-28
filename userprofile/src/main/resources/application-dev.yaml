@@ -1,0 +1,22 @@
+server.port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:5432/${DB_NAME:core_finance_userprofile}
+    username: ${DB_USER:ENC(ProsiZTJThObo+JCmf2kQvIfW1490QEf)}
+    password: ${DB_PASS:ENC(QpBEftJY88j0GimkYIpoGS3xRNAY5GF5)}
+    driver-class-name: ${DB_DRIVER:org.postgresql.Driver}
+    hikari:
+      connection-test-query: SELECT 1
+      maximum-pool-size: ${DB_MAX_CONNECTIONS:10}
+      minimum-idle: ${DB_MIN_CONNECTIONS:2}
+      idle-timeout: 30000
+      pool-name: userprofile_service_pool
+tech:
+  corefinance:
+    common.enabled.tenant: false
+    security.private-key: classpath:private_key.der
+
+management:
+  server:
+    port: ${server.port}

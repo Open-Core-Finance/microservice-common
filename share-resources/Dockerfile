@@ -1,4 +1,4 @@
-FROM gradle:8.4-jdk17-focal as base
+FROM gradle:8.6-jdk17-focal as base
 WORKDIR /app
 # gitCommit for cache busting
 ARG GIT_COMMIT

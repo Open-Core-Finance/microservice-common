@@ -1,7 +1,8 @@
 #Logging
 logging.config: classpath:logback.xml
-server.port: 8082
+
 spring:
+  profiles.active: dev
   main:
     allow-bean-definition-overriding: false
   jackson:
@@ -17,17 +18,6 @@ spring:
       local-date-format: yyyy-MM-dd
       local-time-format: hh:mm:ss
       zoned-date-time-format: yyyy-MM-dd'T'HH:mm:ss.SSSX
-  datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:5432/${DB_NAME:core_finance_gl_account}
-    username: ${DB_USER:postgres}
-    password: ${DB_PASS:postgres}
-    driver-class-name: ${DB_DRIVER:org.postgresql.Driver}
-    hikari:
-      connection-test-query: SELECT 1
-      maximum-pool-size: ${DB_MAX_CONNECTIONS:10}
-      minimum-idle: ${DB_MIN_CONNECTIONS:2}
-      idle-timeout: 30000
-      pool-name: gl_account_service_pool
   jpa:
     properties:
       hibernate:
@@ -50,6 +40,9 @@ tech:
         zoned-date-time-to-string: true
         zoned-date-time-to-local-date-time: true
         zoned-date-time-to-date: true
+      userprofile:
+        default-password-authen: true
+        enable-index-controller: true
     common:
       filter-ordered:
         authen-filter: 2
@@ -78,10 +71,11 @@ tech:
         login-mode: SINGLE_LOGIN_PER_APP
         enabled:
           common: true
+        max-login-fail-allowed: 3
       public-key: classpath:public_key.der
-      private-key:
       no-authen-urls:
         - /
+        - /index
         - /void
         - /parserConfigurationException
         - /throwable
@@ -97,7 +91,8 @@ tech:
       url-cors:
         cors-configurations:
           - url-pattern: /v3/api-docs/*
-            allowed-origins: '*'
+            allowed-origins:
+              - http://localhost:4200
             allowed-methods:
               - GET
             allowed-headers: '*'
@@ -111,9 +106,6 @@ tech:
               - POST
               - PATCH
             allowed-headers: '*'
-    encryption:
-      plain: test
-      encoded: ENC(O5MFWIMMOz+V3iItOVY60g==)
     schema-tenancy:
       mode: postgresql
       ignore-schemas:
@@ -133,19 +125,22 @@ export:
     datetime: yyyy/MM/dd HH:mm:ss
 jasypt:
   encryptor:
-    password: password
-    # algorithm: PBEWithHmacSHA512AndAES_256
-    algorithm: PBEWithMD5AndDES
+    password: ${JASYPT_ENCRYPTOR_PASSWORD:password}
+    #algorithm: PBEWithHmacSHA512AndAES_256
+    algorithm: PBEWithMD5AndTripleDES
+    #salt-generator-class-name: org.jasypt.salt.ZeroSaltGenerator
     salt-generator-class-name: org.jasypt.salt.RandomSaltGenerator
+    #iv-generator-classname: org.jasypt.iv.RandomIvGenerator
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator
     # provider-class-name: com.sun.crypto.provider.SunJCE
     provider-name: SunJCE
     string-output-type: base64
     key-obtention-iterations: 1000
     pool-size: 1
+    proxy-property-sources: false
+    # skip-property-sources:
 
 management:
-  server:
-    port: ${server.port}
   endpoints:
     web:
       base-path: /actuator

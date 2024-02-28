@@ -73,7 +73,6 @@ public class DepositProduct extends Product {
     /**
      * Early Closure Period.
      */
-    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "early_closure_period")
     private Integer earlyClosurePeriod;
 

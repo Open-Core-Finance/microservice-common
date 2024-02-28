@@ -1,4 +1,4 @@
-package tech.corefinance.account.deposit;
+package tech.corefinance.account.combined;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,21 +14,27 @@ import tech.corefinance.common.enums.CommonConstants;
 import java.io.File;
 
 @SpringBootApplication(scanBasePackages = {
-        "tech.corefinance.account.deposit", "tech.corefinance.account.common", "tech.corefinance.common"
+        "tech.corefinance.product", "tech.corefinance.account.deposit", "tech.corefinance.account.common",
+        "tech.corefinance.account.gl", "tech.corefinance.account.loan", "tech.corefinance.common",
+        "tech.corefinance.customer"
 })
 @EnableJpaRepositories(basePackages = {
+        "tech.corefinance.product.repository", "tech.corefinance.account.loan.repository", "tech.corefinance.account.gl.repository",
         "tech.corefinance.account.deposit.repository", "tech.corefinance.account.common.repository",
-        "tech.corefinance.common.jpa.repository", "tech.corefinance.common.repository"
+        "tech.corefinance.common.jpa.repository", "tech.corefinance.common.repository",
+        "tech.corefinance.customer.repository"
 })
 @EntityScan(basePackages = {
-        "tech.corefinance.common.jpa.model", "tech.corefinance.common.model",
-        "tech.corefinance.account.deposit.entity", "tech.corefinance.account.common.entity"
+        "tech.corefinance.product.entity", "tech.corefinance.common.jpa.model", "tech.corefinance.common.model",
+        "tech.corefinance.account.deposit.entity", "tech.corefinance.account.common.entity",
+        "tech.corefinance.account.loan.entity", "tech.corefinance.account.gl.entity", "tech.corefinance.customer.entity"
 })
-@ConditionalOnProperty(prefix = "tech.app.enabled", name = "deposit-account", havingValue = "true",matchIfMissing = true)
-public class DepositAccountApplication {
+@ConditionalOnProperty(prefix = "tech.app.enabled", name = "combined-product-account", havingValue = "true",matchIfMissing = true)
+public class CombinedAccountApplication {
 
     public static void main(String[] args) {
-        String logFileNameDefault = "core_finance_deposit_account";
+        // Logs
+        String logFileNameDefault = "core_finance_combined_product_account";
         if (!StringUtils.hasText(System.getProperty(CommonConstants.LOGBACK_FILE_PATH_KEY))) {
             System.setProperty(CommonConstants.LOGBACK_FILE_PATH_KEY, CommonConstants.LOGBACK_FILE_PATH_DEFAULT);
         }
@@ -37,9 +43,9 @@ public class DepositAccountApplication {
             System.setProperty(CommonConstants.LOGBACK_FILE_NAME_KEY, logFileNameDefault);
         }
 
-        SpringApplicationBuilder app = new SpringApplicationBuilder(DepositAccountApplication.class);
+        SpringApplicationBuilder app = new SpringApplicationBuilder(CombinedAccountApplication.class);
         File file = new File(CommonConstants.LOGBACK_FILE_PATH_DEFAULT + "/" + logFileNameDefault + "_shutdown.pid");
-        Logger log = LoggerFactory.getLogger(DepositAccountApplication.class);
+        Logger log = LoggerFactory.getLogger(CombinedAccountApplication.class);
         log.info("Log folder path [{}]", System.getProperty(CommonConstants.LOGBACK_FILE_PATH_KEY));
         log.info("Generated PID file {}", file.getAbsolutePath());
         log.info("Log file name [{}]", System.getProperty(CommonConstants.LOGBACK_FILE_NAME_KEY));
