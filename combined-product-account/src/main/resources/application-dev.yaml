@@ -1,0 +1,35 @@
+server.port: 8888
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:5432/${DB_NAME:core_finance_combined_product_account}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASS:postgres}
+    driver-class-name: ${DB_DRIVER:org.postgresql.Driver}
+    hikari:
+      connection-test-query: SELECT 1
+      maximum-pool-size: ${DB_MAX_CONNECTIONS:10}
+      minimum-idle: ${DB_MIN_CONNECTIONS:2}
+      idle-timeout: 30000
+      pool-name: combined_product_account_service_pool
+  liquibase:
+    parameters:
+      liquibase.searchPath: /Users/trung_bao.d/personal/corefinance/corefinance
+      LIQUIBASE_SEARCH_PATH: /Users/trung_bao.d/personal/corefinance/corefinance
+      searchPath: /Users/trung_bao.d/personal/corefinance/corefinance
+      search-path: /Users/trung_bao.d/personal/corefinance/corefinance
+management:
+  server:
+    port: ${server.port}
+
+liquibase.search-path: /Users/trung_bao.d/personal/corefinance/corefinance
+
+tech:
+  app:
+    enabled:
+      product: false
+      customer: false
+      deposit-account: false
+      gl-account: false
+      loan-account: false
+      combined-product-account: true

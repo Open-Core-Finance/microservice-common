@@ -1,6 +1,6 @@
 #Logging
-logging.config: classpath:logback.xml
-server.port: 8084
+logging.config: classpath:logback-test.xml
+server.port: 7777
 spring:
   main:
     allow-bean-definition-overriding: false
@@ -12,35 +12,7 @@ spring:
       write-durations-as-timestamps: true
       write-enums-using-to-string: false
       FAIL_ON_EMPTY_BEANS: false
-  jackson-custom:
-    serialization:
-      local-date-format: yyyy-MM-dd
-      local-time-format: hh:mm:ss
-      zoned-date-time-format: yyyy-MM-dd'T'HH:mm:ss.SSSX
-  datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:5432/${DB_NAME:core_finance_customer}
-    username: ${DB_USER:postgres}
-    password: ${DB_PASS:postgres}
-    driver-class-name: ${DB_DRIVER:org.postgresql.Driver}
-    hikari:
-      connection-test-query: SELECT 1
-      maximum-pool-size: ${DB_MAX_CONNECTIONS:10}
-      minimum-idle: ${DB_MIN_CONNECTIONS:2}
-      idle-timeout: 30000
-      pool-name: customer_service_pool
-  jpa:
-    properties:
-      hibernate:
-        hbm2ddl:
-          auto: validate
-      show-sql: true
-      generate-ddl: false
-  # Liquibase settings
-  liquibase:
-    change-log: classpath:db/changelog/sql-changelog.xml
-    drop-first: false
-    enabled: true
-    contexts: development
+
 tech:
   corefinance:
     app:
@@ -54,8 +26,8 @@ tech:
       filter-ordered:
         authen-filter: 2
         tenant-id-filter-order: 3
-        trace-info-id-order: 1
-        encoding-response-order: 0
+        trace-info-id-order: 0
+        encoding-response-order: 100
       enabled:
         async: true
         simple-version: true
@@ -64,12 +36,12 @@ tech:
         trace-id-filter: true
         tenant: true
       default-response-charset: utf-8
-      generic-exception-handling: true
     log:
       enabled:
         services: true
         repositories: true
         api: true
+      exclude-classes: "feign.Target"
     security:
       internal-api-key: No-key
       # Json Web Token
@@ -78,8 +50,9 @@ tech:
         login-mode: SINGLE_LOGIN_PER_APP
         enabled:
           common: true
+          cached: false
       public-key: classpath:public_key.der
-      private-key:
+      private-key: classpath:private_key.der
       no-authen-urls:
         - /
         - /void
@@ -88,7 +61,7 @@ tech:
         - /test/api/*
       permission:
         default-control: ALLOWED
-      authorize-check: true
+      authorize-check: false
       scan-controllers-actions: true
       ignore-controller-scan:
         - .springframework.
@@ -97,12 +70,15 @@ tech:
       url-cors:
         cors-configurations:
           - url-pattern: /v3/api-docs/*
-            allowed-origins: '*'
+            allowed-origins:
+              - http://localhost:4200
             allowed-methods:
               - GET
             allowed-headers: '*'
           - url-pattern: /**
-            allowed-origins: '*'
+            allowed-origins:
+              - http://localhost:4200
+              - http://*.corefinance.tech
             allowed-methods:
               - GET
               - PUT
@@ -114,19 +90,16 @@ tech:
     encryption:
       plain: test
       encoded: ENC(O5MFWIMMOz+V3iItOVY60g==)
-    schema-tenancy:
-      mode: postgresql
-      ignore-schemas:
-        - public
-        - test_schema
-      enabled: true
-      schema-prefix: tenant_
-      default-schema: public
-    audit:
-      enabled:
-        zoned-date-time: true
-        basic-user: true
-        delete-track: true
+    initial:
+      name-separator: _
+      version-separator: .
+      data-regex:
+        permission:
+          file-name-regex: classpath:initial/*permissions*.json
+          replace-if-existed: true
+        internal-api:
+          file-name-regex: classpath:initial/*internal_api*.json
+          replace-if-existed: true
 export:
   format:
     date: yyyy/MM/dd
@@ -142,12 +115,3 @@ jasypt:
     string-output-type: base64
     key-obtention-iterations: 1000
     pool-size: 1
-
-management:
-  server:
-    port: ${server.port}
-  endpoints:
-    web:
-      base-path: /actuator
-      enabled: true
-      exposure.include: '*'

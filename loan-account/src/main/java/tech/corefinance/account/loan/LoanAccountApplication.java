@@ -3,6 +3,7 @@ package tech.corefinance.account.loan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.ApplicationPidFileWriter;
@@ -12,7 +13,9 @@ import tech.corefinance.common.enums.CommonConstants;
 
 import java.io.File;
 
-@SpringBootApplication(scanBasePackages = {"tech.corefinance.account.loan", "tech.corefinance.common"})
+@SpringBootApplication(scanBasePackages = {
+        "tech.corefinance.account.loan", "tech.corefinance.account.common","tech.corefinance.common"
+})
 @EnableJpaRepositories(basePackages = {
         "tech.corefinance.account.loan.repository", "tech.corefinance.account.common.repository",
         "tech.corefinance.common.jpa.repository", "tech.corefinance.common.repository"
@@ -21,6 +24,7 @@ import java.io.File;
         "tech.corefinance.common.jpa.model", "tech.corefinance.common.model",
         "tech.corefinance.account.loan.entity", "tech.corefinance.account.common.entity"
 })
+@ConditionalOnProperty(prefix = "tech.app.enabled", name = "loan-account", havingValue = "true",matchIfMissing = true)
 public class LoanAccountApplication {
 
     public static void main(String[] args) {
