@@ -9,21 +9,21 @@ INSERT INTO role (id, name, tenant_id) VALUES ('Bank1-User', 'Bank 1 User', '574
 
 -- UserProfile
 INSERT INTO user_profile (id, activated, address, birthday, display_name, email, first_name, gender, last_name, password,
-  phone_number, username, role_id) VALUES
+  phone_number, username) VALUES
   ('01', true, NULL, NULL, 'System Admin', 'admin@admin.com', 'Admin', 'FEMALE', NULL, '$2a$10$VXilztBj3jmpzMHGd4lIj.Q5R.5aqo7t6H3MWSMO8HUTle3VpIkNa', NULL,
-  'admin', NULL) ON CONFLICT DO NOTHING;
+  'admin') ON CONFLICT DO NOTHING;
 INSERT INTO user_profile (id, activated, address, birthday, display_name, email, first_name, gender, last_name, password,
-  phone_number, username, role_id) VALUES
+  phone_number, username) VALUES
   ('02', true, NULL, NULL, 'Bank 1 Admin', 'admin@bank1.com', 'Admin Bank 1', 'MALE', NULL, '$2a$10$VXilztBj3jmpzMHGd4lIj.Q5R.5aqo7t6H3MWSMO8HUTle3VpIkNa', NULL,
-  'adminbank1', NULL) ON CONFLICT DO NOTHING;
+  'adminbank1') ON CONFLICT DO NOTHING;
 INSERT INTO user_profile (id, activated, address, birthday, display_name, email, first_name, gender, last_name, password,
-  phone_number, username, role_id) VALUES
+  phone_number, username) VALUES
   ('03', true, NULL, NULL, 'Bank 2 Admin', 'admin@bank2.com', 'Admin Bank 2', 'MALE', NULL, '$2a$10$VXilztBj3jmpzMHGd4lIj.Q5R.5aqo7t6H3MWSMO8HUTle3VpIkNa', NULL,
-  'adminbank2', NULL) ON CONFLICT DO NOTHING;
+  'adminbank2') ON CONFLICT DO NOTHING;
 INSERT INTO user_profile (id, activated, address, birthday, display_name, email, first_name, gender, last_name, password,
-  phone_number, username, role_id) VALUES
+  phone_number, username) VALUES
   ('04', true, NULL, NULL, 'User Bank 01', 'user@bank1.com', 'User Bank 1', 'FEMALE', NULL, '$2a$10$VXilztBj3jmpzMHGd4lIj.Q5R.5aqo7t6H3MWSMO8HUTle3VpIkNa', NULL,
-  'user01', NULL) ON CONFLICT DO NOTHING;
+  'user01') ON CONFLICT DO NOTHING;
 
 -- User Role
 INSERT INTO user_profile_role(user_profile_id, role_id) VALUES ('01', 'SystemAdmin') ON CONFLICT DO NOTHING;

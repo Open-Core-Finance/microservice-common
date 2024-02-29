@@ -1,5 +1,4 @@
 export DB_PORT=5433
 export DB_HOST=host.docker.internal
-export POSTGRESQL_BIND_PORT=${DB_PORT}
 export COMPOSE_PARALLEL_LIMIT=2
 export COMPOSE_IGNORE_ORPHANS=true

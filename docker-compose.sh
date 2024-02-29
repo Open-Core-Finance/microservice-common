@@ -9,7 +9,6 @@ else
 fi
 
 export GIT_COMMIT=$(git log --format="%H" -n 1 | sed 's/ *$//g')
-echo "Git commit ID: ${GIT_COMMIT}"
 
 chmod +x ./share-resources/docker-scripts/docker-compose-env
 . ./share-resources/docker-scripts/docker-compose-env
@@ -20,4 +19,9 @@ for element in "${services_list[@]}"; do
     export "${element//-/_}_port"="${serverPortConfig}"
 done
 
+echo "DB PORT: ${DB_PORT}"
+echo "DB HOST: ${DB_HOST}"
+echo "userprofile port: ${userprofile_port}"
+echo "combined-product-account port: ${combined_product_account_port}"
+echo "GIT_COMMIT: ${GIT_COMMIT}"
 docker compose "${all_args}"
