@@ -56,7 +56,6 @@ public class ControllerScanner {
 
     private void scanHandler(RequestMappingHandlerMapping mapping) {
         var handlerMethods = mapping.getHandlerMethods();
-        var permissionActions = new LinkedList<ResourceAction>();
         main_loop:
         for (Map.Entry<RequestMappingInfo, HandlerMethod> entry : handlerMethods.entrySet()) {
             var key = entry.getKey();
@@ -99,13 +98,11 @@ public class ControllerScanner {
             var resourceType = coreFinanceUtil.resolveResourceType(perActAnn, controllerManagedResource);
             var action = coreFinanceUtil.resolveResourceAction(perActAnn, key);
             var requestMethods = key.getMethodsCondition().getMethods();
-            permissionActions.addAll(buildListActions(resourceType, action, urls, requestMethods));
+            buildListActions(resourceType, action, urls, requestMethods);
             if (manualPerCheckAnn != null) {
                 saveManualCheckPermissions(resourceType, action, urls, requestMethods);
             }
         }
-        log.info("{}", permissionActions);
-        resourceActionRepository.saveAll(permissionActions);
     }
 
     private List<ResourceAction> buildListActions(String resourceType, String action, Iterable<Pair<String, String>> urls,
@@ -118,7 +115,7 @@ public class ControllerScanner {
                 if (!resourceActionRepository.existsByActionAndRequestMethodAndResourceTypeAndUrl(action, requestMethod,
                         resourceType, url.getSecond())) {
                     log.debug("Saving action [{}]", resourceAction);
-                    permissionActions.add(resourceAction);
+                    permissionActions.add(resourceActionRepository.save(resourceAction));
                 } else {
                     log.debug("Skip existed action [{}]", resourceAction);
                 }

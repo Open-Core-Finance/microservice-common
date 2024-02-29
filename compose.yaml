@@ -14,18 +14,19 @@ services:
     volumes:
       - ./share-resources/docker-scripts/create-db.sql:/scripts/create-db.sql
       - ./share-resources/docker-scripts/create-db.sh:/docker-entrypoint-initdb.d/create-db.sh
-  userprofile1:
+  userprofile:
     build:
       args:
         - GIT_COMMIT=${GIT_COMMIT}
         - PROJECT_NAME=userprofile
       context: .
       dockerfile: share-resources/Dockerfile
-    ports:
-      - "9091:${userprofile_port}"
-    container_name: userprofile_service_1
+#    ports:
+#      - "9091-9093:${userprofile_port}"
+#    container_name: userprofile_service_1
     depends_on:
       - postgresql
+      - kafka
     environment:
       - DB_PORT=${DB_PORT}
       - DB_HOST=${DB_HOST}
@@ -33,56 +34,24 @@ services:
       - SERVICE_ENV=local
       - SERVICE_PORT=${userprofile_port}
       - GIT_COMMIT=${GIT_COMMIT}
-  userprofile2:
-    build:
-      args:
-        - GIT_COMMIT=${GIT_COMMIT}
-        - PROJECT_NAME=userprofile
-      context: .
-      dockerfile: share-resources/Dockerfile
-    ports:
-      - "9092:${userprofile_port}"
-    container_name: userprofile_service_2
-    depends_on:
-      - postgresql
-    environment:
-      - DB_PORT=${DB_PORT}
-      - DB_HOST=${DB_HOST}
-      - DB_NAME=core_finance_userprofile
-      - SERVICE_ENV=local
-      - SERVICE_PORT=${userprofile_port}
-      - GIT_COMMIT=${GIT_COMMIT}
-  userprofile3:
-    build:
-      args:
-        - GIT_COMMIT=${GIT_COMMIT}
-        - PROJECT_NAME=userprofile
-      context: .
-      dockerfile: share-resources/Dockerfile
-    ports:
-      - "9093:${userprofile_port}"
-    container_name: userprofile_service_3
-    depends_on:
-      - postgresql
-    environment:
-      - DB_PORT=${DB_PORT}
-      - DB_HOST=${DB_HOST}
-      - DB_NAME=core_finance_userprofile
-      - SERVICE_ENV=local
-      - SERVICE_PORT=${userprofile_port}
-      - GIT_COMMIT=${GIT_COMMIT}
-  combinedproductaccount1:
+    deploy:
+      mode: replicated
+      replicas: 3
+
+  combinedproductaccount:
     build:
       args:
         - GIT_COMMIT=${GIT_COMMIT}
         - PROJECT_NAME=combined-product-account
       context: .
       dockerfile: share-resources/Dockerfile
-    ports:
-      - "9191:${combined_product_account_port}"
-    container_name: combined_product_account_service_1
+#    ports:
+#      - "9191-9193:${combined_product_account_port}"
+#    container_name: combined_product_account_service_1
     depends_on:
       - postgresql
+      - kafka
+      - userprofile
     environment:
       - DB_PORT=${DB_PORT}
       - DB_HOST=${DB_HOST}
@@ -90,41 +59,40 @@ services:
       - SERVICE_ENV=local
       - SERVICE_PORT=${combined_product_account_port}
       - GIT_COMMIT=${GIT_COMMIT}
-  combinedproductaccount2:
-    build:
-      args:
-        - GIT_COMMIT=${GIT_COMMIT}
-        - PROJECT_NAME=combined-product-account
-      context: .
-      dockerfile: share-resources/Dockerfile
+    deploy:
+      mode: replicated
+      replicas: 3
+
+  ngnix-server:
+    image: nginx:1.25.4
     ports:
-      - "9192:${combined_product_account_port}"
-    container_name: combined_product_account_service_2
-    depends_on:
-      - postgresql
+      - "9090:81" # Userprofile
+      - "9190:82" # Product
+      - "9290:83" # Customer
+      - "9390:84" # GL Account
+      - "9490:85" # Deposit Account
+      - "9590:86" # Loan Account
+    volumes:
+      - ./share-resources/docker-scripts/ngnix.conf:/etc/nginx/nginx.conf
+      - ./share-resources/docker-scripts/nginx-userprofile.conf:/etc/nginx/conf.d/default.conf
+      - ./share-resources/docker-scripts/nginx-combined-product-account.conf:/etc/nginx/conf.d/combined-product-account.conf
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
     environment:
-      - DB_PORT=${DB_PORT}
-      - DB_HOST=${DB_HOST}
-      - DB_NAME=core_finance_combined_product_account
-      - SERVICE_ENV=local
-      - SERVICE_PORT=${combined_product_account_port}
-      - GIT_COMMIT=${GIT_COMMIT}
-  combinedproductaccount3:
-    build:
-      args:
-        - GIT_COMMIT=${GIT_COMMIT}
-        - PROJECT_NAME=combined-product-account
-      context: .
-      dockerfile: share-resources/Dockerfile
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
     ports:
-      - "9193:${combined_product_account_port}"
-    container_name: combined_product_account_service_3
+      - 22181:2181
+  kafka:
+    image: confluentinc/cp-kafka:latest
     depends_on:
-      - postgresql
+      - zookeeper
+    ports:
+      - 29092:29092
     environment:
-      - DB_PORT=${DB_PORT}
-      - DB_HOST=${DB_HOST}
-      - DB_NAME=core_finance_combined_product_account
-      - SERVICE_ENV=local
-      - SERVICE_PORT=${combined_product_account_port}
-      - GIT_COMMIT=${GIT_COMMIT}
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
