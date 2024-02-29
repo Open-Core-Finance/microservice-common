@@ -2,7 +2,7 @@ server.port: 8080
 
 spring:
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:5432/${DB_NAME:core_finance_userprofile}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:core_finance_userprofile}
     username: ${DB_USER:ENC(ProsiZTJThObo+JCmf2kQvIfW1490QEf)}
     password: ${DB_PASS:ENC(QpBEftJY88j0GimkYIpoGS3xRNAY5GF5)}
     driver-class-name: ${DB_DRIVER:org.postgresql.Driver}

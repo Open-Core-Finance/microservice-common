@@ -1,0 +1,54 @@
+version: '3'
+
+services:
+  postgresql:
+    image: "postgres:16"
+    ports:
+      - "${POSTGRESQL_BIND_PORT}:5432"
+    container_name: postgresql
+    environment:
+      - POSTGRES_USER=postgres # The PostgreSQL user (useful to connect to the database)
+      - POSTGRES_PASSWORD=postgres # The PostgreSQL password (useful to connect to the database)
+      #- POSTGRES_DB=kuniv # The PostgreSQL default database (automatically created at first launch)
+      - POSTGRES_HOST=0.0.0.0
+    volumes:
+      - ./share-resources/docker-scripts/create-db.sql:/scripts/create-db.sql
+      - ./share-resources/docker-scripts/create-db.sh:/docker-entrypoint-initdb.d/create-db.sh
+  userprofile1:
+    build:
+      args:
+        - GIT_COMMIT=${GIT_COMMIT}
+        - PROJECT_NAME=userprofile
+      context: .
+      dockerfile: share-resources/Dockerfile
+    ports:
+      - "9090:${userprofile_port}"
+    container_name: userprofile_service_1
+    depends_on:
+      - postgresql
+    environment:
+      - DB_PORT=${DB_PORT}
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=core_finance_userprofile
+      - SERVICE_ENV=local
+      - SERVICE_PORT=${userprofile_port}
+      - GIT_COMMIT=${GIT_COMMIT}
+  combinedproductaccount1:
+    build:
+      args:
+        - GIT_COMMIT=${GIT_COMMIT}
+        - PROJECT_NAME=combined-product-account
+      context: .
+      dockerfile: share-resources/Dockerfile
+    ports:
+      - "9190:${combined_product_account_port}"
+    container_name: combined_product_account_service_1
+    depends_on:
+      - postgresql
+    environment:
+      - DB_PORT=${DB_PORT}
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=core_finance_combined_product_account
+      - SERVICE_ENV=local
+      - SERVICE_PORT=${combined_product_account_port}
+      - GIT_COMMIT=${GIT_COMMIT}

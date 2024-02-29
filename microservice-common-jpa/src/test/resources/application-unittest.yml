@@ -13,7 +13,7 @@ spring:
       write-enums-using-to-string: false
       FAIL_ON_EMPTY_BEANS: false
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/kuniv_unit_test}
+    url: ${DB_URL:jdbc:postgresql://localhost:${DB_PORT:5432}/kuniv_unit_test}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver

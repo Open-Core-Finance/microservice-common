@@ -13,7 +13,7 @@ spring:
       write-enums-using-to-string: false
       FAIL_ON_EMPTY_BEANS: false
   datasource:
-    url: jdbc:postgresql://localhost:5432/coffee_shop_order
+    url: jdbc:postgresql://localhost:${DB_PORT:5432}/coffee_shop_order
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver

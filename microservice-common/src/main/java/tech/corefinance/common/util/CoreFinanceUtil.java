@@ -84,18 +84,21 @@ public class CoreFinanceUtil {
         Map<String, Object> logs = new LinkedHashMap<>();
         Object[] args = joinPoint.getArgs();
 
-        for (int i = 0; i < parametersNames.length; i++) {
-            String name = parametersNames[i];
-            Object arg = args[i];
-            boolean shouldIgnore =
-                    LIST_IGNORE_LOGGING.stream().anyMatch(clzz -> arg != null && clzz.isAssignableFrom(arg.getClass()));
-            if (!shouldIgnore && arg != null) {
-                shouldIgnore = arg.getClass().getSimpleName().contains("$");
-            }
-            if (!shouldIgnore) {
-                logs.put(name, writeValueToJson(objectMapper, arg));
-            } else {
-                logs.put(name, arg == null ? "null" : "<" + arg.getClass().getName() + "/>");
+        if (parametersNames != null) {
+            for (int i = 0; i < parametersNames.length; i++) {
+                String name = parametersNames[i];
+                Object arg = args[i];
+                boolean shouldIgnore =
+                        LIST_IGNORE_LOGGING.stream()
+                                .anyMatch(clzz -> arg != null && clzz.isAssignableFrom(arg.getClass()));
+                if (!shouldIgnore && arg != null) {
+                    shouldIgnore = arg.getClass().getSimpleName().contains("$");
+                }
+                if (!shouldIgnore) {
+                    logs.put(name, writeValueToJson(objectMapper, arg));
+                } else {
+                    logs.put(name, arg == null ? "null" : "<" + arg.getClass().getName() + "/>");
+                }
             }
         }
         return writeValueToJson(objectMapper, logs);
