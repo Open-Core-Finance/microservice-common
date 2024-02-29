@@ -22,8 +22,46 @@ services:
       context: .
       dockerfile: share-resources/Dockerfile
     ports:
-      - "9090:${userprofile_port}"
+      - "9091:${userprofile_port}"
     container_name: userprofile_service_1
+    depends_on:
+      - postgresql
+    environment:
+      - DB_PORT=${DB_PORT}
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=core_finance_userprofile
+      - SERVICE_ENV=local
+      - SERVICE_PORT=${userprofile_port}
+      - GIT_COMMIT=${GIT_COMMIT}
+  userprofile2:
+    build:
+      args:
+        - GIT_COMMIT=${GIT_COMMIT}
+        - PROJECT_NAME=userprofile
+      context: .
+      dockerfile: share-resources/Dockerfile
+    ports:
+      - "9092:${userprofile_port}"
+    container_name: userprofile_service_2
+    depends_on:
+      - postgresql
+    environment:
+      - DB_PORT=${DB_PORT}
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=core_finance_userprofile
+      - SERVICE_ENV=local
+      - SERVICE_PORT=${userprofile_port}
+      - GIT_COMMIT=${GIT_COMMIT}
+  userprofile3:
+    build:
+      args:
+        - GIT_COMMIT=${GIT_COMMIT}
+        - PROJECT_NAME=userprofile
+      context: .
+      dockerfile: share-resources/Dockerfile
+    ports:
+      - "9093:${userprofile_port}"
+    container_name: userprofile_service_3
     depends_on:
       - postgresql
     environment:
@@ -41,8 +79,46 @@ services:
       context: .
       dockerfile: share-resources/Dockerfile
     ports:
-      - "9190:${combined_product_account_port}"
+      - "9191:${combined_product_account_port}"
     container_name: combined_product_account_service_1
+    depends_on:
+      - postgresql
+    environment:
+      - DB_PORT=${DB_PORT}
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=core_finance_combined_product_account
+      - SERVICE_ENV=local
+      - SERVICE_PORT=${combined_product_account_port}
+      - GIT_COMMIT=${GIT_COMMIT}
+  combinedproductaccount2:
+    build:
+      args:
+        - GIT_COMMIT=${GIT_COMMIT}
+        - PROJECT_NAME=combined-product-account
+      context: .
+      dockerfile: share-resources/Dockerfile
+    ports:
+      - "9192:${combined_product_account_port}"
+    container_name: combined_product_account_service_2
+    depends_on:
+      - postgresql
+    environment:
+      - DB_PORT=${DB_PORT}
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=core_finance_combined_product_account
+      - SERVICE_ENV=local
+      - SERVICE_PORT=${combined_product_account_port}
+      - GIT_COMMIT=${GIT_COMMIT}
+  combinedproductaccount3:
+    build:
+      args:
+        - GIT_COMMIT=${GIT_COMMIT}
+        - PROJECT_NAME=combined-product-account
+      context: .
+      dockerfile: share-resources/Dockerfile
+    ports:
+      - "9193:${combined_product_account_port}"
+    container_name: combined_product_account_service_3
     depends_on:
       - postgresql
     environment:
