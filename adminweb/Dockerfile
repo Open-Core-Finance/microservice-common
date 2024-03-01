@@ -3,10 +3,11 @@ FROM node:20 as build-stage
 WORKDIR /app
 COPY package*.json /app/
 RUN npm install
+RUN npm install -g @angular/cli
 COPY angular.json tsconfig.* /app/
 COPY src/ /app/src
 ARG configuration=production
-RUN pwd && ls -ail && npm run build -- --output-path=./dist/out --configuration $configuration
+RUN pwd && ls -ail && ng build --output-path=./dist/out --configuration $configuration
 
 # Stage 1, based on Nginx, to have only the compiled app, ready for production with Nginx
 FROM --platform=linux/amd64 nginx:1.25

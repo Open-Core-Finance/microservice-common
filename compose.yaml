@@ -64,14 +64,21 @@ services:
       replicas: 2
 
   ngnix-server:
-    image: nginx:1.25.4
+#    image: nginx:1.25.4
+    build:
+      args:
+        - GIT_COMMIT=${GIT_COMMIT}
+        - PROJECT_NAME=adminweb
+      context: .
+      dockerfile: share-resources/Dockerfile-AdminWeb
     ports:
-      - "9090:81" # Userprofile
-      - "9190:82" # Product
-      - "9290:83" # Customer
-      - "9390:84" # GL Account
-      - "9490:85" # Deposit Account
-      - "9590:86" # Loan Account
+      - "9090:80" # Admin Web
+      - "9091:81" # Userprofile
+      - "9092:82" # Product
+      - "9093:83" # Customer
+      - "9094:84" # GL Account
+      - "9095:85" # Deposit Account
+      - "9096:86" # Loan Account
     depends_on:
       - postgresql
       - kafka
@@ -81,6 +88,7 @@ services:
       - ./share-resources/docker-scripts/ngnix.conf:/etc/nginx/nginx.conf
       - ./share-resources/docker-scripts/nginx-userprofile.conf:/etc/nginx/conf.d/default.conf
       - ./share-resources/docker-scripts/nginx-combined-product-account.conf:/etc/nginx/conf.d/combined-product-account.conf
+      - ./share-resources/docker-scripts/nginx-adminweb.conf:/etc/nginx/conf.d/nginx-adminweb.conf
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     environment:
