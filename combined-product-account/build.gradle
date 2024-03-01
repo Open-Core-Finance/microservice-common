@@ -31,6 +31,7 @@ processResources {
                 def listSubApp = [ "customer", "product", "deposit-account", "gl-account", "loan-account" ]
                 for (def subProject : listSubApp) {
                     def outDir = "db/changelog/${subProject}"
+                    delete fileTree("${sourceSets.main.output.resourcesDir}/${outDir}").include('*')
                     def listSql = []
                     copy {
                         from "${project(":${subProject}").projectDir}/src/main/resources/db/changelog/sql"

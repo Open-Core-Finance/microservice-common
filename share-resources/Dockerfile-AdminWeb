@@ -1,0 +1,13 @@
+FROM node:20.11.1-slim as adminweb-build
+WORKDIR /app/adminweb
+COPY adminweb/package*.json ./
+RUN npm install
+RUN npm install -g @angular/cli
+COPY adminweb/angular.json ./angular.json
+COPY adminweb/app.yaml ./app.yaml
+COPY adminweb/tsconfig*.json ./
+COPY adminweb/src ./src
+RUN pwd && ls -ail && ng build --output-path=./dist/out --configuration dockercompose && if [ $(cat ./dist/out/main.js |grep "corefinance\." | wc -l) != "0" ]; then exit 1; else exit 0; fi
+
+FROM nginx:1.25.4
+COPY --from=adminweb-build /app/adminweb/dist/out/ /usr/share/nginx/html
