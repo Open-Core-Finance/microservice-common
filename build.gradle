@@ -245,8 +245,8 @@ configure(subprojects) {
         }
     }
 
-    publish.dependsOn(':build')
-    publish.mustRunAfter(':build')
+    project.publish.dependsOn(project.build)
+    project.publish.mustRunAfter(project.build)
 
     signing {
         sign publishing.publications

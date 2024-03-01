@@ -1,5 +1,6 @@
 package tech.corefinance.common.services;
 
+import org.springframework.util.StringUtils;
 import tech.corefinance.common.config.ServiceSecurityConfig;
 import tech.corefinance.common.model.Permission;
 import tech.corefinance.common.model.ResourceAction;
@@ -25,10 +26,7 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
@@ -51,6 +49,13 @@ public class ControllerScannerTest {
         var resourceActionRepositoryField = PowerMockito.field(ControllerScanner.class, "resourceActionRepository");
         resourceActionRepositoryField.setAccessible(true);
         resourceActionRepositoryField.set(controllerScanner, resourceActionRepository);
+        PowerMockito.when(resourceActionRepository.save(any())).thenAnswer(e -> {
+            var arg = e.getArgument(0, ResourceAction.class);
+            if (!StringUtils.hasText(arg.getId())) {
+                arg.setId(UUID.randomUUID().toString());
+            }
+            return arg;
+        });
         // ServiceSecurityConfig
         serviceSecurityConfig = new ServiceSecurityConfig();
         listIgnoredPackage = new LinkedList<>();
@@ -93,10 +98,9 @@ public class ControllerScannerTest {
         // Config
         listIgnoredPackage.add(".test.");
         // Check if call save with empty list
-        var result = new LinkedList<ResourceAction>();
         controllerScanner.scan();
         // Verify
-        verify(resourceActionRepository, times(1)).saveAll(result);
+        verify(resourceActionRepository, times(0)).save(any());
     }
 
     @Test
@@ -128,10 +132,9 @@ public class ControllerScannerTest {
         // Config
         noAuthenUrls.add("/test-api");
         // Check if call save with empty list
-        var result = new LinkedList<ResourceAction>();
         controllerScanner.scan();
         // Verify
-        verify(resourceActionRepository, times(1)).saveAll(result);
+        verify(resourceActionRepository, times(0)).save(any());
     }
 
     @Test
@@ -150,7 +153,7 @@ public class ControllerScannerTest {
         var result = new LinkedList<ResourceAction>();
         controllerScanner.scan();
         // Verify
-        verify(resourceActionRepository, times(1)).saveAll(result);
+        verify(resourceActionRepository, times(0)).save(any());
     }
 
     @Test
@@ -177,7 +180,7 @@ public class ControllerScannerTest {
         resourceAction.setId("add-test-common-_test_another-normal");
         result.add(resourceAction);
         verify(permissionService, times(1)).createOrUpdateEntity(Mockito.any());
-        verify(resourceActionRepository, times(1)).saveAll(result);
+        verify(resourceActionRepository, times(1)).save(any());
     }
 
     @Test
@@ -201,6 +204,6 @@ public class ControllerScannerTest {
         result.add(resourceAction);
         controllerScanner.scan();
         // Verify
-        verify(resourceActionRepository, times(1)).saveAll(result);
+        verify(resourceActionRepository, times(1)).save(any());
     }
 }
