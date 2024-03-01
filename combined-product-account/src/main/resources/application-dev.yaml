@@ -12,17 +12,9 @@ spring:
       minimum-idle: ${DB_MIN_CONNECTIONS:2}
       idle-timeout: 30000
       pool-name: combined_product_account_service_pool
-  liquibase:
-    parameters:
-      liquibase.searchPath: /Users/trung_bao.d/personal/corefinance/corefinance
-      LIQUIBASE_SEARCH_PATH: /Users/trung_bao.d/personal/corefinance/corefinance
-      searchPath: /Users/trung_bao.d/personal/corefinance/corefinance
-      search-path: /Users/trung_bao.d/personal/corefinance/corefinance
 management:
   server:
     port: ${server.port}
-
-liquibase.search-path: /Users/trung_bao.d/personal/corefinance/corefinance
 
 tech:
   app:
