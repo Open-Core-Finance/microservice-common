@@ -1,0 +1,40 @@
+<div class="add-item-page">
+    <mat-card>
+        <mat-card-title>
+            {{languageService.formatLanguage(formTitleKey, [])}}
+        </mat-card-title>
+        <mat-card-content>
+            <form [formGroup]="formGroup">
+                <ng-container *ngFor="let formItem of formItems">
+
+                    <app-reactive-form-input *ngIf="isFormInput(formItem)" [placeHolderKey]="$any(formItem).placeHolderKey"
+                        [formControlName]="formItem.formControlName" [additionClass]="formItem.additionClass" [addLabel]="$any(formItem).addLabel"
+                        [inputType]="$any(formItem).inputType" [appearance]="formItem.appearance" [colorScheme]="formItem.colorScheme"
+                        [required]="formItem.required">
+                    </app-reactive-form-input>
+
+                    <app-reactive-form-select *ngIf="isFormSelect(formItem)" [labelKey]="$any(formItem).labelKey" [formControlName]="formItem.formControlName"
+                        [selectItems]="$any(formItem).selectItems" [additionClass]="formItem.additionClass" [appearance]="formItem.appearance" [colorScheme]="formItem.colorScheme"
+                        [required]="formItem.required"></app-reactive-form-select>
+
+                </ng-container>
+
+                <ng-content></ng-content>
+
+                <app-general-error-panel [message]="message" errorPrefix="currencyScreens.error."></app-general-error-panel>
+                
+            </form>
+        </mat-card-content>
+
+        <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="saveClick($event);">
+                {{languageService.formatLanguage('action.save', [])}}
+            </button>
+            <button mat-raised-button color="warn" (click)="cancelClick($event);">
+                {{languageService.formatLanguage('action.cancel', [])}}
+            </button>
+        </mat-card-actions>
+
+    </mat-card>
+
+</div>
