@@ -10,6 +10,7 @@ import { EntitiesService } from 'src/app/services/EntitiesService';
 import { environment } from 'src/environments/environment';
 import { GeneralEntityAddComponent } from 'src/app/generic-component/GeneralEntityAddComponent';
 import { OrganizationService } from 'src/app/services/organization.service';
+import { UiFormCustomContent, UiFormInput, UiFormItem, UiFormSelect, UiSelectItem } from 'src/app/classes/ui/UiFormInput';
 
 @Component({
   selector: 'app-add-curreny',
@@ -20,6 +21,7 @@ export class AddCurrenyComponent extends GeneralEntityAddComponent<Currency> imp
 
   currencies: Currency[] = [];
   currencySubscription: Subscription | undefined;
+  formItems: UiFormItem[] = [];
 
   addCurrencyForm = new FormGroup({
     index: new FormControl(0),
@@ -38,6 +40,20 @@ export class AddCurrenyComponent extends GeneralEntityAddComponent<Currency> imp
       this.currencySubscription = entitiesService.entitySubjectMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.subscribe(
          currencies => this.currencies = currencies
       );
+
+      // Form UI
+      this.formItems = [];
+      const nameInput = new UiFormInput("currency", "name");
+      this.formItems.push(nameInput);
+      const symbolInput = new UiFormInput("currencySymbol", "symbol");
+      this.formItems.push(symbolInput);
+
+      const decimalMarkInput = new UiFormSelect("decimalMark", [ { lableKey: "decimalMarkPeriod", selectValue: "." },
+        { lableKey: "decimalMarkComma", selectValue: "," } ], "decimalMark");
+      this.formItems.push(decimalMarkInput);
+      const currencySymbolPosisionInput = new UiFormSelect("currencySymbolPosision", [ { lableKey: "currencySymbolPosision_true", selectValue: true },
+        { lableKey: "currencySymbolPosision_false", selectValue: false } ], "symbolAtBeginning");
+      this.formItems.push(currencySymbolPosisionInput);
   }
 
   ngOnDestroy(): void {

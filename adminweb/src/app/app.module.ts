@@ -35,7 +35,6 @@ import { LeftMenuComponent } from './left-menu/left-menu.component';
 import { SettingsComponent } from './settings/settings.component';
 import { OrganizationComponent } from './system/organization/organization.component';
 import { AddOrganizationComponent } from './system/add-organization/add-organization.component';
-import { ConfirmDialogComponent } from './generic-component/confirm-dialog/confirm-dialog.component';
 import { CurrenyComponent } from './system/curreny/curreny.component';
 import { AddCurrenyComponent } from './system/add-curreny/add-curreny.component';
 import { HolidayComponent } from './organization-master/holiday/holiday.component';
@@ -65,7 +64,6 @@ import { AddCryptoProductComponent } from './products/add-crypto-product/add-cry
 import { CryptoProductComponent } from './products/crypto-product/crypto-product.component';
 import { AddLoanProductComponent } from './products/add-loan-product/add-loan-product.component';
 import { LoanProductComponent } from './products/loan-product/loan-product.component';
-import { GeneralErrorPanelComponent } from './generic-component/general-error-panel/general-error-panel.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { CurrencyValueInputComponent } from './products/currency-value-input/currency-value-input.component';
 import { DepositInterestRateInputComponent } from './products/deposit-interest-rate-input/deposit-interest-rate-input.component';

@@ -1,0 +1,9 @@
+<mat-form-field class="full-width {{additionClass}}" [appearance]="appearance" [color]="colorScheme">
+    <mat-label *ngIf="labelKey != ''">{{languageService.formatLanguage(labelKey, [])}}</mat-label>
+
+    <mat-select required [(ngModel)]="value" (selectionChange)="onChanged()" [attr.required]="required ? '' : null">
+        <mat-option *ngFor="let item of selectItems" [value]="item.selectValue">
+            {{languageService.formatLanguage(item.lableKey, [])}}
+        </mat-option>
+    </mat-select>
+</mat-form-field>

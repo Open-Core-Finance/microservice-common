@@ -70,7 +70,7 @@
               "optimization": true,
               "vendorChunk": true,
               "extractLicenses": false,
-              "sourceMap": false,
+              "sourceMap": true,
               "namedChunks": true,
               "fileReplacements": [
                 {
@@ -102,6 +102,10 @@
             },
             "local": {
               "buildTarget": "corefinance-adminweb:build:local"
+            }
+            ,
+            "dockercompose": {
+              "buildTarget": "corefinance-adminweb:build:dockercompose"
             }
           },
           "defaultConfiguration": "local"

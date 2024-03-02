@@ -19,21 +19,24 @@ REM The setlocal enabledelayedexpansion is used to enable delayed variable expan
 setlocal enabledelayedexpansion
 
 REM Initialize array elements
-set array[0]=userprofile
-set array[1]=combined-product-account
+rem set array[0]=userprofile
+rem set array[1]=combined-product-account
 
 REM Loop through array
-for /L %%i in (0,1,6) do (
-    for /f "delims=" %%a in ('findstr /i "server.port" "!array[%%i]!\src\main\resources\application-dev.yaml"') do (
-        set filtered_lines=%%a
-        set project_name=!array[%%i]!
-        set project_name=%project_name:-=_%
-        for /f "tokens=2" %%j in ("!filtered_lines!") do (
-            set %project_name%_port=%%j
-        )
-    )
-)
+rem for /L %%i in (0,1,6) do (
+rem     for /f "delims=" %%a in ('findstr /i "server.port" "!array[%%i]!\src\main\resources\application-dev.yaml"') do (
+rem         set filtered_lines=%%a
+rem         set project_name=!array[%%i]!
+rem         set project_name=%project_name:-=_%
+rem         for /f "tokens=2" %%j in ("!filtered_lines!") do (
+rem             set %project_name%_port=%%j
+rem         )
+rem     )
+rem )
+
+set userprofile_port=8080
+set combined_product_account_port=8888
 
 docker compose %*
 
-endlocal
+rem endlocal
