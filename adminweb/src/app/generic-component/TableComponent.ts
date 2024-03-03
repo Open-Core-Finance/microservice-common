@@ -58,12 +58,8 @@ export abstract class TableComponent<T extends GeneralModel<any>> implements Aft
     private _tableDataSubscription: Subscription | null = null;
     protected addModeSubject = new BehaviorSubject<boolean>(false);
     private _addModeSubscription: Subscription | null = null;
-    protected addUpdateItemSubject = new BehaviorSubject<T | null>(null);
-    private _addUpdateItemSubscription: Subscription | null = null;
     protected pagingSubject = new BehaviorSubject<Paging | null>(null);
     private _pagingSubscription: Subscription | null = null;
-    protected pagingEventSubject = new BehaviorSubject<PageEvent>(this.emptyPageEvent());
-    private _pagingEventSubscription: Subscription | null = null;
     protected loadingSubject = new BehaviorSubject<boolean>(false);
     private _loadSubscription: Subscription | null = null;
 
@@ -108,12 +104,8 @@ export abstract class TableComponent<T extends GeneralModel<any>> implements Aft
             this.addMode = addMode;
             this.tableUi.addMode = addMode;
         });
-        this._addUpdateItemSubscription?.unsubscribe();
-        this._addUpdateItemSubscription = this.addUpdateItemSubject.subscribe( item => this.addingItem = item);
         this._pagingSubscription?.unsubscribe();
         this._pagingSubscription = this.pagingSubject.subscribe(paging => this.paging = paging);
-        this._pagingEventSubscription?.unsubscribe();
-        this._pagingEventSubscription = this.pagingEventSubject.subscribe(pageEvent => this.pageEvent = pageEvent);
         this._loadSubscription?.unsubscribe();
         this._loadSubscription = this.loadingSubject.subscribe(loading => {
             this.isLoadingResults = loading;
@@ -141,9 +133,7 @@ export abstract class TableComponent<T extends GeneralModel<any>> implements Aft
         this._permissionConfigSubscription?.unsubscribe();
         this._tableDataSubscription?.unsubscribe();
         this._addModeSubscription?.unsubscribe();
-        this._addUpdateItemSubscription?.unsubscribe();
         this._pagingSubscription?.unsubscribe();
-        this._pagingEventSubscription?.unsubscribe();
         this._loadSubscription?.unsubscribe();
     }
 
@@ -204,11 +194,11 @@ export abstract class TableComponent<T extends GeneralModel<any>> implements Aft
             pageEvent = this.emptyPageEvent();
         }
         this.pagingSubject.next(paging);
-        this.pagingEventSubject.next(pageEvent);
+        this.pageEvent = pageEvent;
     }
 
     handlePageEvent(e: PageEvent) {
-        this.pagingEventSubject.next(e);
+        this.pageEvent = e;
         this.itemPerPage = this.pageEvent.pageSize;
         this.reloadData();
     }
@@ -279,7 +269,7 @@ export abstract class TableComponent<T extends GeneralModel<any>> implements Aft
     }
 
     submitAdd($event: any) {
-        this.addUpdateItemSubject.next(this.createNewItem());
+        this.addingItem = this.createNewItem();
         this.addModeSubject.next(false);
         this.reloadData();
         if ($event.type == "updated") {
@@ -291,16 +281,16 @@ export abstract class TableComponent<T extends GeneralModel<any>> implements Aft
 
     addClick($event: any) {
         this.clearMessages();
-        this.createNewItem();
+        const newItem = this.createNewItem();
+        this.addingItem = newItem;
         this.addModeSubject.next(true);
-        this.addUpdateItemSubject.next(this.createNewItem());
     }
 
     abstract createNewItem(): T;
 
     editClick($event: any, item: T) {
+        this.addingItem = item;
         this.addModeSubject.next(true);
-        this.addUpdateItemSubject.next(item);
         this.clearMessages();
     }
 
