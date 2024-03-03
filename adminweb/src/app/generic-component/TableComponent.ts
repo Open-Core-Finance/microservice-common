@@ -7,7 +7,7 @@ import {AuthenticationService} from "../services/authentication.service";
 import {HttpClient} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {UserMessage} from '../classes/UserMessage';
-import {Subscription} from "rxjs";
+import {BehaviorSubject, Subscription} from "rxjs";
 import {LanguageService} from "../services/language.service";
 import {CommonService} from "../services/common.service";
 import { LoginSession } from '../classes/LoginSession';
@@ -20,6 +20,7 @@ import { ConfirmDialogComponent, ConfirmDialogModel } from './confirm-dialog/con
 import { GeneralModel } from '../classes/CommonClasses';
 import { PermissionService } from '../services/permission.service';
 import { AccessControl, Permission, ResourceAction } from '../classes/Permission';
+import { TableColumnUi, TableUi } from '../classes/ui/UiTableDisplay';
 
 @Component({
     template: ''
@@ -53,21 +54,34 @@ export abstract class TableComponent<T extends GeneralModel<any>> implements Aft
     private _deleteSubscription: Subscription | null = null;
     private _permissionSubscription: Subscription | null = null;
     private _permissionConfigSubscription: Subscription | null = null;
+    protected tableDataSubject = new BehaviorSubject<any[]>([]);
+    private _tableDataSubscription: Subscription | null = null;
+    protected addModeSubject = new BehaviorSubject<boolean>(false);
+    private _addModeSubscription: Subscription | null = null;
+    protected addUpdateItemSubject = new BehaviorSubject<T | null>(null);
+    private _addUpdateItemSubscription: Subscription | null = null;
+    protected pagingSubject = new BehaviorSubject<Paging | null>(null);
+    private _pagingSubscription: Subscription | null = null;
+    protected pagingEventSubject = new BehaviorSubject<PageEvent>(this.emptyPageEvent());
+    private _pagingEventSubscription: Subscription | null = null;
+    protected loadingSubject = new BehaviorSubject<boolean>(false);
+    private _loadSubscription: Subscription | null = null;
 
     currentModulePermissions: Permission[] = [];
+    tableUi: TableUi;
 
     public constructor(protected restService: RestService, public auth: AuthenticationService,
                           protected http: HttpClient, protected router: Router, public languageService: LanguageService,
                           protected commonService: CommonService, public dialog: MatDialog,
                           protected organizationService: OrganizationService,
                           protected permissionService: PermissionService, protected changeDetector: ChangeDetectorRef) {
+        this.tableUi = this.buildTableUi();
         this.clearMessages();
         this.sortFields = [];
         this.searchText = "";
         this.itemPerPage = environment.pageSize;
         this.pageEvent = this.emptyPageEvent();
-        this.pageEvent.pageSize = environment.pageSize;
-        this.displayedColumns = this.buildTableColumns();
+        this.displayedColumns = this.tableColumNames;
         this.customData = {};
     }
 
@@ -84,6 +98,27 @@ export abstract class TableComponent<T extends GeneralModel<any>> implements Aft
         this._permissionSubscription = this.permissionService.currentUserPermissionSubject.subscribe(p => this.permissionReloaded(p));
         this._permissionConfigSubscription?.unsubscribe();
         this._permissionConfigSubscription = this.permissionService.permissionConfigSubject.subscribe(p => this.permissionReloaded(this.permissionService.currentUserPermissions));
+        this._tableDataSubscription?.unsubscribe();
+        this._tableDataSubscription = this.tableDataSubject.subscribe( (data: any[]) => {
+            this.tableData = data;
+            this.tableUi.dataSource = data;
+        });
+        this._addModeSubscription?.unsubscribe();
+        this._addModeSubscription = this.addModeSubject.subscribe( addMode => {
+            this.addMode = addMode;
+            this.tableUi.addMode = addMode;
+        });
+        this._addUpdateItemSubscription?.unsubscribe();
+        this._addUpdateItemSubscription = this.addUpdateItemSubject.subscribe( item => this.addingItem = item);
+        this._pagingSubscription?.unsubscribe();
+        this._pagingSubscription = this.pagingSubject.subscribe(paging => this.paging = paging);
+        this._pagingEventSubscription?.unsubscribe();
+        this._pagingEventSubscription = this.pagingEventSubject.subscribe(pageEvent => this.pageEvent = pageEvent);
+        this._loadSubscription?.unsubscribe();
+        this._loadSubscription = this.loadingSubject.subscribe(loading => {
+            this.isLoadingResults = loading;
+            this.tableUi.loading = loading;
+        });
     }
 
     ngAfterViewInit() {
@@ -104,6 +139,12 @@ export abstract class TableComponent<T extends GeneralModel<any>> implements Aft
         this._deleteSubscription?.unsubscribe();
         this._permissionSubscription?.unsubscribe();
         this._permissionConfigSubscription?.unsubscribe();
+        this._tableDataSubscription?.unsubscribe();
+        this._addModeSubscription?.unsubscribe();
+        this._addUpdateItemSubscription?.unsubscribe();
+        this._pagingSubscription?.unsubscribe();
+        this._pagingEventSubscription?.unsubscribe();
+        this._loadSubscription?.unsubscribe();
     }
 
     reloadData() {
@@ -115,7 +156,7 @@ export abstract class TableComponent<T extends GeneralModel<any>> implements Aft
     }
 
     getData(pageNumber: number, orders: Order[], customData: any) {
-        this.isLoadingResults = true;
+        this.loadingSubject.next(true);
         this.clearMessages();
         if (!this.canViewList()) {
             this.message.error.push(TableComponent.NO_LIST_PERMISSION_ERROR_CODE);
@@ -135,32 +176,39 @@ export abstract class TableComponent<T extends GeneralModel<any>> implements Aft
         const requestBody = this.commonService.buildPostStringBody(body);
         this.http.post<GeneralApiResponse>(this.getSearchUrl(), requestBody, {headers})
             .subscribe({next: (data: GeneralApiResponse) => this.dataLoadSuccess(data as Paging),
-                error: (data: any) => this.restService.handleRestError(data, this.message)});
+                error: (data: any) => {
+                    this.loadingSubject.next(false);
+                    this.restService.handleRestError(data, this.message);
+                }
+            });
     }
 
     protected dataLoadSuccess(paging: Paging) {
-        this.isLoadingResults = false;
-        this.paging = paging;
-        if (this.paging) {
-            this.tableData = [];
-            if (this.paging.result) {
-                var index = (this.paging.pageNumber * this.paging.pageSize) + 1
-                for ( const item of this.paging.result) {
+        this.loadingSubject.next(false);
+        var pageEvent = this.pageEvent;
+        if (paging) {
+            const tableData: any[] = [];
+            if (paging.result) {
+                var index = (paging.pageNumber * paging.pageSize) + 1
+                for ( const item of paging.result) {
                     const obj = Object.assign(this.createNewItem(), item);
                     obj['index'] = index++;
-                    this.tableData.push(obj);
+                    tableData.push(obj);
                 }
             }
-            this.pageEvent.pageIndex = this.paging.pageNumber;
-            this.pageEvent.pageSize = this.paging.pageSize;
-            this.pageEvent.length = this.paging.totalElements;
+            this.tableDataSubject.next(tableData);
+            pageEvent.pageIndex = paging.pageNumber;
+            pageEvent.pageSize = paging.pageSize;
+            pageEvent.length = paging.totalElements;
         } else {
-            this.pageEvent = this.emptyPageEvent();
+            pageEvent = this.emptyPageEvent();
         }
+        this.pagingSubject.next(paging);
+        this.pagingEventSubject.next(pageEvent);
     }
 
     handlePageEvent(e: PageEvent) {
-        this.pageEvent = e;
+        this.pagingEventSubject.next(e);
         this.itemPerPage = this.pageEvent.pageSize;
         this.reloadData();
     }
@@ -227,12 +275,12 @@ export abstract class TableComponent<T extends GeneralModel<any>> implements Aft
     }
 
     cancelAdd($event: any) {
-        this.addMode = false;
+        this.addModeSubject.next(false);
     }
 
     submitAdd($event: any) {
-        this.createNewItem();
-        this.addMode = false;
+        this.addUpdateItemSubject.next(this.createNewItem());
+        this.addModeSubject.next(false);
         this.reloadData();
         if ($event.type == "updated") {
             this.message.success.push("update_successfull");
@@ -244,22 +292,20 @@ export abstract class TableComponent<T extends GeneralModel<any>> implements Aft
     addClick($event: any) {
         this.clearMessages();
         this.createNewItem();
-        this.addingItem = this.createNewItem();
-        this.addMode = true;
+        this.addModeSubject.next(true);
+        this.addUpdateItemSubject.next(this.createNewItem());
     }
 
     abstract createNewItem(): T;
 
     editClick($event: any, item: T) {
-        this.addingItem = item;
-        this.addMode = true;
+        this.addModeSubject.next(true);
+        this.addUpdateItemSubject.next(item);
         this.clearMessages();
     }
 
     refreshLanguage(languageData: Record<string, any>) {
     }
-
-    abstract buildTableColumns(): string[];
 
     emptyPageEvent() {
         const result = new PageEvent();
@@ -318,4 +364,35 @@ export abstract class TableComponent<T extends GeneralModel<any>> implements Aft
         }
         return environment.defaultPermissionIfNull != AccessControl.DENIED;
     }
+
+    genericTableUiEdit($event: any) {
+        this.editClick($event.event, $event.element);
+    }
+
+    protected buildTableUi(): TableUi {
+        var result = this.newEmptyTableUi();
+        result.enabledActionAdd = this.canAddItem();
+        result.enabledActionDelete = this.canDeleteItem();
+        result.enabledActionEdit = this.canUpdateItem();
+        result.enabledTopPaging = this.enabledTopPaging();
+        result.indexColumnLabelKey = this.indexColumnLabelKey;
+        result.columns = this.tableUiColumns;
+        return result;
+    }
+
+    abstract newEmptyTableUi(): TableUi;
+
+    enabledTopPaging(): boolean {
+        return false;
+    }
+
+    get indexColumnLabelKey(): string {
+        return "numberInList";
+    }
+
+    get tableColumNames(): string[] {
+        return this.tableUi.tableColumNames;
+    }
+
+    abstract get tableUiColumns(): TableColumnUi[];
 }

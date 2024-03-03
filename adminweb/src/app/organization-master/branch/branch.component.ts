@@ -4,6 +4,7 @@ import { TableComponent } from 'src/app/generic-component/TableComponent';
 import { Branch } from 'src/app/classes/organizations/Branch';
 import { UiOrderEvent } from 'src/app/classes/UiOrderEvent';
 import { environment } from 'src/environments/environment';
+import { TableColumnUi, TableUi } from 'src/app/classes/ui/UiTableDisplay';
 
 @Component({
   selector: 'app-branch',
@@ -16,8 +17,18 @@ export class BranchComponent extends TableComponent<Branch> {
     return "branch";
   }
 
-  override buildTableColumns(): string[] {
-    return ["index", "id", "name", "phoneNumber", "email", "action"];
+  override newEmptyTableUi(): TableUi {
+    return new TableUi("branch.error.");
+  }
+
+  override get tableUiColumns(): TableColumnUi[] {
+    const labelKeyPrefix = "branch.";
+    var result: TableColumnUi[] = [];
+    result.push(new TableColumnUi("id", labelKeyPrefix + "id"));
+    result.push(new TableColumnUi("name", labelKeyPrefix + "name"));
+    result.push(new TableColumnUi("phoneNumber", "phoneNumber"));
+    result.push(new TableColumnUi("email", "email"));
+    return result;
   }
 
   override ngAfterViewInit(): void {

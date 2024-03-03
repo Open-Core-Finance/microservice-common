@@ -10,7 +10,7 @@ import { EntitiesService } from 'src/app/services/EntitiesService';
 import { environment } from 'src/environments/environment';
 import { GeneralEntityAddComponent } from 'src/app/generic-component/GeneralEntityAddComponent';
 import { OrganizationService } from 'src/app/services/organization.service';
-import { UiFormCustomContent, UiFormInput, UiFormItem, UiFormSelect, UiSelectItem } from 'src/app/classes/ui/UiFormInput';
+import { UiFormInput, UiFormItem, UiFormSelect } from 'src/app/classes/ui/UiFormInput';
 
 @Component({
   selector: 'app-add-curreny',

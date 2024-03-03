@@ -15,20 +15,26 @@ import { MatCardModule } from '@angular/material/card';
 import { ReactiveFormInputComponent } from './reactive-form-input/reactive-form-input.component';
 import { ReactiveFormSelectComponent } from './reactive-form-select/reactive-form-select.component';
 import { GenericFormComponent } from './generic-form/generic-form.component';
+import { GenericTableComponent } from './generic-table/generic-table.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   declarations: [
     GeneralErrorPanelComponent, ConfirmDialogComponent, AutoResizeDirective, ReactiveFormInputComponent,
-    ReactiveFormSelectComponent, GenericFormComponent
+    ReactiveFormSelectComponent, GenericFormComponent, GenericTableComponent
   ],
   imports: [
     CommonModule, MatDialogModule, MatButtonModule, MatInputModule, MatIconModule, FormsModule, ReactiveFormsModule,
-    MatFormFieldModule, MatSelectModule, MatCardModule
+    MatFormFieldModule, MatSelectModule, MatCardModule, MatProgressSpinnerModule, MatPaginatorModule, MatTableModule,
+    MatSortModule
   ],
   // export the component to make it available in other modules where the Shared module is imported
   exports: [
     GeneralErrorPanelComponent, ConfirmDialogComponent, AutoResizeDirective, ReactiveFormInputComponent,
-    ReactiveFormSelectComponent, GenericFormComponent
+    ReactiveFormSelectComponent, GenericFormComponent, GenericTableComponent
   ] 
 })
 export class SharedModule {  }

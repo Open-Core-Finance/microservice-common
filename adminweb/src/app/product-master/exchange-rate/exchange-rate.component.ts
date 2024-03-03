@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { UiOrderEvent } from 'src/app/classes/UiOrderEvent';
 import { ExchangeRate } from 'src/app/classes/products/ExchangeRate';
+import { TableColumnUi, TableUi } from 'src/app/classes/ui/UiTableDisplay';
 import { TableComponent } from 'src/app/generic-component/TableComponent';
 import { environment } from 'src/environments/environment';
 
@@ -15,8 +16,18 @@ export class ExchangeRateComponent extends TableComponent<ExchangeRate> {
     return "exchangerate";
   }
 
-  override buildTableColumns(): string[] {
-    return ["index", "id", "name", "sellRate", "buyRate", "action"];
+  override newEmptyTableUi(): TableUi {
+    return new TableUi("exchangeRate.error.");
+  }
+
+  override get tableUiColumns(): TableColumnUi[] {
+    const labelKeyPrefix = "exchangeRate.";
+    var result: TableColumnUi[] = [];
+    result.push(new TableColumnUi("id", labelKeyPrefix + "id"));
+    result.push(new TableColumnUi("name", labelKeyPrefix + "name"));
+    result.push(new TableColumnUi("sellRate", labelKeyPrefix + "sellRate"));
+    result.push(new TableColumnUi("buyRate", labelKeyPrefix + "buyRate"));
+    return result;
   }
 
   override ngAfterViewInit(): void {

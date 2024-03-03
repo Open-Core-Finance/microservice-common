@@ -12,6 +12,7 @@ import { User } from '../../classes/User';
 import { AddUserComponent } from '../add-user/add-user.component';
 import { SharedModule } from 'src/app/generic-component/SharedModule';
 import { TableComponent } from 'src/app/generic-component/TableComponent';
+import { TableUi, TableColumnUi } from 'src/app/classes/ui/UiTableDisplay';
 
 @Component({
   selector: 'app-user',
@@ -23,8 +24,19 @@ import { TableComponent } from 'src/app/generic-component/TableComponent';
 })
 export class UserComponent extends TableComponent<User> {
 
-  override buildTableColumns(): string[] {
-    return ["index", "firstName", "lastName", "username", "email", "activated", "action"];
+  override newEmptyTableUi(): TableUi {
+    return new TableUi("user.error.");
+  }
+
+  override get tableUiColumns(): TableColumnUi[] {
+    const labelKeyPrefix = "user.";
+    var result: TableColumnUi[] = [];
+    result.push(new TableColumnUi("firstName", labelKeyPrefix + "firstName"));
+    result.push(new TableColumnUi("lastName", labelKeyPrefix + "lastName"));
+    result.push(new TableColumnUi("username", labelKeyPrefix + "username"));
+    result.push(new TableColumnUi("email", labelKeyPrefix + "email"));
+    result.push(new TableColumnUi("activated", labelKeyPrefix + "activated"));
+    return result;
   }
 
   override ngAfterViewInit(): void {

@@ -4,6 +4,7 @@ import { TableComponent } from 'src/app/generic-component/TableComponent';
 import { environment } from 'src/environments/environment';
 import { UiOrderEvent } from 'src/app/classes/UiOrderEvent';
 import { formatDate } from '@angular/common';
+import { TableColumnUi, TableUi } from 'src/app/classes/ui/UiTableDisplay';
 
 @Component({
   selector: 'app-holiday',
@@ -16,8 +17,18 @@ export class HolidayComponent extends TableComponent<Holiday> {
     return "holiday";
   }
 
-  override buildTableColumns(): string[] {
-    return ["index", "id", "description", "holidayDate", "repeatYearly", "action"];
+  override newEmptyTableUi(): TableUi {
+    return new TableUi("holiday.error.");
+  }
+
+  override get tableUiColumns(): TableColumnUi[] {
+    const labelKeyPrefix = "holiday.";
+    var result: TableColumnUi[] = [];
+    result.push(new TableColumnUi("id", labelKeyPrefix + "id"));
+    result.push(new TableColumnUi("description", labelKeyPrefix + "description"));
+    result.push(new TableColumnUi("holidayDate", labelKeyPrefix + "holidayDate"));
+    result.push(new TableColumnUi("repeatYearly", labelKeyPrefix + "repeatYearly"));
+    return result;
   }
 
   override ngAfterViewInit(): void {

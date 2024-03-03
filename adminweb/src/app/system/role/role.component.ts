@@ -13,6 +13,7 @@ import { AddRoleComponent } from '../add-role/add-role.component';
 import { PermissionComponent } from '../permission/permission.component';
 import { TableComponent } from 'src/app/generic-component/TableComponent';
 import { SharedModule } from 'src/app/generic-component/SharedModule';
+import { TableColumnUi, TableUi } from 'src/app/classes/ui/UiTableDisplay';
 
 @Component({
   selector: 'app-role',
@@ -26,8 +27,16 @@ export class RoleComponent extends TableComponent<Role> {
 
   selectedRole: Role | null = null;
 
-  override buildTableColumns(): string[] {
-    return ["index", "id", "name", "action"];
+  override newEmptyTableUi(): TableUi {
+    return new TableUi("role.error.");
+  }
+
+  override get tableUiColumns(): TableColumnUi[] {
+    const labelKeyPrefix = "role.";
+    var result: TableColumnUi[] = [];
+    result.push(new TableColumnUi("id", labelKeyPrefix + "id"));
+    result.push(new TableColumnUi("name", labelKeyPrefix + "name"));
+    return result;
   }
 
   override ngAfterViewInit(): void {

@@ -3,6 +3,7 @@ import { TableComponent } from 'src/app/generic-component/TableComponent';
 import { ProductCategory } from 'src/app/classes/products/ProductCategory';
 import { UiOrderEvent } from 'src/app/classes/UiOrderEvent';
 import { environment } from 'src/environments/environment';
+import { TableColumnUi, TableUi } from 'src/app/classes/ui/UiTableDisplay';
 
 @Component({
   selector: 'app-product-category',
@@ -15,8 +16,17 @@ export class ProductCategoryComponent extends TableComponent<ProductCategory> {
     return "productcategory";
   }
 
-  override buildTableColumns(): string[] {
-    return ["index", "id", "name", "type", "action"];
+  override newEmptyTableUi(): TableUi {
+    return new TableUi("productCategory.error.");
+  }
+
+  override get tableUiColumns(): TableColumnUi[] {
+    const labelKeyPrefix = "productCategory.";
+    var result: TableColumnUi[] = [];
+    result.push(new TableColumnUi("id", labelKeyPrefix + "id"));
+    result.push(new TableColumnUi("name", labelKeyPrefix + "name"));
+    result.push(new TableColumnUi("type", labelKeyPrefix + "type"));
+    return result;
   }
 
   override ngAfterViewInit(): void {
