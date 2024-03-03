@@ -4,7 +4,7 @@
 
 <ng-content select="[topcomponent]"></ng-content>
 
-<mat-paginator #paginator *ngIf="tableUi.enabledTopPaging && pageEvent && pageEvent.length > 0"
+<mat-paginator #paginator *ngIf="!tableUi.addMode && tableUi.enabledTopPaging && pageEvent && pageEvent.length > 0"
     (page)="handlePageEvent($event)" [length]="pageEvent.length"
     [pageSize]="pageEvent.pageSize" [showFirstLastButtons]="true"
     [pageSizeOptions]="pageSizeOptions" [hidePageSize]="false" [pageIndex]="pageEvent.pageIndex">
@@ -79,7 +79,7 @@
 
 <ng-content select="[aftertable]"></ng-content>
 
-<mat-paginator #paginator *ngIf="tableUi.enabledBottomPaging && pageEvent && pageEvent.length > 0"
+<mat-paginator #paginator *ngIf="!tableUi.addMode && tableUi.enabledBottomPaging && pageEvent && pageEvent.length > 0"
                (page)="handlePageEvent($event)" [length]="pageEvent.length"
                [pageSize]="pageEvent.pageSize" [showFirstLastButtons]="true"
                [pageSizeOptions]="pageSizeOptions" [hidePageSize]="false" [pageIndex]="pageEvent.pageIndex">
