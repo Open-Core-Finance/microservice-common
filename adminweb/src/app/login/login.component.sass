@@ -1,14 +1,17 @@
+
+$form-width: 450px
+
 :host
     display: flex
     justify-content: center
     margin: 100px 0px
 
     mat-card
-        width: 350px
+        width: $form-width
 
     mat-form-field
         width: 100%
-        max-width: 350px
+        max-width: $form-width
 
     mat-card-title,
     mat-card-content
@@ -20,4 +23,10 @@
         justify-content: flex-end
 
     div
-        max-width: 350px
+        max-width: $form-width
+::ng-deep .mat-mdc-selection-list
+    max-width: $form-width
+    .mdc-list-item__content span
+        word-wrap: break-word
+        white-space: pre-wrap
+
