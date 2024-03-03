@@ -4,6 +4,7 @@ import { Currency } from 'src/app/classes/Currency';
 import { TableComponent } from 'src/app/generic-component/TableComponent';
 import { UiOrderEvent } from 'src/app/classes/UiOrderEvent';
 import { environment } from 'src/environments/environment';
+import { TableUi, TableColumnUi } from 'src/app/classes/ui/UiTableDisplay';
 
 @Component({
   selector: 'app-curreny',
@@ -13,12 +14,33 @@ import { environment } from 'src/environments/environment';
 })
 export class CurrenyComponent extends TableComponent<Currency> {
 
-  override permissionResourceName(): string {
-    return "currency";
+  override newEmptyTableUi(): TableUi {
+    return new TableUi("currencyScreens.error.");
+  }
+  
+  override get tableUiColumns(): TableColumnUi[] {
+    var languageService = this.languageService;
+    var result: TableColumnUi[] = [];
+    result.push(new TableColumnUi("id", "currencyId"));
+    result.push(new TableColumnUi("name", "currency"));
+    result.push(new TableColumnUi("symbol", "currencySymbol"));
+    result.push(new TableColumnUi("decimalMark", "decimalMark", {
+      function(decimalMark: string): string {
+        if (decimalMark == ".") {
+          return languageService.formatLanguage("decimalMarkPeriod", []);
+        } else if (decimalMark == ",") {
+          return languageService.formatLanguage("decimalMarkComma", [])
+        } else {
+          return decimalMark;
+        }
+      }
+    }));
+    result.push(new TableColumnUi("symbolAtBeginning", "currencySymbolPosision", {labelPrefix: "currencySymbolPosision_"}));
+    return result;
   }
 
-  override buildTableColumns(): string[] {
-    return ["index", "id", "name", "symbol", "decimalMark", "symbolAtBeginning", "action"];
+  override permissionResourceName(): string {
+    return "currency";
   }
 
   override ngAfterViewInit(): void {

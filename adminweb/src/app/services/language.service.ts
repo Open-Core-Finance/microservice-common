@@ -78,7 +78,7 @@ export class LanguageService implements OnDestroy {
         });
     }
 
-    formatLanguage(languageKey: string, parameters: any[]) {
+    formatLanguage(languageKey: string, parameters?: any[]) {
         let result = this.languageData;
         while (languageKey.indexOf(".") >= 0) {
             const prefix = languageKey.substring(0, languageKey.indexOf("."));

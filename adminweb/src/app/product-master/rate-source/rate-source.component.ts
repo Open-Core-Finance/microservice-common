@@ -3,6 +3,7 @@ import { RateSource } from 'src/app/classes/products/RateSource';
 import { TableComponent } from 'src/app/generic-component/TableComponent';
 import { UiOrderEvent } from 'src/app/classes/UiOrderEvent';
 import { environment } from 'src/environments/environment';
+import { TableColumnUi, TableUi } from 'src/app/classes/ui/UiTableDisplay';
 
 @Component({
   selector: 'app-rate-source',
@@ -15,8 +16,18 @@ export class RateSourceComponent extends TableComponent<RateSource> {
     return "ratesource";
   }
 
-  override buildTableColumns(): string[] {
-    return ["index", "id", "name", "type", "note", "action"];
+  override newEmptyTableUi(): TableUi {
+    return new TableUi("rateSource.error.");
+  }
+
+  override get tableUiColumns(): TableColumnUi[] {
+    const labelKeyPrefix = "rateSource.";
+    var result: TableColumnUi[] = [];
+    result.push(new TableColumnUi("id", labelKeyPrefix + "id"));
+    result.push(new TableColumnUi("name", labelKeyPrefix + "name"));
+    result.push(new TableColumnUi("type", labelKeyPrefix + "type"));
+    result.push(new TableColumnUi("note", labelKeyPrefix + "note"));
+    return result;
   }
 
   override ngAfterViewInit(): void {

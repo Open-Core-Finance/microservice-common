@@ -4,6 +4,7 @@ import { UiOrderEvent } from 'src/app/classes/UiOrderEvent';
 import { TableComponent } from 'src/app/generic-component/TableComponent';
 import { environment } from 'src/environments/environment';
 import {AppComponent} from "../../app.component";
+import { TableColumnUi, TableUi } from 'src/app/classes/ui/UiTableDisplay';
 
 @Component({
   selector: 'app-organization',
@@ -18,8 +19,20 @@ export class OrganizationComponent extends TableComponent<Organization> {
 
   parent: AppComponent | undefined;
 
-  override buildTableColumns(): string[] {
-    return ["index", "id", "iconUrl", "name", "country", "phoneNumber", "email", "action"];
+  override newEmptyTableUi(): TableUi {
+    return new TableUi("organization.error.");
+  }
+
+  override get tableUiColumns(): TableColumnUi[] {
+    const labelKeyPrefix = "organization.";
+    var result: TableColumnUi[] = [];
+    result.push(new TableColumnUi("id", labelKeyPrefix + "id"));
+    result.push(new TableColumnUi("iconUrl", labelKeyPrefix + "iconUrl"));
+    result.push(new TableColumnUi("name", labelKeyPrefix + "name"));
+    result.push(new TableColumnUi("country", "country"));
+    result.push(new TableColumnUi("phoneNumber", "phoneNumber"));
+    result.push(new TableColumnUi("email", "email"));
+    return result;
   }
 
   override ngAfterViewInit(): void {

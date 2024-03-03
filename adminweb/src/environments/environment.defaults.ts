@@ -42,7 +42,7 @@ export const environment = {
     pageSize: 25,
     pageSizeOptions: [25, 50, 100],
     loginRefreshInterval: 15 * 60 * 1000,
-    defaultPermissionIfNull: AccessControl.DENIED
+    defaultPermissionIfNull: AccessControl.ALLOWED
 };
 
 export function rebuildEnvironment() {
