@@ -30,8 +30,10 @@ export class OrganizationService implements OnInit, OnDestroy {
   }
 
   public set organization(organization: Organization | null) {
-    sessionStorage.setItem(AppSettings.LOCAL_KEY_SAVED_ORGANIZATION, JSON.stringify(organization));
-    this.organizationSubject.next(organization);
+    if (organization != null) {
+      sessionStorage.setItem(AppSettings.LOCAL_KEY_SAVED_ORGANIZATION, JSON.stringify(organization));
+      this.organizationSubject.next(organization);
+    }
   }
 
 }

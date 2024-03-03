@@ -62,7 +62,7 @@
       <td mat-cell *matCellDef="let element">
         <mat-icon aria-hidden="false" fontIcon="edit" (click)="editClick($event, element)"></mat-icon>
         <mat-icon aria-hidden="false" fontIcon="delete" (click)="deleteClick(element)"></mat-icon>
-        <ng-content select="[customrowaction]"></ng-content>
+        <ng-container *ngTemplateOutlet="rowActionTemplate; context: { $implicit: element }"></ng-container>
       </td>
     </ng-container>
   

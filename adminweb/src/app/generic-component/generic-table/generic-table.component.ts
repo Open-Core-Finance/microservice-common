@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { Paging } from 'src/app/classes/Paging';
 import { UserMessage } from 'src/app/classes/UserMessage';
@@ -33,6 +33,9 @@ export class GenericTableComponent implements OnInit, OnDestroy {
   @Output() edit = new EventEmitter();
   @Output() delete = new EventEmitter();
   @Output() pageAction = new EventEmitter();
+
+  @Input()
+  rowActionTemplate: TemplateRef<any> | null = null;
 
   constructor(public languageService: LanguageService) {
   }

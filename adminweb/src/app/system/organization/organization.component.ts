@@ -60,9 +60,11 @@ export class OrganizationComponent extends TableComponent<Organization> {
   }
 
   viewOrganizationClick(organization: Organization) {
-    this.organizationService.organization = organization;
-    const urlToNavigate = "/" + environment.frontEndUrl.organizationDetails;
-    this.router.navigateByUrl(urlToNavigate);
-    this.parent?.openMenu();
+    if (organization != undefined) {
+      this.organizationService.organization = organization;
+      const urlToNavigate = "/" + environment.frontEndUrl.organizationDetails;
+      this.router.navigateByUrl(urlToNavigate);
+      this.parent?.openMenu();
+    }
   }
 }
