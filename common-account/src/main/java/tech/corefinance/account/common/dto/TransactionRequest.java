@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 public class TransactionRequest implements CreateUpdateDto<String> {
 
-    private String entityId;
+    private String id;
     private double amount;
     private double vat;
     private String currency;

@@ -44,7 +44,7 @@ public interface CrudController<I extends Serializable ,T extends GenericModel<I
      */
     @PostMapping(value = "/create")
     default GeneralApiResponse<?> createEntity(@RequestBody D entity) {
-        entity.setEntityId(null);
+        entity.setId(null);
         return createOrUpdate(entity);
     }
 
@@ -65,7 +65,7 @@ public interface CrudController<I extends Serializable ,T extends GenericModel<I
      */
     @PutMapping(value = "/{entityId}")
     default GeneralApiResponse<?> updateEntity(@PathVariable("entityId") I entityId, @RequestBody D entity) {
-        entity.setEntityId(entityId);
+        entity.setId(entityId);
         return createOrUpdate(entity);
     }
 

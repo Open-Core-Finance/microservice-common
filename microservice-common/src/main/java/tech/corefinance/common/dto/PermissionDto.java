@@ -8,7 +8,7 @@ import tech.corefinance.common.model.CreateUpdateDto;
 
 @Data
 public class PermissionDto implements CreateUpdateDto<String>{
-    private String entityId;
+    private String id;
     private String roleId;
     private String resourceType;
     private String action;
@@ -18,7 +18,7 @@ public class PermissionDto implements CreateUpdateDto<String>{
 
     public static PermissionDto fromPermission(Permission permission) {
         var result = new PermissionDto();
-        result.setEntityId(permission.getId());
+        result.setId(permission.getId());
         result.setUrl(permission.getUrl());
         result.setAction(permission.getAction());
         result.setControl(permission.getControl());
@@ -26,10 +26,5 @@ public class PermissionDto implements CreateUpdateDto<String>{
         result.setRequestMethod(permission.getRequestMethod());
         result.setResourceType(permission.getResourceType());
         return result;
-    }
-
-    @Override
-    public String getEntityId() {
-        return entityId;
     }
 }

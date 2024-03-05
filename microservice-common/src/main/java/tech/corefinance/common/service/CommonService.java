@@ -5,6 +5,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.*;
 import org.springframework.util.StringUtils;
 import tech.corefinance.common.context.ApplicationContextHolder;
+import tech.corefinance.common.ex.ResourceNotFound;
 import tech.corefinance.common.ex.ServiceProcessingException;
 import tech.corefinance.common.model.CreateUpdateDto;
 import tech.corefinance.common.model.GenericModel;
@@ -13,9 +14,7 @@ import tech.corefinance.common.util.CoreFinanceUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.ParameterizedType;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 public interface CommonService<I extends Serializable, T extends GenericModel<I>, R extends CommonResourceRepository<T, I>> {
@@ -92,16 +91,16 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
         logger.info("Entering createOrUpdateEntity...");
         T entity;
         var repository = getRepository();
-        if (dto.getEntityId() != null) {
+        if (dto.getId() != null) {
             logger.info("Entity ID not empty! Checking if existed in DB or not...");
-            Optional<T> optional = repository.findById(dto.getEntityId());
+            Optional<T> optional = repository.findById(dto.getId());
             if (optional.isPresent()) {
                 logger.info("Entity found!");
                 entity = optional.get();
             } else {
                 logger.info("Entity not found! Creating new entity...");
                 entity = createEntityObject();
-                entity.setId(dto.getEntityId());
+                entity.setId(dto.getId());
             }
         } else {
             logger.info("Entity ID empty! Creating new entity...");
@@ -151,8 +150,7 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
                 logger.info("Load without search text and order {}", orders);
                 entities = repository.findAll(sort);
             }
-            Page<T> result = new PageImpl<>(entities);
-            return result;
+            return new PageImpl<>(entities);
         }
     }
 
@@ -205,7 +203,7 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
      * @return Entity object.
      */
     default T getEntityDetails(I entityId) {
-        return getRepository().findById(entityId).get();
+        return getRepository().findById(entityId).orElseThrow(() -> new ResourceNotFound("Cannot find entity for ID " + entityId));
     }
 
     default Class<T> findEntityClass() {
