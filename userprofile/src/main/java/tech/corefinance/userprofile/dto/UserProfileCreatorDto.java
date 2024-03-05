@@ -9,7 +9,7 @@ import java.util.Map;
 
 @Data
 public class UserProfileCreatorDto implements CreateUpdateDto<String> {
-    private String entityId;
+    private String id;
     private String firstName;
     private String lastName;
     private Gender gender;
