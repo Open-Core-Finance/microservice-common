@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from "@angular/core";
 import { GeneralModel } from "../classes/CommonClasses";
 import { UserMessage } from "../classes/UserMessage";
 import { LanguageService } from "../services/language.service";
@@ -7,6 +7,8 @@ import { RestService } from "../services/rest.service";
 import { HttpClient } from "@angular/common/http";
 import { GeneralApiResponse } from "../classes/GeneralApiResponse";
 import { FormBuilder, FormGroup } from "@angular/forms";
+import { UiFormItem } from "../classes/ui/UiFormInput";
+import { AuthenticationService } from "../services/authentication.service";
 import { OrganizationService } from "../services/organization.service";
 
 @Component({
@@ -17,10 +19,17 @@ export abstract class GeneralEntityAddComponent<T extends GeneralModel<any>> {
   @Output() save = new EventEmitter();
   _addingItem: T | null = null;
   message = new UserMessage([], []);
+  formItems: UiFormItem[];
 
   constructor(public languageService: LanguageService, protected commonService: CommonService,
     protected restService: RestService, protected http: HttpClient, protected formBuilder: FormBuilder,
-    protected organizationService: OrganizationService) {
+    protected organizationService: OrganizationService, protected changeDetector: ChangeDetectorRef,
+    protected authenticationService: AuthenticationService) {
+      this.formItems = this.buildFormItems();
+  }
+
+  protected buildFormItems(): UiFormItem[] {
+    return [];
   }
 
   protected cancelClick($event: any): any {

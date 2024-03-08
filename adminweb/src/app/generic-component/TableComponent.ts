@@ -15,12 +15,12 @@ import {PageEvent} from '@angular/material/paginator';
 import { UiOrderEvent } from '../classes/UiOrderEvent';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
-import { OrganizationService } from '../services/organization.service';
 import { ConfirmDialogComponent, ConfirmDialogModel } from './confirm-dialog/confirm-dialog.component';
 import { GeneralModel } from '../classes/CommonClasses';
 import { PermissionService } from '../services/permission.service';
 import { AccessControl, Permission, ResourceAction } from '../classes/Permission';
 import { TableColumnUi, TableUi } from '../classes/ui/UiTableDisplay';
+import { OrganizationService } from '../services/organization.service';
 
 @Component({
     template: ''
@@ -121,6 +121,10 @@ export abstract class TableComponent<T extends GeneralModel<any>> implements Aft
         if (this.organizationService.organization?.id) {
             this.customData['organizationId'] = this.organizationService.organization.id
         }
+        const order = new UiOrderEvent();
+        order.active = "id";
+        order.direction = "asc";
+        this.changeOrder({ order });
     }
 
     ngOnDestroy() {
@@ -181,9 +185,7 @@ export abstract class TableComponent<T extends GeneralModel<any>> implements Aft
             if (paging.result) {
                 var index = (paging.pageNumber * paging.pageSize) + 1
                 for ( const item of paging.result) {
-                    const obj = Object.assign(this.createNewItem(), item);
-                    obj['index'] = index++;
-                    tableData.push(obj);
+                    tableData.push(this.convertItem(item, index++));
                 }
             }
             this.tableDataSubject.next(tableData);
@@ -195,6 +197,12 @@ export abstract class TableComponent<T extends GeneralModel<any>> implements Aft
         }
         this.pagingSubject.next(paging);
         this.pageEvent = pageEvent;
+    }
+
+    protected convertItem(item: T, index: number): T {
+        const obj: any = Object.assign(this.createNewItem(), item);
+        obj['index'] = index;
+        return obj as T;
     }
 
     handlePageEvent(e: PageEvent) {
@@ -235,8 +243,18 @@ export abstract class TableComponent<T extends GeneralModel<any>> implements Aft
         this.reloadData();
     }
 
-    abstract getDeleteConfirmContent(item: T): string;
-    abstract getDeleteConfirmTitle(item: T): string;
+    getDeleteConfirmContent(item: T): string {
+        var name = item.id;
+        if ((item as any)['name']) {
+            name = (item as any)['name'];
+        }
+        const messageKey = this.localizePrefix + ".deleteConfirmContent";
+        return this.languageService.formatLanguage(messageKey, [name]);
+    }
+
+    getDeleteConfirmTitle(item: T): string {
+     return this.languageService.formatLanguage(this.localizePrefix + ".deleteConfirmTitle", []);
+    }
 
     showDeleteModel(item: T) {
         const message = this.getDeleteConfirmContent(item);
@@ -250,7 +268,7 @@ export abstract class TableComponent<T extends GeneralModel<any>> implements Aft
             const requestHeaders = this.restService.initApplicationJsonRequestHeaders();
             const serviceUrl = this.getServiceUrl() + "/" + item.id;
             this.http.delete<GeneralApiResponse>(serviceUrl, {
-              headers: requestHeaders, params: { entityId: item.id }
+              headers: requestHeaders, params: { id: item.id }
             }).subscribe({
               next: (_: GeneralApiResponse) => this.reloadData(),
               error: (data: any) => this.restService.handleRestError(data, this.message)
@@ -370,7 +388,9 @@ export abstract class TableComponent<T extends GeneralModel<any>> implements Aft
         return result;
     }
 
-    abstract newEmptyTableUi(): TableUi;
+    newEmptyTableUi(): TableUi {
+        return new TableUi(this.localizePrefix + ".error.");
+    }    
 
     enabledTopPaging(): boolean {
         return false;
@@ -385,4 +405,8 @@ export abstract class TableComponent<T extends GeneralModel<any>> implements Aft
     }
 
     abstract get tableUiColumns(): TableColumnUi[];
+
+    get localizePrefix(): string {
+        return this.permissionResourceName();
+    }
 }

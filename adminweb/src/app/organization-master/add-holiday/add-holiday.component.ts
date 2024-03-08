@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Holiday } from 'src/app/classes/organizations/Holiday';
 import { environment } from 'src/environments/environment';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
@@ -12,6 +12,7 @@ import { CustomDateFormat } from 'src/app/classes/DateFormat';
 import { formatDate } from '@angular/common';
 import { GeneralEntityAddComponent } from 'src/app/generic-component/GeneralEntityAddComponent';
 import { OrganizationService } from 'src/app/services/organization.service';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
   selector: 'app-add-holiday',
@@ -33,8 +34,9 @@ export class AddHolidayComponent extends GeneralEntityAddComponent<Holiday> impl
 
   constructor(public override languageService: LanguageService, protected override commonService: CommonService,
     protected override restService: RestService, protected override http: HttpClient, protected override formBuilder: FormBuilder,
-    protected override organizationService: OrganizationService, @Inject(MAT_DATE_FORMATS) public config: CustomDateFormat) {
-      super(languageService, commonService, restService, http, formBuilder, organizationService);
+    protected override organizationService: OrganizationService, protected override changeDetector: ChangeDetectorRef,
+    protected override authenticationService: AuthenticationService, @Inject(MAT_DATE_FORMATS) public config: CustomDateFormat) {
+      super(languageService, commonService, restService, http, formBuilder, organizationService, changeDetector, authenticationService);
   }
 
   ngAfterViewInit(): void {

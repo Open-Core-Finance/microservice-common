@@ -22,7 +22,7 @@ export class UiFormInput extends UiFormItem {
 
   placeHolderKey: string = "";
 
-  constructor(placeHolderKey: string, formControlName: string){
+  constructor(placeHolderKey: string, formControlName: string) {
     super(formControlName);
     this.placeHolderKey = placeHolderKey;
   }
@@ -39,7 +39,7 @@ export class UiFormSelect extends UiFormItem {
 }
 
 export class UiSelectItem {
-    lableKey = "";
+    labelKey = "";
     selectValue: any;
 }
 
@@ -50,5 +50,28 @@ export class UiFormCustomContent extends UiFormItem  {
   constructor(contentSelect: string, formControlName: string){
     super(formControlName);
     this.contentSelect = contentSelect;
+  }
+}
+
+export class UiFormCheckbox extends UiFormItem {
+
+  labelKey: string = "";
+
+  constructor(labelKey: string, formControlName: string){
+    super(formControlName);
+    this.labelKey = labelKey;
+  }
+}
+
+export class UiFormDate extends UiFormItem {
+  inputType: string = "text";
+
+  addLabel: boolean = true;
+
+  placeHolderKey: string = "";
+
+  constructor(placeHolderKey: string, formControlName: string) {
+    super(formControlName);
+    this.placeHolderKey = placeHolderKey;
   }
 }

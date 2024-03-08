@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { Currency } from 'src/app/classes/Currency';
 import { Subscription } from 'rxjs';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
@@ -11,6 +11,7 @@ import { environment } from 'src/environments/environment';
 import { GeneralEntityAddComponent } from 'src/app/generic-component/GeneralEntityAddComponent';
 import { OrganizationService } from 'src/app/services/organization.service';
 import { UiFormInput, UiFormItem, UiFormSelect } from 'src/app/classes/ui/UiFormInput';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
   selector: 'app-add-curreny',
@@ -21,7 +22,6 @@ export class AddCurrenyComponent extends GeneralEntityAddComponent<Currency> imp
 
   currencies: Currency[] = [];
   currencySubscription: Subscription | undefined;
-  formItems: UiFormItem[] = [];
 
   addCurrencyForm = new FormGroup({
     index: new FormControl(0),
@@ -34,8 +34,9 @@ export class AddCurrenyComponent extends GeneralEntityAddComponent<Currency> imp
 
   constructor(public override languageService: LanguageService, protected override commonService: CommonService,
     protected override restService: RestService, protected override http: HttpClient, protected override formBuilder: FormBuilder,
-    protected override organizationService: OrganizationService, private entitiesService: EntitiesService) {
-      super(languageService, commonService, restService, http, formBuilder, organizationService);
+    protected override organizationService: OrganizationService, protected override changeDetector: ChangeDetectorRef,
+    protected override authenticationService: AuthenticationService, private entitiesService: EntitiesService) {
+      super(languageService, commonService, restService, http, formBuilder, organizationService, changeDetector, authenticationService);
       this.currencySubscription?.unsubscribe();
       this.currencySubscription = entitiesService.entitySubjectMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.subscribe(
          currencies => this.currencies = currencies
@@ -48,11 +49,11 @@ export class AddCurrenyComponent extends GeneralEntityAddComponent<Currency> imp
       const symbolInput = new UiFormInput("currencySymbol", "symbol");
       this.formItems.push(symbolInput);
 
-      const decimalMarkInput = new UiFormSelect("decimalMark", [ { lableKey: "decimalMarkPeriod", selectValue: "." },
-        { lableKey: "decimalMarkComma", selectValue: "," } ], "decimalMark");
+      const decimalMarkInput = new UiFormSelect("decimalMark", [ { labelKey: "decimalMarkPeriod", selectValue: "." },
+        { labelKey: "decimalMarkComma", selectValue: "," } ], "decimalMark");
       this.formItems.push(decimalMarkInput);
-      const currencySymbolPosisionInput = new UiFormSelect("currencySymbolPosision", [ { lableKey: "currencySymbolPosision_true", selectValue: true },
-        { lableKey: "currencySymbolPosision_false", selectValue: false } ], "symbolAtBeginning");
+      const currencySymbolPosisionInput = new UiFormSelect("currencySymbolPosision", [ { labelKey: "currencySymbolPosision_true", selectValue: true },
+        { labelKey: "currencySymbolPosision_false", selectValue: false } ], "symbolAtBeginning");
       this.formItems.push(currencySymbolPosisionInput);
   }
 

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { Product, ProductNewAccountSettingType } from "../classes/products/Product";
 import { ProductCategory, ProductCategoryType } from "../classes/products/ProductCategory";
 import { ProductType } from "../classes/products/ProductType";
@@ -17,6 +17,7 @@ import { FormBuilder } from "@angular/forms";
 import { OrganizationService } from "../services/organization.service";
 import { AccountState } from "../classes/accounts/AccountState";
 import { CurrencyBasesValue } from "../classes/products/ValueConstraint";
+import { AuthenticationService } from "../services/authentication.service";
 
 @Component({
     template: ''
@@ -36,8 +37,9 @@ export abstract class GeneralProductAddComponent<T extends Product> extends Gene
 
     constructor(public override languageService: LanguageService, protected override commonService: CommonService,
         protected override restService: RestService, protected override http: HttpClient, protected override formBuilder: FormBuilder,
-        protected override organizationService: OrganizationService, protected entityService: EntitiesService) {
-        super(languageService, commonService, restService, http, formBuilder, organizationService);
+        protected override organizationService: OrganizationService, protected override changeDetector: ChangeDetectorRef,
+        protected override authenticationService: AuthenticationService, protected entityService: EntitiesService) {
+        super(languageService, commonService, restService, http, formBuilder, organizationService, changeDetector, authenticationService);
     }
 
     protected override validateFormData(formData: any): void {

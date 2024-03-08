@@ -14,8 +14,8 @@ import { TableUi, TableColumnUi } from 'src/app/classes/ui/UiTableDisplay';
 })
 export class CurrenyComponent extends TableComponent<Currency> {
 
-  override newEmptyTableUi(): TableUi {
-    return new TableUi("currencyScreens.error.");
+  override get localizePrefix(): string {
+    return "currencyScreens";
   }
   
   override get tableUiColumns(): TableColumnUi[] {
@@ -41,14 +41,6 @@ export class CurrenyComponent extends TableComponent<Currency> {
 
   override permissionResourceName(): string {
     return "currency";
-  }
-
-  override ngAfterViewInit(): void {
-    super.ngAfterViewInit();
-    const order = new UiOrderEvent();
-    order.active = "id";
-    order.direction = "asc";
-    this.changeOrder({ order });
   }
 
   getServiceUrl() {

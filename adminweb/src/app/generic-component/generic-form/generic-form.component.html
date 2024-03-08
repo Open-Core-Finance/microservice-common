@@ -17,11 +17,20 @@
                         [selectItems]="$any(formItem).selectItems" [additionClass]="formItem.additionClass" [appearance]="formItem.appearance" [colorScheme]="formItem.colorScheme"
                         [required]="formItem.required"></app-reactive-form-select>
 
+                    <app-reactive-form-checkbox *ngIf="isFormCheckbox(formItem)" [labelKey]="$any(formItem).labelKey" [formControlName]="formItem.formControlName"
+                     [additionClass]="formItem.additionClass" [colorScheme]="formItem.colorScheme" [required]="formItem.required"></app-reactive-form-checkbox>
+
+                     <app-reactive-form-date *ngIf="isFormDate(formItem)" [placeHolderKey]="$any(formItem).placeHolderKey"
+                        [formControlName]="formItem.formControlName" [additionClass]="formItem.additionClass" [addLabel]="$any(formItem).addLabel"
+                        [inputType]="$any(formItem).inputType" [appearance]="formItem.appearance" [colorScheme]="formItem.colorScheme"
+                        [required]="formItem.required">
+                    </app-reactive-form-date>
+
                 </ng-container>
 
-                <ng-content></ng-content>
+                <ng-content select="[formcontols]"></ng-content>
 
-                <app-general-error-panel [message]="message" errorPrefix="currencyScreens.error."></app-general-error-panel>
+                <app-general-error-panel [message]="message" [errorPrefix]="errorPrefix"></app-general-error-panel>
                 
             </form>
         </mat-card-content>
