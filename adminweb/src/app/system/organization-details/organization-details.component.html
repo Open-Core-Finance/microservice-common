@@ -107,7 +107,13 @@
         </mat-card-content>
 
         <mat-card-actions>
-            <button mat-raised-button color="primary" (click)="viewListClick($event);">
+            <button mat-raised-button color="primary" (click)="viewDepositProductClick($event);">
+                {{languageService.formatLanguage('menu.depositProduct', [])}}
+            </button>
+            <button mat-raised-button color="primary" (click)="viewLoanProductClick($event);">
+                {{languageService.formatLanguage('menu.loanProduct', [])}}
+            </button>
+            <button mat-raised-button color="primary" (click)="viewListClick($event);" *ngIf="canViewListOrganizations()">
                 {{languageService.formatLanguage('organization.listOrg', [])}}
             </button>
             <button mat-raised-button color="warn" (click)="editClick($event);">

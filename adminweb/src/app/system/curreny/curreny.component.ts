@@ -14,15 +14,14 @@ import { TableUi, TableColumnUi } from 'src/app/classes/ui/UiTableDisplay';
 })
 export class CurrenyComponent extends TableComponent<Currency> {
 
-  override newEmptyTableUi(): TableUi {
-    return new TableUi("currencyScreens.error.");
+  override get localizePrefix(): string {
+    return "currencyScreens";
   }
   
   override get tableUiColumns(): TableColumnUi[] {
     var languageService = this.languageService;
     var result: TableColumnUi[] = [];
-    result.push(new TableColumnUi("id", "currencyId"));
-    result.push(new TableColumnUi("name", "currency"));
+    result.push(new TableColumnUi("id", "currency"));
     result.push(new TableColumnUi("symbol", "currencySymbol"));
     result.push(new TableColumnUi("decimalMark", "decimalMark", {
       function(decimalMark: string): string {
@@ -43,20 +42,12 @@ export class CurrenyComponent extends TableComponent<Currency> {
     return "currency";
   }
 
-  override ngAfterViewInit(): void {
-    super.ngAfterViewInit();
-    const order = new UiOrderEvent();
-    order.active = "id";
-    order.direction = "asc";
-    this.changeOrder({ order });
-  }
-
   getServiceUrl() {
     return environment.apiUrl.currency;
   }
 
   override getDeleteConfirmContent(item: Currency): string {
-    return this.languageService.formatLanguage("currencyDeleteConfirmContent", [item.name]);
+    return this.languageService.formatLanguage("currencyDeleteConfirmContent", [item.id]);
   }
 
   override getDeleteConfirmTitle(item: Currency): string {

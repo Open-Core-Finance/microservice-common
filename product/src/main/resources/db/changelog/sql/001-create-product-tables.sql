@@ -1,7 +1,7 @@
 -- Liquibase formatted SQL
 -- ChangeSet Trung.Doan:1 labels:permission,basic-table runOnChange:true
 
-CREATE TABLE IF NOT EXISTS resource_action
+CREATE TABLE IF NOT EXISTS public.resource_action
 (
     id character varying(255) DEFAULT gen_random_uuid()::character varying(255) PRIMARY KEY,
     action character varying(255),
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS resource_action
     CONSTRAINT resource_action_action_method_type_url_unique UNIQUE NULLS NOT DISTINCT (action, request_method, resource_type, url)
 );
 
-CREATE TABLE IF NOT EXISTS internal_service_config
+CREATE TABLE IF NOT EXISTS public.internal_service_config
 (
     id character varying(255) DEFAULT gen_random_uuid()::character varying(255) PRIMARY KEY,
     activated boolean NOT NULL,
@@ -46,16 +46,15 @@ CREATE TABLE IF NOT EXISTS rate_source
     CONSTRAINT rate_source_type_check CHECK (type::text = ANY (ARRAY['INTEREST'::character varying, 'WITHHOLDING_TAX'::character varying, 'VALUE_ADDED_TAX'::character varying]::text[]))
 );
 
-CREATE TABLE IF NOT EXISTS currency
+CREATE TABLE IF NOT EXISTS public.currency
 (
-    id character varying(255) DEFAULT gen_random_uuid()::character varying(255) PRIMARY KEY,
-    name character varying(255),
-    symbol character varying(255),
-    decimal_mark character varying(10),
-    symbol_at_beginning boolean NOT NULL DEFAULT false
+    id character varying(255) PRIMARY KEY,
+    symbol character varying(255) NOT NULL,
+    decimal_mark character varying(10) DEFAULT '.' NOT NULL ,
+    symbol_at_beginning boolean NOT NULL DEFAULT true
 );
 
-CREATE TABLE IF NOT EXISTS organization
+CREATE TABLE IF NOT EXISTS public.organization
 (
     id character varying(255) DEFAULT gen_random_uuid()::character varying(255) PRIMARY KEY,
     city character varying(255),
@@ -120,7 +119,9 @@ CREATE TABLE IF NOT EXISTS holiday
     id character varying(255) DEFAULT gen_random_uuid()::character varying(255) PRIMARY KEY,
     description character varying(255),
     holiday_date date,
-    repeat_yearly boolean
+    to_date date,
+    repeat_yearly boolean,
+    date_range boolean
 );
 
 CREATE TABLE IF NOT EXISTS crypto_product
@@ -182,10 +183,17 @@ CREATE TABLE IF NOT EXISTS deposit_product
 
 CREATE TABLE IF NOT EXISTS exchange_rate
 (
-    id character varying(255) NOT NULL,
+    from_currency character varying(255) NOT NULL,
+    to_currency character varying(255) NOT NULL,
     buy_rate double precision,
     name character varying(255),
-    sell_rate double precision
+    sell_rate double precision,
+    margin double precision,
+    created_date timestamp with time zone,
+    last_modified_date timestamp with time zone,
+    created_by jsonb,
+    last_modified_by jsonb,
+    CONSTRAINT exchange_rate_pk PRIMARY KEY (from_currency, to_currency)
 );
 
 CREATE TABLE IF NOT EXISTS gl_product

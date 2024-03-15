@@ -6,7 +6,7 @@
     <mat-form-field class="example-full-width" *ngIf="selectedCurrenciesDisplay.length < currencies.length">
       <mat-autocomplete #auto="matAutocomplete">
         @for (currency of currencies; track currency) {
-          <mat-option [value]="currency" *ngIf="!isSelectedCurrency(currency)">{{currency.name}}</mat-option>
+          <mat-option [value]="currency" *ngIf="!isSelectedCurrency(currency)">{{currency.id}}</mat-option>
         }
       </mat-autocomplete>
       <input type="text" placeholder="{{languageService.formatLanguage('currencyScreens.selectionPanel.title', [])}}"
@@ -25,7 +25,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let b of selectedCurrenciesDisplay">
-          <td>{{b.name}}</td>
+          <td>{{b.id}}</td>
           <td>{{b.symbol}}</td>
           <td>
             <span *ngIf="b.decimalMark == '.'">{{languageService.formatLanguage("decimalMarkPeriod", [])}}</span>

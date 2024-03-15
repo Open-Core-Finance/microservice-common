@@ -78,8 +78,10 @@ export class PermissionService implements OnDestroy {
     switch(serviceUrl) {
       case environment.apiUrl.userprofile:
         return "userprofile";
-      case environment.apiUrl.product:
+      case environment.apiUrl.productService:
         return "product";
+        case environment.apiUrl.accountService:
+          return "account";
       default:
         return "others";
     }
@@ -205,7 +207,7 @@ export class PermissionService implements OnDestroy {
   }
 
   public getServiceUrls(): string[] {
-    return [environment.apiUrl.userprofile, environment.apiUrl.product];
+    return [environment.apiUrl.userprofile, environment.apiUrl.productService, environment.apiUrl.accountService];
   }
 
   public filterConfigByServiceUrl(configMap: Map<string, PermissionConfig[]>, serviceUrl: string): PermissionConfig[] {

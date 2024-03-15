@@ -11,5 +11,6 @@
     <include file="classpath:db/changelog/sql/004-permissions.sql"/>
     <include file="classpath:db/changelog/sql/005-add-audit-info.sql"/>
     <include file="classpath:db/changelog/sql/006-add-withdrawal_channel.sql"/>
+    <include file="classpath:db/changelog/sql/007-add-sample-data.sql"/>
 
 </databaseChangeLog>

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { UiOrderEvent } from '../../classes/UiOrderEvent';
 import { environment } from '../../../environments/environment';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {MatTableModule} from '@angular/material/table';
@@ -27,36 +26,16 @@ export class RoleComponent extends TableComponent<Role> {
 
   selectedRole: Role | null = null;
 
-  override newEmptyTableUi(): TableUi {
-    return new TableUi("role.error.");
-  }
-
   override get tableUiColumns(): TableColumnUi[] {
-    const labelKeyPrefix = "role.";
+    const labelKeyPrefix = this.localizePrefix + ".";
     var result: TableColumnUi[] = [];
     result.push(new TableColumnUi("id", labelKeyPrefix + "id"));
     result.push(new TableColumnUi("name", labelKeyPrefix + "name"));
     return result;
   }
 
-  override ngAfterViewInit(): void {
-    super.ngAfterViewInit();
-    const order = new UiOrderEvent();
-    order.active = "id";
-    order.direction = "asc";
-    this.changeOrder({ order });
-  }
-
   getServiceUrl() {
     return environment.apiUrl.role;
-  }
-
-  override getDeleteConfirmContent(item: Role): string {
-    return this.languageService.formatLanguage("role.deleteConfirmContent", [item.name]);
-  }
-
-  override getDeleteConfirmTitle(item: Role): string {
-    return this.languageService.formatLanguage("role.deleteConfirmTitle", []);
   }
 
   override createNewItem(): Role {

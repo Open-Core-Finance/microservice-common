@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS loan_account
     created_by jsonb,
     last_modified_by jsonb,
     supported_currencies character varying[] NOT NULL,
+    product_id character varying(255) NOT NULL,
     customer_id bigint NOT NULL
 );
 

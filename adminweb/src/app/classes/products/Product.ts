@@ -1,6 +1,7 @@
 import { GeneralModel, ListableItem } from "../CommonClasses";
 import {User} from "../User";
 import { AccountState } from "../accounts/AccountState";
+import { ProductFeeType } from "./ProductFeeType";
 
 export abstract class Product implements GeneralModel<string>, ListableItem {
     id: string = "";
@@ -43,45 +44,6 @@ export class ProductFee {
 
     monthlyPayOption: MonthlyPayOption = MonthlyPayOption.MONTHLY_FROM_ACTIVATION;
     requiredFeeApplication: boolean | null = false;
-}
-
-export enum ProductFeeType {
-    /**
-     * Manual for deposit or loan account.
-     */
-    MANUAL_FEE = "MANUAL_FEE",
-    /**
-     * Deposit monthly fee.
-     */
-    MONTHLY_FEE = "MONTHLY_FEE",
-    /**
-     * Planned (Applied on Due Dates) for loan.
-     */
-    PLANNED = "PLANNED",
-    /**
-     * Deducted Disbursement.
-     */
-    DEDUCTED_DISBURSEMENT = "DEDUCTED_DISBURSEMENT",
-    /**
-     * Capitalized Disbursement.
-     */
-    CAPITALIZED_DISBURSEMENT = "CAPITALIZED_DISBURSEMENT",
-    /**
-     * Upfront Disbursement.
-     */
-    UPFRONT_DISBURSEMENT = "UPFRONT_DISBURSEMENT",
-    /**
-     * Late Repayment.
-     */
-    LATE_REPAYMENT = "LATE_REPAYMENT",
-    /**
-     * Payment Due (Applied Upfront).
-     */
-    PAYMENT_DUE_UPFRONT = "PAYMENT_DUE_UPFRONT",
-    /**
-     * Payment Due (Applied on Due Dates).
-     */
-    PAYMENT_DUE_DUE_DATE = "PAYMENT_DUE_DUE_DATE"
 }
 
 export enum MonthlyPayOption {

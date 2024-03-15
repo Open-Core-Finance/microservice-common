@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
 import { Role } from '../classes/Role';
 import { UserMessage } from '../classes/UserMessage';
 import { RestService } from '../services/rest.service';
+import { OrganizationService } from '../services/organization.service';
 
 @Component({
   selector: 'app-login',
@@ -37,7 +38,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   selectedRoleSubscription: Subscription | null = null;
 
   constructor(public languageService: LanguageService, private auth: AuthenticationService, private router: Router,
-    private route: ActivatedRoute, private restService: RestService) {
+    private route: ActivatedRoute, private restService: RestService, private organizationService: OrganizationService) {
   }
 
   ngOnDestroy(): void {
@@ -70,6 +71,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         if (role.organization == null) {
           urlToNavigate = that.returnUrl || "/" + environment.frontEndUrl.organizations;
         } else {
+          this.organizationService.organizationSubject.next(role.organization);
           urlToNavigate = that.returnUrl || "/" + environment.frontEndUrl.organizationDetails;
         }
         that.router.navigate([urlToNavigate]);

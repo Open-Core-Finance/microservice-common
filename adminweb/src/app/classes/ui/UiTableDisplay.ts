@@ -18,7 +18,7 @@ export class TableUi {
     enabledBottomPaging = true;
     enabledTopPaging = true;
     columns: TableColumnUi[] = [];
-    actionLableKey = "action.action";
+    actionLabelKey = "action.action";
 
     constructor(errorPrefix: string) {
         this.errorPrefix = errorPrefix;
@@ -53,11 +53,12 @@ export class TableColumnUi {
     enableSort = true;
     /**
      * Supported transform:
-     * 1. dateFormat = "yyyy-MM-dd"
-     * 2. numberFormat = '1.0-2'
-     * 3. plainTextDisplay = true (Default)
-     * 4. function = (input) => {}
-     * 5. labelPrefix = "display.column_"
+     * 1. dateFormat: "yyyy-MM-dd"
+     * 2. numberFormat: '1.0-2'
+     * 3. plainTextDisplay: true (Default)
+     * 4. function: (input) => {}
+     * 5. labelPrefix: "display.column_"
+     * 6. complex: true => Other display can set by html template for complexCellTemplate[column.columnName]
      */
     columnTransformOptions: any = {
         plainTextDisplay: true

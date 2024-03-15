@@ -4,7 +4,7 @@ import { Currency } from 'src/app/classes/Currency';
 import { Subscription } from 'rxjs';
 import { DepositLimit, DepositLimitType } from 'src/app/classes/products/DepositLimit';
 import { LanguageService } from 'src/app/services/language.service';
-import { EntitiesService } from 'src/app/services/EntitiesService';
+import { CurrencyService } from 'src/app/services/currency.service';
 
 @Component({
   selector: 'app-deposit-limit-input',
@@ -28,9 +28,9 @@ export class DepositLimitInputComponent implements OnInit, ControlValueAccessor,
   depositLimitTypeEnum = DepositLimitType;
   allTypes = Object.keys(DepositLimitType);
 
-  public constructor(public languageService: LanguageService, private entityService: EntitiesService) {
+  public constructor(public languageService: LanguageService, private currencyService: CurrencyService) {
     this.currenciesSubscription?.unsubscribe();
-    this.currenciesSubscription = this.entityService.entitySubjectMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.subscribe( c => {
+    this.currenciesSubscription = this.currencyService.currenciesSubject.subscribe( c => {
       this.currencies = c;
       if (this.lastSupportedCurrencies) {
         this.populateCurrenciesToUi(this.lastSupportedCurrencies);
@@ -84,12 +84,6 @@ export class DepositLimitInputComponent implements OnInit, ControlValueAccessor,
   }
 
   limitCurrencyChanged($event: any, limit: DepositLimit) {
-    for (const currency of this.currenciesToDisplay) {
-      if ($event == currency.id) {
-        limit.currencyName = currency.name;
-        break;
-      }
-    }
   }
 
   addLimitClick($event: MouseEvent) {
@@ -106,7 +100,6 @@ export class DepositLimitInputComponent implements OnInit, ControlValueAccessor,
       }
       var item = new DepositLimit();
       item.currencyId = currency.id;
-      item.currencyName = currency.name;
       this.value.push(item);
     }
   }

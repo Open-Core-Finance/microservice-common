@@ -1,6 +1,5 @@
 export class WithdrawalLimit {
     currencyId: string = "";
-    currencyName: string = "";
     /**
      * Limit type.
      */

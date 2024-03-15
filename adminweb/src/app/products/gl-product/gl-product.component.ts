@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import {TableComponent} from "../../generic-component/TableComponent";
-import {UiOrderEvent} from "../../classes/UiOrderEvent";
 import {environment} from "../../../environments/environment";
 import { GlProduct } from 'src/app/classes/products/GlProduct';
 import { TableColumnUi, TableUi } from 'src/app/classes/ui/UiTableDisplay';
@@ -16,8 +15,8 @@ export class GlProductComponent extends TableComponent<GlProduct> {
     return "glproduct";
   }
 
-  override newEmptyTableUi(): TableUi {
-    return new TableUi("glProduct.error.");
+  override get localizePrefix(): string {
+    return "glProduct";
   }
 
   override get tableUiColumns(): TableColumnUi[] {
@@ -32,24 +31,8 @@ export class GlProductComponent extends TableComponent<GlProduct> {
     return result;
   }
 
-  override ngAfterViewInit(): void {
-    super.ngAfterViewInit();
-    const order = new UiOrderEvent();
-    order.active = "id";
-    order.direction = "asc";
-    this.changeOrder({ order });
-  }
-
   getServiceUrl() {
     return environment.apiUrl.glProduct;
-  }
-
-  override getDeleteConfirmContent(item: GlProduct): string {
-    return this.languageService.formatLanguage("glProduct.deleteConfirmContent", [item.name]);
-  }
-
-  override getDeleteConfirmTitle(item: GlProduct): string {
-    return this.languageService.formatLanguage("glProduct.deleteConfirmTitle", []);
   }
 
   override createNewItem(): GlProduct {

@@ -3,6 +3,9 @@ import { ActionMenuItem, LanguageMenuItem, MenuGroup, MenuItem } from '../classe
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationService } from '../services/authentication.service';
 import { OrganizationService } from '../services/organization.service';
+import { Role } from '../classes/Role';
+import { Subscription } from 'rxjs';
+import { Organization } from '../classes/Organization';
 
 @Component({
   selector: 'app-left-menu',
@@ -15,11 +18,20 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
   menuGroups: MenuGroup[] = [];
   @Output() menuClosedEmitter = new EventEmitter();
 
+  private selectedRole: Role | null = null;
+  private selectedRoleSubscription: Subscription | undefined;
+  private organization: Organization | null = null;
+  private organizationSubscription: Subscription | undefined;
+
   constructor(private router: Router, private route: ActivatedRoute, private auth: AuthenticationService,
     private organizationService: OrganizationService) {
   }
 
   ngOnInit(): void {
+    this.selectedRoleSubscription?.unsubscribe();
+    this.selectedRoleSubscription = this.auth.selectedRoleSubject.subscribe( role => this.selectedRole = role);
+    this.organizationSubscription?.unsubscribe();
+    this.organizationSubscription = this.organizationService.organizationSubject.subscribe(org => this.organization = org);
   }
 
   menuItemClicked(menuItem: MenuItem) {
@@ -49,7 +61,10 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy() { }
+  ngOnDestroy() {
+    this.selectedRoleSubscription?.unsubscribe();
+    this.organizationSubscription?.unsubscribe();
+  }
 
   isActionItem(menuItem: MenuItem): boolean {
     return (menuItem instanceof ActionMenuItem);
@@ -71,7 +86,7 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
   isVisibleMenu(visibleFn: Function | null) {
     var result = true;
     if (visibleFn != null) {
-       result = visibleFn(this.auth, this.organizationService);
+      result = visibleFn(this.selectedRole, this.organization);
     }
     return result;
   }

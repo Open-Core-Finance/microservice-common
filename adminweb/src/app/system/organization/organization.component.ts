@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { Organization } from 'src/app/classes/Organization';
-import { UiOrderEvent } from 'src/app/classes/UiOrderEvent';
 import { TableComponent } from 'src/app/generic-component/TableComponent';
 import { environment } from 'src/environments/environment';
 import {AppComponent} from "../../app.component";
-import { TableColumnUi, TableUi } from 'src/app/classes/ui/UiTableDisplay';
+import { TableColumnUi } from 'src/app/classes/ui/UiTableDisplay';
 
 @Component({
   selector: 'app-organization',
@@ -19,12 +18,8 @@ export class OrganizationComponent extends TableComponent<Organization> {
 
   parent: AppComponent | undefined;
 
-  override newEmptyTableUi(): TableUi {
-    return new TableUi("organization.error.");
-  }
-
   override get tableUiColumns(): TableColumnUi[] {
-    const labelKeyPrefix = "organization.";
+    const labelKeyPrefix = this.localizePrefix + ".";
     var result: TableColumnUi[] = [];
     result.push(new TableColumnUi("id", labelKeyPrefix + "id"));
     result.push(new TableColumnUi("iconUrl", labelKeyPrefix + "iconUrl"));
@@ -35,24 +30,8 @@ export class OrganizationComponent extends TableComponent<Organization> {
     return result;
   }
 
-  override ngAfterViewInit(): void {
-    super.ngAfterViewInit();
-    const order = new UiOrderEvent();
-    order.active = "id";
-    order.direction = "asc";
-    this.changeOrder({ order });
-  }
-
   getServiceUrl() {
     return environment.apiUrl.organization;
-  }
-
-  override getDeleteConfirmContent(item: Organization): string {
-    return this.languageService.formatLanguage("organization.deleteConfirmContent", [item.name]);
-  }
-
-  override getDeleteConfirmTitle(item: Organization): string {
-    return this.languageService.formatLanguage("organization.deleteConfirmTitle", []);
   }
 
   override createNewItem(): Organization {

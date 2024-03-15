@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { Currency } from 'src/app/classes/Currency';
 import { DayOfWeek } from 'src/app/classes/DayOfWeek';
 import { Organization } from 'src/app/classes/Organization';
-import { EntitiesService } from 'src/app/services/EntitiesService';
+import { CurrencyService } from 'src/app/services/currency.service';
 import { CommonService } from 'src/app/services/common.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { RestService } from 'src/app/services/rest.service';
@@ -15,6 +15,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { GeneralEntityAddComponent } from 'src/app/generic-component/GeneralEntityAddComponent';
 import { OrganizationService } from 'src/app/services/organization.service';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
   selector: 'app-add-organization',
@@ -53,10 +54,11 @@ export class AddOrganizationComponent extends GeneralEntityAddComponent<Organiza
 
   constructor(public override languageService: LanguageService, protected override commonService: CommonService,
     protected override restService: RestService, protected override http: HttpClient, protected override formBuilder: FormBuilder,
-    protected override organizationService: OrganizationService, private entitiesService: EntitiesService) {
-      super(languageService, commonService, restService, http, formBuilder, organizationService);
+    protected override organizationService: OrganizationService, protected override changeDetector: ChangeDetectorRef,
+    protected override authenticationService: AuthenticationService, private currencyService: CurrencyService) {
+      super(languageService, commonService, restService, http, formBuilder, organizationService, changeDetector, authenticationService);
       this.currencySubscription?.unsubscribe();
-      this.currencySubscription = entitiesService.entitySubjectMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.subscribe(
+      this.currencySubscription = currencyService.currenciesSubject.subscribe(
          currencies => this.currencies = currencies
       );
   }

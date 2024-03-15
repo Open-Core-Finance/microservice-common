@@ -1,6 +1,5 @@
 export class CurrencyBasesValue {
     currencyId: string = "";
-    currencyName: string = "";
 }
 
 export class ValueConstraint extends CurrencyBasesValue {

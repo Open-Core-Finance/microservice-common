@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { UiOrderEvent } from '../../classes/UiOrderEvent';
 import { environment } from '../../../environments/environment';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {MatTableModule} from '@angular/material/table';
@@ -12,7 +11,7 @@ import { User } from '../../classes/User';
 import { AddUserComponent } from '../add-user/add-user.component';
 import { SharedModule } from 'src/app/generic-component/SharedModule';
 import { TableComponent } from 'src/app/generic-component/TableComponent';
-import { TableUi, TableColumnUi } from 'src/app/classes/ui/UiTableDisplay';
+import {  TableColumnUi } from 'src/app/classes/ui/UiTableDisplay';
 
 @Component({
   selector: 'app-user',
@@ -24,12 +23,13 @@ import { TableUi, TableColumnUi } from 'src/app/classes/ui/UiTableDisplay';
 })
 export class UserComponent extends TableComponent<User> {
 
-  override newEmptyTableUi(): TableUi {
-    return new TableUi("user.error.");
+
+  override get localizePrefix(): string {
+    return "user";
   }
 
   override get tableUiColumns(): TableColumnUi[] {
-    const labelKeyPrefix = "user.";
+    const labelKeyPrefix = this.localizePrefix + ".";
     var result: TableColumnUi[] = [];
     result.push(new TableColumnUi("firstName", labelKeyPrefix + "firstName"));
     result.push(new TableColumnUi("lastName", labelKeyPrefix + "lastName"));
@@ -39,24 +39,8 @@ export class UserComponent extends TableComponent<User> {
     return result;
   }
 
-  override ngAfterViewInit(): void {
-    super.ngAfterViewInit();
-    const order = new UiOrderEvent();
-    order.active = "id";
-    order.direction = "asc";
-    this.changeOrder({ order });
-  }
-
   getServiceUrl() {
     return environment.apiUrl.user;
-  }
-
-  override getDeleteConfirmContent(item: User): string {
-    return this.languageService.formatLanguage("user.deleteConfirmContent", [item.displayName]);
-  }
-
-  override getDeleteConfirmTitle(item: User): string {
-    return this.languageService.formatLanguage("user.deleteConfirmTitle", []);
   }
 
   override createNewItem(): User {

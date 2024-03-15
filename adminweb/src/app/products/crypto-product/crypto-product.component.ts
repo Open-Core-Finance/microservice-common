@@ -16,8 +16,8 @@ export class CryptoProductComponent extends TableComponent<CryptoProduct> {
     return "cryptoproduct";
   }
 
-  override newEmptyTableUi(): TableUi {
-    return new TableUi("cryptoProduct.error.");
+  override get localizePrefix(): string {
+    return "cryptoProduct";
   }
 
   override get tableUiColumns(): TableColumnUi[] {
@@ -32,24 +32,8 @@ export class CryptoProductComponent extends TableComponent<CryptoProduct> {
     return result;
   }
 
-  override ngAfterViewInit(): void {
-    super.ngAfterViewInit();
-    const order = new UiOrderEvent();
-    order.active = "id";
-    order.direction = "asc";
-    this.changeOrder({ order });
-  }
-
   getServiceUrl() {
     return environment.apiUrl.cryptoProduct;
-  }
-
-  override getDeleteConfirmContent(item: CryptoProduct): string {
-    return this.languageService.formatLanguage("cryptoProduct.deleteConfirmContent", [item.name]);
-  }
-
-  override getDeleteConfirmTitle(item: CryptoProduct): string {
-    return this.languageService.formatLanguage("cryptoProduct.deleteConfirmTitle", []);
   }
 
   override createNewItem(): CryptoProduct {

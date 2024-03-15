@@ -20,6 +20,10 @@ import { CryptoProductComponent } from './products/crypto-product/crypto-product
 import { LoanProductComponent } from './products/loan-product/loan-product.component';
 import { UserComponent } from './system/user/user.component';
 import { RoleComponent } from './system/role/role.component';
+import { DepositAccountComponent } from './accounts/deposit-account/deposit-account.component';
+import { LoanAccountComponent } from './accounts/loan-account/loan-account.component';
+import { GlAccountComponent } from './accounts/gl-account/gl-account.component';
+import { CryptoAccountComponent } from './accounts/crypto-account/crypto-account.component';
 
 const routes: Routes = [
   { path: '', redirectTo: environment.frontEndUrl.organizations, pathMatch: 'full'},
@@ -40,7 +44,11 @@ const routes: Routes = [
   { path: environment.frontEndUrl.cryptoProducts, component: CryptoProductComponent, canActivate: [AuthGuard] },
   { path: environment.frontEndUrl.loanProducts, component: LoanProductComponent, canActivate: [AuthGuard] },
   { path: environment.frontEndUrl.userManagement, component: UserComponent, canActivate: [AuthGuard] },
-  { path: environment.frontEndUrl.roleManagement, component: RoleComponent, canActivate: [AuthGuard] }
+  { path: environment.frontEndUrl.roleManagement, component: RoleComponent, canActivate: [AuthGuard] },
+  { path: environment.frontEndUrl.depositAccounts, component: DepositAccountComponent, canActivate: [AuthGuard] },
+  { path: environment.frontEndUrl.loanAccounts, component: LoanAccountComponent, canActivate: [AuthGuard] },
+  { path: environment.frontEndUrl.glAccounts, component: GlAccountComponent, canActivate: [AuthGuard] },
+  { path: environment.frontEndUrl.cryptoAccounts, component: CryptoAccountComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({

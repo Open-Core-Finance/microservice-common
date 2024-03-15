@@ -12,6 +12,7 @@ import { LanguageItem } from './classes/LanguageItem';
 import { Role } from './classes/Role';
 import {LeftMenuComponent} from "./left-menu/left-menu.component";
 import {RouterOutlet} from "@angular/router";
+import { Organization } from './classes/Organization';
 
 @Component({
   selector: 'app-root',
@@ -85,17 +86,15 @@ export class AppComponent implements OnDestroy, OnInit, AfterViewInit {
     this.languageService.changeLanguage(langiageItem);
   }
 
-  private isVisibleOrganizationMenu(auth: AuthenticationService, organizationService: OrganizationService): boolean {
-    var role = auth.selectedRoleValue;
-    if (role != undefined && role != null) {
-      return role?.tenantId == null || role?.tenantId?.trim()?.length < 1;
+  private isVisibleOrganizationMenu(selectedRole: Role | null, organization: Organization | null): boolean {
+    if (selectedRole != undefined && selectedRole != null) {
+      return selectedRole.tenantId == null || selectedRole.tenantId?.trim()?.length < 1;
     }
     return false;
   }
 
-  private isVisibleOrganizationDetailsMenu(auth: AuthenticationService, organizationService: OrganizationService): boolean {
-    var org = organizationService.organization;
-    if (org != undefined && org != null) {
+  private isVisibleOrganizationDetailsMenu(selectedRole: Role | null, organization: Organization | null): boolean {
+    if (organization != undefined && organization != null) {
       return true;
     }
     return false;
@@ -150,7 +149,13 @@ export class AppComponent implements OnDestroy, OnInit, AfterViewInit {
 
   private get accountMenu(): MenuGroup {
     const languageService = this.languageService;
-    return new MenuGroup("", new LanguageKeyLabelProvider(languageService, "menu.groupAccount", []), [], null);
+    const depositMenuItem = new MenuItem(environment.frontEndUrl.depositAccounts, new LanguageKeyLabelProvider(languageService, "menu.depositAccount", []), "", "account_balance", null);
+    const loanMenuItem = new MenuItem(environment.frontEndUrl.loanAccounts, new LanguageKeyLabelProvider(languageService, "menu.loanAccount", []), "", "real_estate_agent", null);
+    const glMenuItem = new MenuItem(environment.frontEndUrl.glAccounts, new LanguageKeyLabelProvider(languageService, "menu.glAccount", []), "", "account_balance_wallet", null);
+    const cryptoMenuItem = new MenuItem(environment.frontEndUrl.cryptoAccounts, new LanguageKeyLabelProvider(languageService, "menu.cryptoAccount", []), "", "currency_bitcoin", null);
+    return new MenuGroup("", new LanguageKeyLabelProvider(languageService, "menu.groupAccount", []), [
+      depositMenuItem, loanMenuItem, glMenuItem, cryptoMenuItem
+    ], this.isVisibleOrganizationDetailsMenu);
   }
 
   private get uamMenu(): MenuGroup {
