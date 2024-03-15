@@ -4,7 +4,7 @@ services:
   postgresql:
     image: "postgres:16"
     ports:
-      - "${DB_PORT}:5432"
+      - "${DB_BIND_PORT}:${DB_PORT}"
     container_name: postgresql
     environment:
       - POSTGRES_USER=postgres # The PostgreSQL user (useful to connect to the database)

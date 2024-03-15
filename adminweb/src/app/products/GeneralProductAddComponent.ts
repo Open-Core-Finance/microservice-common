@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { Product, ProductNewAccountSettingType } from "../classes/products/Product";
 import { ProductCategory, ProductCategoryType } from "../classes/products/ProductCategory";
 import { ProductType } from "../classes/products/ProductType";
@@ -8,7 +8,7 @@ import { environment } from "src/environments/environment";
 import { Subscription } from "rxjs";
 import { Organization } from "../classes/Organization";
 import { Currency } from "../classes/Currency";
-import { EntitiesService } from "../services/EntitiesService";
+import { CurrencyService } from "../services/currency.service";
 import { LanguageService } from "../services/language.service";
 import { RestService } from "../services/rest.service";
 import { CommonService } from "../services/common.service";
@@ -17,6 +17,7 @@ import { FormBuilder } from "@angular/forms";
 import { OrganizationService } from "../services/organization.service";
 import { AccountState } from "../classes/accounts/AccountState";
 import { CurrencyBasesValue } from "../classes/products/ValueConstraint";
+import { AuthenticationService } from "../services/authentication.service";
 
 @Component({
     template: ''
@@ -36,8 +37,9 @@ export abstract class GeneralProductAddComponent<T extends Product> extends Gene
 
     constructor(public override languageService: LanguageService, protected override commonService: CommonService,
         protected override restService: RestService, protected override http: HttpClient, protected override formBuilder: FormBuilder,
-        protected override organizationService: OrganizationService, protected entityService: EntitiesService) {
-        super(languageService, commonService, restService, http, formBuilder, organizationService);
+        protected override organizationService: OrganizationService, protected override changeDetector: ChangeDetectorRef,
+        protected override authenticationService: AuthenticationService, protected currencyService: CurrencyService) {
+        super(languageService, commonService, restService, http, formBuilder, organizationService, changeDetector, authenticationService);
     }
 
     protected override validateFormData(formData: any): void {
@@ -91,7 +93,7 @@ export abstract class GeneralProductAddComponent<T extends Product> extends Gene
             }
         });
         this.currenciesSubscription?.unsubscribe();
-        this.currenciesSubscription = this.entityService.entitySubjectMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.subscribe( c => {
+        this.currenciesSubscription = this.currencyService.currenciesSubject.subscribe( c => {
             this.currencies = c;
             this.currenciesChanged();
         });
@@ -161,7 +163,6 @@ export abstract class GeneralProductAddComponent<T extends Product> extends Gene
           }
           if (!found) {
             newItem.currencyId = currency.id;
-            newItem.currencyName = currency.name;
             constraints.push(newItem);
           }
         }

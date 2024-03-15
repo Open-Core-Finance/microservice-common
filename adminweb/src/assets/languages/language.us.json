@@ -68,7 +68,11 @@
       "groupMaster": "Master data",
       "groupUam": "UAM",
       "user": "Users",
-      "role": "Roles"
+      "role": "Roles",
+      "depositAccount": "Deposit account",
+      "loanAccount": "Loan account",
+      "glAccount": "GL account",
+      "cryptoAccount": "Crypto account"
   },
   "organization": {
       "id": "ID",
@@ -148,12 +152,14 @@
       "deleteConfirmContent": "Are you sure to delete holiday ${0}?",
       "deleteConfirmTitle": "Confirm delete holiday",
       "holidayDateFormat": "dd MMM yyyy",
-      "holidayDateYearlyFormat": "dd MMM' (Annually)'",
+      "holidayDateYearlyFormat": "dd MMM",
       "error": {
           "description_empty": "Description cannot be empty!",
           "holiday_date_empty": "Holiday date cannot be empty!"
       },
-      "addTitle": "Add holiday"
+      "addTitle": "Add holiday",
+      "dateRange": "Date range",
+      "toDate": "To date"
   },
   "dateFormatValue": "MM/dd/yyyy",
   "monthYearLabel": "MMM YYYY",
@@ -219,15 +225,18 @@
       "name": "Name",
       "sellRate": "Sale rate",
       "buyRate": "Buy rate",
-      "deleteConfirmContent": "Are you sure to delete exchange rate ${0}?",
+      "deleteConfirmContent": "Are you sure to delete exchange rate from ${0} to ${1}?",
       "deleteConfirmTitle": "Confirm delete exchange rate",
       "addTitle": "Add exchange rate",
       "error": {
-          "id_empty": "Exchange rate code cannot be empty!",
-          "name_empty": "Exchange rate name cannot be empty!",
+          "from_currency_empty": "From currency cannot be empty!",
+          "to_currency_empty": "To currency cannot be empty!",
           "sell_rate_error": "Sell rate must be larger than 0!",
           "buy_rate_error": "Sell rate must be larger than 0!"
-      }
+      },
+      "fromCurrency": "From currency",
+      "toCurrency": "To currency",
+      "margin": "Margin"
   },
   "rateSource": {
       "id": "ID",
@@ -664,5 +673,24 @@
       "load_by_role_permission_POST": "Load permissions by roles",
       "override_by_role_permission_PUT": "Override role's permissons"
     }
+  },
+  "glaccount": {
+    "id": "ID",
+    "category": "Category",
+    "description": "Product description",
+    "name": "Product name",
+    "type": "Product type",
+    "activated": "Activated",
+    "lastModifyDate": "Last modified",
+    "currencies": "Currencies",
+    "error": {
+      "no_currency_selected": "Please select at least 1 currency to continue!"
+    },
+    "addFee": "Add fee",
+    "allowArbitraryFees": "Allow Arbitrary Fees",
+    "lastModifiedDate": "Last modified",
+    "lastModifiedBy": "Modified user",
+    "addTitle": "Add GL Account",
+    "product": "Product"
   }
 }

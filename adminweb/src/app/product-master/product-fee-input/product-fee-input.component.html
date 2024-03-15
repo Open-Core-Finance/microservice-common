@@ -3,7 +3,7 @@
         {{languageService.formatLanguage('product.error.no_currency_selected', [])}}
     </div>
     <div *ngIf="supportedCurrenciesObject.length > 0">
-        <div *ngFor="let fee of selectedFees" class="fee-panel">
+        <div *ngFor="let fee of selectedFees; let i = index;" class="fee-panel">
             <mat-label>{{languageService.formatLanguage('productFee.id', [])}}:&nbsp;</mat-label>
             <mat-form-field class="full-width" appearance="fill" color="primary">
                 <input type="text" matInput placeholder="{{languageService.formatLanguage('productFee.id', [])}}" [(ngModel)]="fee.id" required>
@@ -40,10 +40,14 @@
             <mat-form-field>
                 <mat-select [(ngModel)]="fee.currencyId" required>
                     <mat-option *ngFor="let currency of supportedCurrenciesObject" [value]="currency.id">
-                        {{currency.name}}
+                        {{currency.id}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
+
+            <button mat-icon-button (click)="removeFee($event, i)" title="Remove fee">
+                <mat-icon aria-hidden="false" fontIcon="delete"></mat-icon>
+            </button>
         </div>
         <div class="button-bar">
             <button mat-raised-button color="primary" (click)="addFeeClick()">

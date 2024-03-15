@@ -4,7 +4,7 @@ import { Currency } from 'src/app/classes/Currency';
 import { Subscription } from 'rxjs';
 import { AccruedInterestPostingFrequency, LoanInterestCalculationMethod, LoanInterestRate, LoanInterestType, RepaymentsInterestCalculation } from 'src/app/classes/products/LoanProduct';
 import { LanguageService } from 'src/app/services/language.service';
-import { EntitiesService } from 'src/app/services/EntitiesService';
+import { CurrencyService } from 'src/app/services/currency.service';
 import { ValueConstraint } from 'src/app/classes/products/ValueConstraint';
 import { InterestDayInYear } from 'src/app/classes/products/InterestDayInYear';
 import { InterestCalculationMethod } from 'src/app/classes/products/InterestCalculationMethod';
@@ -41,9 +41,9 @@ export class LoanInterestRateInputComponent implements OnInit, ControlValueAcces
   repaymentsInterestCalculationEnum = RepaymentsInterestCalculation;
   allRepaymentsInterestCalculations = Object.keys(RepaymentsInterestCalculation);
 
-  public constructor(public languageService: LanguageService, private entityService: EntitiesService) {
+  public constructor(public languageService: LanguageService, private currencyService: CurrencyService) {
     this.currenciesSubscription?.unsubscribe();
-    this.currenciesSubscription = this.entityService.entitySubjectMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.subscribe( c => {
+    this.currenciesSubscription = this.currencyService.currenciesSubject.subscribe( c => {
       this.currencies = c;
       if (this.lastSupportedCurrencies) {
         this.populateCurrenciesToUi(this.lastSupportedCurrencies);
@@ -113,7 +113,6 @@ export class LoanInterestRateInputComponent implements OnInit, ControlValueAcces
     if (!found) {
       const item = new ValueConstraint();
       item.currencyId = currency.id;
-      item.currencyName = currency.name;
       this.value.interestRateConstraints.push(item);
     }
     if (!this.lastSupportedCurrencies || this.lastSupportedCurrencies.length < 1) {

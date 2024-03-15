@@ -108,7 +108,7 @@
               "buildTarget": "corefinance-adminweb:build:dockercompose"
             }
           },
-          "defaultConfiguration": "local"
+          "defaultConfiguration": "dockercompose"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",

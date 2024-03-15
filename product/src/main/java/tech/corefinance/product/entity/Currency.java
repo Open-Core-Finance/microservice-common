@@ -11,9 +11,7 @@ import tech.corefinance.common.model.GenericModel;
 public class Currency implements GenericModel<String>, CreateUpdateDto<String> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
-    private String name;
     private String symbol;
     @Column(name = "decimal_mark")
     private String decimalMark;

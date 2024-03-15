@@ -17,7 +17,7 @@
                             <mat-label>{{languageService.formatLanguage('currency', [])}}</mat-label>
                             <mat-select required formControlName="currency" (valueChange)="currencyChanged($event)">
                                 <mat-option *ngFor="let currency of currencies" [value]="currency">
-                                    {{currency.name}} ({{currency.symbol}})
+                                    {{currency.id}} ({{currency.symbol}})
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>

@@ -1,10 +1,11 @@
 package tech.corefinance.account.common.model;
 
 import lombok.Data;
+import tech.corefinance.product.common.enums.ProductFeeType;
 
 @Data
 public class TransactionFee {
-    private AccountFeeType type;
+    private ProductFeeType type;
     private String currency;
     private double amount;
     private double vat;

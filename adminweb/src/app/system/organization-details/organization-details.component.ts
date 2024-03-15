@@ -62,7 +62,7 @@ export class OrganizationDetailsComponent implements OnInit, OnDestroy{
   }
 
   currencyLabel(currency: Currency) {
-    return currency.name + ' (' + currency.symbol + ')';
+    return currency.id + ' (' + currency.symbol + ')';
   }
 
   isDayOfWeekChecked(dayOfWeekName: string) {
@@ -101,5 +101,15 @@ export class OrganizationDetailsComponent implements OnInit, OnDestroy{
         $event.organization.index = -1;
       }
       this.organizationService.organization = $event.organization;
+  }
+
+  viewDepositProductClick($event: any) {
+    const urlToNavigate = "/" + environment.frontEndUrl.depositProducts;
+    this.router.navigateByUrl(urlToNavigate);
+  }
+
+  viewLoanProductClick($event: any) {
+    const urlToNavigate = "/" + environment.frontEndUrl.loanProducts;
+    this.router.navigateByUrl(urlToNavigate);
   }
 }

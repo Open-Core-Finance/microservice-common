@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { UserMessage } from 'src/app/classes/UserMessage';
-import { UiFormCustomContent, UiFormInput, UiFormItem, UiFormSelect } from 'src/app/classes/ui/UiFormInput';
+import { UiFormCheckbox, UiFormCustomContent, UiFormDate, UiFormInput, UiFormItem, UiFormSelect } from 'src/app/classes/ui/UiFormInput';
 import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
@@ -19,6 +19,8 @@ export class GenericFormComponent implements OnInit, OnDestroy {
   formItems: UiFormItem[] = [];
   @Input()
   message: UserMessage = new UserMessage([], []);
+  @Input()
+  errorPrefix: string = "error.";
 
   @Output() cancel = new EventEmitter();
   @Output() save = new EventEmitter();
@@ -40,8 +42,16 @@ export class GenericFormComponent implements OnInit, OnDestroy {
     return item instanceof UiFormSelect;
   }
 
+  isFormCheckbox(item: UiFormItem) {
+    return item instanceof UiFormCheckbox;
+  }
+
   isFormCustomContent(item: UiFormItem) {
     return item instanceof UiFormCustomContent;
+  }
+
+  isFormDate(item: UiFormItem) {
+    return item instanceof UiFormDate;
   }
 
   protected cancelClick($event: any): any {

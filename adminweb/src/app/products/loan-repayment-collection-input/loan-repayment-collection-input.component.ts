@@ -4,7 +4,7 @@ import { PrePaymentRecalculation, RepaymentCollection, RepaymentType } from 'src
 import { Currency } from 'src/app/classes/Currency';
 import { Subscription } from 'rxjs';
 import { LanguageService } from 'src/app/services/language.service';
-import { EntitiesService } from 'src/app/services/EntitiesService';
+import { CurrencyService } from 'src/app/services/currency.service';
 import {CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Component({
@@ -32,9 +32,9 @@ export class LoanRepaymentCollectionInputComponent implements OnInit, ControlVal
   repaymentTypeEnum = RepaymentType;
   allRepaymentTypes = Object.keys(RepaymentType);
 
-  public constructor(public languageService: LanguageService, private entityService: EntitiesService) {
+  public constructor(public languageService: LanguageService, private currencyService: CurrencyService) {
     this.currenciesSubscription?.unsubscribe();
-    this.currenciesSubscription = this.entityService.entitySubjectMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.subscribe( c => {
+    this.currenciesSubscription = this.currencyService.currenciesSubject.subscribe( c => {
       this.currencies = c;
       if (this.lastSupportedCurrencies) {
         this.populateCurrenciesToUi(this.lastSupportedCurrencies);

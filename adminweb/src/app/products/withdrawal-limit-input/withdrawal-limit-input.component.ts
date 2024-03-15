@@ -2,9 +2,8 @@ import { Component, Input, OnDestroy, OnInit, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Currency } from 'src/app/classes/Currency';
 import { Subscription } from 'rxjs';
-import { DepositLimit } from 'src/app/classes/products/DepositLimit';
 import { LanguageService } from 'src/app/services/language.service';
-import { EntitiesService } from 'src/app/services/EntitiesService';
+import { CurrencyService } from 'src/app/services/currency.service';
 import { WithdrawalLimit, WithdrawalLimitType } from 'src/app/classes/products/WithdrawalLimit';
 import { WithdrawalChannel } from 'src/app/classes/WithdrawalChannel';
 import { HttpClient } from '@angular/common/http';
@@ -36,10 +35,10 @@ export class WithdrawalLimitInputComponent implements OnInit, ControlValueAccess
   allTypes = Object.keys(WithdrawalLimitType);
   channels: WithdrawalChannel[] = [];
 
-  public constructor(public languageService: LanguageService, private entityService: EntitiesService,
+  public constructor(public languageService: LanguageService, private currencyService: CurrencyService,
     private http: HttpClient, private restService: RestService, private commonService: CommonService) {
     this.currenciesSubscription?.unsubscribe();
-    this.currenciesSubscription = this.entityService.entitySubjectMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.subscribe( c => {
+    this.currenciesSubscription = this.currencyService.currenciesSubject.subscribe( c => {
       this.currencies = c;
       if (this.lastSupportedCurrencies) {
         this.populateCurrenciesToUi(this.lastSupportedCurrencies);
@@ -102,12 +101,6 @@ export class WithdrawalLimitInputComponent implements OnInit, ControlValueAccess
   }
 
   limitCurrencyChanged($event: any, limit: WithdrawalLimit) {
-    for (const currency of this.currenciesToDisplay) {
-      if ($event == currency.id) {
-        limit.currencyName = currency.name;
-        break;
-      }
-    }
   }
 
   addLimitClick($event: MouseEvent) {
@@ -124,7 +117,6 @@ export class WithdrawalLimitInputComponent implements OnInit, ControlValueAccess
       }
       var item = new WithdrawalLimit();
       item.currencyId = currency.id;
-      item.currencyName = currency.name;
       if (this.value.length > 0) {
         item.channelId = this.value[this.value.length - 1].channelId;
       } else if (this.channels.length > 0) {

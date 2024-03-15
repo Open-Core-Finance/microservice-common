@@ -16,24 +16,27 @@ import tech.corefinance.common.model.CreateUpdateDto;
 import tech.corefinance.common.model.GenericModel;
 import tech.corefinance.common.model.ModifiedDateTrackedEntity;
 
+import java.time.Duration;
 import java.time.ZonedDateTime;
 
 @Entity
 @Table(name = "exchange_rate")
 @Data
 @EntityListeners({EntityBasicUserAuditorListener.class, EntityZonedDateTimeAuditListener.class, EntityDeleteListener.class})
-public class ExchangeRate implements GenericModel<String>, CreateUpdateDto<String>,
+public class ExchangeRate implements GenericModel<ExchangeRateId>, CreateUpdateDto<ExchangeRateId>,
         AuditableEntity<BasicUserDto>, ModifiedDateTrackedEntity<ZonedDateTime> {
     /**
      * Currency code to sell/buy.
      */
     @Id
-    private String id;
-    private String name;
+    private ExchangeRateId id;
+
     @Column(name = "sell_rate")
     private double sellRate;
     @Column(name = "buy_rate")
     private double buyRate;
+    @Column(name = "margin")
+    private double margin;
 
     @CreatedDate
     @Column(name = "created_date")
@@ -49,4 +52,5 @@ public class ExchangeRate implements GenericModel<String>, CreateUpdateDto<Strin
     @Column(name = "last_modified_by")
     @JdbcTypeCode(SqlTypes.JSON)
     private BasicUserDto lastModifiedBy;
+    Duration.ofDays(5);
 }

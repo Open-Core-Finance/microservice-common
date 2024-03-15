@@ -68,7 +68,11 @@
       "groupMaster": "Master data",
       "groupUam": "UAM",
       "user": "Người dùng",
-      "role": "Vai trò"
+      "role": "Vai trò",
+      "depositAccount": "TK tiền gửi",
+      "loanAccount": "TK vay",
+      "glAccount": "TK GL",
+      "cryptoAccount": "TK Crypto"
   },
   "organization": {
       "id": "Mã số",
@@ -143,17 +147,19 @@
   "holiday": {
       "id": "Mã số",
       "description": "Mô tả",
-      "repeatYearly": "Lặp lại hằng năm",
+      "repeatYearly": "Hằng năm",
       "holidayDate": "Ngày tháng",
       "deleteConfirmContent": "Bạn có chắc muốn xóa ngày lễ ${0} không?",
       "deleteConfirmTitle": "Xác nhận xóa ngày lễ",
-      "holidayDateFormat": "dd-MM-yyyy",
-      "holidayDateYearlyFormat": "dd-MM' (Hằng năm)'",
+      "holidayDateFormat": "dd MMM yyyy",
+      "holidayDateYearlyFormat": "dd MMM",
       "error": {
           "description_empty": "Mô tả không được bỏ trống!",
           "holiday_date_empty": "Ngày tháng không được bỏ trống!"
       },
-      "addTitle": "Thêm ngày lễ"
+      "addTitle": "Thêm ngày lễ",
+      "dateRange": "Nhiều ngày",
+      "toDate": "Ngày kết thúc"
   },
   "dateFormatValue": "dd/MM/yyyy",
   "monthYearLabel": "MM/YYYY",
@@ -219,15 +225,18 @@
       "name": "Tên tỉ giá",
       "sellRate": "Giá bán",
       "buyRate": "Giá mua",
-      "deleteConfirmContent": "Bạn có chắc muốn xóa tỉ giá ${0} không?",
+      "deleteConfirmContent": "Bạn có chắc muốn xóa tỉ giá từ ${0} sang ${1} không?",
       "deleteConfirmTitle": "Xác nhận xóa tỉ giá",
       "addTitle": "Thêm tỉ giá",
       "error": {
-          "id_empty": "Mã tỉ giá không được bỏ trống!",
-          "name_empty": "Tên tỉ giá không được bỏ trống!",
+          "from_currency_empty": "Tiền nguồn không được bỏ trống!",
+          "to_currency_empty": "Tiền đích không được bỏ trống!",
           "sell_rate_error": "Giá bán phải lớn hơn 0!",
           "buy_rate_error": "Giá mua phải lớn hơn 0!"
-      }
+      },
+      "fromCurrency": "Tiền nguồn",
+      "toCurrency": "Tiền đích",
+      "margin": "Margin"
   },
   "rateSource": {
       "id": "Mã số",
@@ -664,5 +673,24 @@
       "load_by_role_permission_POST": "Load permissions by roles",
       "override_by_role_permission_PUT": "Override role's permissons"
     }
+  },
+  "glaccount": {
+    "id": "Mã số",
+    "category": "Chuyên mục",
+    "description": "Mô tả sản phẩm",
+    "name": "Tên sản phầm",
+    "type": "Loại sản phầm",
+    "activated": "Hoạt động",
+    "lastModifyDate": "Lần sửa cuối",
+    "currencies": "Tiền tệ",
+    "error": {
+      "no_currency_selected": "Xin hãy chọn ít nhất 1 đơn vị tiền tệ để tiếp tục!"
+    },
+    "addFee": "Thêm phí",
+    "allowArbitraryFees": "Allow Arbitrary Fees",
+    "lastModifiedDate": "Lần sửa cuối",
+    "lastModifiedBy": "Người sửa",
+    "addTitle": "Tạo TK GL",
+    "product": "Sản phẩm"
   }
 }

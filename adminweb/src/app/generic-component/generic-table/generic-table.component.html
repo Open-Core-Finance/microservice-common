@@ -28,7 +28,7 @@
     </ng-container>
   
     <!-- Others Column -->
-    <ng-container *ngFor="let column of tableUi.columns" matColumnDef="{{column.columnName}}">
+    <ng-container *ngFor="let column of tableUi.columns; index as i" matColumnDef="{{column.columnName}}">
         <th mat-header-cell [attr.mat-sort-header]="column.enableSort ? '' : null" *matHeaderCellDef class="{{column.columnClass}}">
             {{languageService.formatLanguage(column.columnLabelKey, [])}}
         </th>
@@ -41,11 +41,15 @@
                 {{element[column.columnName] | number : column.columnTransformOptions['numberFormat']}}
             </ng-container>
             <ng-container *ngIf="!column.columnTransformOptions.plainTextDisplay && column.columnTransformOptions['function'] != undefined">
-                {{column.columnTransformOptions['function'](element[column.columnName])}}
+                <div [innerHTML]="column.columnTransformOptions['function'](element[column.columnName], i)"></div>
             </ng-container>
             <ng-container *ngIf="!column.columnTransformOptions.plainTextDisplay && column.columnTransformOptions['labelPrefix'] != undefined">
                 {{languageService.formatLanguage(column.columnTransformOptions['labelPrefix'] + element.symbolAtBeginning, [])}}
-            </ng-container>  
+            </ng-container>
+
+            <ng-container *ngIf="complexCellTemplate">
+                <ng-container *ngTemplateOutlet="complexCellTemplate[column.columnName]; context: { $implicit: element }"></ng-container>
+            </ng-container>
         </td>
     </ng-container>
 
@@ -54,7 +58,7 @@
     <!-- Action Column -->
     <ng-container *ngIf="tableUi.enabledActionColumn" matColumnDef="action">
       <th mat-header-cell *matHeaderCellDef>
-        {{languageService.formatLanguage(tableUi.actionLableKey, [])}}
+        {{languageService.formatLanguage(tableUi.actionLabelKey, [])}}
         <mat-icon aria-hidden="false" fontIcon="add" (click)="addClick($event)"></mat-icon>
         <mat-icon aria-hidden="false" fontIcon="refresh" (click)="reloadData()"></mat-icon>
         <ng-content select="[customcolumnaction]"></ng-content>

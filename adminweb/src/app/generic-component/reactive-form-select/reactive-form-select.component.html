@@ -3,7 +3,7 @@
 
     <mat-select required [(ngModel)]="value" (selectionChange)="onChanged()" [attr.required]="required ? '' : null">
         <mat-option *ngFor="let item of selectItems" [value]="item.selectValue">
-            {{languageService.formatLanguage(item.lableKey, [])}}
+            {{languageService.formatLanguage(item.labelKey, [])}}
         </mat-option>
     </mat-select>
 </mat-form-field>

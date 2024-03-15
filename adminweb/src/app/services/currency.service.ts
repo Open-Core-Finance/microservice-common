@@ -10,15 +10,11 @@ import { CommonService } from './common.service';
 @Injectable({
   providedIn: 'root'
 })
-export class EntitiesService implements OnInit {
-    public static readonly ENTITY_TYPE_CURRENCY = "CURRENCY";
+export class CurrencyService implements OnInit {
 
-    public entitySubjectMap: Map<string, BehaviorSubject<any[]> | undefined> = 
-        new Map<string, BehaviorSubject<any[]> | undefined>();
+    public currenciesSubject: BehaviorSubject<Currency[]> = new BehaviorSubject<Currency[]>([]);
 
     constructor(private restService: RestService, private http: HttpClient, private commonService: CommonService) {
-        // Currency
-        this.entitySubjectMap.set(EntitiesService.ENTITY_TYPE_CURRENCY, new BehaviorSubject<any[]>([]));
         // Init
         this.ngOnInit();
     }
@@ -30,7 +26,7 @@ export class EntitiesService implements OnInit {
         this.http.post<GeneralApiResponse>(serviceUrl, requestBody, { headers }).subscribe({
             next: (data: GeneralApiResponse) => {
                 if (data.status === 0) {
-                    this.entitySubjectMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.next(data.result as Currency[]);
+                    this.currenciesSubject.next(data.result as Currency[]);
                 }
             }, error: (data: GeneralApiResponse) => {
                 console.error(data);

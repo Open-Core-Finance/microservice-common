@@ -1,0 +1,50 @@
+<div>
+  <div>
+    <mat-label *ngIf="selectedSubjectDtoDisplay.length < daysOfWeek.length">{{languageService.formatLanguage('course.weekSchedules', [])}}:</mat-label>
+  </div>
+  <div>
+    <mat-form-field class="full-width" *ngIf="selectedSubjectDtoDisplay.length < daysOfWeek.length">
+      <mat-autocomplete #auto="matAutocomplete">
+        @for (dayOfWeek of daysOfWeek; track dayOfWeek) {
+          <mat-option [value]="dayOfWeek" *ngIf="!isSelectedDay(dayOfWeek)">
+            {{languageService.formatLanguage("dayOfWeek." + dayOfWeek)}}
+          </mat-option>
+        }
+      </mat-autocomplete>
+      <input type="text" placeholder="{{languageService.formatLanguage('course.weekSchedules', [])}}"
+             matInput [matAutocomplete]="auto" [(ngModel)]="selectedDay" #selectionInput>
+    </mat-form-field>
+  </div>
+  <div *ngIf="selectedSubjectDtoDisplay.length > 0">
+    <table>
+      <thead>
+        <tr>
+          <th>{{languageService.formatLanguage('course.scheduleDayOfWeek', [])}}</th>
+          <th>{{languageService.formatLanguage('course.scheduleStartTime', [])}}</th>
+          <th>{{languageService.formatLanguage('course.scheduleEndTime', [])}}</th>
+          <th>{{languageService.formatLanguage('action.action', [])}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let b of selectedSubjectDtoDisplay">
+          <td>{{b.dayOfWeek}}</td>
+          <td>
+            <mat-form-field class="full-width" appearance="fill" color="primary">
+              <mat-label>{{languageService.formatLanguage("course.scheduleStartTime", [])}}</mat-label>
+              <input type="time" matInput placeholder="{{languageService.formatLanguage('course.scheduleStartTime', [])}}"
+                [(ngModel)]="b.startTime" required (ngModelChange)="triggerChanged()" (change)="triggerChanged()">
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field class="full-width" appearance="fill" color="primary">
+              <mat-label>{{languageService.formatLanguage("course.scheduleEndTime", [])}}</mat-label>
+              <input type="time" matInput placeholder="{{languageService.formatLanguage('course.scheduleEndTime', [])}}"
+                [(ngModel)]="b.endTime" required (ngModelChange)="triggerChanged()" (change)="triggerChanged()">
+            </mat-form-field>
+          </td>
+          <td><mat-icon aria-hidden="false" fontIcon="delete" (click)="removeSchedule(b)"></mat-icon></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

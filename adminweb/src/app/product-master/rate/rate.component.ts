@@ -16,12 +16,8 @@ export class RateComponent extends TableComponent<Rate> {
     return "rate";
   }
 
-  override newEmptyTableUi(): TableUi {
-    return new TableUi("rate.error.");
-  }
-
   override get tableUiColumns(): TableColumnUi[] {
-    const labelKeyPrefix = "rate.";
+    const labelKeyPrefix = this.localizePrefix + ".";
     var result: TableColumnUi[] = [];
     result.push(new TableColumnUi("id", labelKeyPrefix + "id"));
     result.push(new TableColumnUi("rateValue", labelKeyPrefix + "rateValue"));
@@ -29,14 +25,6 @@ export class RateComponent extends TableComponent<Rate> {
     result.push(new TableColumnUi("note", labelKeyPrefix + "note"));
     result.push(new TableColumnUi("rateSource", labelKeyPrefix + "rateSource"));
     return result;
-  }
-
-  override ngAfterViewInit(): void {
-   super.ngAfterViewInit();
-   const order = new UiOrderEvent();
-   order.active = "id";
-   order.direction = "asc";
-   this.changeOrder({ order });
   }
 
   getServiceUrl() {
