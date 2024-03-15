@@ -6,6 +6,7 @@ export const environment = {
 };
 
 environment.apiUrl.userprofile = "http://localhost:8080";
-environment.apiUrl.product = "http://localhost:8081";
+environment.apiUrl.productService = "http://localhost:8081";
+environment.apiUrl.accountService = "http://localhost:8082";
 
 rebuildEnvironment();

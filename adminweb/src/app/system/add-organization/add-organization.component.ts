@@ -5,7 +5,7 @@ import { startWith, map } from 'rxjs/operators';
 import { Currency } from 'src/app/classes/Currency';
 import { DayOfWeek } from 'src/app/classes/DayOfWeek';
 import { Organization } from 'src/app/classes/Organization';
-import { EntitiesService } from 'src/app/services/EntitiesService';
+import { CurrencyService } from 'src/app/services/currency.service';
 import { CommonService } from 'src/app/services/common.service';
 import { LanguageService } from 'src/app/services/language.service';
 import { RestService } from 'src/app/services/rest.service';
@@ -55,10 +55,10 @@ export class AddOrganizationComponent extends GeneralEntityAddComponent<Organiza
   constructor(public override languageService: LanguageService, protected override commonService: CommonService,
     protected override restService: RestService, protected override http: HttpClient, protected override formBuilder: FormBuilder,
     protected override organizationService: OrganizationService, protected override changeDetector: ChangeDetectorRef,
-    protected override authenticationService: AuthenticationService, private entitiesService: EntitiesService) {
+    protected override authenticationService: AuthenticationService, private currencyService: CurrencyService) {
       super(languageService, commonService, restService, http, formBuilder, organizationService, changeDetector, authenticationService);
       this.currencySubscription?.unsubscribe();
-      this.currencySubscription = entitiesService.entitySubjectMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.subscribe(
+      this.currencySubscription = currencyService.currenciesSubject.subscribe(
          currencies => this.currencies = currencies
       );
   }

@@ -6,7 +6,7 @@ import { LanguageService } from 'src/app/services/language.service';
 import { RestService } from 'src/app/services/rest.service';
 import { HttpClient } from '@angular/common/http';
 import { CommonService } from 'src/app/services/common.service';
-import { EntitiesService } from 'src/app/services/EntitiesService';
+import { CurrencyService } from 'src/app/services/currency.service';
 import { environment } from 'src/environments/environment';
 import { GeneralEntityAddComponent } from 'src/app/generic-component/GeneralEntityAddComponent';
 import { OrganizationService } from 'src/app/services/organization.service';
@@ -35,26 +35,23 @@ export class AddCurrenyComponent extends GeneralEntityAddComponent<Currency> imp
   constructor(public override languageService: LanguageService, protected override commonService: CommonService,
     protected override restService: RestService, protected override http: HttpClient, protected override formBuilder: FormBuilder,
     protected override organizationService: OrganizationService, protected override changeDetector: ChangeDetectorRef,
-    protected override authenticationService: AuthenticationService, private entitiesService: EntitiesService) {
+    protected override authenticationService: AuthenticationService, private currencyService: CurrencyService) {
       super(languageService, commonService, restService, http, formBuilder, organizationService, changeDetector, authenticationService);
       this.currencySubscription?.unsubscribe();
-      this.currencySubscription = entitiesService.entitySubjectMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.subscribe(
+      this.currencySubscription = currencyService.currenciesSubject.subscribe(
          currencies => this.currencies = currencies
       );
+  }
 
-      // Form UI
-      this.formItems = [];
-      const nameInput = new UiFormInput("currency", "name");
-      this.formItems.push(nameInput);
-      const symbolInput = new UiFormInput("currencySymbol", "symbol");
-      this.formItems.push(symbolInput);
-
-      const decimalMarkInput = new UiFormSelect("decimalMark", [ { labelKey: "decimalMarkPeriod", selectValue: "." },
-        { labelKey: "decimalMarkComma", selectValue: "," } ], "decimalMark");
-      this.formItems.push(decimalMarkInput);
-      const currencySymbolPosisionInput = new UiFormSelect("currencySymbolPosision", [ { labelKey: "currencySymbolPosision_true", selectValue: true },
-        { labelKey: "currencySymbolPosision_false", selectValue: false } ], "symbolAtBeginning");
-      this.formItems.push(currencySymbolPosisionInput);
+  protected override buildFormItems(): UiFormItem[] {
+    const formItems: UiFormItem[] = [];
+    formItems.push(new UiFormInput("currency", "id"));
+    formItems.push(new UiFormInput("currencySymbol", "symbol"));
+    formItems.push(new UiFormSelect("decimalMark", [ { labelKey: "decimalMarkPeriod", selectValue: "." },
+      { labelKey: "decimalMarkComma", selectValue: "," } ], "decimalMark"));
+    formItems.push(new UiFormSelect("currencySymbolPosision", [ { labelKey: "currencySymbolPosision_true", selectValue: true },
+      { labelKey: "currencySymbolPosision_false", selectValue: false } ], "symbolAtBeginning"));
+    return formItems;
   }
 
   ngOnDestroy(): void {
@@ -68,7 +65,7 @@ export class AddCurrenyComponent extends GeneralEntityAddComponent<Currency> imp
     return this.addCurrencyForm;
   }
   protected override validateFormData(formData: any): void {
-    if (this.commonService.isNullOrEmpty(formData.name)) {
+    if (this.commonService.isNullOrEmpty(formData.id)) {
       this.message['error'].push("name_empty")
     }
     if (this.commonService.isNullOrEmpty(formData.symbol)) {

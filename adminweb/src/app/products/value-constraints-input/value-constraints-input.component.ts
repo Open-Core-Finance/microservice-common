@@ -4,7 +4,7 @@ import { Currency } from 'src/app/classes/Currency';
 import { Subscription } from 'rxjs';
 import { ValueConstraint } from 'src/app/classes/products/ValueConstraint';
 import { LanguageService } from 'src/app/services/language.service';
-import { EntitiesService } from 'src/app/services/EntitiesService';
+import { CurrencyService } from 'src/app/services/currency.service';
 
 @Component({
   selector: 'app-value-constraints-input',
@@ -34,9 +34,9 @@ export class ValueConstraintsInputComponent implements OnInit, ControlValueAcces
   labelKeyDefaultVal = "";
   _value: ValueConstraint[] = [];
 
-  public constructor(public languageService: LanguageService, private entityService: EntitiesService, protected formBuilder: FormBuilder) {
+  public constructor(public languageService: LanguageService, private currencyService: CurrencyService, protected formBuilder: FormBuilder) {
     this.currenciesSubscription?.unsubscribe();
-    this.currenciesSubscription = this.entityService.entitySubjectMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.subscribe( c => {
+    this.currenciesSubscription = this.currencyService.currenciesSubject.subscribe( c => {
       this.currencies = c;
       if (this.lastSupportedCurrencies) {
         this.populateCurrenciesToUi(this.lastSupportedCurrencies);

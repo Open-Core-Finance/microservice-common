@@ -5,7 +5,7 @@ import { Currency } from 'src/app/classes/Currency';
 import { FrequencyOption } from 'src/app/classes/products/FrequencyOption';
 import { GracePeriodType, NonWorkingDaysRescheduling, RepaymentCurrencyRounding, RepaymentScheduleRounding, RepaymentScheduling, RepaymentSchedulingMethod, ShortMonthHandling } from 'src/app/classes/products/Repayment';
 import { ValueConstraint } from 'src/app/classes/products/ValueConstraint';
-import { EntitiesService } from 'src/app/services/EntitiesService';
+import { CurrencyService } from 'src/app/services/currency.service';
 import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
@@ -42,9 +42,9 @@ export class LoanRepaymentSchedulingInputComponent implements OnInit, ControlVal
   nonWorkingDaysReschedulingEnum = NonWorkingDaysRescheduling;
   allNonWorkingDaysReschedulings = Object.keys(NonWorkingDaysRescheduling);
 
-  public constructor(public languageService: LanguageService, private entityService: EntitiesService) {
+  public constructor(public languageService: LanguageService, private currencyService: CurrencyService) {
     this.currenciesSubscription?.unsubscribe();
-    this.currenciesSubscription = this.entityService.entitySubjectMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.subscribe( c => {
+    this.currenciesSubscription = this.currencyService.currenciesSubject.subscribe( c => {
       this.currencies = c;
       if (this.lastSupportedCurrencies) {
         this.populateCurrenciesToUi(this.lastSupportedCurrencies);
@@ -119,7 +119,6 @@ export class LoanRepaymentSchedulingInputComponent implements OnInit, ControlVal
     if (!found) {
       const item = new ValueConstraint();
       item.currencyId = currency.id;
-      item.currencyName = currency.name;
       constraints.push(item);
     }
     if (!this.lastSupportedCurrencies || this.lastSupportedCurrencies.length < 1) {

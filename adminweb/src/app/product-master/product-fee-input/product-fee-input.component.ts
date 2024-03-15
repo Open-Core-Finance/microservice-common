@@ -2,8 +2,9 @@ import { Component, Input, OnDestroy, OnInit, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Currency } from 'src/app/classes/Currency';
-import { MonthlyPayOption, ProductFee, ProductFeeType } from 'src/app/classes/products/Product';
-import { EntitiesService } from 'src/app/services/EntitiesService';
+import { MonthlyPayOption, ProductFee } from 'src/app/classes/products/Product';
+import { ProductFeeType } from 'src/app/classes/products/ProductFeeType';
+import { CurrencyService } from 'src/app/services/currency.service';
 import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
@@ -28,7 +29,7 @@ export class ProductFeeInputComponent implements OnInit, ControlValueAccessor, O
   currenciesSubscription: Subscription | undefined;
   lastSupportedCurrencies: string[] | undefined;
 
-  public constructor(public languageService: LanguageService, private entityService: EntitiesService) {
+  public constructor(public languageService: LanguageService, private currencyService: CurrencyService) {
   }
 
   ngOnDestroy(): void {
@@ -37,7 +38,7 @@ export class ProductFeeInputComponent implements OnInit, ControlValueAccessor, O
 
   ngOnInit(): void {
     this.currenciesSubscription?.unsubscribe();
-    this.currenciesSubscription = this.entityService.entitySubjectMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.subscribe( c => {
+    this.currenciesSubscription = this.currencyService.currenciesSubject.subscribe( c => {
       this.currencies = c;
       if (this.lastSupportedCurrencies) {
         this.populateCurrenciesToUi(this.lastSupportedCurrencies);
@@ -88,5 +89,9 @@ export class ProductFeeInputComponent implements OnInit, ControlValueAccessor, O
       item.currencyId = this.supportedCurrenciesObject[0].id;
     }
     this.selectedFees.push(item);
+  }
+
+  removeFee($event: any, index: number) {
+    this.selectedFees.splice(index, 1);
   }
 }

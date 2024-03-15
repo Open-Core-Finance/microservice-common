@@ -2,7 +2,7 @@ import {Component, forwardRef, OnInit, ViewChild, ElementRef, OnDestroy} from '@
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {LanguageService} from "../../services/language.service";
 import { Currency } from 'src/app/classes/Currency';
-import { EntitiesService } from 'src/app/services/EntitiesService';
+import { CurrencyService } from 'src/app/services/currency.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -27,7 +27,7 @@ export class CurrenciesSelectionComponent implements OnInit, ControlValueAccesso
 
   @ViewChild("selectionInput") input: ElementRef | undefined = undefined;
 
-  constructor(public languageService: LanguageService, private entityService: EntitiesService) {
+  constructor(public languageService: LanguageService, private currencyService: CurrencyService) {
   }
 
   ngOnDestroy(): void {
@@ -36,7 +36,7 @@ export class CurrenciesSelectionComponent implements OnInit, ControlValueAccesso
 
   ngOnInit(): void {
     this.currenciesSubscription?.unsubscribe();
-    this.currenciesSubscription = this.entityService.entitySubjectMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.subscribe( c => {
+    this.currenciesSubscription = this.currencyService.currenciesSubject.subscribe( c => {
       this.currencies = c;
       this.populateValue(this.lastWriteValues);
     });

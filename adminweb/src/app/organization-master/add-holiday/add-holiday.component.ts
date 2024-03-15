@@ -1,7 +1,7 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Holiday } from 'src/app/classes/organizations/Holiday';
 import { environment } from 'src/environments/environment';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { LanguageService } from 'src/app/services/language.service';
 import { CommonService } from 'src/app/services/common.service';
 import { RestService } from 'src/app/services/rest.service';
@@ -13,6 +13,9 @@ import { formatDate } from '@angular/common';
 import { GeneralEntityAddComponent } from 'src/app/generic-component/GeneralEntityAddComponent';
 import { OrganizationService } from 'src/app/services/organization.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { UiFormInput, UiFormItem } from 'src/app/classes/ui/UiFormInput';
+import { UiFormDate } from 'src/app/classes/ui/UiFormInput';
+import { UiFormCheckbox } from 'src/app/classes/ui/UiFormInput';
 
 @Component({
   selector: 'app-add-holiday',
@@ -24,19 +27,23 @@ export class AddHolidayComponent extends GeneralEntityAddComponent<Holiday> impl
   @ViewChild('holidayDatePicker')
   holidayDatePicker!: MatDatepicker<any>;
 
-  addHolidayForm = new FormGroup({
-    index: new FormControl(0),
-    id: new FormControl(""),
-    description: new FormControl('', {nonNullable: true}),
-    repeatYearly: new FormControl(false, {nonNullable: true}),
-    holidayDate: new FormControl<any>(new Date(), {nonNullable: true})
-  });
+  addHolidayForm = this.formBuilder.group(new Holiday());
 
   constructor(public override languageService: LanguageService, protected override commonService: CommonService,
     protected override restService: RestService, protected override http: HttpClient, protected override formBuilder: FormBuilder,
     protected override organizationService: OrganizationService, protected override changeDetector: ChangeDetectorRef,
     protected override authenticationService: AuthenticationService, @Inject(MAT_DATE_FORMATS) public config: CustomDateFormat) {
       super(languageService, commonService, restService, http, formBuilder, organizationService, changeDetector, authenticationService);
+  }
+
+  protected override buildFormItems(): UiFormItem[] {
+    const formItems: UiFormItem[] = [];
+    const prefix = "holiday.";
+    formItems.push(new UiFormInput(prefix + "description", "description"));
+    formItems.push(new UiFormDate(prefix + "holidayDate", "holidayDate"));
+    formItems.push(new UiFormCheckbox(prefix + "dateRange", "dateRange"));
+    formItems.push(new UiFormCheckbox(prefix + "repeatYearly", "repeatYearly"));
+    return formItems;
   }
 
   ngAfterViewInit(): void {
@@ -63,6 +70,11 @@ export class AddHolidayComponent extends GeneralEntityAddComponent<Holiday> impl
     }
     if (formData.repeatYearly == null) {
       formData.repeatYearly = false;
+    }
+    if (!formData.dateRange) {
+      formData.toDate = formData.holidayDate;
+    } else {
+      formData.toDate = formatDate(formData.toDate, "yyyy-MM-dd", "en_US");
     }
   }
 

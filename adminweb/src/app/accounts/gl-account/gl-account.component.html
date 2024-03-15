@@ -1,0 +1,13 @@
+
+<app-generic-table (add)="addClick($event)" (delete)="showDeleteModel($event)" (edit)="genericTableUiEdit($event)" (reload)="reloadData()" [tableUi]="tableUi"
+  [message]="message" [pageEvent]="pageEvent" [paging]="paging" [pageSizeOptions]="pageSizeOptions" (pageAction)="handlePageEvent($event)">
+
+  <ng-container additemform>
+    <app-add-gl-account (cancel)="cancelAdd($event)" *ngIf="addMode" (save)="submitAdd($event)" [addingItem]="addingItem"></app-add-gl-account>
+  </ng-container>
+
+  <!-- <ng-template #rowAction let-data>
+    <mat-icon aria-hidden="false" fontIcon="view_kanban" (click)="viewOrganizationClick(data)"></mat-icon>
+  </ng-template> -->
+
+</app-generic-table>

@@ -4,7 +4,7 @@ import { Currency } from 'src/app/classes/Currency';
 import { DepositBalanceInterestCalculation, DepositInterestRate, DepositInterestRateTerms, InterestCalculationDateOptionType } from 'src/app/classes/products/DepositProduct';
 import { Subscription } from 'rxjs';
 import { LanguageService } from 'src/app/services/language.service';
-import { EntitiesService } from 'src/app/services/EntitiesService';
+import { CurrencyService } from 'src/app/services/currency.service';
 import { InterestCalculationMethod } from 'src/app/classes/products/InterestCalculationMethod';
 import { InterestDayInYear } from 'src/app/classes/products/InterestDayInYear';
 import { ValueConstraint } from 'src/app/classes/products/ValueConstraint';
@@ -40,9 +40,9 @@ export class DepositInterestRateInputComponent implements OnInit, ControlValueAc
   interestDayInYearEnum = InterestDayInYear;
   allDayInYearOption = Object.keys(InterestDayInYear);
 
-  public constructor(public languageService: LanguageService, private entityService: EntitiesService) {
+  public constructor(public languageService: LanguageService, private currencyService: CurrencyService) {
     this.currenciesSubscription?.unsubscribe();
-    this.currenciesSubscription = this.entityService.entitySubjectMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.subscribe( c => {
+    this.currenciesSubscription = this.currencyService.currenciesSubject.subscribe( c => {
       this.currencies = c;
       if (this.lastSupportedCurrencies) {
         this.populateCurrenciesToUi(this.lastSupportedCurrencies);
@@ -113,7 +113,6 @@ export class DepositInterestRateInputComponent implements OnInit, ControlValueAc
     if (!found) {
       const item = new ValueConstraint();
       item.currencyId = currency.id;
-      item.currencyName = currency.name;
       this.value.interestRateConstraints.push(item);
     }
     if (!this.lastSupportedCurrencies || this.lastSupportedCurrencies.length < 1) {
@@ -139,7 +138,6 @@ export class DepositInterestRateInputComponent implements OnInit, ControlValueAc
       if (this.value.interestItems.length < 1) {
         var item = new TieredInterestItem();
         item.currencyId = currency.id;
-        item.currencyName = currency.name;
         this.value.interestItems.push(item);
       }
     }
@@ -159,7 +157,6 @@ export class DepositInterestRateInputComponent implements OnInit, ControlValueAc
       }
       var item = new TieredInterestItem();
       item.currencyId = currency.id;
-      item.currencyName = currency.name;
       this.value.interestItems.push(item);
     }
   }
@@ -169,11 +166,5 @@ export class DepositInterestRateInputComponent implements OnInit, ControlValueAc
   }
 
   inerestTierCurrencyChanged($event: any, item: TieredInterestItem) {
-    for (const currency of this.currenciesToDisplay) {
-      if ($event == currency.id) {
-        item.currencyName = currency.name;
-        break;
-      }
-    }
   }
 }

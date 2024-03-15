@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS deposit_account
     created_by jsonb,
     last_modified_by jsonb,
     supported_currencies character varying[] NOT NULL,
+    product_id character varying(255) NOT NULL,
     customer_id bigint NOT NULL,
     allow_deposit_after_maturity_date boolean NOT NULL default false,
     allow_overdrafts boolean NOT NULL default false,

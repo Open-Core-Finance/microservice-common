@@ -17,7 +17,11 @@ public class Holiday implements GenericModel<String>, CreateUpdateDto<String> {
     private String id;
     @Column(name = "holiday_date")
     private LocalDate holidayDate;
+    @Column(name = "to_date")
+    private LocalDate toDate;
     @Column(name = "repeat_yearly")
     private boolean repeatYearly;
     private String description;
+    @Column(name = "date_range")
+    private boolean dateRange;
 }

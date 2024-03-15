@@ -1,6 +1,5 @@
 export class DepositLimit {
     currencyId: string = "";
-    currencyName: string = "";
     type: DepositLimitType = DepositLimitType.MIN_OPENING_AMOUNT;
     value: number = 0.0;
 }

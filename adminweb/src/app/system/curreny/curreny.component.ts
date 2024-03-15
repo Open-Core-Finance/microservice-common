@@ -21,8 +21,7 @@ export class CurrenyComponent extends TableComponent<Currency> {
   override get tableUiColumns(): TableColumnUi[] {
     var languageService = this.languageService;
     var result: TableColumnUi[] = [];
-    result.push(new TableColumnUi("id", "currencyId"));
-    result.push(new TableColumnUi("name", "currency"));
+    result.push(new TableColumnUi("id", "currency"));
     result.push(new TableColumnUi("symbol", "currencySymbol"));
     result.push(new TableColumnUi("decimalMark", "decimalMark", {
       function(decimalMark: string): string {
@@ -48,7 +47,7 @@ export class CurrenyComponent extends TableComponent<Currency> {
   }
 
   override getDeleteConfirmContent(item: Currency): string {
-    return this.languageService.formatLanguage("currencyDeleteConfirmContent", [item.name]);
+    return this.languageService.formatLanguage("currencyDeleteConfirmContent", [item.id]);
   }
 
   override getDeleteConfirmTitle(item: Currency): string {

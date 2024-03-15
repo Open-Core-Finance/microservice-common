@@ -9,6 +9,7 @@ import { AppSettings } from '../classes/AppSetting';
 import { environment } from 'src/environments/environment';
 import { v4 as uuidv4 } from 'uuid';
 import { OrganizationService } from './organization.service';
+import { Organization } from '../classes/Organization';
 
 @Injectable({
     providedIn: 'root'
@@ -18,7 +19,7 @@ export class RestService {
     languageData: Record<string, any> = {};
     siteUrl: string;
 
-    constructor(private http: HttpClient, private languageService: LanguageService, private organizationService: OrganizationService) {
+    constructor(private http: HttpClient, private languageService: LanguageService) {
         languageService.languageDataSubject.subscribe(languageData => {
             this.languageData = languageData;
         });
@@ -34,7 +35,7 @@ export class RestService {
             headers = headers.set('Authorization', 'Bearer ' + loginSession.token);
         }
 
-        var org = this.organizationService.organization;
+        var org = this.organization;
         if (org && org.id) {
             headers = headers.set('x-tenant-id', org.id);
         }
@@ -63,14 +64,18 @@ export class RestService {
         var errArr = message['error'];
         if (data.errorKeysWithData) {
             this.mapError(message, data.errorKeysWithData);
-        } else if (data.statusText) {
+        } else if (data.statusText && data.statusText.toUpperCase() != "OK") {
             errArr.push(data.statusText);
         } else if (data.error) {
             var err = data.error;
             if (data.errorKeysWithData) {
                 this.mapError(message, data.errorKeysWithData);
             } else if (err.result) {
-                errArr.push(err.result as string[]);
+                if (err.result.detail) {
+                    errArr.push(err.result.detail);
+                } else {
+                    errArr.push(err.result as string[]);
+                }
             } else if (err.statusText) {
                 errArr.push(err.statusText);
             } else if (err.statusCode) {
@@ -126,6 +131,14 @@ export class RestService {
         const savedCredential = sessionStorage.getItem(AppSettings.LOCAL_KEY_SAVED_CREDENTIAL);
         if (savedCredential != null) {
           return JSON.parse(savedCredential) as LoginSession;
+        }
+        return null;
+    }
+
+    public get organization(): Organization | null {
+        const savedOrg = sessionStorage.getItem(AppSettings.LOCAL_KEY_SAVED_ORGANIZATION);
+        if (savedOrg != null) {
+          return JSON.parse(savedOrg) as Organization;
         }
         return null;
     }

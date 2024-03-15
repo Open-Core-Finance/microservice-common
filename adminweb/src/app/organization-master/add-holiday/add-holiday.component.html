@@ -1,40 +1,8 @@
-<div class="add-item-page">
-    <mat-card>
-        <mat-card-title>
-            {{languageService.formatLanguage('holiday.addTitle', [])}}
-        </mat-card-title>
-        <mat-card-content>
-            <form [formGroup]="addHolidayForm">
-                <mat-form-field class="full-width" appearance="fill" color="primary">
-                    <input type="text" matInput placeholder="{{languageService.formatLanguage('holiday.description', [])}}" formControlName="description" required>
-                </mat-form-field>
-                <mat-form-field class="full-width" appearance="fill" color="primary">
-                    <mat-label>{{languageService.formatLanguage('holiday.holidayDate', [])}}</mat-label>
-                    <input matInput [matDatepicker]="holidayDatePicker" required placeholder="{{languageService.formatLanguage('holiday.holidayDate', [])}}"
-                        formControlName="holidayDate">
-                    <!-- <mat-hint>{{config.display.dateInput}}</mat-hint> -->
-                    <mat-datepicker-toggle matIconSuffix [for]="holidayDatePicker"></mat-datepicker-toggle>
-                    <mat-datepicker #holidayDatePicker></mat-datepicker>
-                </mat-form-field>
-                
-                <mat-checkbox color="primary" formControlName="repeatYearly">
-                    {{languageService.formatLanguage('holiday.repeatYearly', [])}}
-                </mat-checkbox>
+<app-generic-form (cancel)="this.cancelClick($event)" (save)="this.saveClick($event)" [formGroup]="addHolidayForm"
+  [formItems]="formItems" formTitleKey="holiday.addTitle" [message]="message">
 
-                <app-general-error-panel [message]="message" errorPrefix="holiday.error."></app-general-error-panel>
-                
-            </form>
-        </mat-card-content>
-
-        <mat-card-actions>
-            <button mat-raised-button color="primary" (click)="saveClick($event);">
-                {{languageService.formatLanguage('action.save', [])}}
-            </button>
-            <button mat-raised-button color="warn" (click)="cancelClick($event);">
-                {{languageService.formatLanguage('action.cancel', [])}}
-            </button>
-        </mat-card-actions>
-
-    </mat-card>
-
-</div>
+  <ng-container formcontols *ngIf="addHolidayForm.value.dateRange">
+    <app-reactive-form-date placeHolderKey="holiday.toDate" formControlName="toDate" additionClass="" [addLabel]="true"
+        inputType="text" appearance="fill" colorScheme="primary" [required]="true"></app-reactive-form-date>
+  </ng-container>
+</app-generic-form>

@@ -3,7 +3,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Currency } from 'src/app/classes/Currency';
 import { CurrencyLimitValue } from 'src/app/classes/products/ValueConstraint';
-import { EntitiesService } from 'src/app/services/EntitiesService';
+import { CurrencyService } from 'src/app/services/currency.service';
 import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
@@ -25,7 +25,7 @@ export class CurrencyValueInputComponent implements OnInit, ControlValueAccessor
   currenciesSubscription: Subscription | undefined;
   values: CurrencyLimitValue[] = [];
 
-  public constructor(public languageService: LanguageService, private entityService: EntitiesService) {
+  public constructor(public languageService: LanguageService, private currencyService: CurrencyService) {
   }
 
   ngOnDestroy(): void {
@@ -34,7 +34,7 @@ export class CurrencyValueInputComponent implements OnInit, ControlValueAccessor
 
   ngOnInit(): void {
     this.currenciesSubscription?.unsubscribe();
-    this.currenciesSubscription = this.entityService.entitySubjectMap.get(EntitiesService.ENTITY_TYPE_CURRENCY)?.subscribe( c => {
+    this.currenciesSubscription = this.currencyService.currenciesSubject.subscribe( c => {
       this.currencies = c;
       if (this.lastSupportedCurrencies) {
         this.populateCurrenciesToUi(this.lastSupportedCurrencies);
@@ -90,7 +90,6 @@ export class CurrencyValueInputComponent implements OnInit, ControlValueAccessor
     if (!found) {
       var currencyValue = new CurrencyLimitValue();
       currencyValue.currencyId = currency.id;
-      currencyValue.currencyName = currency.name;
       this.values.push(currencyValue);
     }
   }

@@ -16,7 +16,6 @@ import { UiOrderEvent } from '../classes/UiOrderEvent';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent, ConfirmDialogModel } from './confirm-dialog/confirm-dialog.component';
-import { GeneralModel } from '../classes/CommonClasses';
 import { PermissionService } from '../services/permission.service';
 import { AccessControl, Permission, ResourceAction } from '../classes/Permission';
 import { TableColumnUi, TableUi } from '../classes/ui/UiTableDisplay';
@@ -25,7 +24,7 @@ import { OrganizationService } from '../services/organization.service';
 @Component({
     template: ''
 })
-export abstract class TableComponent<T extends GeneralModel<any>> implements AfterViewInit, OnInit {
+export abstract class TableComponent<T extends any> implements AfterViewInit, OnInit {
 
     public static NO_LIST_PERMISSION_ERROR_CODE = "permission_list_error";
 
@@ -200,7 +199,7 @@ export abstract class TableComponent<T extends GeneralModel<any>> implements Aft
     }
 
     protected convertItem(item: T, index: number): T {
-        const obj: any = Object.assign(this.createNewItem(), item);
+        const obj: any = Object.assign(this.createNewItem() as any, item);
         obj['index'] = index;
         return obj as T;
     }
@@ -244,7 +243,7 @@ export abstract class TableComponent<T extends GeneralModel<any>> implements Aft
     }
 
     getDeleteConfirmContent(item: T): string {
-        var name = item.id;
+        var name = (item as any).id;
         if ((item as any)['name']) {
             name = (item as any)['name'];
         }
@@ -266,16 +265,20 @@ export abstract class TableComponent<T extends GeneralModel<any>> implements Aft
         this._deleteSubscription = dialogRef.afterClosed().subscribe(dialogResult => {
           if (dialogResult) {
             const requestHeaders = this.restService.initApplicationJsonRequestHeaders();
-            const serviceUrl = this.getServiceUrl() + "/" + item.id;
+            const serviceUrl = this.getDeleteUrl(item);
             this.http.delete<GeneralApiResponse>(serviceUrl, {
-              headers: requestHeaders, params: { id: item.id }
+              headers: requestHeaders, params: { id: (item as any).id }
             }).subscribe({
               next: (_: GeneralApiResponse) => this.reloadData(),
               error: (data: any) => this.restService.handleRestError(data, this.message)
             });
           }
         });
-      }
+    }
+
+    protected getDeleteUrl(item: T): string {
+        return this.getServiceUrl() + "/" + (item as any).id;
+    }
 
     searchClick($event: any) {
         this.searchText = $event.searchText;

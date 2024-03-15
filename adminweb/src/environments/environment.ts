@@ -7,6 +7,7 @@ export const environment = {
 };
 
 environment.apiUrl.userprofile = "http://userprofile.corefinance.tech";
-environment.apiUrl.product = "http://product.corefinance.tech";
+environment.apiUrl.productService = "http://product.corefinance.tech";
+environment.apiUrl.accountService = "http://account.corefinance.tech";
 
 rebuildEnvironment();

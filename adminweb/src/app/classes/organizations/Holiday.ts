@@ -6,4 +6,6 @@ export class Holiday implements GeneralModel<string>, ListableItem {
     index: number = 0;
     repeatYearly: boolean = false;
     holidayDate: Date = new Date();
+    toDate: Date = new Date();
+    dateRange = false;
 }

@@ -11,7 +11,7 @@
         </thead>
         <tbody>        
             <tr *ngFor="let constr of value; let i = index">
-                <td>{{constr.currencyName}}</td>
+                <td>{{constr.currencyId}}</td>
                 <td>
                     <mat-form-field appearance="fill" color="primary">
                         <input type="number" matInput placeholder="{{languageService.formatLanguage(labelKeyDefaultVal, [])}}"

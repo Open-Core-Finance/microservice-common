@@ -2,9 +2,8 @@ import { Component } from '@angular/core';
 import { Holiday } from 'src/app/classes/organizations/Holiday';
 import { TableComponent } from 'src/app/generic-component/TableComponent';
 import { environment } from 'src/environments/environment';
-import { UiOrderEvent } from 'src/app/classes/UiOrderEvent';
 import { formatDate } from '@angular/common';
-import { TableColumnUi, TableUi } from 'src/app/classes/ui/UiTableDisplay';
+import { TableColumnUi } from 'src/app/classes/ui/UiTableDisplay';
 
 @Component({
   selector: 'app-holiday',
@@ -22,8 +21,7 @@ export class HolidayComponent extends TableComponent<Holiday> {
     var result: TableColumnUi[] = [];
     result.push(new TableColumnUi("id", labelKeyPrefix + "id"));
     result.push(new TableColumnUi("description", labelKeyPrefix + "description"));
-    result.push(new TableColumnUi("holidayDate", labelKeyPrefix + "holidayDate"));
-    result.push(new TableColumnUi("repeatYearly", labelKeyPrefix + "repeatYearly"));
+    result.push(new TableColumnUi("holidayDate", labelKeyPrefix + "holidayDate", { complex: true }));
     return result;
   }
 
@@ -32,7 +30,7 @@ export class HolidayComponent extends TableComponent<Holiday> {
   }
 
   override getDeleteConfirmContent(item: Holiday): string {
-    return this.languageService.formatLanguage("holiday.deleteConfirmContent", [
+    return this.languageService.formatLanguage(this.localizePrefix + ".deleteConfirmContent", [
       this.getHolidayDateLabel(item.holidayDate, item.repeatYearly)
     ]);
   }
@@ -45,9 +43,9 @@ export class HolidayComponent extends TableComponent<Holiday> {
     const locale = 'en-US';
     let dateFormat;
     if (repeatYearly) {
-      dateFormat = this.languageService.formatLanguage("holiday.holidayDateYearlyFormat", []);
+      dateFormat = this.languageService.formatLanguage(this.localizePrefix + ".holidayDateYearlyFormat", []);
     } else {
-      dateFormat = this.languageService.formatLanguage("holiday.holidayDateFormat", []);
+      dateFormat = this.languageService.formatLanguage(this.localizePrefix + ".holidayDateFormat", []);
     }
     return formatDate(holidayDate, dateFormat, locale);
   }

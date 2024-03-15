@@ -14,7 +14,8 @@ CREATE TABLE IF NOT EXISTS gl_account
     last_modified_date timestamp with time zone,
     created_by jsonb,
     last_modified_by jsonb,
-    supported_currencies character varying[] NOT NULL
+    supported_currencies character varying[] NOT NULL,
+    product_id character varying(255) NOT NULL
  );
 
 CREATE TABLE IF NOT EXISTS account_balance (

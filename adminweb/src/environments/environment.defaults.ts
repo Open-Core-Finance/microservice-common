@@ -4,10 +4,10 @@ export const environment = {
     production: true,
     apiUrlRoot: '',
     apiUrl: {
-        userprofile: '', organization: '', role: '', common: '', authentication: '', product: '',
+        userprofile: '', organization: '', role: '', common: '', authentication: '', productService: '',
         currency: '', holiday: '', branch: '', productCategory: '', exchangeRate: '', rateSource: '', rate: '',
         depositProduct: '', productType: '', glProduct: '', cryptoProduct: '', loanProduct: '', withdrawalChannel: '',
-        user: ''
+        user: '', accountService: '', glAccount: ''
     },
     apiPrefix: {
         userLogin: '/login',
@@ -35,7 +35,11 @@ export const environment = {
         rates: "rates",
         rateSources: "rate-sources",
         userManagement: "user-management",
-        roleManagement: "role-management"
+        roleManagement: "role-management",
+        depositAccounts: "deposit-accounts",
+        loanAccounts: "loan-accounts",
+        glAccounts: "gl-accounts",
+        cryptoAccounts: "crypto-accounts"
     },
     appVersion: "1.0.0-SNAPSHOT",
     appClientId: "corefinance-ADMIN-WEB",
@@ -51,19 +55,21 @@ export function rebuildEnvironment() {
     environment.apiUrl.user = environment.apiUrl.userprofile + "/userprofiles";
     environment.apiUrl.role = environment.apiUrl.userprofile + "/roles";
     // Product
-    environment.apiUrl.organization = environment.apiUrl.product + "/organizations";
-    environment.apiUrl.currency = environment.apiUrl.product + "/currencies";
-    environment.apiUrl.holiday = environment.apiUrl.product + "/holidays";
-    environment.apiUrl.branch = environment.apiUrl.product + "/branches";
-    environment.apiUrl.branch = environment.apiUrl.product + "/branches";
-    environment.apiUrl.productCategory = environment.apiUrl.product + "/product-categories"
-    environment.apiUrl.exchangeRate = environment.apiUrl.product + "/exchange-rates"
-    environment.apiUrl.rateSource = environment.apiUrl.product + "/rate-sources"
-    environment.apiUrl.rate = environment.apiUrl.product + "/rates"
-    environment.apiUrl.depositProduct = environment.apiUrl.product + "/deposit-products"
-    environment.apiUrl.productType = environment.apiUrl.product + "/product-types"
-    environment.apiUrl.glProduct = environment.apiUrl.product + "/gl-products"
-    environment.apiUrl.cryptoProduct = environment.apiUrl.product + "/crypto-products"
-    environment.apiUrl.loanProduct = environment.apiUrl.product + "/loan-products"
-    environment.apiUrl.withdrawalChannel = environment.apiUrl.product + "/withdrawal-channels"
+    environment.apiUrl.organization = environment.apiUrl.productService + "/organizations";
+    environment.apiUrl.currency = environment.apiUrl.productService + "/currencies";
+    environment.apiUrl.holiday = environment.apiUrl.productService + "/holidays";
+    environment.apiUrl.branch = environment.apiUrl.productService + "/branches";
+    environment.apiUrl.branch = environment.apiUrl.productService + "/branches";
+    environment.apiUrl.productCategory = environment.apiUrl.productService + "/product-categories"
+    environment.apiUrl.exchangeRate = environment.apiUrl.productService + "/exchange-rates"
+    environment.apiUrl.rateSource = environment.apiUrl.productService + "/rate-sources"
+    environment.apiUrl.rate = environment.apiUrl.productService + "/rates"
+    environment.apiUrl.depositProduct = environment.apiUrl.productService + "/deposit-products"
+    environment.apiUrl.productType = environment.apiUrl.productService + "/product-types"
+    environment.apiUrl.glProduct = environment.apiUrl.productService + "/gl-products"
+    environment.apiUrl.cryptoProduct = environment.apiUrl.productService + "/crypto-products"
+    environment.apiUrl.loanProduct = environment.apiUrl.productService + "/loan-products"
+    environment.apiUrl.withdrawalChannel = environment.apiUrl.productService + "/withdrawal-channels"
+    // Acount
+    environment.apiUrl.glAccount = environment.apiUrl.accountService + "/gl-accounts";
 }
