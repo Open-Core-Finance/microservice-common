@@ -1,7 +1,6 @@
 import { GeneralModel, ListableItem } from "../CommonClasses";
-import {User} from "../User";
+import { UserDto} from "../User";
 import { AccountState } from "../accounts/AccountState";
-import { ProductFeeType } from "./ProductFeeType";
 
 export abstract class Product implements GeneralModel<string>, ListableItem {
     id: string = "";
@@ -25,25 +24,11 @@ export abstract class Product implements GeneralModel<string>, ListableItem {
     // Product Fees
     allowArbitraryFees: boolean  = false;
     showInactiveFees: boolean  = false;
-    productFees: ProductFee[] = [];
 
     lastModifiedDate: Date = new Date();
     createdDate: Date = new Date();
-    createdBy: User = new User();
-    lastModifiedBy: User = new User();
-}
-
-export class ProductFee {
-    activated = true;
-    id = "";
-    name = "";
-    type: ProductFeeType = ProductFeeType.MONTHLY_FEE;
-    amount: number | null = 0.0;
-    currencyId: string = "";
-    disbursedPercent: number | null = 0.0;
-
-    monthlyPayOption: MonthlyPayOption = MonthlyPayOption.MONTHLY_FROM_ACTIVATION;
-    requiredFeeApplication: boolean | null = false;
+    createdBy: UserDto = new UserDto();
+    lastModifiedBy: UserDto = new UserDto();
 }
 
 export enum MonthlyPayOption {

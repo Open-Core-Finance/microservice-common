@@ -5,22 +5,20 @@ import { MatFormFieldAppearance } from '@angular/material/form-field';
 import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
-  selector: 'app-reactive-form-input',
-  templateUrl: './reactive-form-input.component.html',
-  styleUrl: './reactive-form-input.component.sass',
+  selector: 'app-reactive-form-textarea',
+  templateUrl: './reactive-form-textarea.component.html',
+  styleUrl: './reactive-form-textarea.component.sass',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ReactiveFormInputComponent),
+      useExisting: forwardRef(() => ReactiveFormTextareaComponent),
       multi: true
     }
   ]
 })
-export class ReactiveFormInputComponent implements OnInit, ControlValueAccessor, OnDestroy {
+export class ReactiveFormTextareaComponent implements OnInit, ControlValueAccessor, OnDestroy {
 
   value: any;
-  @Input()
-  inputType: string = "text";
   @Input()
   additionClass: string = "";
   @Input()
@@ -34,8 +32,6 @@ export class ReactiveFormInputComponent implements OnInit, ControlValueAccessor,
   required: boolean = false;
   @Input()
   placeHolderKey: string = "";
-  @Input()
-  postFixLabelKey: string = "";
 
   constructor(public languageService: LanguageService) {
   }

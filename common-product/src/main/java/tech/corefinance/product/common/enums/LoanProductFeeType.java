@@ -1,14 +1,10 @@
 package tech.corefinance.product.common.enums;
 
-public enum ProductFeeType {
+public enum LoanProductFeeType {
     /**
      * Manual for deposit or loan account.
      */
     MANUAL_FEE,
-    /**
-     * Deposit monthly fee.
-     */
-    MONTHLY_FEE,
     /**
      * Planned (Applied on Due Dates) for loan.
      */

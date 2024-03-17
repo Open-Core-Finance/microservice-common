@@ -1,11 +1,9 @@
 import { Component, Input, OnDestroy, OnInit, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Subscription } from 'rxjs';
 import { Currency } from 'src/app/classes/Currency';
 import { FrequencyOption } from 'src/app/classes/products/FrequencyOption';
 import { GracePeriodType, NonWorkingDaysRescheduling, RepaymentCurrencyRounding, RepaymentScheduleRounding, RepaymentScheduling, RepaymentSchedulingMethod, ShortMonthHandling } from 'src/app/classes/products/Repayment';
 import { ValueConstraint } from 'src/app/classes/products/ValueConstraint';
-import { CurrencyService } from 'src/app/services/currency.service';
 import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
@@ -22,10 +20,7 @@ import { LanguageService } from 'src/app/services/language.service';
 })
 export class LoanRepaymentSchedulingInputComponent implements OnInit, ControlValueAccessor, OnDestroy {
   isDisabled: boolean = false;
-  lastSupportedCurrencies: string[] | undefined;
-  currencies: Currency[] = [];
-  currenciesToDisplay: Currency[] = [];
-  currenciesSubscription: Subscription | undefined;
+  _supportedCurrencies: Currency[] = [];
   value: RepaymentScheduling = new RepaymentScheduling();
   frequencyOptionEnum = FrequencyOption;
   allFrequencyOptions = Object.keys(FrequencyOption);
@@ -42,18 +37,10 @@ export class LoanRepaymentSchedulingInputComponent implements OnInit, ControlVal
   nonWorkingDaysReschedulingEnum = NonWorkingDaysRescheduling;
   allNonWorkingDaysReschedulings = Object.keys(NonWorkingDaysRescheduling);
 
-  public constructor(public languageService: LanguageService, private currencyService: CurrencyService) {
-    this.currenciesSubscription?.unsubscribe();
-    this.currenciesSubscription = this.currencyService.currenciesSubject.subscribe( c => {
-      this.currencies = c;
-      if (this.lastSupportedCurrencies) {
-        this.populateCurrenciesToUi(this.lastSupportedCurrencies);
-      }
-    });
+  public constructor(public languageService: LanguageService) {
   }
 
   ngOnDestroy(): void {
-    this.currenciesSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -61,7 +48,7 @@ export class LoanRepaymentSchedulingInputComponent implements OnInit, ControlVal
 
   writeValue(value: RepaymentScheduling): void {
     this.value = value;
-    this.populateCurrenciesToUi(this.lastSupportedCurrencies ? this.lastSupportedCurrencies : []);
+    this.populateCurrenciesToUi(this._supportedCurrencies);
   }
  
   registerOnChange(fn: any): void {
@@ -79,24 +66,20 @@ export class LoanRepaymentSchedulingInputComponent implements OnInit, ControlVal
   propagateTouched = (_: RepaymentScheduling[]) => { };
 
   @Input()
-  set supportedCurrencies(supportedCurrencies: string[]) {
-    this.lastSupportedCurrencies = supportedCurrencies;
+  set supportedCurrencies(supportedCurrencies: Currency[]) {
+    this._supportedCurrencies = supportedCurrencies;
     this.populateCurrenciesToUi(supportedCurrencies);
   }
 
-  private populateCurrenciesToUi(supportedCurrencies: string[]) {
-    this.currenciesToDisplay = [];
+  get supportedCurrencies(): Currency[] {
+    return this._supportedCurrencies;
+  }
+
+  private populateCurrenciesToUi(supportedCurrencies: Currency[]) {
     if (supportedCurrencies.length > 0) {
-      this.currencies.forEach((value, index, arr) => {
-        for(let  i = 0; i < supportedCurrencies.length; i++) {
-          const c = supportedCurrencies[i];
-          if (c == value.id) {
-            this.currenciesToDisplay.push(value);
-            this.checkAndUpdateCurrency(value);
-            break;
-          }
-        }
-      });
+      for(let  i = 0; i < supportedCurrencies.length; i++) {
+        this.checkAndUpdateCurrency(supportedCurrencies[i]);
+      }
     } else {
       this.value.installmentsConstraints = [];
       this.value.firstDueDateOffsetConstraints = [];
@@ -121,15 +104,15 @@ export class LoanRepaymentSchedulingInputComponent implements OnInit, ControlVal
       item.currencyId = currency.id;
       constraints.push(item);
     }
-    if (!this.lastSupportedCurrencies || this.lastSupportedCurrencies.length < 1) {
+    if (!this._supportedCurrencies || this._supportedCurrencies.length < 1) {
       constraints.splice(0, constraints.length);
     } else {
       // Clean remove currencies constraint
       for(let  i = 0; i < constraints.length; i++) {
         var c = constraints[i];
         found = false;
-        for (const supportedCurrency of this.lastSupportedCurrencies) {
-          if (supportedCurrency == c.currencyId) {
+        for (const supportedCurrency of this._supportedCurrencies) {
+          if (supportedCurrency.id == c.currencyId) {
             found = true;
             break;
           }

@@ -5,7 +5,6 @@ import tech.corefinance.common.dto.BasicUserDto;
 import tech.corefinance.common.model.CreateUpdateDto;
 import tech.corefinance.common.model.GenericModel;
 import tech.corefinance.product.common.model.ProductAvailability;
-import tech.corefinance.product.common.model.ProductFee;
 import tech.corefinance.product.common.model.ProductNewAccountSetting;
 
 import java.io.Serializable;
@@ -28,7 +27,6 @@ public class ProductDto implements Serializable, CreateUpdateDto<String>, Generi
     // Product Fees
     private boolean allowArbitraryFees;
     private boolean showInactiveFees;
-    private List<ProductFee> productFees;
 
     private ZonedDateTime createdDate;
     private BasicUserDto createdBy;

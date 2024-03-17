@@ -1,7 +1,6 @@
 import { Component, Input, OnDestroy, OnInit, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Currency } from 'src/app/classes/Currency';
-import { Subscription } from 'rxjs';
 import { LanguageService } from 'src/app/services/language.service';
 import { CurrencyService } from 'src/app/services/currency.service';
 import { WithdrawalLimit, WithdrawalLimitType } from 'src/app/classes/products/WithdrawalLimit';
@@ -26,10 +25,7 @@ import { CommonService } from 'src/app/services/common.service';
 })
 export class WithdrawalLimitInputComponent implements OnInit, ControlValueAccessor, OnDestroy {
   isDisabled: boolean = false;
-  lastSupportedCurrencies: string[] | undefined;
-  currencies: Currency[] = [];
-  currenciesToDisplay: Currency[] = [];
-  currenciesSubscription: Subscription | undefined;
+  _supportedCurrencies: Currency[] = [];
   value: WithdrawalLimit[] = [];
   withdrawalLimitTypeEnum = WithdrawalLimitType;
   allTypes = Object.keys(WithdrawalLimitType);
@@ -37,17 +33,9 @@ export class WithdrawalLimitInputComponent implements OnInit, ControlValueAccess
 
   public constructor(public languageService: LanguageService, private currencyService: CurrencyService,
     private http: HttpClient, private restService: RestService, private commonService: CommonService) {
-    this.currenciesSubscription?.unsubscribe();
-    this.currenciesSubscription = this.currencyService.currenciesSubject.subscribe( c => {
-      this.currencies = c;
-      if (this.lastSupportedCurrencies) {
-        this.populateCurrenciesToUi(this.lastSupportedCurrencies);
-      }
-    });
   }
 
   ngOnDestroy(): void {
-    this.currenciesSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -64,7 +52,6 @@ export class WithdrawalLimitInputComponent implements OnInit, ControlValueAccess
 
   writeValue(value: WithdrawalLimit[]): void {
     this.value = value;
-    this.populateCurrenciesToUi(this.lastSupportedCurrencies ? this.lastSupportedCurrencies : []);
   }
  
   registerOnChange(fn: any): void {
@@ -82,33 +69,26 @@ export class WithdrawalLimitInputComponent implements OnInit, ControlValueAccess
   propagateTouched = (_: WithdrawalLimit[]) => { };
 
   @Input()
-  set supportedCurrencies(supportedCurrencies: string[]) {
-    this.lastSupportedCurrencies = supportedCurrencies;
-    this.populateCurrenciesToUi(supportedCurrencies);
+  set supportedCurrencies(supportedCurrencies: Currency[]) {
+    this._supportedCurrencies = supportedCurrencies;
   }
 
-  private populateCurrenciesToUi(supportedCurrencies: string[]) {
-    this.currenciesToDisplay = [];
-    this.currencies.forEach((value, index, arr) => {
-      for(let  i = 0; i < supportedCurrencies.length; i++) {
-        const c = supportedCurrencies[i];
-        if (c == value.id) {
-          this.currenciesToDisplay.push(value);
-          break;
-        }
-      }
-    });
+  get supportedCurrencies(): Currency[] {
+    return this._supportedCurrencies;
   }
 
   limitCurrencyChanged($event: any, limit: WithdrawalLimit) {
   }
 
   addLimitClick($event: MouseEvent) {
-    if (this.currenciesToDisplay.length > 0) {
-      var currency = this.currenciesToDisplay[0];
+    if (this._supportedCurrencies.length > 0) {
+      var currency = this._supportedCurrencies[0];
+      if (this._supportedCurrencies.length > 1) {
+        currency = this._supportedCurrencies[1];
+      }
       if (this.value.length > 0) {
         const last = this.value[this.value.length - 1];
-        for (const c of this.currenciesToDisplay) {
+        for (const c of this._supportedCurrencies) {
           if (c.id == last.currencyId) {
             currency = c;
             break;

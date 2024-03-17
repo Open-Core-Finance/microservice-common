@@ -37,23 +37,27 @@
                 <tbody>
                     <tr *ngFor="let constr of value.interestItems; let i = index;">
                         <td>
-                            <mat-form-field *ngIf="currenciesToDisplay.length > 1">
+                            <mat-form-field *ngIf="supportedCurrencies.length > 1">
                                 <mat-select [(ngModel)]="constr.currencyId" required (valueChange)="inerestTierCurrencyChanged($event, constr)">
-                                    <mat-option *ngFor="let currency of currenciesToDisplay" [value]="currency.id">
+                                    <mat-option *ngFor="let currency of supportedCurrencies" [value]="currency.id">
                                         {{currency.id}}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
-                            <span *ngIf="currenciesToDisplay.length == 1">
-                                {{currenciesToDisplay[0].id}}
+                            <span *ngIf="supportedCurrencies.length == 1">
+                                {{supportedCurrencies[0].id}}
                             </span>
                         </td>
                         <td>{{languageService.formatLanguage('depositProduct.interestRate.tier', []) + " " + (i + 1)}}</td>
                         <td>
-                            <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.interestRate.tierFrom', [])}}" [(ngModel)]="constr.fromValue">
+                            <mat-form-field>
+                                <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.interestRate.tierFrom', [])}}" [(ngModel)]="constr.fromValue">
+                            </mat-form-field>
                         </td>
                         <td>
-                            <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.interestRate.tierTo', [])}}" [(ngModel)]="constr.toValue">
+                            <mat-form-field>
+                                <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.interestRate.tierTo', [])}}" [(ngModel)]="constr.toValue">
+                            </mat-form-field>
                             <span *ngIf="value.interestRateTerms == depositInterestRateTermsEnum.TIERED_PER_PERIOD">
                                 {{languageService.formatLanguage('depositProduct.interestRate.perDays', [])}}
                             </span>
@@ -62,7 +66,9 @@
                             </span>
                         </td>
                         <td>
-                            <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.interestRate.label', [])}}" [(ngModel)]="constr.interestPercentage">
+                            <mat-form-field>
+                                <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.interestRate.label', [])}}" [(ngModel)]="constr.interestPercentage">
+                            </mat-form-field>
                             {{languageService.formatLanguage('depositProduct.interestRate.rateCalculationMethod_' + value.interestCalculationMethod, [])}}
                         </td>
                         <td>
@@ -80,9 +86,12 @@
         <mat-checkbox color="accent" [(ngModel)]="value.allowNegativeInterestRate">
             {{languageService.formatLanguage('depositProduct.interestRate.allowNegativeInterestRate', [])}}
         </mat-checkbox>
+        <mat-checkbox color="accent" [(ngModel)]="value.sameConstraintForAllCurrency">
+            {{languageService.formatLanguage('depositProduct.interestRate.interestRateConstraintsForAll', [])}}
+        </mat-checkbox>
         <app-value-constraints-input labelKey="depositProduct.interestRate.interestRateConstraints" labelKeyDefaultVal="depositProduct.interestRate.interestRateDefault"
             labelKeyMaxVal="depositProduct.interestRate.interestRateMax" labelKeyMinVal="depositProduct.interestRate.interestRateMin"
-            [value]="value.interestRateConstraints" *ngIf="value.interestRateConstraints.length > 0">
+            [value]="value.interestRateConstraints" *ngIf="value.interestRateConstraints.length > 0" [sameConstraintForAllCurrency]="value.sameConstraintForAllCurrency">
         </app-value-constraints-input>
     </div>
 

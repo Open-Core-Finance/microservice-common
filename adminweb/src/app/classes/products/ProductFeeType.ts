@@ -1,4 +1,4 @@
-export enum ProductFeeType {
+export enum DepositProductFeeType {
     /**
      * Manual for deposit or loan account.
      */
@@ -6,7 +6,14 @@ export enum ProductFeeType {
     /**
      * Deposit monthly fee.
      */
-    MONTHLY_FEE = "MONTHLY_FEE",
+    MONTHLY_FEE = "MONTHLY_FEE"
+}
+
+export enum LoanProductFeeType {
+    /**
+     * Manual for deposit or loan account.
+     */
+    MANUAL_FEE = "MANUAL_FEE",
     /**
      * Planned (Applied on Due Dates) for loan.
      */

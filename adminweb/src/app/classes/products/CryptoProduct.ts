@@ -1,4 +1,4 @@
-import { Product } from "./Product";
+import { DepositProduct } from "./DepositProduct";
 
-export class CryptoProduct extends Product {
+export class CryptoProduct extends DepositProduct {
 }

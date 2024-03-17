@@ -7,10 +7,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import tech.corefinance.product.common.enums.CreditArrangementManaged;
 import tech.corefinance.product.common.enums.FrequencyOptionYearly;
-import tech.corefinance.product.common.model.CurrencyValue;
-import tech.corefinance.product.common.model.DepositProductInterestRate;
-import tech.corefinance.product.common.model.DepositLimit;
-import tech.corefinance.product.common.model.WithdrawalLimit;
+import tech.corefinance.product.common.model.*;
 
 import java.util.List;
 
@@ -42,7 +39,12 @@ import java.util.List;
 @Entity
 @Table(name = "deposit_product")
 @EqualsAndHashCode(callSuper = true)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class DepositProduct extends Product {
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "product_fees")
+    private List<DepositProductFee> productFees;
 
     @Column(name = "allow_deposit_after_maturity_date")
     private boolean allowDepositAfterMaturityDate;

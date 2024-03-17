@@ -7,15 +7,17 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let val of values">
-                <td>{{val.currencyId}}</td>
-                <td>
-                    <mat-form-field appearance="fill" color="primary">
-                        <input type="number" matInput placeholder="{{languageService.formatLanguage('limitValue', [])}}"
-                            [(ngModel)]="val.limit" required>
-                    </mat-form-field>
-                </td>
-            </tr>
+            <ng-container *ngFor="let val of values">
+                <tr>
+                    <td>{{val.currencyId}}</td>
+                    <td>
+                        <mat-form-field appearance="fill" color="primary">
+                            <input type="number" matInput placeholder="{{languageService.formatLanguage('limitValue', [])}}"
+                                [(ngModel)]="val.limit" required>
+                        </mat-form-field>
+                    </td>
+                </tr>
+            </ng-container>
         </tbody>
     </table>
 </div>

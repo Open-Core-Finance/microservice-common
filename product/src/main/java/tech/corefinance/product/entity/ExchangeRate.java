@@ -16,7 +16,6 @@ import tech.corefinance.common.model.CreateUpdateDto;
 import tech.corefinance.common.model.GenericModel;
 import tech.corefinance.common.model.ModifiedDateTrackedEntity;
 
-import java.time.Duration;
 import java.time.ZonedDateTime;
 
 @Entity
@@ -52,5 +51,4 @@ public class ExchangeRate implements GenericModel<ExchangeRateId>, CreateUpdateD
     @Column(name = "last_modified_by")
     @JdbcTypeCode(SqlTypes.JSON)
     private BasicUserDto lastModifiedBy;
-    Duration.ofDays(5);
 }

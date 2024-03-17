@@ -138,10 +138,27 @@ CREATE TABLE IF NOT EXISTS crypto_product
     product_fees jsonb,
     show_inactive_fees boolean NOT NULL,
     type character varying(255),
+    allow_deposit_after_maturity_date boolean,
+    allow_overdrafts boolean,
+    days_to_set_to_dormant integer,
+    default_term_length integer,
+    deposit_limits jsonb,
+    early_closure_period integer,
+    interest_rate jsonb,
+    max_overdraft_limit jsonb,
+    max_term_length integer,
+    min_term_length integer,
+    overdrafts_interest jsonb,
+    overdrafts_under_credit_arrangement_managed character varying(255),
+    term_unit character varying(255),
+    withdrawal_limits jsonb,
     created_date timestamp with time zone,
     last_modified_date timestamp with time zone,
     created_by jsonb,
-    last_modified_by jsonb
+    last_modified_by jsonb,
+    enable_term_deposit boolean NOT NULL default false,
+    CONSTRAINT crypto_product_overdrafts_under_credit_arrangement_manag_check CHECK (overdrafts_under_credit_arrangement_managed::text = ANY (ARRAY['REQUIRED'::character varying, 'NO'::character varying, 'OPTIONAL'::character varying]::text[])),
+    CONSTRAINT crypto_product_term_unit_check CHECK (term_unit::text = ANY (ARRAY['DAY'::character varying, 'WEEK'::character varying, 'MONTH'::character varying]::text[]))
 );
 
 CREATE TABLE IF NOT EXISTS deposit_product
@@ -207,7 +224,6 @@ CREATE TABLE IF NOT EXISTS gl_product
     name character varying(255),
     new_account_setting jsonb NOT NULL,
     product_availabilities jsonb NOT NULL,
-    product_fees jsonb,
     show_inactive_fees boolean NOT NULL,
     type character varying(255),
     created_date timestamp with time zone,

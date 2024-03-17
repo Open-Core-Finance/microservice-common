@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from "@angular/core";
-import { GeneralModel } from "../classes/CommonClasses";
 import { UserMessage } from "../classes/UserMessage";
 import { LanguageService } from "../services/language.service";
 import { CommonService } from "../services/common.service";
@@ -7,7 +6,7 @@ import { RestService } from "../services/rest.service";
 import { HttpClient } from "@angular/common/http";
 import { GeneralApiResponse } from "../classes/GeneralApiResponse";
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { UiFormItem, UiFormSelect, UiSelectItem } from "../classes/ui/UiFormInput";
+import { ExpansionPanelInputGroup, UiFormItem, UiFormSelect, UiSelectItem } from "../classes/ui/UiFormInput";
 import { AuthenticationService } from "../services/authentication.service";
 import { OrganizationService } from "../services/organization.service";
 
@@ -20,15 +19,21 @@ export abstract class GeneralEntityAddComponent<T extends any> {
   _addingItem: T | null = null;
   message = new UserMessage([], []);
   formItems: UiFormItem[];
+  inputGroups: ExpansionPanelInputGroup[] = [];
 
   constructor(public languageService: LanguageService, protected commonService: CommonService,
     protected restService: RestService, protected http: HttpClient, protected formBuilder: FormBuilder,
     protected organizationService: OrganizationService, protected changeDetector: ChangeDetectorRef,
     protected authenticationService: AuthenticationService) {
       this.formItems = this.buildFormItems();
+      this.inputGroups = this.buildFormInputGroups();
   }
 
   protected buildFormItems(): UiFormItem[] {
+    return [];
+  }
+
+  protected buildFormInputGroups(): ExpansionPanelInputGroup[] {
     return [];
   }
 

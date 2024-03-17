@@ -1,276 +1,146 @@
-<div class="add-item-page">
-  <mat-card>
-    <mat-card-title>
-      {{languageService.formatLanguage('depositProduct.addTitle', [])}}
-    </mat-card-title>
-    <mat-card-content>
-      <form [formGroup]="addDepositProductForm">
+<app-generic-form (cancel)="this.cancelClick($event)" (save)="this.saveClick($event)" [formGroup]="addForm"
+  [formItems]="formItems" [inputGroups]="inputGroups" formTitleKey="glProduct.addTitle" [message]="message" [complexInputTemplate]="{
+    availabilities: availabilitiesTemplate, newAccountSetting: newAccountSettingTemplate,
+    currencies: currenciesTemplate, productFees: productFeesTemplate, interestRate: interestRateTemplate,
+    overdrafts: overdraftsTemplate, termDeposit: termDepositTemplate, depositLimits: depositLimitsTemplate,
+    withdrawalLimit: withdrawalLimitTemplate
+  }">
 
-        <mat-form-field>
-          <mat-label>{{languageService.formatLanguage('product.id', [])}}</mat-label>
-          <input type="text" matInput placeholder="{{languageService.formatLanguage('product.id', [])}}" formControlName="id">
-        </mat-form-field>
+  <ng-template #availabilitiesTemplate let-formGroup>
+    <div>
+      <mat-label>{{languageService.formatLanguage('product.availableTo', [])}}</mat-label>
+    </div>
+    <div>
+      <mat-checkbox color="accent" formControlName="productAvailabilityAllGroups">
+        {{languageService.formatLanguage('product.availableMode_ALL_GROUPS', [])}}
+      </mat-checkbox>
+    </div>
+    <div>
+      <mat-checkbox color="accent" formControlName="productAvailabilityAllBranches">
+        {{languageService.formatLanguage('product.availableMode_ALL_BRANCHES', [])}}
+      </mat-checkbox>
+    </div>
+    <div *ngIf="!$any(addForm.value).productAvailabilityAllBranches">
+      <app-branches-selection formControlName="productAvailabilityModeInfo"></app-branches-selection>
+    </div>
+  </ng-template>
 
-        <mat-form-field>
-          <mat-label>{{languageService.formatLanguage('product.name', [])}}</mat-label>
-          <input type="text" matInput placeholder="{{languageService.formatLanguage('product.name', [])}}" formControlName="name">
-        </mat-form-field>
+  <ng-template #newAccountSettingTemplate let-data>
+    <div [formGroup]="$any(addForm.controls).newAccountSetting">
+      <mat-label>{{languageService.formatLanguage('product.idType', [])}}:&nbsp;</mat-label>
+      <mat-form-field appearance="fill" color="primary">
+        <mat-select formControlName="type" required formControlName="type">
+          <mat-option [value]="newAccountIdTypeEnum.INCREASEMENT">{{languageService.formatLanguage('product.idType_INCREASEMENT', [])}}</mat-option>
+          <mat-option [value]="newAccountIdTypeEnum.RANDOM_PATTERN">{{languageService.formatLanguage('product.idType_RANDOM_PATTERN', [])}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-label *ngIf="$any(addForm.value).newAccountSetting?.type==newAccountIdTypeEnum.RANDOM_PATTERN">
+        {{languageService.formatLanguage('product.patternUsingLabel', [])}}&nbsp;
+      </mat-label>
+      <mat-form-field *ngIf="$any(addForm.value).newAccountSetting?.type==newAccountIdTypeEnum.RANDOM_PATTERN">
+        <input type="text" matInput placeholder="{{languageService.formatLanguage('product.patternUsingLabel', [])}}" formControlName="randomPatternTemplate">
+      </mat-form-field>
+      <mat-label *ngIf="$any(addForm.value).newAccountSetting?.type==newAccountIdTypeEnum.INCREASEMENT">
+        {{languageService.formatLanguage('product.increasementStartingFrom', [])}}&nbsp;
+      </mat-label>
+      <mat-form-field *ngIf="$any(addForm.value).newAccountSetting?.type==newAccountIdTypeEnum.INCREASEMENT">
+        <input type="number" matInput placeholder="{{languageService.formatLanguage('product.increasementStartingFrom', [])}}" formControlName="increasementStartingFrom">
+      </mat-form-field>
 
-        <mat-form-field appearance="fill" color="primary">
-          <mat-label>{{languageService.formatLanguage('product.category', [])}}</mat-label>
-          <mat-select formControlName="category">
-            <mat-option [value]="null">&nbsp;</mat-option>
-            <mat-option [value]="cat.id" *ngFor="let cat of productCategories">{{cat.name}}</mat-option>
+      <mat-label>{{languageService.formatLanguage('product.accountInitState', [])}}:&nbsp;</mat-label>
+      <mat-form-field appearance="fill" color="primary">
+          <mat-select required formControlName="initialState">
+              <mat-option *ngFor="let state of allAccountStates" [value]="state">{{languageService.formatLanguage('product.accountInitState_' + state, [])}}</mat-option>
           </mat-select>
-        </mat-form-field>
+      </mat-form-field>
+    </div>
+  </ng-template>
 
-        <mat-form-field appearance="fill" color="primary">
-          <mat-label>{{languageService.formatLanguage('product.type', [])}}</mat-label>
-          <mat-select formControlName="type">
-            <mat-option [value]="null">&nbsp;</mat-option>
-            <mat-option [value]="t.id" *ngFor="let t of productTypes">{{t.name}}</mat-option>
-          </mat-select>
-        </mat-form-field>
+  <ng-template #currenciesTemplate let-data>
+    <app-currencies-selection formControlName="currencies" (ngModelChange)="currenciesChanged();"></app-currencies-selection>
+  </ng-template>
 
-        <mat-checkbox color="accent" formControlName="activated">
-          {{languageService.formatLanguage('product.activated', [])}}
-        </mat-checkbox>
+  <ng-template #productFeesTemplate let-data>
+    <app-product-fee-input formControlName="productFees" [supportedCurrencies]="currenciesToDisplay">
+    </app-product-fee-input>
+  </ng-template>
 
-        <mat-expansion-panel hideToggle>
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{languageService.formatLanguage('product.description', [])}}</mat-panel-title>
-            <mat-panel-description>&nbsp;</mat-panel-description>
-          </mat-expansion-panel-header>
-          <mat-form-field class="full-width" appearance="fill" color="primary">
-            <textarea matInput placeholder="{{languageService.formatLanguage('organization.name', [])}}" formControlName="description"></textarea>
-          </mat-form-field>
-        </mat-expansion-panel>
+  <ng-template #interestRateTemplate let-data>
+    <app-deposit-interest-rate-input [supportedCurrencies]="currenciesToDisplay"
+        formControlName="interestRate" *ngIf="$any(addForm.value).enableInterestRate"></app-deposit-interest-rate-input>
+  </ng-template>
 
-        <mat-expansion-panel hideToggle>
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{languageService.formatLanguage('product.availabilities', [])}}</mat-panel-title>
-            <mat-panel-description>&nbsp;</mat-panel-description>
-          </mat-expansion-panel-header>
-          <div>
-            <mat-label>{{languageService.formatLanguage('product.availableTo', [])}}</mat-label>
-          </div>
-          <div>
-            <mat-checkbox color="accent" formControlName="productAvailabilityAllGroups">
-              {{languageService.formatLanguage('product.availableMode_ALL_GROUPS', [])}}
-            </mat-checkbox>
-          </div>
-          <div>
-            <mat-checkbox color="accent" formControlName="productAvailabilityAllBranches">
-              {{languageService.formatLanguage('product.availableMode_ALL_BRANCHES', [])}}
-            </mat-checkbox>
-          </div>
-          <div *ngIf="!addDepositProductForm.value.productAvailabilityAllBranches">
-            <app-branches-selection formControlName="productAvailabilityModeInfo"></app-branches-selection>
-          </div>
-        </mat-expansion-panel>
+  <ng-template #overdraftsTemplate let-data>
+    <div *ngIf="$any(addForm.value).allowOverdrafts">
+      <div>
+        <mat-label>&nbsp;{{languageService.formatLanguage('depositProduct.overdraftsLimit', [])}}:&nbsp;</mat-label>
+        <app-currency-value-input [supportedCurrencies]="currenciesToDisplay"
+          formControlName="maxOverdraftLimit"></app-currency-value-input>
+      </div>
 
-        <mat-expansion-panel hideToggle="false" formGroupName="newAccountSetting" expanded="true">
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{languageService.formatLanguage('product.newAccountSetting', [])}}</mat-panel-title>
-            <mat-panel-description>&nbsp;</mat-panel-description>
-          </mat-expansion-panel-header>
-          <mat-label>{{languageService.formatLanguage('product.idType', [])}}:&nbsp;</mat-label>
-          <mat-form-field appearance="fill" color="primary">
-            <mat-select formControlName="type" required formControlName="type">
-              <mat-option [value]="newAccountIdTypeEnum.INCREASEMENT">{{languageService.formatLanguage('product.idType_INCREASEMENT', [])}}</mat-option>
-              <mat-option [value]="newAccountIdTypeEnum.RANDOM_PATTERN">{{languageService.formatLanguage('product.idType_RANDOM_PATTERN', [])}}</mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-label *ngIf="addDepositProductForm.value.newAccountSetting?.type==newAccountIdTypeEnum.RANDOM_PATTERN">
-            {{languageService.formatLanguage('product.patternUsingLabel', [])}}&nbsp;
-          </mat-label>
-          <mat-form-field *ngIf="addDepositProductForm.value.newAccountSetting?.type==newAccountIdTypeEnum.RANDOM_PATTERN">
-            <input type="text" matInput placeholder="{{languageService.formatLanguage('product.patternUsingLabel', [])}}" formControlName="randomPatternTemplate">
-          </mat-form-field>
-          <mat-label *ngIf="addDepositProductForm.value.newAccountSetting?.type==newAccountIdTypeEnum.INCREASEMENT">
-            {{languageService.formatLanguage('product.increasementStartingFrom', [])}}&nbsp;
-          </mat-label>
-          <mat-form-field *ngIf="addDepositProductForm.value.newAccountSetting?.type==newAccountIdTypeEnum.INCREASEMENT">
-            <input type="number" matInput placeholder="{{languageService.formatLanguage('product.increasementStartingFrom', [])}}" formControlName="increasementStartingFrom">
-          </mat-form-field>
+      <mat-label>{{languageService.formatLanguage('creditArrangementManaged.label', [])}}:&nbsp;</mat-label>
+      <mat-form-field appearance="fill" color="primary">
+        <mat-select formControlName="type" required formControlName="overdraftsUnderCreditArrangementManaged">
+          <mat-option [value]="creditArrangementManagedEnum.OPTIONAL">{{languageService.formatLanguage('creditArrangementManaged.OPTIONAL', [])}}</mat-option>
+          <mat-option [value]="creditArrangementManagedEnum.REQUIRED">{{languageService.formatLanguage('creditArrangementManaged.REQUIRED', [])}}</mat-option>
+          <mat-option [value]="creditArrangementManagedEnum.NO">{{languageService.formatLanguage('creditArrangementManaged.NO', [])}}</mat-option>
+        </mat-select>
+      </mat-form-field>
 
-          <mat-label>{{languageService.formatLanguage('product.accountInitState', [])}}:&nbsp;</mat-label>
-          <mat-form-field appearance="fill" color="primary">
-              <mat-select required formControlName="initialState">
-                  <mat-option *ngFor="let state of allAccountStates" [value]="state">{{languageService.formatLanguage('product.accountInitState_' + state, [])}}</mat-option>
-              </mat-select>
-          </mat-form-field>
-        </mat-expansion-panel>
+      <app-deposit-interest-rate-input [supportedCurrencies]="currenciesToDisplay"
+        formControlName="overdraftsInterest"></app-deposit-interest-rate-input>
+    </div>
+  </ng-template>
 
-        <mat-expansion-panel hideToggle="false" expanded="true">
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{languageService.formatLanguage('product.currencies', [])}}</mat-panel-title>
-            <mat-panel-description>&nbsp;</mat-panel-description>
-          </mat-expansion-panel-header>
-          <app-currencies-selection formControlName="currencies" (ngModelChange)="currenciesChanged();"></app-currencies-selection>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel hideToggle>
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{languageService.formatLanguage('product.productFees', [])}}</mat-panel-title>
-            <mat-panel-description>&nbsp;</mat-panel-description>
-          </mat-expansion-panel-header>
-          <mat-checkbox color="accent" formControlName="allowArbitraryFees" *ngIf="!addDepositProductForm.value.currencies || addDepositProductForm.value.currencies.length > 0">
-            {{languageService.formatLanguage('product.allowArbitraryFees', [])}}
-          </mat-checkbox>
-          <app-product-fee-input formControlName="productFees" [supportedCurrencies]="addDepositProductForm.value.currencies ? addDepositProductForm.value.currencies : []">
-          </app-product-fee-input>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel hideToggle>
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{languageService.formatLanguage('depositProduct.internalControl', [])}}</mat-panel-title>
-            <mat-panel-description>&nbsp;</mat-panel-description>
-          </mat-expansion-panel-header>
-          <div>
-            <mat-checkbox color="accent" formControlName="enableEarlyClosurePeriod"></mat-checkbox>
-            <mat-label>&nbsp;{{languageService.formatLanguage('depositProduct.earlyClosurePeriod', [])}}&nbsp;</mat-label>
-            <mat-form-field *ngIf="addDepositProductForm.value.enableEarlyClosurePeriod">
-              <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.earlyClosurePeriodDesc', [])}}" formControlName="earlyClosurePeriod">
-            </mat-form-field>
-            <mat-icon aria-hidden="false" fontIcon="help" matTooltip="{{languageService.formatLanguage('depositProduct.earlyClosurePeriodDesc', [])}}"></mat-icon>
-          </div>
-          <div>
-            <mat-checkbox color="accent" formControlName="autoSetAsDormant">
-              {{languageService.formatLanguage('depositProduct.autoDormantAccount', [])}}
-            </mat-checkbox>
-            <mat-label *ngIf="addDepositProductForm.value.autoSetAsDormant">&nbsp;{{languageService.formatLanguage('depositProduct.domainAfterLabel', [])}}&nbsp;</mat-label>
-            <mat-form-field *ngIf="addDepositProductForm.value.autoSetAsDormant">
-              <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.autoDormantAccount', [])}}" formControlName="daysToSetToDormant">
-            </mat-form-field>
-            <mat-label *ngIf="addDepositProductForm.value.autoSetAsDormant">&nbsp;{{languageService.formatLanguage('depositProduct.domainDaysLabel', [])}}</mat-label>
-          </div>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel hideToggle *ngIf="hasCurrenciesSelected()">
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{languageService.formatLanguage('depositProduct.interestRate.label', [])}}</mat-panel-title>
-            <mat-panel-description>&nbsp;</mat-panel-description>
-          </mat-expansion-panel-header>
-          <mat-checkbox color="accent" formControlName="enableInterestRate">
-            {{languageService.formatLanguage('depositProduct.interestRate.enableInterestRate', [])}}
-          </mat-checkbox>
-
-          <app-deposit-interest-rate-input [supportedCurrencies]="addDepositProductForm.value.currencies ? addDepositProductForm.value.currencies : []"
-               formControlName="interestRate" *ngIf="addDepositProductForm.value.enableInterestRate"></app-deposit-interest-rate-input>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel hideToggle="false" *ngIf="hasCurrenciesSelected()">
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{languageService.formatLanguage('depositProduct.overdrafts', [])}}</mat-panel-title>
-            <mat-panel-description>&nbsp;</mat-panel-description>
-          </mat-expansion-panel-header>
-          <mat-checkbox color="accent" formControlName="allowOverdrafts">
-            {{languageService.formatLanguage('depositProduct.allowOverdrafts', [])}}
-          </mat-checkbox>
-          <div *ngIf="addDepositProductForm.value.allowOverdrafts">
-            <div>
-              <mat-label>&nbsp;{{languageService.formatLanguage('depositProduct.overdraftsLimit', [])}}:&nbsp;</mat-label>
-              <app-currency-value-input [supportedCurrencies]="addDepositProductForm.value.currencies ? addDepositProductForm.value.currencies : []"
-                formControlName="maxOverdraftLimit"></app-currency-value-input>
-            </div>
-
-            <mat-label>{{languageService.formatLanguage('creditArrangementManaged.label', [])}}:&nbsp;</mat-label>
+  <ng-template #termDepositTemplate let-data>
+    <table *ngIf="$any(addForm.value).enableTermDeposit">
+      <thead>
+        <tr>
+          <th>&nbsp;</th>
+          <th>{{languageService.formatLanguage('depositProduct.termDepositDefault', [])}}</th>
+          <th>{{languageService.formatLanguage('depositProduct.termDepositMax', [])}}</th>
+          <th>{{languageService.formatLanguage('depositProduct.termDepositMin', [])}}</th>
+          <th>{{languageService.formatLanguage('depositProduct.termDepositUnit', [])}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{languageService.formatLanguage('depositProduct.termLength', [])}}</td>
+          <td>
             <mat-form-field appearance="fill" color="primary">
-              <mat-select formControlName="type" required formControlName="overdraftsUnderCreditArrangementManaged">
-                <mat-option [value]="creditArrangementManagedEnum.OPTIONAL">{{languageService.formatLanguage('creditArrangementManaged.OPTIONAL', [])}}</mat-option>
-                <mat-option [value]="creditArrangementManagedEnum.REQUIRED">{{languageService.formatLanguage('creditArrangementManaged.REQUIRED', [])}}</mat-option>
-                <mat-option [value]="creditArrangementManagedEnum.NO">{{languageService.formatLanguage('creditArrangementManaged.NO', [])}}</mat-option>
-              </mat-select>
+              <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.termDepositDefault', [])}}" formControlName="defaultTermLength">
             </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field appearance="fill" color="primary">
+              <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.termDepositMax', [])}}" formControlName="maxTermLength">
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field appearance="fill" color="primary">
+              <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.termDepositMin', [])}}" formControlName="minTermLength">
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field appearance="fill" color="primary">
+              <mat-select required formControlName="termUnit">
+                  <mat-option *ngFor="let unit of allTermsUnit" [value]="unit">
+                      {{languageService.formatLanguage('depositProduct.termDepositUnit_' + unit, [])}}
+                  </mat-option>
+              </mat-select>
+          </mat-form-field>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-template>
 
-            <app-deposit-interest-rate-input [supportedCurrencies]="addDepositProductForm.value.currencies ? addDepositProductForm.value.currencies : []"
-              formControlName="overdraftsInterest"></app-deposit-interest-rate-input>
-          </div>
-        </mat-expansion-panel>
+  <ng-template #depositLimitsTemplate let-data>
+    <app-deposit-limit-input [supportedCurrencies]="currenciesToDisplay" formControlName="depositLimits"></app-deposit-limit-input>
+  </ng-template>
 
-        <mat-expansion-panel hideToggle>
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{languageService.formatLanguage('depositProduct.fixedDeposit', [])}}</mat-panel-title>
-            <mat-panel-description>&nbsp;</mat-panel-description>
-          </mat-expansion-panel-header>
-          <mat-checkbox color="accent" formControlName="enableTermDeposit">
-            {{languageService.formatLanguage('depositProduct.enableTermDeposit', [])}}
-          </mat-checkbox>
-          <table *ngIf="addDepositProductForm.value.enableTermDeposit">
-            <thead>
-              <tr>
-                <th></th>
-                <th>{{languageService.formatLanguage('depositProduct.termDepositDefault', [])}}</th>
-                <th>{{languageService.formatLanguage('depositProduct.termDepositMax', [])}}</th>
-                <th>{{languageService.formatLanguage('depositProduct.termDepositMin', [])}}</th>
-                <th>{{languageService.formatLanguage('depositProduct.termDepositUnit', [])}}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{{languageService.formatLanguage('depositProduct.termLength', [])}}</td>
-                <td>
-                  <mat-form-field appearance="fill" color="primary">
-                    <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.termDepositDefault', [])}}" formControlName="defaultTermLength">
-                  </mat-form-field>
-                </td>
-                <td>
-                  <mat-form-field appearance="fill" color="primary">
-                    <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.termDepositMax', [])}}" formControlName="maxTermLength">
-                  </mat-form-field>
-                </td>
-                <td>
-                  <mat-form-field appearance="fill" color="primary">
-                    <input type="number" matInput placeholder="{{languageService.formatLanguage('depositProduct.termDepositMin', [])}}" formControlName="minTermLength">
-                  </mat-form-field>
-                </td>
-                <td>
-                  <mat-form-field appearance="fill" color="primary">
-                    <mat-select required formControlName="termUnit">
-                        <mat-option *ngFor="let unit of allTermsUnit" [value]="unit">
-                            {{languageService.formatLanguage('depositProduct.termDepositUnit_' + unit, [])}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </mat-expansion-panel>
+  <ng-template #withdrawalLimitTemplate let-data>
+    <app-withdrawal-limit-input [supportedCurrencies]="currenciesToDisplay" ormControlName="withdrawalLimits"></app-withdrawal-limit-input>
+  </ng-template>
 
-        <mat-expansion-panel hideToggle>
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{languageService.formatLanguage('depositProduct.depositLimits', [])}}</mat-panel-title>
-            <mat-panel-description>&nbsp;</mat-panel-description>
-          </mat-expansion-panel-header>
-          <app-deposit-limit-input [supportedCurrencies]="addDepositProductForm.value.currencies ? addDepositProductForm.value.currencies : []"
-            formControlName="depositLimits"></app-deposit-limit-input>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel hideToggle>
-          <mat-expansion-panel-header>
-            <mat-panel-title>{{languageService.formatLanguage('depositProduct.withdrawalLimit', [])}}</mat-panel-title>
-            <mat-panel-description>&nbsp;</mat-panel-description>
-          </mat-expansion-panel-header>
-          <app-withdrawal-limit-input [supportedCurrencies]="addDepositProductForm.value.currencies ? addDepositProductForm.value.currencies : []"
-            formControlName="withdrawalLimits"></app-withdrawal-limit-input>
-        </mat-expansion-panel>
-
-        <app-general-error-panel [message]="message" errorPrefix="depositProduct.error."></app-general-error-panel>
-
-      </form>
-    </mat-card-content>
-
-    <mat-card-actions>
-      <button mat-raised-button color="primary" (click)="saveClick($event);">
-        {{languageService.formatLanguage('action.save', [])}}
-      </button>
-      <button mat-raised-button color="warn" (click)="cancelClick($event);">
-        {{languageService.formatLanguage('action.cancel', [])}}
-      </button>
-    </mat-card-actions>
-
-  </mat-card>
-
-</div>
+</app-generic-form>

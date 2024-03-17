@@ -4,12 +4,15 @@ import { FrequencyOptionYearly } from "./FrequencyOption";
 import { InterestCalculationMethod } from "./InterestCalculationMethod";
 import { InterestDayInYear } from "./InterestDayInYear";
 import { InterestRate } from "./InterestRate";
-import { Product } from "./Product";
+import { MonthlyPayOption, Product } from "./Product";
+import { DepositProductFeeType } from "./ProductFeeType";
 import { TieredInterestItem } from "./TieredInterestItem";
 import { CurrencyLimitValue, ValueConstraint } from "./ValueConstraint";
 import { WithdrawalLimit } from "./WithdrawalLimit";
 
 export class DepositProduct extends Product {
+
+    productFees: DepositProductFee[] = [];
 
     /**
      * Interest Rate.
@@ -45,6 +48,8 @@ export class DepositProduct extends Product {
     minTermLength: number | null = 0.0;
     maxTermLength: number | null = 0.0;
     defaultTermLength: number | null = 0.0;
+
+    allowDepositAfterMaturityDate = false;
 }
 
 export class DepositInterestRate implements InterestRate {
@@ -65,6 +70,7 @@ export class DepositInterestRate implements InterestRate {
      * Interest Spread Constraints (%) for index rate source.
      */
     interestRateConstraints: ValueConstraint[] = [];
+    sameConstraintForAllCurrency = true;
     interestRateIndexSource: string = "";
     // Tiered interest rate
     interestItems: TieredInterestItem[] = [];
@@ -105,4 +111,15 @@ export enum InterestCalculationDateOptionType {
 
 export enum DepositInterestRateTerms {
     FIXED = "FIXED", TIERED_PER_BALANCE = "TIERED_PER_BALANCE", TIERED_PER_PERIOD = "TIERED_PER_PERIOD"
+}
+
+export class DepositProductFee {
+    activated = true;
+    id = "";
+    name = "";
+    type: DepositProductFeeType = DepositProductFeeType.MONTHLY_FEE;
+    amount: number | null = 0.0;
+    currencyId: string = "";
+
+    monthlyPayOption: MonthlyPayOption = MonthlyPayOption.MONTHLY_FROM_ACTIVATION;
 }

@@ -18,6 +18,10 @@ import java.util.List;
 public class LoanProduct extends Product {
 
     @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "product_fees")
+    private List<LoanProductFee> productFees;
+
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "loan_values")
     private List<ValueConstraint> loanValues;
 

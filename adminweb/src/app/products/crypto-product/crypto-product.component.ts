@@ -27,7 +27,7 @@ export class CryptoProductComponent extends TableComponent<CryptoProduct> {
     result.push(new TableColumnUi("name", labelKeyPrefix + "name"));
     result.push(new TableColumnUi("category", labelKeyPrefix + "category"));
     result.push(new TableColumnUi("type", labelKeyPrefix + "type"));
-    result.push(new TableColumnUi("lastModifyDate", labelKeyPrefix + "lastModifyDate"));
+    result.push(new TableColumnUi("lastModifiedDate", labelKeyPrefix + "lastModifiedDate", {dateFormat: "yyyy-MM-dd hh:mm:ss"}));
     result.push(new TableColumnUi("activated", labelKeyPrefix + "activated"));
     return result;
   }

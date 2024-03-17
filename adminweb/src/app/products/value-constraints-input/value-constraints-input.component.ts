@@ -1,7 +1,6 @@
 import { Component, Input, OnDestroy, OnInit, forwardRef } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, FormBuilder, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Currency } from 'src/app/classes/Currency';
-import { Subscription } from 'rxjs';
 import { ValueConstraint } from 'src/app/classes/products/ValueConstraint';
 import { LanguageService } from 'src/app/services/language.service';
 import { CurrencyService } from 'src/app/services/currency.service';
@@ -20,10 +19,7 @@ import { CurrencyService } from 'src/app/services/currency.service';
 })
 export class ValueConstraintsInputComponent implements OnInit, ControlValueAccessor, OnDestroy {
   isDisabled: boolean = false;
-  lastSupportedCurrencies: string[] | undefined;
-  currencies: Currency[] = [];
-  currenciesToDisplay: Currency[] = [];
-  currenciesSubscription: Subscription | undefined;
+  _supportedCurrencies: Currency[] = [];
   @Input()
   labelKey: string = "";
   @Input()
@@ -33,19 +29,13 @@ export class ValueConstraintsInputComponent implements OnInit, ControlValueAcces
   @Input()
   labelKeyDefaultVal = "";
   _value: ValueConstraint[] = [];
+  @Input()
+  sameConstraintForAllCurrency = true;
 
   public constructor(public languageService: LanguageService, private currencyService: CurrencyService, protected formBuilder: FormBuilder) {
-    this.currenciesSubscription?.unsubscribe();
-    this.currenciesSubscription = this.currencyService.currenciesSubject.subscribe( c => {
-      this.currencies = c;
-      if (this.lastSupportedCurrencies) {
-        this.populateCurrenciesToUi(this.lastSupportedCurrencies);
-      }
-    });
   }
 
   ngOnDestroy(): void {
-    this.currenciesSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -53,7 +43,6 @@ export class ValueConstraintsInputComponent implements OnInit, ControlValueAcces
 
   writeValue(value: ValueConstraint[]): void {
     this._value = value;
-    this.populateCurrenciesToUi(this.lastSupportedCurrencies ? this.lastSupportedCurrencies : []);
   }
  
   registerOnChange(fn: any): void {
@@ -71,22 +60,12 @@ export class ValueConstraintsInputComponent implements OnInit, ControlValueAcces
   propagateTouched = (_: ValueConstraint[]) => { };
 
   @Input()
-  set supportedCurrencies(supportedCurrencies: string[]) {
-    this.lastSupportedCurrencies = supportedCurrencies;
-    this.populateCurrenciesToUi(supportedCurrencies);
+  set supportedCurrencies(supportedCurrencies: Currency[]) {
+    this._supportedCurrencies = supportedCurrencies;
   }
 
-  private populateCurrenciesToUi(supportedCurrencies: string[]) {
-    this.currenciesToDisplay = [];
-    this.currencies.forEach((value, index, arr) => {
-      for(let  i = 0; i < supportedCurrencies.length; i++) {
-        const c = supportedCurrencies[i];
-        if (c == value.id) {
-          this.currenciesToDisplay.push(value);
-          break;
-        }
-      }
-    });
+  get supportedCurrencies(): Currency[] {
+    return this._supportedCurrencies;
   }
 
   @Input()

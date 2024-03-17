@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
-import { Product, ProductNewAccountSettingType } from "../classes/products/Product";
+import { Product, ProductAvailability, ProductNewAccountSetting, ProductNewAccountSettingType } from "../classes/products/Product";
 import { ProductCategory, ProductCategoryType } from "../classes/products/ProductCategory";
 import { ProductType } from "../classes/products/ProductType";
 import { GeneralEntityAddComponent } from "../generic-component/GeneralEntityAddComponent";
@@ -13,11 +13,12 @@ import { LanguageService } from "../services/language.service";
 import { RestService } from "../services/rest.service";
 import { CommonService } from "../services/common.service";
 import { HttpClient } from "@angular/common/http";
-import { FormBuilder } from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { OrganizationService } from "../services/organization.service";
 import { AccountState } from "../classes/accounts/AccountState";
 import { CurrencyBasesValue } from "../classes/products/ValueConstraint";
 import { AuthenticationService } from "../services/authentication.service";
+import { ExpansionPanelInputGroup, UiFormCheckbox, UiFormComplexInput, UiFormInput, UiFormItem, UiFormSelect, UiFormTextarea, UiSelectItem } from "../classes/ui/UiFormInput";
 
 @Component({
     template: ''
@@ -31,9 +32,12 @@ export abstract class GeneralProductAddComponent<T extends Product> extends Gene
     protected lastOrganization: Organization | null = null;
     protected currencies: Currency[] = [];
     protected currenciesSubscription: Subscription | undefined;
-    protected accountStateEnum = AccountState;
     protected allAccountStates = Object.keys(AccountState);
     protected currenciesToDisplay: Currency[] = [];
+
+    addForm = this.formBuilder.group(
+        Object.assign(Object.assign({}, this.newEmptyEntity()), this.additionalFormGroupElement)
+    );
 
     constructor(public override languageService: LanguageService, protected override commonService: CommonService,
         protected override restService: RestService, protected override http: HttpClient, protected override formBuilder: FormBuilder,
@@ -71,6 +75,7 @@ export abstract class GeneralProductAddComponent<T extends Product> extends Gene
             next: (data: GeneralApiResponse) => {
                 if (data.status === 0) {
                     this.productCategories = (data.result as ProductCategory[]);
+                    this.updateSelectItem("category");
                 } else this.restService.handleRestError(data, this.message)
             }, error: (data: any) => this.restService.handleRestError(data, this.message)
         });
@@ -80,6 +85,7 @@ export abstract class GeneralProductAddComponent<T extends Product> extends Gene
             next: (data: GeneralApiResponse) => {
                 if (data.status === 0) {
                     this.productTypes = (data.result as ProductType[]);
+                    this.updateSelectItem("type");
                 } else this.restService.handleRestError(data, this.message)
             }, error: (data: any) => this.restService.handleRestError(data, this.message)
         });
@@ -119,6 +125,7 @@ export abstract class GeneralProductAddComponent<T extends Product> extends Gene
 
     protected currenciesChanged() {
         this.currenciesToDisplay = [];
+        this.currenciesToDisplay.push(new Currency());
         const form = this.getAddForm();
         const supportedCurrencies = form.value.currencies ? form.value.currencies : [];
         for (let currency of this.currencies) {
@@ -150,9 +157,13 @@ export abstract class GeneralProductAddComponent<T extends Product> extends Gene
         }
       }
     
-      protected addMissingConstraints<T extends CurrencyBasesValue>(constraints: T[], newItem: T) {
+      protected addMissingConstraints<T extends CurrencyBasesValue>(constraints: T[], newItem: T, excludeAllCurrency: boolean) {
+        var allCurrenciesId = new Currency().id;
         for(let  j = 0; j < this.currenciesToDisplay.length; j++) {
           const currency = this.currenciesToDisplay[j];
+          if (excludeAllCurrency && allCurrenciesId == currency.id) {
+            continue;
+          }
           var found = false;
           for (let i = 0; i < constraints.length; i++) {
             const constraint = constraints[i];
@@ -166,5 +177,70 @@ export abstract class GeneralProductAddComponent<T extends Product> extends Gene
             constraints.push(newItem);
           }
         }
+      }
+
+      protected override buildFormItems(): UiFormItem[] {
+        const formItems: UiFormItem[] = [];
+        let prefix = "product.";
+        formItems.push(new UiFormInput(prefix + "id", "id"));
+        formItems.push(new UiFormInput(prefix + "name", "name"));
+        formItems.push(new UiFormSelect(prefix + "category", this.buildListSelection("category"), "category"));
+        formItems.push(new UiFormSelect(prefix + "type", this.buildListSelection("type"), "type"));
+        formItems.push(new UiFormCheckbox(prefix + "activated", "activated"));
+        return formItems;
+      }
+
+      protected override buildListSelection(selectName: string): UiSelectItem[] {
+        if (selectName == 'category') {
+          return this.productCategories ? this.productCategories.map( c => ({selectValue: c.id, labelKey: c.name} as UiSelectItem)) : [];
+        } else if (selectName == 'type') {
+            return this.productTypes ? this.productTypes.map( c => ({selectValue: c.id, labelKey: c.name} as UiSelectItem)) : [];
+        }
+        return [];
+      }
+
+      protected override buildFormInputGroups(): ExpansionPanelInputGroup[] {
+        const formInputGroups: ExpansionPanelInputGroup[] = [];
+        let prefix = "product.";
+        // Description
+        let formItems: UiFormItem[] = [];
+        let formItem: UiFormItem = new UiFormTextarea(prefix + "description", "description");
+        formItem.additionClass = "full-width";
+        formItems.push(formItem);
+        formInputGroups.push(new ExpansionPanelInputGroup(prefix + 'description', formItems));
+        // Product Availabilities
+        formItems = [];
+        formItems.push(new UiFormComplexInput("availabilities", "availabilities"));
+        formInputGroups.push(new ExpansionPanelInputGroup(prefix + 'availabilities', formItems));
+        // New account setting
+        formItems = [];
+        formItems.push(new UiFormComplexInput("newAccountSetting", "newAccountSetting"));
+        let group = new ExpansionPanelInputGroup(prefix + 'newAccountSetting', formItems);
+        group.formGroupName = "newAccountSetting";
+        formInputGroups.push(group);
+        // Currencies
+        formItems = [];
+        formItems.push(new UiFormComplexInput("currencies", "currencies"));
+        formInputGroups.push(new ExpansionPanelInputGroup(prefix + 'currencies', formItems));
+        // Return
+        return formInputGroups;
+      }
+
+      hasCurrenciesSelected(): boolean {
+        var currencies = this.getAddForm().value.currencies;
+        return currencies != null && currencies.length > 0;
+      }
+
+      protected get additionalFormGroupElement(): any {
+        return {
+            productAvailabilityModeInfo: new FormControl<string[]>([]),
+            productAvailabilities: new FormControl<ProductAvailability[]>([]),
+            newAccountSetting: this.formBuilder.group(new ProductNewAccountSetting()),
+            currencies: new FormControl<string[]>([])
+        };
+      }
+
+      protected override getAddForm(): FormGroup<any> {
+        return this.addForm;
       }
 }

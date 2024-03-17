@@ -5,6 +5,7 @@ import { InterestDayInYear } from "./InterestDayInYear";
 import { InterestRate } from "./InterestRate";
 import { PenaltySetting } from "./PenaltySetting";
 import { Product } from "./Product";
+import { LoanProductFeeType } from "./ProductFeeType";
 import { RepaymentCollection, RepaymentScheduling } from "./Repayment";
 import { ValueConstraint } from "./ValueConstraint";
 
@@ -85,4 +86,20 @@ export enum RepaymentsInterestCalculation {
      * Using Repayment Periodicity.
      */
     REPAYMENT_PERIODICITY = "REPAYMENT_PERIODICITY"
+}
+
+export class LoanProductFee {
+    activated = true;
+    id = "";
+    name = "";
+    type: LoanProductFeeType = LoanProductFeeType.MANUAL_FEE;
+    amount: number | null = 0.0;
+    currencyId: string = "";
+    requiredFeeApplication: boolean | null = false;
+    feePaymentType: LoanFeePaymentType = LoanFeePaymentType.FLAT;
+}
+
+export enum LoanFeePaymentType {
+    FLAT, LOAN_AMOUNT_PERCENTAGE, REPAYMENT_PRINCIPAL_AMOUNT_PERCENTAGE, FLAT_NUMBER_OF_INSTALLMENTS,
+    LOAN_AMOUNT_PERCENTAGE_NUMBER_OF_INSTALLMENTS
 }

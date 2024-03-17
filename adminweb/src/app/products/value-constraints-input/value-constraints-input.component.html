@@ -9,28 +9,30 @@
                 <th>{{languageService.formatLanguage(labelKeyMaxVal, [])}}</th>
             </tr>
         </thead>
-        <tbody>        
-            <tr *ngFor="let constr of value; let i = index">
-                <td>{{constr.currencyId}}</td>
-                <td>
-                    <mat-form-field appearance="fill" color="primary">
-                        <input type="number" matInput placeholder="{{languageService.formatLanguage(labelKeyDefaultVal, [])}}"
-                            [(ngModel)]="constr.defaultVal">
-                    </mat-form-field>
-                </td>
-                <td>
-                    <mat-form-field appearance="fill" color="primary">
-                        <input type="number" matInput placeholder="{{languageService.formatLanguage(labelKeyMinVal, [])}}"
-                        [(ngModel)]="constr.minVal">
-                    </mat-form-field>
-                </td>
-                <td>
-                    <mat-form-field appearance="fill" color="primary">
-                        <input type="number" matInput placeholder="{{languageService.formatLanguage(labelKeyMaxVal, [])}}"
-                        [(ngModel)]="constr.maxVal"> 
-                    </mat-form-field>
-                </td>
-            </tr>
+        <tbody>
+            <ng-container *ngFor="let constr of value; let i = index">
+                <tr *ngIf="(i == 0 && sameConstraintForAllCurrency) || (i != 0 && !sameConstraintForAllCurrency)">
+                    <td>{{constr.currencyId}}</td>
+                    <td>
+                        <mat-form-field appearance="fill" color="primary">
+                            <input type="number" matInput placeholder="{{languageService.formatLanguage(labelKeyDefaultVal, [])}}"
+                                [(ngModel)]="constr.defaultVal">
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <mat-form-field appearance="fill" color="primary">
+                            <input type="number" matInput placeholder="{{languageService.formatLanguage(labelKeyMinVal, [])}}"
+                            [(ngModel)]="constr.minVal">
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <mat-form-field appearance="fill" color="primary">
+                            <input type="number" matInput placeholder="{{languageService.formatLanguage(labelKeyMaxVal, [])}}"
+                            [(ngModel)]="constr.maxVal"> 
+                        </mat-form-field>
+                    </td>
+                </tr>
+            </ng-container>
         </tbody>
     </table>
 </div>

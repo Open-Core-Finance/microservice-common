@@ -3,8 +3,8 @@ import {FormControl, FormGroup} from "@angular/forms";
 import {environment} from "../../../environments/environment";
 import {ProductCategoryType} from "../../classes/products/ProductCategory";
 import { GeneralProductAddComponent } from '../GeneralProductAddComponent';
-import { LoanProduct } from 'src/app/classes/products/LoanProduct';
-import { ProductAvailability, ProductFee, ProductNewAccountSetting } from 'src/app/classes/products/Product';
+import { LoanProduct, LoanProductFee } from 'src/app/classes/products/LoanProduct';
+import { ProductAvailability, ProductNewAccountSetting } from 'src/app/classes/products/Product';
 import { CurrencyLimitValue, ValueConstraint } from 'src/app/classes/products/ValueConstraint';
 import { CreditArrangementManaged } from 'src/app/classes/products/CreditArrangementManaged';
 import { PenaltyCalculationMethod } from 'src/app/classes/products/PenaltySetting';
@@ -22,7 +22,7 @@ export class AddLoanProductComponent extends GeneralProductAddComponent<LoanProd
       productAvailabilityModeInfo: new FormControl<string[]>([]),
       productAvailabilities: new FormControl<ProductAvailability[]>([]),
       newAccountSetting: this.formBuilder.group(new ProductNewAccountSetting()),
-      productFees: new FormControl<ProductFee[]>([]),
+      productFees: new FormControl<LoanProductFee[]>([]),
       currencies: new FormControl<string[]>([]),
       loanValues: new FormControl<ValueConstraint[]>([]),
       penaltySetting: new FormGroup({
@@ -64,29 +64,29 @@ export class AddLoanProductComponent extends GeneralProductAddComponent<LoanProd
     if (this.addLoanProductForm.value.loanValues) {
       const loanValues = this.addLoanProductForm.value.loanValues;
       this.cleanUpConstraints(loanValues);
-      this.addMissingConstraints(loanValues, new ValueConstraint());
+      this.addMissingConstraints(loanValues, new ValueConstraint(), false);
     }
     const pennaltyForm = this.addLoanProductForm.controls.penaltySetting;
     if (pennaltyForm.value.penaltyRateConstraints) {
       const penaltyConstraints: ValueConstraint[] = pennaltyForm.value.penaltyRateConstraints;
       this.cleanUpConstraints(penaltyConstraints);
-      this.addMissingConstraints(penaltyConstraints, new ValueConstraint());
+      this.addMissingConstraints(penaltyConstraints, new ValueConstraint(), false);
     }
     const arrearsSettingForm = this.addLoanProductForm.controls.arrearsSetting;
     if (arrearsSettingForm.value.toleranceAmounts) {
       const toleranceAmounts: ValueConstraint[] = arrearsSettingForm.value.toleranceAmounts;
       this.cleanUpConstraints(toleranceAmounts);
-      this.addMissingConstraints(toleranceAmounts, new ValueConstraint());
+      this.addMissingConstraints(toleranceAmounts, new ValueConstraint(), false);
     }
     if (arrearsSettingForm.value.tolerancePeriods) {
       const tolerancePeriods: ValueConstraint[] = arrearsSettingForm.value.tolerancePeriods;
       this.cleanUpConstraints(tolerancePeriods);
-      this.addMissingConstraints(tolerancePeriods, new ValueConstraint());
+      this.addMissingConstraints(tolerancePeriods, new ValueConstraint(), false);
     }
     if (arrearsSettingForm.value.floors) {
       const floors = arrearsSettingForm.value.floors;
       this.cleanUpConstraints(floors);
-      this.addMissingConstraints(floors, new CurrencyLimitValue());
+      this.addMissingConstraints(floors, new CurrencyLimitValue(), false);
     }
   }
 }

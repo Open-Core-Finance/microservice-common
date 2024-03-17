@@ -23,10 +23,7 @@ import { InterestCalculationMethod } from 'src/app/classes/products/InterestCalc
 })
 export class LoanInterestRateInputComponent implements OnInit, ControlValueAccessor, OnDestroy {
   isDisabled: boolean = false;
-  lastSupportedCurrencies: string[] | undefined;
-  currencies: Currency[] = [];
-  currenciesToDisplay: Currency[] = [];
-  currenciesSubscription: Subscription | undefined;
+  _supportedCurrencies: Currency[] = [];
   value: LoanInterestRate = new LoanInterestRate();
   loanInterestCalculationMethodEnum = LoanInterestCalculationMethod;
   allLoanCalculationMethods = Object.keys(LoanInterestCalculationMethod);
@@ -41,18 +38,10 @@ export class LoanInterestRateInputComponent implements OnInit, ControlValueAcces
   repaymentsInterestCalculationEnum = RepaymentsInterestCalculation;
   allRepaymentsInterestCalculations = Object.keys(RepaymentsInterestCalculation);
 
-  public constructor(public languageService: LanguageService, private currencyService: CurrencyService) {
-    this.currenciesSubscription?.unsubscribe();
-    this.currenciesSubscription = this.currencyService.currenciesSubject.subscribe( c => {
-      this.currencies = c;
-      if (this.lastSupportedCurrencies) {
-        this.populateCurrenciesToUi(this.lastSupportedCurrencies);
-      }
-    });
+  public constructor(public languageService: LanguageService) {
   }
 
   ngOnDestroy(): void {
-    this.currenciesSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -60,7 +49,6 @@ export class LoanInterestRateInputComponent implements OnInit, ControlValueAcces
 
   writeValue(value: LoanInterestRate): void {
     this.value = value;
-    this.populateCurrenciesToUi(this.lastSupportedCurrencies ? this.lastSupportedCurrencies : []);
   }
  
   registerOnChange(fn: any): void {
@@ -78,24 +66,16 @@ export class LoanInterestRateInputComponent implements OnInit, ControlValueAcces
   propagateTouched = (_: LoanInterestRate[]) => { };
 
   @Input()
-  set supportedCurrencies(supportedCurrencies: string[]) {
-    this.lastSupportedCurrencies = supportedCurrencies;
+  set supportedCurrencies(supportedCurrencies: Currency[]) {
+    this._supportedCurrencies = supportedCurrencies;
     this.populateCurrenciesToUi(supportedCurrencies);
   }
 
-  private populateCurrenciesToUi(supportedCurrencies: string[]) {
-    this.currenciesToDisplay = [];
+  private populateCurrenciesToUi(supportedCurrencies: Currency[]) {
     if (supportedCurrencies.length > 0) {
-      this.currencies.forEach((value, index, arr) => {
-        for(let  i = 0; i < supportedCurrencies.length; i++) {
-          const c = supportedCurrencies[i];
-          if (c == value.id) {
-            this.currenciesToDisplay.push(value);
-            this.checkAndUpdateCurrency(value);
-            break;
-          }
-        }
-      });
+      for(let  i = 0; i < supportedCurrencies.length; i++) {
+        this.checkAndUpdateCurrency(supportedCurrencies[i]);
+      }
     } else {
       this.value.interestRateConstraints = [];
     }
@@ -115,15 +95,15 @@ export class LoanInterestRateInputComponent implements OnInit, ControlValueAcces
       item.currencyId = currency.id;
       this.value.interestRateConstraints.push(item);
     }
-    if (!this.lastSupportedCurrencies || this.lastSupportedCurrencies.length < 1) {
+    if (!this._supportedCurrencies || this._supportedCurrencies.length < 1) {
       this.value.interestRateConstraints = [];
     } else {
       // Clean remove currencies constraint
       for(let  i = 0; i < constraints.length; i++) {
         var c = constraints[i];
         found = false;
-        for (const supportedCurrency of this.lastSupportedCurrencies) {
-          if (supportedCurrency == c.currencyId) {
+        for (const supportedCurrency of this._supportedCurrencies) {
+          if (supportedCurrency.id == c.currencyId) {
             found = true;
             break;
           }
