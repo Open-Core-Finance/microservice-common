@@ -6,29 +6,29 @@
         <mat-card-content>
             <form [formGroup]="formGroup">
                 <ng-container *ngFor="let formItem of formItems">
-
-                    <app-reactive-form-input *ngIf="isFormInput(formItem)" [placeHolderKey]="$any(formItem).placeHolderKey"
-                        [formControlName]="formItem.formControlName" [additionClass]="formItem.additionClass" [addLabel]="$any(formItem).addLabel"
-                        [inputType]="$any(formItem).inputType" [appearance]="formItem.appearance" [colorScheme]="formItem.colorScheme"
-                        [required]="formItem.required">
-                    </app-reactive-form-input>
-
-                    <app-reactive-form-select *ngIf="isFormSelect(formItem)" [labelKey]="$any(formItem).labelKey" [formControlName]="formItem.formControlName"
-                        [selectItems]="$any(formItem).selectItems" [additionClass]="formItem.additionClass" [appearance]="formItem.appearance" [colorScheme]="formItem.colorScheme"
-                        [required]="formItem.required"></app-reactive-form-select>
-
-                    <app-reactive-form-checkbox *ngIf="isFormCheckbox(formItem)" [labelKey]="$any(formItem).labelKey" [formControlName]="formItem.formControlName"
-                     [additionClass]="formItem.additionClass" [colorScheme]="formItem.colorScheme" [required]="formItem.required"></app-reactive-form-checkbox>
-
-                     <app-reactive-form-date *ngIf="isFormDate(formItem)" [placeHolderKey]="$any(formItem).placeHolderKey"
-                        [formControlName]="formItem.formControlName" [additionClass]="formItem.additionClass" [addLabel]="$any(formItem).addLabel"
-                        [inputType]="$any(formItem).inputType" [appearance]="formItem.appearance" [colorScheme]="formItem.colorScheme"
-                        [required]="formItem.required">
-                    </app-reactive-form-date>
-
+                    <ng-container *ngTemplateOutlet="fieldGenerateTemplate; context: { $implicit: formItem, formGroup: formGroup }"></ng-container>
                 </ng-container>
 
                 <ng-content select="[formcontols]"></ng-content>
+
+                <ng-container *ngFor="let inputGroup of inputGroups">
+                    <mat-expansion-panel [hideToggle]="inputGroup.hideToggle" [expanded]="inputGroup.expanded" *ngIf="inputGroup.formItems.length > 0 && (inputGroup.visibleFn == null || inputGroup.visibleFn())">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title>{{languageService.formatLanguage(inputGroup.headerTitle, [])}}</mat-panel-title>
+                          <mat-panel-description *ngIf="inputGroup.headerDescription != ''">{{languageService.formatLanguage(inputGroup.headerDescription, [])}}</mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <div class="panel-body" *ngIf="inputGroup.formGroupName != null && inputGroup.formGroupName != ''" [formGroup]="$any(formGroup.controls[inputGroup.formGroupName])">
+                            <ng-container *ngFor="let formItem of inputGroup.formItems">
+                                <ng-container *ngTemplateOutlet="fieldGenerateTemplate; context: { $implicit: formItem, formGroup: $any(formGroup.controls[inputGroup.formGroupName]) }"></ng-container>
+                            </ng-container>
+                        </div>
+                        <div class="panel-body" *ngIf="inputGroup.formGroupName == null || inputGroup.formGroupName == ''">
+                            <ng-container *ngFor="let formItem of inputGroup.formItems">
+                                <ng-container *ngTemplateOutlet="fieldGenerateTemplate; context: { $implicit: formItem, formGroup: formGroup }"></ng-container>
+                            </ng-container>
+                        </div>
+                    </mat-expansion-panel>
+                </ng-container>
 
                 <app-general-error-panel [message]="message" [errorPrefix]="errorPrefix"></app-general-error-panel>
                 
@@ -46,4 +46,35 @@
 
     </mat-card>
 
+    <ng-template #fieldGenerateTemplate let-formItem let-formGroup [formGroup]="formGroup">
+        <app-reactive-form-input *ngIf="isFormInput(formItem) && (formItem.visibleFn == null || formItem.visibleFn())" [placeHolderKey]="formItem.placeHolderKey"
+            [formControlName]="formItem.formControlName" [additionClass]="formItem.additionClass" [addLabel]="formItem.addLabel"
+            [inputType]="formItem.inputType" [appearance]="formItem.appearance" [colorScheme]="formItem.colorScheme"
+            [required]="formItem.required" [postFixLabelKey]="formItem.postFixLabelKey">
+        </app-reactive-form-input>
+
+        <app-reactive-form-select *ngIf="isFormSelect(formItem) && (formItem.visibleFn == null || formItem.visibleFn())" [labelKey]="formItem.labelKey" [formControlName]="formItem.formControlName"
+            [selectItems]="formItem.selectItems" [additionClass]="formItem.additionClass" [appearance]="formItem.appearance" [colorScheme]="formItem.colorScheme"
+            [required]="formItem.required"></app-reactive-form-select>
+
+        <app-reactive-form-checkbox *ngIf="isFormCheckbox(formItem) && (formItem.visibleFn == null || formItem.visibleFn())" [labelKey]="formItem.labelKey" [formControlName]="formItem.formControlName"
+            [additionClass]="formItem.additionClass" [colorScheme]="formItem.colorScheme" [required]="formItem.required"></app-reactive-form-checkbox>
+
+        <app-reactive-form-date *ngIf="isFormDate(formItem) && (formItem.visibleFn == null || formItem.visibleFn())" [placeHolderKey]="formItem.placeHolderKey"
+            [formControlName]="formItem.formControlName" [additionClass]="formItem.additionClass" [addLabel]="formItem.addLabel"
+            [inputType]="formItem.inputType" [appearance]="formItem.appearance" [colorScheme]="formItem.colorScheme"
+            [required]="formItem.required">
+        </app-reactive-form-date>
+
+        <app-reactive-form-textarea *ngIf="isFormTextarea(formItem) && (formItem.visibleFn == null || formItem.visibleFn())" [placeHolderKey]="formItem.placeHolderKey"
+            [formControlName]="formItem.formControlName" [additionClass]="formItem.additionClass" [addLabel]="formItem.addLabel"
+            [appearance]="formItem.appearance" [colorScheme]="formItem.colorScheme" [required]="formItem.required">
+        </app-reactive-form-textarea>
+
+        <ng-container *ngIf="complexInputTemplate && isFormComplextInput(formItem) && (formItem.visibleFn == null || formItem.visibleFn())">
+            <ng-container *ngTemplateOutlet="complexInputTemplate[formItem.templateName]; context: { $implicit: formGroup }"></ng-container>
+        </ng-container>
+
+        <mat-divider *ngIf="isDevider(formItem) && (formItem.visibleFn == null || formItem.visibleFn())"></mat-divider>
+    </ng-template>
 </div>

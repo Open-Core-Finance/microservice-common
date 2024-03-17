@@ -9,5 +9,5 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "crypto_product")
 @EqualsAndHashCode(callSuper = true)
-public class CryptoProduct extends Product {
+public class CryptoProduct extends DepositProduct {
 }

@@ -10,6 +10,8 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class LoanProductDto extends ProductDto {
+    private List<LoanProductFee> productFees;
+
     private List<ValueConstraint> loanValues;
     private CreditArrangementManaged underCreditArrangementManaged;
     private LoanProductInterestRate interestRate;

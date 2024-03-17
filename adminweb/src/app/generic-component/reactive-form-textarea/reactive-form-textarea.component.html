@@ -1,0 +1,5 @@
+<mat-form-field class="{{additionClass}}" [appearance]="appearance" [color]="colorScheme">
+    <mat-label *ngIf="addLabel">{{languageService.formatLanguage(placeHolderKey, [])}}</mat-label>
+    <textarea matInput placeholder="{{languageService.formatLanguage(placeHolderKey, [])}}" [(ngModel)]="value"
+        [attr.required]="required ? '' : null" (change)="onChanged()"></textarea>
+</mat-form-field>

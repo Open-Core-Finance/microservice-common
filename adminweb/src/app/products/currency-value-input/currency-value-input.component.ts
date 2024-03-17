@@ -20,31 +20,21 @@ import { LanguageService } from 'src/app/services/language.service';
 })
 export class CurrencyValueInputComponent implements OnInit, ControlValueAccessor, OnDestroy {
   isDisabled: boolean = false;
-  lastSupportedCurrencies: string[] | undefined;
-  currencies: Currency[] = [];
-  currenciesSubscription: Subscription | undefined;
+  _supportedCurrencies: Currency[] = [];
   values: CurrencyLimitValue[] = [];
 
   public constructor(public languageService: LanguageService, private currencyService: CurrencyService) {
   }
 
   ngOnDestroy(): void {
-    this.currenciesSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {
-    this.currenciesSubscription?.unsubscribe();
-    this.currenciesSubscription = this.currencyService.currenciesSubject.subscribe( c => {
-      this.currencies = c;
-      if (this.lastSupportedCurrencies) {
-        this.populateCurrenciesToUi(this.lastSupportedCurrencies);
-      }
-    });
   }
 
   writeValue(value: CurrencyLimitValue[]): void {
     this.values = value;
-    this.populateCurrenciesToUi(this.lastSupportedCurrencies ? this.lastSupportedCurrencies : []);
+    this.populateCurrenciesToUi(this._supportedCurrencies);
   }
  
   registerOnChange(fn: any): void {
@@ -62,29 +52,31 @@ export class CurrencyValueInputComponent implements OnInit, ControlValueAccessor
   propagateTouched = (_: CurrencyLimitValue[]) => { };
 
   @Input()
-  set supportedCurrencies(supportedCurrencies: string[]) {
-    this.lastSupportedCurrencies = supportedCurrencies;
+  set supportedCurrencies(supportedCurrencies: Currency[]) {
+    this._supportedCurrencies = supportedCurrencies;
     this.populateCurrenciesToUi(supportedCurrencies);
   }
 
-  private populateCurrenciesToUi(supportedCurrencies: string[]) {
-    this.currencies.forEach((value, index, arr) => {
+  get supportedCurrencies(): Currency[] {
+    return this._supportedCurrencies;
+  }
+
+  private populateCurrenciesToUi(supportedCurrencies: Currency[]) {
       for(let  i = 0; i < supportedCurrencies.length; i++) {
-        const c = supportedCurrencies[i];
-        if (c == value.id) {
-          this.checkAndAddCurrencyLimit(value);
-          break;
-        }
+        this.checkAndAddCurrencyLimit(supportedCurrencies[i]);
       }
-    });
   }
 
   private checkAndAddCurrencyLimit(currency: Currency) {
     let found = false;
-    for (const currencyValue of this.values) {
-      if (currencyValue.currencyId == currency.id) {
-        found = true;
-        break;
+    if (currency.id == 'ALL') {
+      found = true;
+    } else {
+      for (const currencyValue of this.values) {
+        if (currencyValue.currencyId == currency.id) {
+          found = true;
+          break;
+        }
       }
     }
     if (!found) {

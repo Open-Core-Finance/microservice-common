@@ -1,9 +1,9 @@
 import { Component, Input, OnDestroy, OnInit, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Subscription } from 'rxjs';
 import { Currency } from 'src/app/classes/Currency';
-import { MonthlyPayOption, ProductFee } from 'src/app/classes/products/Product';
-import { ProductFeeType } from 'src/app/classes/products/ProductFeeType';
+import { DepositProductFee } from 'src/app/classes/products/DepositProduct';
+import { MonthlyPayOption } from 'src/app/classes/products/Product';
+import { DepositProductFeeType } from 'src/app/classes/products/ProductFeeType';
 import { CurrencyService } from 'src/app/services/currency.service';
 import { LanguageService } from 'src/app/services/language.service';
 
@@ -21,32 +21,21 @@ import { LanguageService } from 'src/app/services/language.service';
 })
 export class ProductFeeInputComponent implements OnInit, ControlValueAccessor, OnDestroy {
   isDisabled: boolean = false;
-  selectedFees: ProductFee[] = [];
-  supportedCurrenciesObject: Currency[] = [];
-  productFeeTypeEnum = ProductFeeType;
+  selectedFees: DepositProductFee[] = [];
+  productFeeTypeEnum = DepositProductFeeType;
   monthlyPayOptionEnum = MonthlyPayOption;
-  currencies: Currency[] = [];
-  currenciesSubscription: Subscription | undefined;
-  lastSupportedCurrencies: string[] | undefined;
+  _supportedCurrencies: Currency[] = [];
 
   public constructor(public languageService: LanguageService, private currencyService: CurrencyService) {
   }
 
   ngOnDestroy(): void {
-    this.currenciesSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {
-    this.currenciesSubscription?.unsubscribe();
-    this.currenciesSubscription = this.currencyService.currenciesSubject.subscribe( c => {
-      this.currencies = c;
-      if (this.lastSupportedCurrencies) {
-        this.populateCurrenciesToUi(this.lastSupportedCurrencies);
-      }
-    });
   }
 
-  writeValue(value: ProductFee[]): void {
+  writeValue(value: DepositProductFee[]): void {
     this.selectedFees = value;
   }
  
@@ -61,32 +50,24 @@ export class ProductFeeInputComponent implements OnInit, ControlValueAccessor, O
     this.isDisabled = isDisabled;
   }
 
-  propagateChange = (_: ProductFee[]) => { };
-  propagateTouched = (_: ProductFee[]) => { };
+  propagateChange = (_: DepositProductFee[]) => { };
+  propagateTouched = (_: DepositProductFee[]) => { };
 
   @Input()
-  set supportedCurrencies(supportedCurrencies: string[]) {
-    this.supportedCurrenciesObject = [];
-    this.lastSupportedCurrencies = supportedCurrencies;
-    this.populateCurrenciesToUi(supportedCurrencies);
+  set supportedCurrencies(supportedCurrencies: Currency[]) {
+    this._supportedCurrencies = supportedCurrencies;
   }
 
-  private populateCurrenciesToUi(supportedCurrencies: string[]) {
-    this.currencies.forEach((value, index, arr) =>{
-      for(let  i = 0; i < supportedCurrencies.length; i++) {
-        const c = supportedCurrencies[i];
-        if (c == value.id) {
-          this.supportedCurrenciesObject.push(value);
-          break;
-        }
-      }
-    });
+  get supportedCurrencies(): Currency[] {
+    return this._supportedCurrencies;
   }
 
   addFeeClick() {
-    var item = new ProductFee();
-    if (this.supportedCurrenciesObject.length > 0) {
-      item.currencyId = this.supportedCurrenciesObject[0].id;
+    var item = new DepositProductFee();
+    if (this._supportedCurrencies.length > 1) {
+      item.currencyId = this._supportedCurrencies[1].id;
+    } else if (this._supportedCurrencies.length > 0) {
+      item.currencyId = this._supportedCurrencies[0].id;
     }
     this.selectedFees.push(item);
   }

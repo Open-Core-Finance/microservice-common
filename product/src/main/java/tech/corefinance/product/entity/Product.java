@@ -17,7 +17,6 @@ import tech.corefinance.common.model.AuditableEntity;
 import tech.corefinance.common.model.GenericModel;
 import tech.corefinance.common.model.ModifiedDateTrackedEntity;
 import tech.corefinance.product.common.model.ProductAvailability;
-import tech.corefinance.product.common.model.ProductFee;
 import tech.corefinance.product.common.model.ProductNewAccountSetting;
 
 import java.time.ZonedDateTime;
@@ -29,7 +28,7 @@ import java.util.List;
 public abstract class Product implements GenericModel<String>, AuditableEntity<BasicUserDto>,
         ModifiedDateTrackedEntity<ZonedDateTime> {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     @NotBlank(message = "product_name_empty")
     private String name;
@@ -53,9 +52,6 @@ public abstract class Product implements GenericModel<String>, AuditableEntity<B
     private boolean allowArbitraryFees;
     @Column(name = "show_inactive_fees")
     private boolean showInactiveFees;
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "product_fees")
-    private List<ProductFee> productFees;
 
     @CreatedDate
     @Column(name = "created_date")

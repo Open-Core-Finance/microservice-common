@@ -1,7 +1,6 @@
 import { GeneralModel, ListableItem } from "../CommonClasses";
-import {User} from "../User";
+import { UserDto} from "../User";
 import { AccountState } from "../accounts/AccountState";
-import { AccountFee } from "./AccountFee";
 
 export abstract class Account implements GeneralModel<string>, ListableItem {
     id: string = "";
@@ -9,16 +8,14 @@ export abstract class Account implements GeneralModel<string>, ListableItem {
     index: number = 0;
 
     createdDate = new Date();
-    createdBy = new User();
+    createdBy = new UserDto();
     lastModifiedDate =  new Date();
-    lastModifiedBy = new User();
+    lastModifiedBy = new UserDto();
 
     category = "";
     type = "";
     description = "";
     status: AccountState = AccountState.NEW;
-
-    accountFees: AccountFee = new AccountFee();
 
     supportedCurrencies: string[] = [];
 

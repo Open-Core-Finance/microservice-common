@@ -4,16 +4,16 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import tech.corefinance.product.common.enums.CreditArrangementManaged;
 import tech.corefinance.product.common.enums.FrequencyOptionYearly;
-import tech.corefinance.product.common.model.CurrencyValue;
-import tech.corefinance.product.common.model.DepositProductInterestRate;
-import tech.corefinance.product.common.model.DepositLimit;
-import tech.corefinance.product.common.model.WithdrawalLimit;
+import tech.corefinance.product.common.model.*;
 
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class DepositProductDto extends ProductDto {
+
+    private List<DepositProductFee> productFees;
+
     /**
      * Interest Rate.
      */

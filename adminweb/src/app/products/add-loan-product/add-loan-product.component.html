@@ -119,8 +119,8 @@
           <mat-checkbox color="accent" formControlName="allowArbitraryFees" *ngIf="!addLoanProductForm.value.currencies || addLoanProductForm.value.currencies.length > 0">
             {{languageService.formatLanguage('product.allowArbitraryFees', [])}}
           </mat-checkbox>
-          <app-product-fee-input formControlName="productFees" [supportedCurrencies]="addLoanProductForm.value.currencies ? addLoanProductForm.value.currencies : []">
-          </app-product-fee-input>
+          <!-- <app-product-fee-input formControlName="productFees" [supportedCurrencies]="addLoanProductForm.value.currencies ? addLoanProductForm.value.currencies : []">
+          </app-product-fee-input> -->
         </mat-expansion-panel>
 
         <mat-expansion-panel hideToggle="false" expanded="true">
@@ -128,8 +128,7 @@
             <mat-panel-title>{{languageService.formatLanguage('loanProduct.loanAmount', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
           </mat-expansion-panel-header>
-          <app-value-constraints-input labelKey="depositProduct.interestRate.interestRateConstraints" labelKeyDefaultVal="loanProduct.loanDefault"
-                labelKeyMaxVal="loanProduct.loanMax" labelKeyMinVal="loanProduct.loanMin" formControlName="loanValues">
+          <app-value-constraints-input labelKeyDefaultVal="loanProduct.loanDefault" labelKeyMaxVal="loanProduct.loanMax" labelKeyMinVal="loanProduct.loanMin" formControlName="loanValues">
           </app-value-constraints-input>
           <mat-label>{{languageService.formatLanguage('creditArrangementManaged.label', [])}}:&nbsp;</mat-label>
             <mat-form-field appearance="fill" color="primary">
@@ -146,7 +145,7 @@
             <mat-panel-title>{{languageService.formatLanguage('loanProduct.interestRate.label', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
           </mat-expansion-panel-header>
-          <app-loan-interest-rate-input [supportedCurrencies]="addLoanProductForm.value.currencies ? addLoanProductForm.value.currencies : []"
+          <app-loan-interest-rate-input [supportedCurrencies]="currenciesToDisplay"
               formControlName="interestRate"></app-loan-interest-rate-input>
         </mat-expansion-panel>
 
@@ -155,7 +154,7 @@
             <mat-panel-title>{{languageService.formatLanguage('loanProduct.repaymentScheduling', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
           </mat-expansion-panel-header>
-          <app-loan-repayment-scheduling-input [supportedCurrencies]="addLoanProductForm.value.currencies ? addLoanProductForm.value.currencies : []"
+          <app-loan-repayment-scheduling-input [supportedCurrencies]="currenciesToDisplay"
             formControlName="repaymentScheduling"></app-loan-repayment-scheduling-input>
         </mat-expansion-panel>
 
@@ -164,7 +163,7 @@
             <mat-panel-title>{{languageService.formatLanguage('loanProduct.repaymentCollection', [])}}</mat-panel-title>
             <mat-panel-description>&nbsp;</mat-panel-description>
           </mat-expansion-panel-header>
-          <app-loan-repayment-collection-input [supportedCurrencies]="addLoanProductForm.value.currencies ? addLoanProductForm.value.currencies : []"
+          <app-loan-repayment-collection-input [supportedCurrencies]="currenciesToDisplay"
             formControlName="repaymentCollection"></app-loan-repayment-collection-input>
         </mat-expansion-panel>
 
@@ -211,7 +210,7 @@
 
           <div *ngIf="addLoanProductForm.value.arrearsSetting?.floors?.length">
             <mat-label>{{languageService.formatLanguage('arrearsSetting.floor', [])}}:&nbsp;</mat-label>
-            <app-currency-value-input [supportedCurrencies]="addLoanProductForm.value.currencies ? addLoanProductForm.value.currencies : []"
+            <app-currency-value-input [supportedCurrencies]="currenciesToDisplay"
                 formControlName="floors"></app-currency-value-input>
           </div>
 

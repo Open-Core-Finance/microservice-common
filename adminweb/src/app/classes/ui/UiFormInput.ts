@@ -8,6 +8,7 @@ export class UiFormItem {
     appearance: MatFormFieldAppearance = "fill";
     colorScheme: ThemePalette = "primary";
     required: boolean = false;
+    visibleFn: Function | null = null;
 
     constructor(formControlName: string) {
         this.formControlName = formControlName;
@@ -21,6 +22,7 @@ export class UiFormInput extends UiFormItem {
   addLabel: boolean = true;
 
   placeHolderKey: string = "";
+  postFixLabelKey = "";
 
   constructor(placeHolderKey: string, formControlName: string) {
     super(formControlName);
@@ -74,4 +76,48 @@ export class UiFormDate extends UiFormItem {
     super(formControlName);
     this.placeHolderKey = placeHolderKey;
   }
+}
+
+export class UiFormTextarea extends UiFormItem {
+
+  addLabel: boolean = true;
+
+  placeHolderKey: string;
+
+  constructor(placeHolderKey: string, formControlName: string) {
+    super(formControlName);
+    this.placeHolderKey = placeHolderKey;
+  }
+}
+
+export class UiFormComplexInput extends UiFormItem {
+
+  templateName: string;
+
+  constructor(templateName: string, formControlName: string) {
+    super(formControlName);
+    this.templateName = templateName;
+  }
+}
+
+export class ExpansionPanelInputGroup {
+  hideToggle = false;
+  expanded = true;
+  formGroupName: string | null = null;
+  headerTitle: string;
+  headerDescription: string = "";
+  formItems: UiFormItem[];
+  visibleFn: Function | null = null;
+
+  constructor(headerTitle: string, formItems: UiFormItem[]) {
+    this.headerTitle = headerTitle;
+    this.formItems = formItems;
+  }
+}
+
+export class UiFormDivider extends UiFormItem {
+
+  inset: boolean = false;
+
+  vertical = false;
 }

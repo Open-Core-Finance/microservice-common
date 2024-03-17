@@ -24,23 +24,27 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import { ReactiveFormCheckboxComponent } from './reactive-form-checkbox/reactive-form-checkbox.component';
 import { ReactiveFormDateComponent } from './reactive-form-date/reactive-form-date.component';
 import {MatDatepickerModule} from '@angular/material/datepicker';
+import { ReactiveFormTextareaComponent } from './reactive-form-textarea/reactive-form-textarea.component';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatDividerModule} from '@angular/material/divider';
 
 @NgModule({
   declarations: [
     GeneralErrorPanelComponent, ConfirmDialogComponent, AutoResizeDirective, ReactiveFormInputComponent,
     ReactiveFormSelectComponent, GenericFormComponent, GenericTableComponent, ReactiveFormCheckboxComponent,
-    ReactiveFormDateComponent
+    ReactiveFormDateComponent, ReactiveFormTextareaComponent
   ],
   imports: [
     CommonModule, MatDialogModule, MatButtonModule, MatInputModule, MatIconModule, FormsModule, ReactiveFormsModule,
     MatFormFieldModule, MatSelectModule, MatCardModule, MatProgressSpinnerModule, MatPaginatorModule, MatTableModule,
-    MatSortModule, MatCheckboxModule, MatDatepickerModule
+    MatSortModule, MatCheckboxModule, MatDatepickerModule, MatExpansionModule, MatDividerModule
   ],
   // export the component to make it available in other modules where the Shared module is imported
   exports: [
     GeneralErrorPanelComponent, ConfirmDialogComponent, AutoResizeDirective, ReactiveFormInputComponent,
     ReactiveFormSelectComponent, GenericFormComponent, GenericTableComponent, ReactiveFormCheckboxComponent,
-    ReactiveFormDateComponent, MatDatepickerModule, FormsModule, ReactiveFormsModule, MatFormFieldModule
+    ReactiveFormDateComponent, MatDatepickerModule, FormsModule, ReactiveFormsModule, MatFormFieldModule,
+    ReactiveFormTextareaComponent
   ] 
 })
 export class SharedModule {  }
