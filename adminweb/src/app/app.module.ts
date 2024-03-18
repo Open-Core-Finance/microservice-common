@@ -57,7 +57,7 @@ import {ProductTypeComponent} from "./product-master/product-type/product-type.c
 import {AddProductTypeComponent} from "./product-master/add-product-type/add-product-type.component";
 import {BranchesSelectionComponent} from "./generic-component/branches-selection/branches-selection.component";
 import { CurrenciesSelectionComponent } from './generic-component/currencies-selection/currencies-selection.component';
-import { ProductFeeInputComponent } from './product-master/product-fee-input/product-fee-input.component';
+import { DepositProductFeeInputComponent } from './product-master/deposit-product-fee-input/deposit-product-fee-input.component';
 import { AddGlProductComponent } from './products/add-gl-product/add-gl-product.component';
 import { GlProductComponent } from './products/gl-product/gl-product.component';
 import { AddCryptoProductComponent } from './products/add-crypto-product/add-crypto-product.component';
@@ -75,6 +75,7 @@ import { ValueConstraintsInputComponent } from './products/value-constraints-inp
 import { LoanRepaymentCollectionInputComponent } from './products/loan-repayment-collection-input/loan-repayment-collection-input.component';
 import { CdkDropList, CdkDrag} from '@angular/cdk/drag-drop';
 import { SharedModule } from './generic-component/SharedModule';
+import { LoanProductFeeInputComponent } from './product-master/loan-product-fee-input/loan-product-fee-input.component';
 
 @NgModule({
   declarations: [
@@ -93,12 +94,12 @@ import { SharedModule } from './generic-component/SharedModule';
     RateComponent, AddRateComponent,
     RateSourceComponent, AddRateSourceComponent,
     DepositProductComponent, AddDepositProductComponent, BranchesSelectionComponent, CurrenciesSelectionComponent,
-    ProductTypeComponent, AddProductTypeComponent, ProductFeeInputComponent,
+    ProductTypeComponent, AddProductTypeComponent, DepositProductFeeInputComponent,
     AddGlProductComponent, GlProductComponent, CurrencyValueInputComponent,
     AddCryptoProductComponent, CryptoProductComponent, LoanRepaymentCollectionInputComponent,
     AddLoanProductComponent, LoanProductComponent,
     DepositInterestRateInputComponent, DepositLimitInputComponent, WithdrawalLimitInputComponent,
-    LoanInterestRateInputComponent, LoanRepaymentSchedulingInputComponent, ValueConstraintsInputComponent
+    LoanInterestRateInputComponent, LoanRepaymentSchedulingInputComponent, ValueConstraintsInputComponent, LoanProductFeeInputComponent
   ],
   imports: [
     BrowserModule, FormsModule, ReactiveFormsModule, SharedModule,

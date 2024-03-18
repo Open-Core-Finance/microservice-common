@@ -11,6 +11,9 @@ import java.util.List;
  */
 @Data
 public class PenaltySetting {
+
+    private boolean sameConstraintForAllCurrency;
+
     private PenaltyCalculationMethod calculationMethod;
     /**
      * Penalty Tolerance Period X Days.

@@ -103,7 +103,6 @@ export class UiFormComplexInput extends UiFormItem {
 export class ExpansionPanelInputGroup {
   hideToggle = false;
   expanded = true;
-  formGroupName: string | null = null;
   headerTitle: string;
   headerDescription: string = "";
   formItems: UiFormItem[];

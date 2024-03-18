@@ -1,6 +1,7 @@
 import { CurrencyLimitValue, ValueConstraint } from "./ValueConstraint";
 
 export class ArrearsSetting {
+    sameConstraintForAllCurrency = true;
     /**
      * Arrears Tolerance Period in Days.
      */

@@ -8,25 +8,25 @@ import { CurrencyService } from 'src/app/services/currency.service';
 import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
-  selector: 'app-product-fee-input',
-  templateUrl: './product-fee-input.component.html',
-  styleUrl: './product-fee-input.component.sass',
+  selector: 'app-deposit-product-fee-input',
+  templateUrl: './deposit-product-fee-input.component.html',
+  styleUrl: './deposit-product-fee-input.component.sass',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ProductFeeInputComponent),
+      useExisting: forwardRef(() => DepositProductFeeInputComponent),
       multi: true
     }
   ]
 })
-export class ProductFeeInputComponent implements OnInit, ControlValueAccessor, OnDestroy {
+export class DepositProductFeeInputComponent implements OnInit, ControlValueAccessor, OnDestroy {
   isDisabled: boolean = false;
   selectedFees: DepositProductFee[] = [];
   productFeeTypeEnum = DepositProductFeeType;
   monthlyPayOptionEnum = MonthlyPayOption;
   _supportedCurrencies: Currency[] = [];
 
-  public constructor(public languageService: LanguageService, private currencyService: CurrencyService) {
+  public constructor(public languageService: LanguageService) {
   }
 
   ngOnDestroy(): void {

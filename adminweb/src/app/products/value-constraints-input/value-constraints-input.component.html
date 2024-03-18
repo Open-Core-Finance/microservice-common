@@ -11,7 +11,7 @@
         </thead>
         <tbody>
             <ng-container *ngFor="let constr of value; let i = index">
-                <tr *ngIf="(i == 0 && sameConstraintForAllCurrency) || (i != 0 && !sameConstraintForAllCurrency)">
+                <tr *ngIf="(constr.currencyId == 'ALL' && sameConstraintForAllCurrency) || (constr.currencyId != 'ALL' && !sameConstraintForAllCurrency)">
                     <td>{{constr.currencyId}}</td>
                     <td>
                         <mat-form-field appearance="fill" color="primary">

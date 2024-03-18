@@ -11,6 +11,8 @@ import { ValueConstraint } from "./ValueConstraint";
 
 export class LoanProduct extends Product {
 
+    productFees: LoanProductFee[] = [];
+
     loanValues: ValueConstraint[] = [];
 
     underCreditArrangementManaged: CreditArrangementManaged | null = CreditArrangementManaged.OPTIONAL;
@@ -42,6 +44,7 @@ export class LoanInterestRate implements InterestRate {
      * Interest Spread Constraints (%) for index rate source.
      */
     interestRateConstraints: ValueConstraint[] = [];
+    sameConstraintForAllCurrency = true;
     interestRateIndexSource = "";
     repaymentsInterestCalculation: RepaymentsInterestCalculation | null = RepaymentsInterestCalculation.ACTUAL_NUMBER_OF_DAYS;
 }
@@ -100,6 +103,8 @@ export class LoanProductFee {
 }
 
 export enum LoanFeePaymentType {
-    FLAT, LOAN_AMOUNT_PERCENTAGE, REPAYMENT_PRINCIPAL_AMOUNT_PERCENTAGE, FLAT_NUMBER_OF_INSTALLMENTS,
-    LOAN_AMOUNT_PERCENTAGE_NUMBER_OF_INSTALLMENTS
+    FLAT = 'FLAT', LOAN_AMOUNT_PERCENTAGE = 'LOAN_AMOUNT_PERCENTAGE',
+    REPAYMENT_PRINCIPAL_AMOUNT_PERCENTAGE = 'REPAYMENT_PRINCIPAL_AMOUNT_PERCENTAGE',
+    FLAT_NUMBER_OF_INSTALLMENTS = 'FLAT_NUMBER_OF_INSTALLMENTS',
+    LOAN_AMOUNT_PERCENTAGE_NUMBER_OF_INSTALLMENTS = 'LOAN_AMOUNT_PERCENTAGE_NUMBER_OF_INSTALLMENTS'
 }

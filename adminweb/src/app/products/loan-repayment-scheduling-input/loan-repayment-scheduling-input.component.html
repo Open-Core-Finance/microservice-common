@@ -45,14 +45,19 @@
         </mat-form-field>
     </div>
 
+    <mat-checkbox color="accent" [(ngModel)]="value.sameConstraintForAllCurrency">
+        {{languageService.formatLanguage('depositProduct.interestRate.interestRateConstraintsForAll', [])}}
+    </mat-checkbox>
+
     <app-value-constraints-input labelKey="repaymentScheduling.installmentsConstraints" labelKeyDefaultVal="repaymentScheduling.installmentsConstraintsDefault"
             labelKeyMaxVal="repaymentScheduling.installmentsConstraintsMax" labelKeyMinVal="repaymentScheduling.installmentsConstraintsMin"
-            [value]="value.installmentsConstraints">
+            [value]="value.installmentsConstraints" [sameConstraintForAllCurrency]="value.sameConstraintForAllCurrency">
     </app-value-constraints-input>
 
     <app-value-constraints-input labelKey="repaymentScheduling.firstDueDateOffsetConstraints" labelKeyDefaultVal="repaymentScheduling.firstDueDateOffsetConstraintsDefault"
         labelKeyMaxVal="repaymentScheduling.firstDueDateOffsetConstraintsMax" labelKeyMinVal="repaymentScheduling.firstDueDateOffsetConstraintsMin"
-        [value]="value.firstDueDateOffsetConstraints" *ngIf="value.repaymentMethod == repaymentSchedulingMethodEnum.INTERVAL">
+        [value]="value.firstDueDateOffsetConstraints" *ngIf="value.repaymentMethod == repaymentSchedulingMethodEnum.INTERVAL"
+        [sameConstraintForAllCurrency]="value.sameConstraintForAllCurrency">
     </app-value-constraints-input>
 
     <div>

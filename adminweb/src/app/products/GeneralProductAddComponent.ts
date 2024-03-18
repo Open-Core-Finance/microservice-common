@@ -215,9 +215,7 @@ export abstract class GeneralProductAddComponent<T extends Product> extends Gene
         // New account setting
         formItems = [];
         formItems.push(new UiFormComplexInput("newAccountSetting", "newAccountSetting"));
-        let group = new ExpansionPanelInputGroup(prefix + 'newAccountSetting', formItems);
-        group.formGroupName = "newAccountSetting";
-        formInputGroups.push(group);
+        formInputGroups.push(new ExpansionPanelInputGroup(prefix + 'newAccountSetting', formItems));
         // Currencies
         formItems = [];
         formItems.push(new UiFormComplexInput("currencies", "currencies"));
