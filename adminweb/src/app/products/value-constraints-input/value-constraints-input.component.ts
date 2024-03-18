@@ -3,7 +3,6 @@ import { ControlValueAccessor, FormBuilder, NG_VALUE_ACCESSOR } from '@angular/f
 import { Currency } from 'src/app/classes/Currency';
 import { ValueConstraint } from 'src/app/classes/products/ValueConstraint';
 import { LanguageService } from 'src/app/services/language.service';
-import { CurrencyService } from 'src/app/services/currency.service';
 
 @Component({
   selector: 'app-value-constraints-input',
@@ -32,7 +31,7 @@ export class ValueConstraintsInputComponent implements OnInit, ControlValueAcces
   @Input()
   sameConstraintForAllCurrency = true;
 
-  public constructor(public languageService: LanguageService, private currencyService: CurrencyService, protected formBuilder: FormBuilder) {
+  public constructor(public languageService: LanguageService, protected formBuilder: FormBuilder) {
   }
 
   ngOnDestroy(): void {

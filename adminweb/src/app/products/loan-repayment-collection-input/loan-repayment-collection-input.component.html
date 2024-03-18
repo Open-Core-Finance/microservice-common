@@ -54,7 +54,7 @@
     <div *ngIf="value.acceptPrePayments">
         <mat-label>{{languageService.formatLanguage('repayment.acceptPrepaymentFutureInterest', [])}}:&nbsp;</mat-label>
         <mat-form-field appearance="fill" color="primary">
-            <mat-select required [(ngModel)]="value.autoApplyInterestPrePayments">
+            <mat-select required [(ngModel)]="value.acceptPrepaymentFutureInterest">
                 <mat-option [value]="false">
                     {{languageService.formatLanguage('repayment.acceptPrepaymentFutureInterest_FALSE', [])}}
                 </mat-option>

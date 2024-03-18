@@ -18,6 +18,7 @@ public class LoanProductInterestRate implements InterestRate {
      * Interest Spread Constraints (%) for index rate source.
      */
     private List<ValueConstraint> interestRateConstraints;
+    private boolean sameConstraintForAllCurrency;
     private String interestRateIndexSource;
     private RepaymentsInterestCalculation repaymentsInterestCalculation;
 }

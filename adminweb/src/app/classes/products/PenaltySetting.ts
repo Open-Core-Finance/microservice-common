@@ -1,6 +1,7 @@
 import { ValueConstraint } from "./ValueConstraint";
 
 export class PenaltySetting {
+    sameConstraintForAllCurrency = true;
     /**
      * 1 => No Penalty
      * 2 => Overdue Principal * # of Late Days * Penalty Rate

@@ -45,4 +45,6 @@ public class RepaymentScheduling {
     private NonWorkingDaysRescheduling nonWorkingDaysRescheduling;
 
     private RepaymentsScheduleEditing repaymentsScheduleEditing;
+
+    private boolean sameConstraintForAllCurrency;
 }

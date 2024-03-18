@@ -17,14 +17,9 @@
                           <mat-panel-title>{{languageService.formatLanguage(inputGroup.headerTitle, [])}}</mat-panel-title>
                           <mat-panel-description *ngIf="inputGroup.headerDescription != ''">{{languageService.formatLanguage(inputGroup.headerDescription, [])}}</mat-panel-description>
                         </mat-expansion-panel-header>
-                        <div class="panel-body" *ngIf="inputGroup.formGroupName != null && inputGroup.formGroupName != ''" [formGroup]="$any(formGroup.controls[inputGroup.formGroupName])">
+                        <div class="panel-body">
                             <ng-container *ngFor="let formItem of inputGroup.formItems">
-                                <ng-container *ngTemplateOutlet="fieldGenerateTemplate; context: { $implicit: formItem, formGroup: $any(formGroup.controls[inputGroup.formGroupName]) }"></ng-container>
-                            </ng-container>
-                        </div>
-                        <div class="panel-body" *ngIf="inputGroup.formGroupName == null || inputGroup.formGroupName == ''">
-                            <ng-container *ngFor="let formItem of inputGroup.formItems">
-                                <ng-container *ngTemplateOutlet="fieldGenerateTemplate; context: { $implicit: formItem, formGroup: formGroup }"></ng-container>
+                                <ng-container *ngTemplateOutlet="fieldGenerateTemplate; context: { $implicit: formItem }"></ng-container>
                             </ng-container>
                         </div>
                     </mat-expansion-panel>
@@ -46,7 +41,7 @@
 
     </mat-card>
 
-    <ng-template #fieldGenerateTemplate let-formItem let-formGroup [formGroup]="formGroup">
+    <ng-template #fieldGenerateTemplate let-formItem [formGroup]="formGroup">
         <app-reactive-form-input *ngIf="isFormInput(formItem) && (formItem.visibleFn == null || formItem.visibleFn())" [placeHolderKey]="formItem.placeHolderKey"
             [formControlName]="formItem.formControlName" [additionClass]="formItem.additionClass" [addLabel]="formItem.addLabel"
             [inputType]="formItem.inputType" [appearance]="formItem.appearance" [colorScheme]="formItem.colorScheme"

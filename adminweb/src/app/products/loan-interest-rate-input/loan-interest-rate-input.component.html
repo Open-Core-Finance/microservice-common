@@ -43,9 +43,12 @@
         <mat-label *ngIf="value.interestCalculationPoint == interestCalculationMethodEnum.PERCENTAGE_PER_X_DAYS">&nbsp;{{languageService.formatLanguage('loanProduct.interestRate.perDays', [])}}</mat-label>
     </div>
 
-    <app-value-constraints-input labelKey="depositProduct.interestRate.interestRateConstraints" labelKeyDefaultVal="loanProduct.loanDefault"
+    <mat-checkbox color="accent" [(ngModel)]="value.sameConstraintForAllCurrency">
+        {{languageService.formatLanguage('depositProduct.interestRate.interestRateConstraintsForAll', [])}}
+    </mat-checkbox>
+    <app-value-constraints-input labelKey="loanProduct.interestRate.interestRateConstraints" labelKeyDefaultVal="loanProduct.loanDefault"
             labelKeyMaxVal="loanProduct.loanMax" labelKeyMinVal="loanProduct.loanMin" [value]="value.interestRateConstraints"
-            *ngIf="value.interestRateConstraints.length > 0">
+            *ngIf="value.interestRateConstraints.length > 0" [sameConstraintForAllCurrency]="value.sameConstraintForAllCurrency">
     </app-value-constraints-input>
 
     <div>

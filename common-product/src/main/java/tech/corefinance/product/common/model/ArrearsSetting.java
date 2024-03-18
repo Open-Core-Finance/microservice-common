@@ -7,6 +7,7 @@ import java.util.List;
 
 @Data
 public class ArrearsSetting {
+    private boolean sameConstraintForAllCurrency;
     /**
      * Arrears Tolerance Period in Days.
      */

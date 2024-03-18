@@ -88,6 +88,8 @@ export class RepaymentScheduling {
     nonWorkingDaysRescheduling: NonWorkingDaysRescheduling = NonWorkingDaysRescheduling.NO_RESCHEDULING;
 
     repaymentsScheduleEditing: RepaymentsScheduleEditing = new RepaymentsScheduleEditing();
+
+    sameConstraintForAllCurrency = true;
 }
 
 export enum RepaymentSchedulingMethod {
