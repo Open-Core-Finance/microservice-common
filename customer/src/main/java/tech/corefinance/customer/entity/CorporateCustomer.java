@@ -14,10 +14,6 @@ import java.time.LocalDate;
 @Table(name = "corporate_customer")
 @EqualsAndHashCode(callSuper = true)
 public class CorporateCustomer extends Customer implements CreateUpdateDto<Long> {
-
-    @Column(name = "contact_name")
-    private String contactEmail;
-
     private String name;
     @Column(name = "tax_number")
     private String taxNumber;

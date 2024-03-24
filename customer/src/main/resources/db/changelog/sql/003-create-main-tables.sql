@@ -1,9 +1,11 @@
 -- Liquibase formatted SQL
 -- ChangeSet Trung.Doan:3 labels:main-table runOnChange:true
 
+CREATE SEQUENCE IF NOT EXISTS customer_id_seq INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1;
+
 CREATE TABLE IF NOT EXISTS individual_customer
 (
-    id BIGSERIAL PRIMARY KEY,
+    id bigint NOT NULL DEFAULT nextval('customer_id_seq'::regclass) PRIMARY KEY,
     created_date timestamp with time zone,
     last_modified_date timestamp with time zone,
     created_by jsonb,
@@ -39,12 +41,14 @@ CREATE TABLE IF NOT EXISTS individual_customer
     place_of_birth character varying(255),
     dob date,
     nationality jsonb,
-    second_nationality jsonb
+    second_nationality jsonb,
+    marital_status character varying(255),
+    CONSTRAINT individual_customer_marital_status_check CHECK (marital_status::text = ANY (ARRAY['SINGLE'::character varying, 'MARRIED'::character varying, 'WINDOWED'::character varying, 'DIVORCED'::character varying, 'SEPARATED'::character varying, 'UNKNOWN'::character varying]::text[]))
  );
 
  CREATE TABLE IF NOT EXISTS corporate_customer
  (
-     id BIGSERIAL PRIMARY KEY,
+     id bigint NOT NULL DEFAULT nextval('customer_id_seq'::regclass) PRIMARY KEY,
      created_date timestamp with time zone,
      last_modified_date timestamp with time zone,
      created_by jsonb,

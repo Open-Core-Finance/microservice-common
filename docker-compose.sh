@@ -13,7 +13,7 @@ export GIT_COMMIT=$(git log --format="%H" -n 1 | sed 's/ *$//g')
 chmod +x ./share-resources/docker-scripts/docker-compose-env
 . ./share-resources/docker-scripts/docker-compose-env
 
-services_list=("userprofile" "combined-product-account")
+services_list=("combined-nontenancy" "combined-product-account")
 for element in "${services_list[@]}"; do
     serverPortConfig=$(cat ${element}/src/main/resources/application-dev.yaml | grep server.port | cut -d ' ' -f 2)
     export "${element//-/_}_port"="${serverPortConfig}"

@@ -3,6 +3,7 @@ package tech.corefinance.userprofile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.ApplicationPidFileWriter;
@@ -15,6 +16,7 @@ import java.io.File;
 @SpringBootApplication(scanBasePackages = {"tech.corefinance.userprofile", "tech.corefinance.common"})
 @EnableJpaRepositories(basePackages = {"tech.corefinance.userprofile.repository", "tech.corefinance.common.jpa.repository", "tech.corefinance.common.repository"})
 @EntityScan(basePackages = {"tech.corefinance.common.jpa.model", "tech.corefinance.userprofile.entity", "tech.corefinance.common.model"})
+@ConditionalOnProperty(prefix = "tech.app.enabled", name = "userprofile", havingValue = "true", matchIfMissing = true)
 public class UserProfileApplication {
 
     public static void main(String[] args) {
