@@ -80,8 +80,12 @@ export class PermissionService implements OnDestroy {
         return "userprofile";
       case environment.apiUrl.productService:
         return "product";
-        case environment.apiUrl.accountService:
-          return "account";
+      case environment.apiUrl.glAccountService:
+          return "glaccount";
+      case environment.apiUrl.depositAccountService:
+        return "depositaccount";
+      case environment.apiUrl.loanAccountService:
+        return "loanaccount";
       default:
         return "others";
     }
@@ -207,7 +211,8 @@ export class PermissionService implements OnDestroy {
   }
 
   public getServiceUrls(): string[] {
-    return [environment.apiUrl.userprofile, environment.apiUrl.productService, environment.apiUrl.accountService];
+    return [environment.apiUrl.userprofile, environment.apiUrl.productService, environment.apiUrl.customerService,
+      environment.apiUrl.glAccountService, environment.apiUrl.depositAccountService, environment.apiUrl.loanAccountService];
   }
 
   public filterConfigByServiceUrl(configMap: Map<string, PermissionConfig[]>, serviceUrl: string): PermissionConfig[] {

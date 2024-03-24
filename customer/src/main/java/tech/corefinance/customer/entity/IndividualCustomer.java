@@ -8,6 +8,7 @@ import org.hibernate.type.SqlTypes;
 import tech.corefinance.common.enums.Gender;
 import tech.corefinance.common.model.CreateUpdateDto;
 import tech.corefinance.customer.enums.CustomerIdentityType;
+import tech.corefinance.customer.enums.MaritalStatus;
 import tech.corefinance.customer.model.Nationality;
 
 import java.time.LocalDate;
@@ -44,5 +45,7 @@ public class IndividualCustomer extends Customer implements CreateUpdateDto<Long
     @JdbcTypeCode(SqlTypes.JSON)
     private Nationality secondNationality;
 
-
+    @Column(name = "marital_status")
+    @Enumerated(EnumType.STRING)
+    private MaritalStatus maritalStatus;
 }

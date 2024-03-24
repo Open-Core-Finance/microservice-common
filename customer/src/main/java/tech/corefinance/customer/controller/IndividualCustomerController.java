@@ -11,7 +11,7 @@ import tech.corefinance.customer.service.IndividualCustomerService;
 
 @RestController
 @RequestMapping("/individual-customers")
-@ControllerManagedResource("individualcustomer")
+@ControllerManagedResource("individualCustomer")
 public class IndividualCustomerController implements CrudController<Long, IndividualCustomer, IndividualCustomer> {
 
     @Autowired

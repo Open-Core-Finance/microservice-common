@@ -11,7 +11,7 @@ import tech.corefinance.customer.service.CorporateCustomerService;
 
 @RestController
 @RequestMapping("/corporate-customers")
-@ControllerManagedResource("corporatecustomer")
+@ControllerManagedResource("corporateCustomer")
 public class CorporateCustomerController implements CrudController<Long, CorporateCustomer, CorporateCustomer> {
 
     @Autowired

@@ -71,5 +71,9 @@
         </ng-container>
 
         <mat-divider *ngIf="isDevider(formItem) && (formItem.visibleFn == null || formItem.visibleFn())"></mat-divider>
+
+        <div *ngIf="isBigHeader(formItem) && (formItem.visibleFn == null || formItem.visibleFn())" class="big-header-label {{formItem.additionClass}}">
+            <mat-label>{{formItem.labelFn()}}</mat-label>
+        </div>
     </ng-template>
 </div>

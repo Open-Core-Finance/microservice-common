@@ -24,6 +24,8 @@ import { DepositAccountComponent } from './accounts/deposit-account/deposit-acco
 import { LoanAccountComponent } from './accounts/loan-account/loan-account.component';
 import { GlAccountComponent } from './accounts/gl-account/gl-account.component';
 import { CryptoAccountComponent } from './accounts/crypto-account/crypto-account.component';
+import { IndividualCustomerComponent } from './customers/individual-customer/individual-customer.component';
+import { CorporateCustomerComponent } from './customers/corporate-customer/corporate-customer.component';
 
 const routes: Routes = [
   { path: '', redirectTo: environment.frontEndUrl.organizations, pathMatch: 'full'},
@@ -48,7 +50,9 @@ const routes: Routes = [
   { path: environment.frontEndUrl.depositAccounts, component: DepositAccountComponent, canActivate: [AuthGuard] },
   { path: environment.frontEndUrl.loanAccounts, component: LoanAccountComponent, canActivate: [AuthGuard] },
   { path: environment.frontEndUrl.glAccounts, component: GlAccountComponent, canActivate: [AuthGuard] },
-  { path: environment.frontEndUrl.cryptoAccounts, component: CryptoAccountComponent, canActivate: [AuthGuard] }
+  { path: environment.frontEndUrl.cryptoAccounts, component: CryptoAccountComponent, canActivate: [AuthGuard] },
+  { path: environment.frontEndUrl.individualCustomer, component: IndividualCustomerComponent, canActivate: [AuthGuard] },
+  { path: environment.frontEndUrl.corporateCustomer, component: CorporateCustomerComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({

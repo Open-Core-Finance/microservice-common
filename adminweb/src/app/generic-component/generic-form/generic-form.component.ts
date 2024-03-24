@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { UserMessage } from 'src/app/classes/UserMessage';
-import { ExpansionPanelInputGroup, UiFormCheckbox, UiFormComplexInput, UiFormCustomContent, UiFormDate, UiFormDivider, UiFormInput, UiFormItem, UiFormSelect, UiFormTextarea } from 'src/app/classes/ui/UiFormInput';
+import { ExpansionPanelInputGroup, UiFormBigHeader, UiFormCheckbox, UiFormComplexInput, UiFormCustomContent, UiFormDate, UiFormDivider, UiFormInput, UiFormItem, UiFormSelect, UiFormTextarea } from 'src/app/classes/ui/UiFormInput';
 import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
@@ -70,6 +70,10 @@ export class GenericFormComponent implements OnInit, OnDestroy {
 
   isDevider(item: UiFormItem) {
     return item instanceof UiFormDivider;
+  }
+
+  isBigHeader(item: UiFormItem) {
+    return item instanceof UiFormBigHeader;
   }
 
   protected cancelClick($event: any): any {

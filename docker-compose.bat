@@ -34,7 +34,7 @@ rem         )
 rem     )
 rem )
 
-set userprofile_port=8080
+set combined_nontenancy_port=8889
 set combined_product_account_port=8888
 
 docker compose %*

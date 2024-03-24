@@ -55,7 +55,8 @@ export class AppComponent implements OnDestroy, OnInit, AfterViewInit {
 
   rebuildMenuItems() {
     // Main Group
-    this.menuGroups = [ this.masterMenu, this.productMenu, this.accountMenu, this.uamMenu, this.languageMenu ];
+    this.menuGroups = [ this.masterMenu, this.productMenu, this.customerMenu, this.accountMenu,
+      this.uamMenu, this.languageMenu ];
     // Generate menu group ID
     for (let  i = 0; i < this.menuGroups.length; i++) {
       const menuGroup = this.menuGroups[i];
@@ -165,6 +166,14 @@ export class AppComponent implements OnDestroy, OnInit, AfterViewInit {
         new LanguageKeyLabelProvider(languageService, "menu.role", []), "", "user_attributes", null);
     return new MenuGroup("", new LanguageKeyLabelProvider(languageService, "menu.groupUam", []),
       [userManagementItem, roleManagementItem], null);
+  }
+
+  private get customerMenu(): MenuGroup {
+    const languageService = this.languageService;
+    const individualCustomerItem = new MenuItem(environment.frontEndUrl.individualCustomer, new LanguageKeyLabelProvider(languageService, "menu.individualCustomer", []), "", "person", null);
+    const corporateCustomerItem = new MenuItem(environment.frontEndUrl.corporateCustomer, new LanguageKeyLabelProvider(languageService, "menu.corporateCustomer", []), "", "corporate_fare", null);
+    return new MenuGroup("", new LanguageKeyLabelProvider(languageService, "menu.groupCustomer", []),
+      [individualCustomerItem, corporateCustomerItem], null);
   }
 
   ngAfterViewInit(): void {

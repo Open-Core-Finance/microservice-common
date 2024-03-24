@@ -1,0 +1,23 @@
+
+server.port: 8086
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:core_finance_geocode}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASS:postgres}
+    driver-class-name: ${DB_DRIVER:org.postgresql.Driver}
+    hikari:
+      connection-test-query: SELECT 1
+      maximum-pool-size: ${DB_MAX_CONNECTIONS:10}
+      minimum-idle: ${DB_MIN_CONNECTIONS:2}
+      idle-timeout: 30000
+      pool-name: geocode_service_pool
+
+tech:
+  corefinance:
+    common.enabled.tenant: false
+
+management:
+  server:
+    port: ${server.port}

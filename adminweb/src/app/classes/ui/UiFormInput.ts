@@ -24,9 +24,12 @@ export class UiFormInput extends UiFormItem {
   placeHolderKey: string = "";
   postFixLabelKey = "";
 
-  constructor(placeHolderKey: string, formControlName: string) {
+  constructor(placeHolderKey: string, formControlName: string, inputType?: string) {
     super(formControlName);
     this.placeHolderKey = placeHolderKey;
+    if (inputType) {
+      this.inputType = inputType;
+    }
   }
 }
 
@@ -119,4 +122,15 @@ export class UiFormDivider extends UiFormItem {
   inset: boolean = false;
 
   vertical = false;
+  constructor() {
+    super("");
+  }
+}
+
+export class UiFormBigHeader extends UiFormItem {
+  labelFn: Function;
+  constructor(labelFn: Function) {
+    super("");
+    this.labelFn = labelFn;
+  }
 }

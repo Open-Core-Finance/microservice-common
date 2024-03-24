@@ -1,4 +1,0 @@
-rootProject.name = 'corefinance'
-include "microservice-common", "microservice-common-jpa", "microservice-common-mongodb"
-include "common-account", "common-product"
-include "userprofile"

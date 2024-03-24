@@ -26,14 +26,18 @@ COPY gradle.properties ./gradle.properties
 RUN find ./
 
 # Build for userprofile component
-FROM build-base as userprofile-build
+FROM build-base as combined-nontenancy-build
 WORKDIR /app
-COPY share-resources/docker-scripts/settings_userprofile.gradle ./settings.gradle
+COPY share-resources/docker-scripts/settings_combined_nontenancy.gradle ./settings.gradle
 COPY userprofile/src ./userprofile/src
 COPY userprofile/build.gradle ./userprofile/build.gradle
+COPY geocode/src ./geocode/src
+COPY geocode/build.gradle ./geocode/build.gradle
+COPY combined-nontenancy/src ./combined-nontenancy/src
+COPY combined-nontenancy/build.gradle ./combined-nontenancy/build.gradle
 ARG GIT_COMMIT
 ARG PROJECT_NAME
-ENV PROJECT_PATH=userprofile
+ENV PROJECT_PATH=combined-nontenancy
 RUN chmod +x build_and_mv.sh && bash build_and_mv.sh "${PROJECT_NAME}" "${PROJECT_PATH}"
 
 # Build for combined product and account component

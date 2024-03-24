@@ -7,7 +7,8 @@ export const environment = {
         userprofile: '', organization: '', role: '', common: '', authentication: '', productService: '',
         currency: '', holiday: '', branch: '', productCategory: '', exchangeRate: '', rateSource: '', rate: '',
         depositProduct: '', productType: '', glProduct: '', cryptoProduct: '', loanProduct: '', withdrawalChannel: '',
-        user: '', accountService: '', glAccount: ''
+        user: '', glAccountService: '', glAccount: '', customerService: '', individualCustomer: '', corporateCustomer: '',
+        depositAccountService: '', loanAccountService: '', depositAccount: '', loanAccount: ''
     },
     apiPrefix: {
         userLogin: '/login',
@@ -39,7 +40,10 @@ export const environment = {
         depositAccounts: "deposit-accounts",
         loanAccounts: "loan-accounts",
         glAccounts: "gl-accounts",
-        cryptoAccounts: "crypto-accounts"
+        cryptoAccounts: "crypto-accounts",
+        corporateCustomer: "corporate-customers",
+        individualCustomer: "individual-customers"
+
     },
     appVersion: "1.0.0-SNAPSHOT",
     appClientId: "corefinance-ADMIN-WEB",
@@ -70,6 +74,13 @@ export function rebuildEnvironment() {
     environment.apiUrl.cryptoProduct = environment.apiUrl.productService + "/crypto-products"
     environment.apiUrl.loanProduct = environment.apiUrl.productService + "/loan-products"
     environment.apiUrl.withdrawalChannel = environment.apiUrl.productService + "/withdrawal-channels"
-    // Acount
-    environment.apiUrl.glAccount = environment.apiUrl.accountService + "/gl-accounts";
+    // GL Account
+    environment.apiUrl.glAccount = environment.apiUrl.glAccountService + "/gl-accounts";
+    // Deposit Account
+    environment.apiUrl.depositAccount = environment.apiUrl.depositAccountService + "/deposit-accounts";
+    // Loan Account
+    environment.apiUrl.loanAccount = environment.apiUrl.loanAccountService + "/loan-accounts";
+    // Customer
+    environment.apiUrl.individualCustomer = environment.apiUrl.customerService + "/individual-customers";
+    environment.apiUrl.corporateCustomer = environment.apiUrl.customerService + "/corporate-customers";
 }
