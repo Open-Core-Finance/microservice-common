@@ -23,14 +23,7 @@ export class AddCurrenyComponent extends GeneralEntityAddComponent<Currency> imp
   currencies: Currency[] = [];
   currencySubscription: Subscription | undefined;
 
-  addCurrencyForm = new FormGroup({
-    index: new FormControl(0),
-    id: new FormControl(""),
-    name: new FormControl('', {nonNullable: true}),
-    symbol: new FormControl("", {nonNullable: true}),
-    decimalMark: new FormControl("", {nonNullable: true}),
-    symbolAtBeginning: new FormControl(false, {nonNullable: true})
-  });
+  addCurrencyForm = this.formBuilder.group(this.newEmptyEntity());
 
   constructor(public override languageService: LanguageService, protected override commonService: CommonService,
     protected override restService: RestService, protected override http: HttpClient, protected override formBuilder: FormBuilder,

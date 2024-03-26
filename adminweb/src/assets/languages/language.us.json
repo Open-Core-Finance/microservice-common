@@ -75,7 +75,13 @@
       "cryptoAccount": "Crypto account",
       "groupCustomer": "Customer",
       "individualCustomer": "Individual customer",
-      "corporateCustomer": "Corporate customer"
+      "corporateCustomer": "Corporate customer",
+      "groupGeocode": "Geocode",
+      "region": "Regions",
+      "subregion": "Subregions",
+      "country": "Countries",
+      "state": "States",
+      "city": "Cities"
   },
   "organization": {
       "id": "ID",
@@ -796,5 +802,85 @@
     "DIVORCED": "Divorced",
     "SEPARATED": "Separated",
     "UNKNOWN": "Unknown"
+  },
+  "region": {
+    "id": "ID",
+    "name": "Name",
+    "translations": "Translations",
+    "enabled": "Enabled",
+    "wikiDataId": "Wiki Data ID",
+    "createdDate": "Created date",
+    "lastModifiedDate": "Modified date",
+    "error": {
+      "name_empty": "Name cannot be empty!"
+    },
+    "addTitle": "Add region"
+  },
+  "subRegion": {
+    "id": "ID",
+    "name": "Name",
+    "translations": "Translations",
+    "enabled": "Enabled",
+    "wikiDataId": "Wiki Data ID",
+    "createdDate": "Created date",
+    "lastModifiedDate": "Modified date",
+    "addTitle": "Add sub region"
+  },
+  "countries": {
+    "id": "ID",
+    "name": "Name",
+    "translations": "Translations",
+    "enabled": "Enabled",
+    "wikiDataId": "Wiki Data ID",
+    "createdDate": "Created date",
+    "lastModifiedDate": "Modified date",
+    "region": "Region",
+    "subRegion": "Sub Region",
+    "iso3": "ISO3",
+    "iso2": "ISO2",
+    "numericCode": "Numeric code",
+    "phoneCode": "Phone code",
+    "capital": "Capital",
+    "currency": "Currency",
+    "currencyName": "Currency name",
+    "currencySymbol": "Currency symbol",
+    "tld": "TLD",
+    "nativePeople": "Native",
+    "nationality": "Nationality",
+    "timezones": "Timezones",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "emoji": "Emoji",
+    "emojiu": "Emoji Unicode"
+  },
+  "states": {
+    "id": "ID",
+    "name": "Name",
+    "translations": "Translations",
+    "enabled": "Enabled",
+    "wikiDataId": "Wiki Data ID",
+    "createdDate": "Created date",
+    "lastModifiedDate": "Modified date",
+    "countryCode": "Country code",
+    "country": "Country",
+    "fipsCode": "FIPS code",
+    "iso2": "ISO2",
+    "type": "Type",
+    "latitude": "Latitude",
+    "longitude": "Longitude"
+  },
+  "cities": {
+    "id": "ID",
+    "name": "Name",
+    "translations": "Translations",
+    "enabled": "Enabled",
+    "wikiDataId": "Wiki Data ID",
+    "createdDate": "Created date",
+    "lastModifiedDate": "Modified date",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "state": "State",
+    "countryCode": "Country code",
+    "country": "Country"
   }
 }

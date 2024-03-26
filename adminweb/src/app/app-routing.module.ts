@@ -26,6 +26,11 @@ import { GlAccountComponent } from './accounts/gl-account/gl-account.component';
 import { CryptoAccountComponent } from './accounts/crypto-account/crypto-account.component';
 import { IndividualCustomerComponent } from './customers/individual-customer/individual-customer.component';
 import { CorporateCustomerComponent } from './customers/corporate-customer/corporate-customer.component';
+import { RegionComponent } from './geocode/region/region.component';
+import { SubRegionComponent } from './geocode/sub-region/sub-region.component';
+import { CountryComponent } from './geocode/country/country.component';
+import { StateComponent } from './geocode/state/state.component';
+import { CityComponent } from './geocode/city/city.component';
 
 const routes: Routes = [
   { path: '', redirectTo: environment.frontEndUrl.organizations, pathMatch: 'full'},
@@ -52,7 +57,12 @@ const routes: Routes = [
   { path: environment.frontEndUrl.glAccounts, component: GlAccountComponent, canActivate: [AuthGuard] },
   { path: environment.frontEndUrl.cryptoAccounts, component: CryptoAccountComponent, canActivate: [AuthGuard] },
   { path: environment.frontEndUrl.individualCustomer, component: IndividualCustomerComponent, canActivate: [AuthGuard] },
-  { path: environment.frontEndUrl.corporateCustomer, component: CorporateCustomerComponent, canActivate: [AuthGuard] }
+  { path: environment.frontEndUrl.corporateCustomer, component: CorporateCustomerComponent, canActivate: [AuthGuard] },
+  { path: environment.frontEndUrl.region, component: RegionComponent, canActivate: [AuthGuard] },
+  { path: environment.frontEndUrl.subRegion, component: SubRegionComponent, canActivate: [AuthGuard] },
+  { path: environment.frontEndUrl.country, component: CountryComponent, canActivate: [AuthGuard] },
+  { path: environment.frontEndUrl.state, component: StateComponent, canActivate: [AuthGuard] },
+  { path: environment.frontEndUrl.city, component: CityComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({

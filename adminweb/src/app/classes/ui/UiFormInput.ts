@@ -36,11 +36,11 @@ export class UiFormInput extends UiFormItem {
 export class UiFormSelect extends UiFormItem {
     labelKey: string = "";
     selectItems: UiSelectItem[] = [];
-    constructor(labelKey: string, selectItems: UiSelectItem[], formControlName: string){
+    constructor(labelKey: string, selectItems: UiSelectItem[], formControlName: string) {
         super(formControlName);
         this.labelKey = labelKey;
         this.selectItems = selectItems;
-      }
+    }
 }
 
 export class UiSelectItem {
@@ -48,11 +48,11 @@ export class UiSelectItem {
     selectValue: any;
 }
 
-export class UiFormCustomContent extends UiFormItem  {
+export class UiFormCustomContent extends UiFormItem {
 
   contentSelect: string = "";
 
-  constructor(contentSelect: string, formControlName: string){
+  constructor(contentSelect: string, formControlName: string) {
     super(formControlName);
     this.contentSelect = contentSelect;
   }
@@ -62,7 +62,7 @@ export class UiFormCheckbox extends UiFormItem {
 
   labelKey: string = "";
 
-  constructor(labelKey: string, formControlName: string){
+  constructor(labelKey: string, formControlName: string) {
     super(formControlName);
     this.labelKey = labelKey;
   }

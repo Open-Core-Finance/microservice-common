@@ -8,6 +8,10 @@ export const environment = {
 
 environment.apiUrl.userprofile = "http://userprofile.corefinance.tech";
 environment.apiUrl.productService = "http://product.corefinance.tech";
-environment.apiUrl.accountService = "http://account.corefinance.tech";
+environment.apiUrl.glAccountService = "http://localhost:9093";
+environment.apiUrl.depositAccountService = "http://localhost:9094";
+environment.apiUrl.loanAccountService = "http://localhost:9095";
+environment.apiUrl.customerService = "http://localhost:9096";
+environment.apiUrl.goecodeService = "http://localhost:9097";
 
 rebuildEnvironment();

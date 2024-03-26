@@ -1,6 +1,5 @@
 import {Component, ViewChild, OnDestroy, OnInit, AfterViewInit} from '@angular/core';
 import { LanguageMenuItem, MenuGroup, MenuItem } from './classes/Menu';
-import { OrganizationService } from './services/organization.service';
 import { environment } from 'src/environments/environment';
 import { LanguageKeyLabelProvider, StaticTextLabelProvider } from './classes/LabelProvider';
 import { LanguageService } from './services/language.service';
@@ -56,7 +55,7 @@ export class AppComponent implements OnDestroy, OnInit, AfterViewInit {
   rebuildMenuItems() {
     // Main Group
     this.menuGroups = [ this.masterMenu, this.productMenu, this.customerMenu, this.accountMenu,
-      this.uamMenu, this.languageMenu ];
+      this.uamMenu, this.languageMenu, this.geocodeMenu ];
     // Generate menu group ID
     for (let  i = 0; i < this.menuGroups.length; i++) {
       const menuGroup = this.menuGroups[i];
@@ -173,7 +172,18 @@ export class AppComponent implements OnDestroy, OnInit, AfterViewInit {
     const individualCustomerItem = new MenuItem(environment.frontEndUrl.individualCustomer, new LanguageKeyLabelProvider(languageService, "menu.individualCustomer", []), "", "person", null);
     const corporateCustomerItem = new MenuItem(environment.frontEndUrl.corporateCustomer, new LanguageKeyLabelProvider(languageService, "menu.corporateCustomer", []), "", "corporate_fare", null);
     return new MenuGroup("", new LanguageKeyLabelProvider(languageService, "menu.groupCustomer", []),
-      [individualCustomerItem, corporateCustomerItem], null);
+      [individualCustomerItem, corporateCustomerItem], this.isVisibleOrganizationDetailsMenu);
+  }
+
+  private get geocodeMenu(): MenuGroup {
+    const languageService = this.languageService;
+    const regionItem = new MenuItem(environment.frontEndUrl.region, new LanguageKeyLabelProvider(languageService, "menu.region", []), "", "public", null);
+    const subregionItem = new MenuItem(environment.frontEndUrl.subRegion, new LanguageKeyLabelProvider(languageService, "menu.subregion", []), "", "south_america", null);
+    const countryItem = new MenuItem(environment.frontEndUrl.country, new LanguageKeyLabelProvider(languageService, "menu.country", []), "", "map", null);
+    const stateItem = new MenuItem(environment.frontEndUrl.state, new LanguageKeyLabelProvider(languageService, "menu.state", []), "", "home_pin", null);
+    const cityItem = new MenuItem(environment.frontEndUrl.city, new LanguageKeyLabelProvider(languageService, "menu.city", []), "", "home_pin", null);
+    return new MenuGroup("", new LanguageKeyLabelProvider(languageService, "menu.groupGeocode", []),
+      [regionItem, subregionItem, countryItem, stateItem, cityItem], null);
   }
 
   ngAfterViewInit(): void {

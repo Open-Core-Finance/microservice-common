@@ -8,7 +8,8 @@ export const environment = {
         currency: '', holiday: '', branch: '', productCategory: '', exchangeRate: '', rateSource: '', rate: '',
         depositProduct: '', productType: '', glProduct: '', cryptoProduct: '', loanProduct: '', withdrawalChannel: '',
         user: '', glAccountService: '', glAccount: '', customerService: '', individualCustomer: '', corporateCustomer: '',
-        depositAccountService: '', loanAccountService: '', depositAccount: '', loanAccount: ''
+        depositAccountService: '', loanAccountService: '', depositAccount: '', loanAccount: '', goecodeService: '',
+        region: '', subRegion: '', country: '', state: '', city: ''
     },
     apiPrefix: {
         userLogin: '/login',
@@ -42,7 +43,12 @@ export const environment = {
         glAccounts: "gl-accounts",
         cryptoAccounts: "crypto-accounts",
         corporateCustomer: "corporate-customers",
-        individualCustomer: "individual-customers"
+        individualCustomer: "individual-customers",
+        region: "regions",
+        subRegion: "sub-regions",
+        country: "Countries",
+        state: "States",
+        city: "Cities"
 
     },
     appVersion: "1.0.0-SNAPSHOT",
@@ -83,4 +89,10 @@ export function rebuildEnvironment() {
     // Customer
     environment.apiUrl.individualCustomer = environment.apiUrl.customerService + "/individual-customers";
     environment.apiUrl.corporateCustomer = environment.apiUrl.customerService + "/corporate-customers";
+    // Geocode
+    environment.apiUrl.region = environment.apiUrl.goecodeService + "/regions";
+    environment.apiUrl.subRegion = environment.apiUrl.goecodeService + "/sub-regions";
+    environment.apiUrl.country = environment.apiUrl.goecodeService + "/countries";
+    environment.apiUrl.state = environment.apiUrl.goecodeService + "/states";
+    environment.apiUrl.city = environment.apiUrl.goecodeService + "/cities";
 }
