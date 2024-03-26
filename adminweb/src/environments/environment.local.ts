@@ -11,5 +11,6 @@ environment.apiUrl.glAccountService = "http://localhost:8082";
 environment.apiUrl.depositAccountService = "http://localhost:8083";
 environment.apiUrl.loanAccountService = "http://localhost:8085";
 environment.apiUrl.customerService = "http://localhost:8084";
+environment.apiUrl.goecodeService = "http://localhost:8086";
 
 rebuildEnvironment();

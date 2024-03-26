@@ -54,7 +54,7 @@ public class Country implements GenericModel<Integer>, ModifiedDateTrackedEntity
     @JsonIgnore
     private Region region;
     @Column(name = "region_id", insertable = false, updatable = false)
-    private int regionId;
+    private Integer regionId;
 
     @Column(name = "subregion_name")
     private String subregionName;
@@ -63,7 +63,7 @@ public class Country implements GenericModel<Integer>, ModifiedDateTrackedEntity
     @JsonIgnore
     private SubRegion subRegion;
     @Column(name = "subregion_id", insertable = false, updatable = false)
-    private int subRegionId;
+    private Integer subRegionId;
 
     private String nationality;
     @JdbcTypeCode(SqlTypes.JSON)

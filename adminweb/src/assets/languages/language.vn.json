@@ -75,7 +75,13 @@
       "cryptoAccount": "TK Crypto",
       "groupCustomer": "Khách hàng",
       "individualCustomer": "Khách hàng cá nhân",
-      "corporateCustomer": "Khách hàng doanh nghiệp"
+      "corporateCustomer": "Khách hàng doanh nghiệp",
+      "groupGeocode": "Geocode",
+      "region": "Châu lục",
+      "subregion": "Vùng",
+      "country": "Quốc gia",
+      "state": "Liên bang",
+      "city": "Thành phố"
   },
   "organization": {
       "id": "Mã số",
@@ -796,5 +802,86 @@
     "DIVORCED": "Đã ly hôn",
     "SEPARATED": "Đang ly thân",
     "UNKNOWN": "Không rõ"
+  },
+  "region": {
+    "id": "Mã số",
+    "name": "Tên",
+    "translations": "Dịch",
+    "enabled": "Bật",
+    "wikiDataId": "Wiki Data ID",
+    "createdDate": "Ngày tạo",
+    "lastModifiedDate": "Ngày cập nhật",
+    "error": {
+      "name_empty": "Không được bỏ trống tên!"
+    },
+    "addTitle": "Thêm châu lục"
+  },
+  "subRegion": {
+    "id": "Mã số",
+    "name": "Tên",
+    "translations": "Dịch",
+    "enabled": "Bật",
+    "wikiDataId": "Wiki Data ID",
+    "createdDate": "Ngày tạo",
+    "lastModifiedDate": "Ngày cập nhật",
+    "region": "Châu lục",
+    "addTitle": "Thêm vùng"
+  },
+  "countries": {
+    "id": "Mã số",
+    "name": "Tên",
+    "translations": "Dịch",
+    "enabled": "Bật",
+    "wikiDataId": "Wiki Data ID",
+    "createdDate": "Ngày tạo",
+    "lastModifiedDate": "Ngày cập nhật",
+    "region": "Châu lục",
+    "subRegion": "Vùng",
+    "iso3": "ISO3",
+    "iso2": "ISO2",
+    "numericCode": "Numeric code",
+    "phoneCode": "Mã điện thoại",
+    "capital": "Thủ đô",
+    "currency": "Tiền tệ",
+    "currencyName": "Tên tiền",
+    "currencySymbol": "Ký hiệu tiền",
+    "tld": "TLD",
+    "nativePeople": "Native",
+    "nationality": "Quốc tịch",
+    "timezones": "Timezones",
+    "latitude": "Vĩ độ",
+    "longitude": "Kinh độ",
+    "emoji": "Emoji",
+    "emojiu": "Emoji Unicode"
+  },
+  "states": {
+    "id": "Mã số",
+    "name": "Tên",
+    "translations": "Dịch",
+    "enabled": "Bật",
+    "wikiDataId": "Wiki Data ID",
+    "createdDate": "Ngày tạo",
+    "lastModifiedDate": "Ngày cập nhật",
+    "countryCode": "Mã quốc gia",
+    "country": "Quốc gia",
+    "fipsCode": "FIPS code",
+    "iso2": "ISO2",
+    "type": "Loại",
+    "latitude": "Vĩ độ",
+    "longitude": "Kinh độ"
+  },
+  "cities": {
+    "id": "Mã số",
+    "name": "Tên",
+    "translations": "Dịch",
+    "enabled": "Bật",
+    "wikiDataId": "Wiki Data ID",
+    "createdDate": "Ngày tạo",
+    "lastModifiedDate": "Ngày cập nhật",
+    "latitude": "Vĩ độ",
+    "longitude": "Kinh độ",
+    "state": "Liên bang",
+    "countryCode": "Mã quốc gia",
+    "country": "Quốc gia"
   }
 }
