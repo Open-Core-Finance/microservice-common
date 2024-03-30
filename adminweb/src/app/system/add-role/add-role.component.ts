@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy } from '@angular/core';
-import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { environment } from '../../../environments/environment';
 
 import {MatCardModule} from '@angular/material/card';
@@ -22,17 +22,11 @@ import { GeneralEntityAddComponent } from 'src/app/generic-component/GeneralEnti
 })
 export class AddRoleComponent extends GeneralEntityAddComponent<Role> implements OnDestroy {
 
-  addForm = this.formBuilder.group(this.newEmptyEntity());
-
   ngOnDestroy(): void {
   }
 
   protected override getServiceUrl(): string {
     return environment.apiUrl.role;
-  }
-
-  protected override getAddForm(): FormGroup<any> {
-    return this.addForm;
   }
 
   protected override validateFormData(formData: any): void {

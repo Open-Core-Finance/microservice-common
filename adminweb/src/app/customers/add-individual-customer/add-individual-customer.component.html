@@ -1,4 +1,55 @@
 <app-generic-form (cancel)="this.cancelClick($event)" (save)="this.saveClick($event)" [formGroup]="addForm"
-  [formItems]="formItems" formTitleKey="individualCustomer.addTitle" [message]="message">
+  [inputGroups]="inputGroups"
+  [formItems]="formItems" formTitleKey="individualCustomer.addTitle" [message]="message"[complexInputTemplate]="{
+    nationality: nationalityTemplate, secondNationality: secondNationalityTemplate
+  }">
+
+  <ng-template #nationalityTemplate let-data>
+    <ng-container *ngTemplateOutlet="nationalityInputTemplate; context: { $implicit: addForm.controls['nationality']}"></ng-container>
+  </ng-template>
+
+  <ng-template #secondNationalityTemplate let-data>
+    <ng-container *ngTemplateOutlet="nationalityInputTemplate; context: { $implicit: addForm.controls['secondNationality']}"></ng-container>
+  </ng-template>
+
+  <ng-template #nationalityInputTemplate let-data>
+    <div [formGroup]="data">
+
+      <app-reactive-form-select labelKey="nationality.identityType" formControlName="identityType"
+            [selectItems]="nationalityIdentityTypeItems" appearance="fill" colorScheme="primary"
+            [required]="true"></app-reactive-form-select>
+
+      <app-reactive-form-input placeHolderKey="nationality.identityNumber" formControlName="identityNumber"
+        [addLabel]="true" inputType="text" appearance="fill" colorScheme="primary"
+        [required]="true">
+      </app-reactive-form-input>
+
+      <app-reactive-form-input placeHolderKey="nationality.issuingCountry" formControlName="issuingCountry"
+        [addLabel]="true" inputType="text" appearance="fill" colorScheme="primary"
+        [required]="true">
+      </app-reactive-form-input>
+
+      <app-reactive-form-input placeHolderKey="nationality.countryCode" formControlName="countryCode"
+        [addLabel]="true" inputType="text" appearance="fill" colorScheme="primary"
+        [required]="true">
+      </app-reactive-form-input>
+
+      <app-reactive-form-input placeHolderKey="nationality.issuingPlace" formControlName="issuingPlace"
+        [addLabel]="true" inputType="text" appearance="fill" colorScheme="primary"
+        [required]="true">
+      </app-reactive-form-input>
+
+      <app-reactive-form-date placeHolderKey="nationality.issuingDate"
+        formControlName="issuingDate" [addLabel]="true" inputType="text" appearance="fill" colorScheme="primary"
+        [required]="true">
+      </app-reactive-form-date>
+
+      <app-reactive-form-date placeHolderKey="nationality.expiringDate"
+        formControlName="expiringDate" [addLabel]="true" inputType="text" appearance="fill" colorScheme="primary"
+        [required]="true">
+      </app-reactive-form-date>
+
+    </div>
+  </ng-template>
 
 </app-generic-form>

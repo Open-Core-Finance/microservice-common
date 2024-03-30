@@ -1,7 +1,7 @@
-<app-generic-form (cancel)="this.cancelClick($event)" (save)="this.saveClick($event)" [formGroup]="addHolidayForm"
+<app-generic-form (cancel)="this.cancelClick($event)" (save)="this.saveClick($event)" [formGroup]="addForm"
   [formItems]="formItems" formTitleKey="holiday.addTitle" [message]="message">
 
-  <ng-container formcontols *ngIf="addHolidayForm.value.dateRange">
+  <ng-container formcontols *ngIf="addForm.value.dateRange">
     <app-reactive-form-date placeHolderKey="holiday.toDate" formControlName="toDate" additionClass="" [addLabel]="true"
         inputType="text" appearance="fill" colorScheme="primary" [required]="true"></app-reactive-form-date>
   </ng-container>

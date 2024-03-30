@@ -22,18 +22,6 @@ export class AddCryptoProductComponent extends GeneralProductAddComponent<Crypto
 
   creditArrangementManagedEnum = CreditArrangementManaged;
   allTermsUnit = Object.keys(FrequencyOptionYearly);
-  addProductForm = this.formBuilder.group(
-    Object.assign(Object.assign({}, new CryptoProduct()), {
-      productAvailabilityModeInfo: new FormControl<string[]>([]),
-      productAvailabilities: new FormControl<ProductAvailability[]>([]),
-      newAccountSetting: this.formBuilder.group(new ProductNewAccountSetting()),
-      productFees: new FormControl<DepositProductFee[]>([]),
-      depositLimits: new FormControl<DepositLimit[]>([]),
-      withdrawalLimits: new FormControl<WithdrawalLimit[]>([]),
-      currencies: new FormControl<string[]>([]),
-      maxOverdraftLimit: new FormControl<CurrencyLimitValue[]>([])
-    })
-  );
   
   protected override getProductCategoryType(): ProductCategoryType {
     return ProductCategoryType.CRYPTO;
@@ -41,17 +29,15 @@ export class AddCryptoProductComponent extends GeneralProductAddComponent<Crypto
   protected override getServiceUrl(): string {
     return environment.apiUrl.cryptoProduct;
   }
-  protected override getAddForm(): FormGroup<any> {
-    return this.addProductForm;
-  }
+
   protected override newEmptyEntity(): CryptoProduct {
     return new CryptoProduct();
   }
 
   protected override currenciesChanged(): void {
     super.currenciesChanged();
-    if (this.addProductForm.value.maxOverdraftLimit) {
-      const maxOverdraftLimit = this.addProductForm.value.maxOverdraftLimit;
+    if (this.addForm.value.maxOverdraftLimit) {
+      const maxOverdraftLimit = this.addForm.value.maxOverdraftLimit;
       this.cleanUpConstraints(maxOverdraftLimit);
       this.addMissingConstraints(maxOverdraftLimit, new CurrencyLimitValue(), true);
     }

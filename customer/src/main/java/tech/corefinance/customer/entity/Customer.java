@@ -56,12 +56,18 @@ public abstract class Customer implements GenericModel<Long>, AuditableEntity<Ba
     private String mailingDistrict;
     @Column(name = "mailing_city")
     private String mailingCity;
+    @Column(name = "mailing_city_id")
+    private Integer mailingCityId;
     @Column(name = "mailing_state")
     private String mailingState;
+    @Column(name = "mailing_state_id")
+    private Integer mailingStateId;
     @Column(name = "mailing_zip_postal_code")
     private String mailingZipPostalCode;
     @Column(name = "malling_country")
     private String mailingCountry;
+    @Column(name = "malling_country_id")
+    private Integer mailingCountryId;
 
     @Column(name = "street_address_line_1")
     private String streetAddressLine1;
@@ -71,12 +77,18 @@ public abstract class Customer implements GenericModel<Long>, AuditableEntity<Ba
     private String district;
     @Column(name = "city")
     private String city;
+    @Column(name = "city_id")
+    private Integer cityId;
     @Column(name = "state")
     private String state;
+    @Column(name = "state_id")
+    private Integer stateId;
     @Column(name = "zip_postal_code")
     private String zipPostalCode;
     @Column(name = "country")
     private String country;
+    @Column(name = "country_id")
+    private Integer countryId;
 
     @Column(name = "consent_marketing")
     private boolean consentMarketing;

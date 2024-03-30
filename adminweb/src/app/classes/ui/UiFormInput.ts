@@ -23,6 +23,7 @@ export class UiFormInput extends UiFormItem {
 
   placeHolderKey: string = "";
   postFixLabelKey = "";
+  autoComleteItems: UiSelectItem[] = [];
 
   constructor(placeHolderKey: string, formControlName: string, inputType?: string) {
     super(formControlName);
@@ -35,7 +36,7 @@ export class UiFormInput extends UiFormItem {
 
 export class UiFormSelect extends UiFormItem {
     labelKey: string = "";
-    selectItems: UiSelectItem[] = [];
+    selectItems: UiSelectItem[];
     constructor(labelKey: string, selectItems: UiSelectItem[], formControlName: string) {
         super(formControlName);
         this.labelKey = labelKey;

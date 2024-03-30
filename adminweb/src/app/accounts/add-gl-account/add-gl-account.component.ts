@@ -25,7 +25,6 @@ import { Subscription } from 'rxjs';
 })
 export class AddGlAccountComponent extends GeneralEntityAddComponent<GlAccount> implements OnDestroy, OnInit {
 
-  addForm = this.formBuilder.group(new GlAccount());
   glProducts: GlProduct[] = [];
   glProductSubscription: Subscription | undefined;
 
@@ -58,10 +57,6 @@ export class AddGlAccountComponent extends GeneralEntityAddComponent<GlAccount> 
 
   protected override getServiceUrl(): string {
     return environment.apiUrl.glAccount;
-  }
-
-  protected override getAddForm(): FormGroup<any> {
-    return this.addForm;
   }
 
   protected override validateFormData(formData: any): void {

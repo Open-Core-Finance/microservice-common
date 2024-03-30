@@ -43,4 +43,8 @@ export class IndividualCustomerComponent extends TableComponent<IndividualCustom
   override createNewItem(): IndividualCustomer {
     return new IndividualCustomer();
   }
+
+  override get indexColumnLabelKey(): string {
+    return "";
+  }
 }

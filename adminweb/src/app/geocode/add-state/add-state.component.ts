@@ -27,8 +27,6 @@ import { State } from 'src/app/classes/geocode/State';
 })
 export class AddStateComponent extends GeneralEntityAddComponent<State> implements OnDestroy, OnInit {
 
-  addForm = this.formBuilder.group(this.newEmptyEntity());
-
   private countries: Country[] = [];
   private countriesSubscription: Subscription | undefined;
 
@@ -53,10 +51,6 @@ export class AddStateComponent extends GeneralEntityAddComponent<State> implemen
 
   protected override getServiceUrl(): string {
     return environment.apiUrl.state;
-  }
-
-  protected override getAddForm(): FormGroup<any> {
-    return this.addForm;
   }
 
   protected override validateFormData(formData: any): void {

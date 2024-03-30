@@ -2,6 +2,7 @@ import {Component, forwardRef, OnInit, OnDestroy, Input} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
+import { UiSelectItem } from 'src/app/classes/ui/UiFormInput';
 import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
@@ -36,6 +37,8 @@ export class ReactiveFormInputComponent implements OnInit, ControlValueAccessor,
   placeHolderKey: string = "";
   @Input()
   postFixLabelKey: string = "";
+  @Input()
+  autoComleteItems: UiSelectItem[] = [];
 
   constructor(public languageService: LanguageService) {
   }

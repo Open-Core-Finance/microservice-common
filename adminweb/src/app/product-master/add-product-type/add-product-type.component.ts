@@ -13,19 +13,8 @@ import { GeneralEntityAddComponent } from 'src/app/generic-component/GeneralEnti
 export class AddProductTypeComponent extends GeneralEntityAddComponent<ProductType> {
   productCategoryTypes = Object.keys(ProductCategoryType);
 
-  addProductTypeForm = new FormGroup({
-    index: new FormControl(0),
-    id: new FormControl(""),
-    name: new FormControl('', {nonNullable: true}),
-    type: new FormControl(ProductCategoryType.DEPOSIT, {nonNullable: true})
-  });
-
   protected override getServiceUrl(): string {
     return environment.apiUrl.productType;
-  }
-
-  protected override getAddForm(): FormGroup<any> {
-    return this.addProductTypeForm;
   }
 
   protected override validateFormData(formData: any): void {

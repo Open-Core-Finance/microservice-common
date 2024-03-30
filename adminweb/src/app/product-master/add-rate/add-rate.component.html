@@ -4,7 +4,7 @@
             {{languageService.formatLanguage('rate.addTitle', [])}}
         </mat-card-title>
         <mat-card-content>
-            <form [formGroup]="addRateForm">
+            <form [formGroup]="addForm">
                 <mat-form-field class="full-width" appearance="fill" color="primary">
                     <mat-label>{{languageService.formatLanguage('rate.type', [])}}</mat-label>
                     <mat-select required formControlName="type" (valueChange)="typeChange($event)">

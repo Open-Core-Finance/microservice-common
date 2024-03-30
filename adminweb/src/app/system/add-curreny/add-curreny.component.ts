@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { Currency } from 'src/app/classes/Currency';
 import { Subscription } from 'rxjs';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { LanguageService } from 'src/app/services/language.service';
 import { RestService } from 'src/app/services/rest.service';
 import { HttpClient } from '@angular/common/http';
@@ -22,8 +22,6 @@ export class AddCurrenyComponent extends GeneralEntityAddComponent<Currency> imp
 
   currencies: Currency[] = [];
   currencySubscription: Subscription | undefined;
-
-  addCurrencyForm = this.formBuilder.group(this.newEmptyEntity());
 
   constructor(public override languageService: LanguageService, protected override commonService: CommonService,
     protected override restService: RestService, protected override http: HttpClient, protected override formBuilder: FormBuilder,
@@ -54,9 +52,7 @@ export class AddCurrenyComponent extends GeneralEntityAddComponent<Currency> imp
   protected override getServiceUrl(): string {
     return environment.apiUrl.currency;
   }
-  protected override getAddForm(): FormGroup<any> {
-    return this.addCurrencyForm;
-  }
+
   protected override validateFormData(formData: any): void {
     if (this.commonService.isNullOrEmpty(formData.id)) {
       this.message['error'].push("name_empty")

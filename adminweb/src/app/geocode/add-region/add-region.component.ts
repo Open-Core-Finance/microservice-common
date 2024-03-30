@@ -18,8 +18,6 @@ import { SharedModule } from 'src/app/generic-component/SharedModule';
 })
 export class AddRegionComponent extends GeneralEntityAddComponent<Region> implements OnDestroy, OnInit {
 
-  addForm = this.formBuilder.group(this.newEmptyEntity());
-
   ngOnInit(): void {
   }
 
@@ -28,10 +26,6 @@ export class AddRegionComponent extends GeneralEntityAddComponent<Region> implem
 
   protected override getServiceUrl(): string {
     return environment.apiUrl.region;
-  }
-
-  protected override getAddForm(): FormGroup<any> {
-    return this.addForm;
   }
 
   protected override validateFormData(formData: any): void {

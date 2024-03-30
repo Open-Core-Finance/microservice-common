@@ -12,7 +12,7 @@ import { RestService } from 'src/app/services/rest.service';
 import { environment } from 'src/environments/environment';
 import { Timezone, _filterTimezoneName, _filterTimezone, DATE_FORMAT_CHARS } from 'src/app/const/TimeZoneList';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { GeneralEntityAddComponent } from 'src/app/generic-component/GeneralEntityAddComponent';
 import { OrganizationService } from 'src/app/services/organization.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
@@ -31,27 +31,6 @@ export class AddOrganizationComponent extends GeneralEntityAddComponent<Organiza
   timeZoneListObservable!: Observable<Timezone[]>;
   tineZoneSelectionSubscription!: Subscription;
 
-  addOrganizationForm = new FormGroup({
-    index: new FormControl(0),
-    id: new FormControl(""),
-    name: new FormControl(''),
-    streetAddressLine1: new FormControl(""),
-    city: new FormControl(""),
-    state: new FormControl(""),
-    country: new FormControl(""),
-    zipPostalCode: new FormControl(""),
-    phoneNumber: new FormControl(""),
-    email: new FormControl(""),
-    currency: new FormControl<Currency | null>(null),
-    decimalMark: new FormControl(""),
-    timezone: new FormControl(""),
-    localDateFormat: new FormControl("", {nonNullable: true}),
-    localDateTimeFormat: new FormControl(""),
-    logoUrl: new FormControl(""),
-    iconUrl: new FormControl(""),
-    nonWorkingDays: new FormControl<DayOfWeek[]>([])
-  });
-
   constructor(public override languageService: LanguageService, protected override commonService: CommonService,
     protected override restService: RestService, protected override http: HttpClient, protected override formBuilder: FormBuilder,
     protected override organizationService: OrganizationService, protected override changeDetector: ChangeDetectorRef,
@@ -63,8 +42,12 @@ export class AddOrganizationComponent extends GeneralEntityAddComponent<Organiza
       );
   }
 
+  protected override get additionalFormGroupElement(): any {
+    return { nonWorkingDays: new FormControl<DayOfWeek[]>([]) };
+  }
+
   ngOnInit(): void {
-    this.timeZoneListObservable = this.addOrganizationForm.get('timezone')!.valueChanges.pipe(
+    this.timeZoneListObservable = this.addForm.get('timezone')!.valueChanges.pipe(
       startWith(''),
       map(value => _filterTimezone(value || '')),
     );
@@ -74,7 +57,7 @@ export class AddOrganizationComponent extends GeneralEntityAddComponent<Organiza
     this.tineZoneSelectionSubscription = this.timeZoneListObservable.subscribe( zones => {
       if (zones.length == 1) {
         const item = zones[0];
-        this.addOrganizationForm.patchValue({country: item.Country});
+        this.addForm.patchValue({country: item.Country});
       }
     });
   }
@@ -87,9 +70,7 @@ export class AddOrganizationComponent extends GeneralEntityAddComponent<Organiza
   protected override getServiceUrl(): string {
     return environment.apiUrl.organization;
   }
-  protected override getAddForm(): FormGroup<any> {
-    return this.addOrganizationForm;
-  }
+
   protected override validateFormData(formData: any): void {
     const errors = this.message['error'];
     if (this.commonService.isNullOrEmpty(formData.name)) {
@@ -137,13 +118,13 @@ export class AddOrganizationComponent extends GeneralEntityAddComponent<Organiza
   }
 
   currencyChanged(currency: Currency) {
-    this.addOrganizationForm.patchValue({
+    this.addForm.patchValue({
       decimalMark: currency.decimalMark
     });
   }
 
   isDayOfWeekChecked(dayOfWeekName: string) {
-    const dayOfWeeks = this.addOrganizationForm.controls.nonWorkingDays.value;
+    const dayOfWeeks = this.addForm.controls['nonWorkingDays'].value;
     if (dayOfWeeks) {
       for (var dayOfWeek of dayOfWeeks) {
         if (dayOfWeek === (dayOfWeekName as DayOfWeek)) {
@@ -155,7 +136,7 @@ export class AddOrganizationComponent extends GeneralEntityAddComponent<Organiza
   }
 
   dayOfWeekChanged(dayOfWeekName: string, event: MatCheckboxChange) {
-    const dayOfWeeks = this.addOrganizationForm.controls.nonWorkingDays.value;
+    const dayOfWeeks = this.addForm.controls['nonWorkingDays'].value;
     if (dayOfWeeks) {
       if (event.checked == false) {
         for (let i = 0; i < dayOfWeeks.length; i++) {

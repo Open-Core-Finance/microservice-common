@@ -18,4 +18,8 @@ export class IndividualCustomer extends Customer {
     maritalStatus: MaritalStatus = MaritalStatus.SINGLE;
     nationality: Nationality = new Nationality();
     secondNationality: Nationality = new Nationality();
+
+    get name(): string {
+        return this.firstName;
+    }
 }

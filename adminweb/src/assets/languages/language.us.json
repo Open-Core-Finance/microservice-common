@@ -759,7 +759,9 @@
     "nationality": "Nationality",
     "secondNationality": "Second nationality",
     "contactInfo": "Contact info",
-    "mailingInfo": "Mailing info"
+    "mailingInfo": "Mailing info",
+    "deleteConfirmContent": "Are you sure to delete customer \"${0}\"?",
+    "deleteConfirmTitle": "Confirm delete customer"
   },
   "corporateCustomer": {
     "id": "ID",
@@ -793,7 +795,9 @@
     "taxNumber": "Tax number",
     "startDate": "Company start date",
     "contactInfo": "Contact info",
-    "mailingInfo": "Mailing info"
+    "mailingInfo": "Mailing info",
+    "deleteConfirmContent": "Are you sure to delete customer \"${0}\"?",
+    "deleteConfirmTitle": "Confirm delete customer"
   },
   "maritalStatus": {
     "SINGLE": "Single",
@@ -824,6 +828,7 @@
     "wikiDataId": "Wiki Data ID",
     "createdDate": "Created date",
     "lastModifiedDate": "Modified date",
+    "region": "Region",
     "addTitle": "Add sub region"
   },
   "countries": {
@@ -882,5 +887,28 @@
     "state": "State",
     "countryCode": "Country code",
     "country": "Country"
+  },
+  "nationality": {
+    "countryCode": "Country code",
+    "identityNumber": "Identity number",
+    "issuingCountry": "Issuing country",
+    "issuingPlace": "Issuing place",
+    "issuingDate": "Issuing date",
+    "expiringDate": "Expiring date",
+    "identityType": "Identity type",
+    "identityType_ID_CARD_9D": "ID card 9 digits",
+    "identityType_ID_CARD_12D": "ID card 12 digits",
+    "identityType_PASSPORT": "Passport",
+    "identityType_BIRTH_CERTIFICATE": "Birth certificate",
+    "identityType_BUSINESS_REGISTRATION_CERTIFICATE": "Business registration certficate",
+    "identityType_DRIVER_LICENSE": "Driver license",
+    "identityType_PERMANENT_RESIDENT_CARD": "Permanent resident card",
+    "identityType_MILITARY_ID_CARD": "Military ID card",
+    "identityType_POLICE_ID_CARD": "Police ID card",
+    "identityType_TEMPORARY_ID_CARD": "Temporary ID card",
+    "identityType_VISA": "Visa",
+    "identityType_SWIFT_CODE": "SWIFT code",
+    "identityType_INVESTMENT_REGISTRATION_CERTIFICATE": "Investment registration certficate",
+    "identityType_OTHER": "Other"
   }
 }

@@ -19,15 +19,21 @@ export class Customer implements GeneralModel<number>, ListableItem {
     mailingDistrict = "";
     mailingCity = "";
     mailingState = "";
+    mailingCityId = 0;
+    mailingStateId = 0;
     mailingZipPostalCode = "";
     mailingCountry = "";
+    mailingCountryId = 0;
     streetAddressLine1 = "";
     streetAddressLine2 = "";
     district = "";
     city = "";
+    cityId = 0;
     state = "";
+    stateId = 0;
     zipPostalCode = "";
     country = "";
+    countryId = 0;
 
     consentMarketing = false;
     consentNonMarketing = false;

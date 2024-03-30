@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ExchangeRate } from 'src/app/classes/products/ExchangeRate';
 import { UiFormInput, UiFormItem, UiFormSelect, UiSelectItem } from 'src/app/classes/ui/UiFormInput';
 import { environment } from 'src/environments/environment';
@@ -7,8 +7,6 @@ import { LanguageService } from 'src/app/services/language.service';
 import { CommonService } from 'src/app/services/common.service';
 import { RestService } from 'src/app/services/rest.service';
 import { HttpClient } from '@angular/common/http';
-import { MAT_DATE_FORMATS } from '@angular/material/core';
-import { CustomDateFormat } from 'src/app/classes/DateFormat';
 import { GeneralEntityAddComponent } from 'src/app/generic-component/GeneralEntityAddComponent';
 import { OrganizationService } from 'src/app/services/organization.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
@@ -22,8 +20,6 @@ import { Subscription } from 'rxjs';
   styleUrl: './add-exchange-rate.component.sass'
 })
 export class AddExchangeRateComponent extends GeneralEntityAddComponent<ExchangeRate>{
-
-  addForm = this.formBuilder.group(new ExchangeRate());
 
   currencies: Currency[] = [];
   currenciesSubscription: Subscription | undefined;
@@ -60,10 +56,6 @@ export class AddExchangeRateComponent extends GeneralEntityAddComponent<Exchange
 
   protected override getServiceUrl(): string {
     return environment.apiUrl.exchangeRate;
-  }
-
-  protected override getAddForm(): FormGroup<any> {
-    return this.addForm;
   }
 
   protected override validateFormData(formData: any): void {

@@ -28,8 +28,6 @@ import { SubRegion } from 'src/app/classes/geocode/SubRegion';
 })
 export class AddCountryComponent extends GeneralEntityAddComponent<Country> implements OnDestroy, OnInit {
 
-  addForm = this.formBuilder.group(this.newEmptyEntity());
-
   private regions: Region[] = [];
   private regionsSubscription: Subscription | undefined;
   private subRegions: SubRegion[] = [];
@@ -69,10 +67,6 @@ export class AddCountryComponent extends GeneralEntityAddComponent<Country> impl
 
   protected override getServiceUrl(): string {
     return environment.apiUrl.country;
-  }
-
-  protected override getAddForm(): FormGroup<any> {
-    return this.addForm;
   }
 
   protected override validateFormData(formData: any): void {

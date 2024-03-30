@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { Branch } from '../../classes/organizations/Branch';
-import { FormControl, FormGroup} from "@angular/forms";
+import { FormControl } from "@angular/forms";
 import { environment } from 'src/environments/environment';
 import { DayOfWeek } from 'src/app/classes/DayOfWeek';
 import { MatCheckboxChange } from '@angular/material/checkbox';
@@ -15,16 +15,12 @@ export class AddBranchComponent extends GeneralEntityAddComponent<Branch> {
 
   listDayOfWeeks = Object.keys(DayOfWeek);
 
-  addBranchForm = this.formBuilder.group(Object.assign(
-    Object.assign({}, new Branch()), {
+  protected override get additionalFormGroupElement(): any {
+    return {
       nonWorkingDays: new FormControl<DayOfWeek[]>([]),
       createdDate: new FormControl<any>(new Date()),
       lastModifiedDate: new FormControl<any>(new Date())
-    }
-  ));
-
-  protected override getAddForm(): FormGroup<any> {
-    return this.addBranchForm;
+    };
   }
 
   protected override validateFormData(formData: any): void {
@@ -48,7 +44,7 @@ export class AddBranchComponent extends GeneralEntityAddComponent<Branch> {
   }
 
   isDayOfWeekChecked(dayOfWeekName: string) {
-    const dayOfWeeks = this.addBranchForm.controls.nonWorkingDays.value;
+    const dayOfWeeks = this.addForm.controls['nonWorkingDays'].value;
     if (dayOfWeeks) {
       for (var dayOfWeek of dayOfWeeks) {
         if (dayOfWeek === (dayOfWeekName as DayOfWeek)) {
@@ -60,7 +56,7 @@ export class AddBranchComponent extends GeneralEntityAddComponent<Branch> {
   }
 
   dayOfWeekChanged(dayOfWeekName: string, event: MatCheckboxChange) {
-    const dayOfWeeks = this.addBranchForm.controls.nonWorkingDays.value;
+    const dayOfWeeks = this.addForm.controls['nonWorkingDays'].value;
     if (dayOfWeeks) {
       if (event.checked == false) {
         for (let i = 0; i < dayOfWeeks.length; i++) {

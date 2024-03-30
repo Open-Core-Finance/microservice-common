@@ -21,12 +21,21 @@ export abstract class GeneralEntityAddComponent<T extends any> {
   formItems: UiFormItem[];
   inputGroups: ExpansionPanelInputGroup[] = [];
 
+  addForm: FormGroup;
+
   constructor(public languageService: LanguageService, protected commonService: CommonService,
     protected restService: RestService, protected http: HttpClient, protected formBuilder: FormBuilder,
     protected organizationService: OrganizationService, protected changeDetector: ChangeDetectorRef,
     protected authenticationService: AuthenticationService) {
+      this.addForm = this.buildAddForm();
       this.formItems = this.buildFormItems();
       this.inputGroups = this.buildFormInputGroups();
+  }
+
+  protected buildAddForm(): FormGroup {
+    return this.formBuilder.group(
+      Object.assign(Object.assign({}, this.newEmptyEntity()), this.additionalFormGroupElement)
+    );
   }
 
   protected buildFormItems(): UiFormItem[] {
@@ -49,15 +58,13 @@ export abstract class GeneralEntityAddComponent<T extends any> {
 
   protected abstract getServiceUrl(): string;
 
-  protected abstract getAddForm(): FormGroup;
-
   protected abstract validateFormData(formData: any): void;
 
   protected abstract newEmptyEntity(): T;
 
   saveClick($event: any): any {
     this.clearMessages();
-    const formData = this.getAddForm().value;
+    const formData = this.addForm.value;
     this.validateFormData(formData);
     if (this.canDeleteFormId(formData.id)) {
       delete formData.id;
@@ -111,10 +118,10 @@ export abstract class GeneralEntityAddComponent<T extends any> {
   @Input() set addingItem(item: T| null) {
     this._addingItem = item;
     if (item) {
-      this.getAddForm().setValue(item);
+      this.addForm.setValue(item);
       this.afterBindingEnityToForm(false);
     } else {
-      this.getAddForm().setValue(this.newEmptyEntity() as any);
+      this.addForm.setValue(this.newEmptyEntity() as any);
       this.afterBindingEnityToForm(true);
     }
   }
@@ -138,5 +145,9 @@ export abstract class GeneralEntityAddComponent<T extends any> {
 
   protected buildListSelection(selectName: string): UiSelectItem[] {
     return [];
+  }
+
+  protected get additionalFormGroupElement(): any {
+    return {};
   }
 }
