@@ -23,7 +23,6 @@ import { GeneralEntityAddComponent } from 'src/app/generic-component/GeneralEnti
 })
 export class AddUserComponent extends GeneralEntityAddComponent<User> implements OnDestroy {
 
-  addForm = this.formBuilder.group(new User());
   genderEnum = Gender;
   allGenders = Object.keys(Gender);
 
@@ -32,10 +31,6 @@ export class AddUserComponent extends GeneralEntityAddComponent<User> implements
 
   protected override getServiceUrl(): string {
     return environment.apiUrl.user;
-  }
-
-  protected override getAddForm(): FormGroup<any> {
-    return this.addForm;
   }
 
   protected override validateFormData(formData: any): void {

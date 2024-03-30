@@ -6,7 +6,7 @@ WORKDIR /app
 ARG GIT_COMMIT
 ARG DB_NAME
 COPY gradle gradlew gradlew.bat build.gradle gradle ./
-COPY artifact-credential-sample.gradle artifact-credential.gradle ./
+COPY artifact-credential*.gradle ./
 COPY share-resources/docker-scripts/*.sh ./
 COPY share-resources/main-app-resources/public_key.der ./share-resources/main-app-resources/public_key.der
 COPY share-resources/main-app-resources/logback.xml ./

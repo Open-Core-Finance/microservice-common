@@ -27,8 +27,6 @@ export class AddHolidayComponent extends GeneralEntityAddComponent<Holiday> impl
   @ViewChild('holidayDatePicker')
   holidayDatePicker!: MatDatepicker<any>;
 
-  addHolidayForm = this.formBuilder.group(new Holiday());
-
   constructor(public override languageService: LanguageService, protected override commonService: CommonService,
     protected override restService: RestService, protected override http: HttpClient, protected override formBuilder: FormBuilder,
     protected override organizationService: OrganizationService, protected override changeDetector: ChangeDetectorRef,
@@ -53,10 +51,6 @@ export class AddHolidayComponent extends GeneralEntityAddComponent<Holiday> impl
   }
 
   ngOnDestroy(): void {
-  }
-
-  protected override getAddForm(): FormGroup<any> {
-    return this.addHolidayForm;
   }
 
   protected override validateFormData(formData: any): void {

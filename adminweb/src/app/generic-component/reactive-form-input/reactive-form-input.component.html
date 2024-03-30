@@ -1,6 +1,22 @@
 <mat-form-field class="{{additionClass}}" [appearance]="appearance" [color]="colorScheme">
     <mat-label *ngIf="addLabel">{{languageService.formatLanguage(placeHolderKey, [])}}</mat-label>
+
     <input [type]="inputType" matInput placeholder="{{languageService.formatLanguage(placeHolderKey, [])}}"
-        [(ngModel)]="value" [attr.required]="required ? '' : null" (change)="onChanged()">
+        [(ngModel)]="value" [attr.required]="required ? '' : null" (change)="onChanged()"
+        *ngIf="autoComleteItems.length < 1">
+    
+    <ng-container *ngIf="autoComleteItems.length > 0">
+        <input [type]="inputType" matInput placeholder="{{languageService.formatLanguage(placeHolderKey, [])}}"
+            [(ngModel)]="value" [attr.required]="required ? '' : null" (change)="onChanged()"
+            [matAutocomplete]="auto">
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+            @for (option of autoComleteItems; track option) {
+                <mat-option [value]="option.selectValue">
+                    {{languageService.formatLanguage(option.labelKey, [])}}
+                </mat-option>
+            }
+        </mat-autocomplete>
+    </ng-container>
+    
     <mat-label *ngIf="addLabel && postFixLabelKey != ''">&nbsp;X {{languageService.formatLanguage(postFixLabelKey, [])}}</mat-label>
 </mat-form-field>

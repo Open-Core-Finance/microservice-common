@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
 import { GeneralApiResponse } from 'src/app/classes/GeneralApiResponse';
 import { Rate, RateType } from 'src/app/classes/products/Rate';
 import { RateSource } from 'src/app/classes/products/RateSource';
@@ -16,27 +15,14 @@ export class AddRateComponent extends GeneralEntityAddComponent<Rate> implements
   rateTypes = Object.keys(RateType);
   rateSources: RateSource[] = [];
 
-  addRateForm = new FormGroup({
-    index: new FormControl(0),
-    id: new FormControl(""),
-    rateSourceId: new FormControl('', {nonNullable: true}),
-    type: new FormControl(RateType.INTEREST, {nonNullable: true}),
-    note: new FormControl('', {nonNullable: false}),
-    rateValue: new FormControl(0.0, {nonNullable: true}),
-    validFrom: new FormControl<any>(new Date(), {nonNullable: true}),
-    rateSourceName: new FormControl('', {nonNullable: false})
-  });
-
   ngOnInit(): void {
-    this.typeChange(this.addRateForm.value.rateValue)
+    this.typeChange(this.addForm.value.rateValue)
   }
 
   protected override getServiceUrl(): string {
     return environment.apiUrl.rate;
   }
-  protected override getAddForm(): FormGroup<any> {
-    return this.addRateForm;
-  }
+
   protected override validateFormData(formData: any): void {
     if (!formData.rateValue || formData.rateValue <= 0) {
       this.message['error'].push("value_error");

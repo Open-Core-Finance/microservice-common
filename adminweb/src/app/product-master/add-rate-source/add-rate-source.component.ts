@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
 import { RateType } from 'src/app/classes/products/Rate';
 import { RateSource } from 'src/app/classes/products/RateSource';
 import { GeneralEntityAddComponent } from 'src/app/generic-component/GeneralEntityAddComponent';
@@ -14,19 +13,8 @@ export class AddRateSourceComponent extends GeneralEntityAddComponent<RateSource
 
   rateTypes = Object.keys(RateType);
 
-  addRateSourceForm = new FormGroup({
-    index: new FormControl(0),
-    id: new FormControl(""),
-    name: new FormControl('', {nonNullable: true}),
-    type: new FormControl(RateType.INTEREST, {nonNullable: true}),
-    note: new FormControl('', {nonNullable: false})
-  });
-
   protected override getServiceUrl(): string {
     return environment.apiUrl.rateSource;
-  }
-  protected override getAddForm(): FormGroup<any> {
-    return this.addRateSourceForm;
   }
 
   protected override validateFormData(formData: any): void {

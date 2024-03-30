@@ -13,7 +13,7 @@ import { LanguageService } from "../services/language.service";
 import { RestService } from "../services/rest.service";
 import { CommonService } from "../services/common.service";
 import { HttpClient } from "@angular/common/http";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import { FormBuilder, FormControl } from "@angular/forms";
 import { OrganizationService } from "../services/organization.service";
 import { AccountState } from "../classes/accounts/AccountState";
 import { CurrencyBasesValue } from "../classes/products/ValueConstraint";
@@ -34,10 +34,6 @@ export abstract class GeneralProductAddComponent<T extends Product> extends Gene
     protected currenciesSubscription: Subscription | undefined;
     protected allAccountStates = Object.keys(AccountState);
     protected currenciesToDisplay: Currency[] = [];
-
-    addForm = this.formBuilder.group(
-        Object.assign(Object.assign({}, this.newEmptyEntity()), this.additionalFormGroupElement)
-    );
 
     constructor(public override languageService: LanguageService, protected override commonService: CommonService,
         protected override restService: RestService, protected override http: HttpClient, protected override formBuilder: FormBuilder,
@@ -92,7 +88,7 @@ export abstract class GeneralProductAddComponent<T extends Product> extends Gene
         this.organizationSubscription?.unsubscribe();
         this.organizationSubscription = this.organizationService.organizationSubject.subscribe( org => {
             this.lastOrganization = org;
-            const addForm = this.getAddForm();
+            const addForm = this.addForm;
             if (!addForm.value.currencies || addForm.value.currencies.length < 1) {
                 addForm.controls['currencies'].setValue([org?.currency.id]);
                 this.currenciesChanged();
@@ -113,7 +109,7 @@ export abstract class GeneralProductAddComponent<T extends Product> extends Gene
     }
 
     protected override afterBindingEnityToForm(isNew: boolean): void {
-        const form = this.getAddForm();
+        const form = this.addForm;
         var formValue = form.value;
         if (isNew && this.lastOrganization) {
             if (!formValue.currencies || formValue.currencies.length < 1) {
@@ -126,7 +122,7 @@ export abstract class GeneralProductAddComponent<T extends Product> extends Gene
     protected currenciesChanged() {
         this.currenciesToDisplay = [];
         this.currenciesToDisplay.push(new Currency());
-        const form = this.getAddForm();
+        const form = this.addForm;
         const supportedCurrencies = form.value.currencies ? form.value.currencies : [];
         for (let currency of this.currencies) {
             for(let  i = 0; i < supportedCurrencies.length; i++) {
@@ -225,20 +221,16 @@ export abstract class GeneralProductAddComponent<T extends Product> extends Gene
       }
 
       hasCurrenciesSelected(): boolean {
-        var currencies = this.getAddForm().value.currencies;
+        var currencies = this.addForm.value.currencies;
         return currencies != null && currencies.length > 0;
       }
 
-      protected get additionalFormGroupElement(): any {
+      protected override get additionalFormGroupElement(): any {
         return {
             productAvailabilityModeInfo: new FormControl<string[]>([]),
             productAvailabilities: new FormControl<ProductAvailability[]>([]),
             newAccountSetting: this.formBuilder.group(new ProductNewAccountSetting()),
             currencies: new FormControl<string[]>([])
         };
-      }
-
-      protected override getAddForm(): FormGroup<any> {
-        return this.addForm;
       }
 }

@@ -4,7 +4,7 @@
             {{languageService.formatLanguage('branch.addTitle', [])}}
         </mat-card-title>
         <mat-card-content>
-            <form [formGroup]="addBranchForm">
+            <form [formGroup]="addForm">
                 <mat-form-field class="full-width" appearance="fill" color="primary">
                     <input type="text" matInput placeholder="{{languageService.formatLanguage('branch.name', [])}}" formControlName="name" required>
                 </mat-form-field>
@@ -33,7 +33,7 @@
                     {{languageService.formatLanguage('branch.inheritNonWorkingDays', [])}}
                 </mat-checkbox>
 
-                <mat-card *ngIf="addBranchForm.value.inheritNonWorkingDays == false">
+                <mat-card *ngIf="addForm.value.inheritNonWorkingDays == false">
                     <mat-card-header>
                         <mat-card-title>{{languageService.formatLanguage('nonWorkingDays', [])}}</mat-card-title>
                     </mat-card-header>

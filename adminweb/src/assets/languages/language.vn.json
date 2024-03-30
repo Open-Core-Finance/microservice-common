@@ -759,7 +759,9 @@
     "nationality": "Quốc tịch",
     "secondNationality": "Quốc tịch thứ 2",
     "contactInfo": "Thông tin liên hệ",
-    "mailingInfo": "Thông tin gửi mail"
+    "mailingInfo": "Thông tin gửi mail",
+    "deleteConfirmContent": "Bạn có chắc muốn xoá khách hàng \"${0}\" không?",
+    "deleteConfirmTitle": "Xác nhận xoá khách hàng"
   },
   "corporateCustomer": {
     "id": "ID",
@@ -793,7 +795,9 @@
     "taxNumber": "Mã số thuế công ty",
     "startDate": "Ngày mở công ty",
     "contactInfo": "Thông tin liên hệ",
-    "mailingInfo": "Thông tin gửi mail"
+    "mailingInfo": "Thông tin gửi mail",
+    "deleteConfirmContent": "Bạn có chắc muốn xoá khách hàng \"${0}\" không?",
+    "deleteConfirmTitle": "Xác nhận xoá khách hàng"
   },
   "maritalStatus": {
     "SINGLE": "Độc thân",
@@ -883,5 +887,28 @@
     "state": "Liên bang",
     "countryCode": "Mã quốc gia",
     "country": "Quốc gia"
+  },
+  "nationality": {
+    "countryCode": "Mã quốc gia",
+    "identityNumber": "Số định danh",
+    "issuingCountry": "Quốc gia cấp",
+    "issuingPlace": "Nơi cấp",
+    "issuingDate": "Ngày cấp",
+    "expiringDate": "Ngày hết hạn",
+    "identityType": "Loại định danh",
+    "identityType_ID_CARD_9D": "CMND 9 số",
+    "identityType_ID_CARD_12D": "CCCD 12 số",
+    "identityType_PASSPORT": "Passport",
+    "identityType_BIRTH_CERTIFICATE": "Khai sinh",
+    "identityType_BUSINESS_REGISTRATION_CERTIFICATE": "Giấy phép đăng ký kinh doanh",
+    "identityType_DRIVER_LICENSE": "Bằng lái xe",
+    "identityType_PERMANENT_RESIDENT_CARD": "Hộ khẩu",
+    "identityType_MILITARY_ID_CARD": "Chứng nhận lực lượng vũ trang",
+    "identityType_POLICE_ID_CARD": "Chứng nhận cảnh sát",
+    "identityType_TEMPORARY_ID_CARD": "Căn cước tạm thời",
+    "identityType_VISA": "Visa",
+    "identityType_SWIFT_CODE": "Mã số SWIFT",
+    "identityType_INVESTMENT_REGISTRATION_CERTIFICATE": "Giấy phép đăng ký đầu tư",
+    "identityType_OTHER": "Giấy tờ khác"
   }
 }

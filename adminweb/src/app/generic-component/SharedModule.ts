@@ -27,6 +27,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import { ReactiveFormTextareaComponent } from './reactive-form-textarea/reactive-form-textarea.component';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatDividerModule} from '@angular/material/divider';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,7 @@ import {MatDividerModule} from '@angular/material/divider';
   imports: [
     CommonModule, MatDialogModule, MatButtonModule, MatInputModule, MatIconModule, FormsModule, ReactiveFormsModule,
     MatFormFieldModule, MatSelectModule, MatCardModule, MatProgressSpinnerModule, MatPaginatorModule, MatTableModule,
-    MatSortModule, MatCheckboxModule, MatDatepickerModule, MatExpansionModule, MatDividerModule
+    MatSortModule, MatCheckboxModule, MatDatepickerModule, MatExpansionModule, MatDividerModule, MatAutocompleteModule
   ],
   // export the component to make it available in other modules where the Shared module is imported
   exports: [
