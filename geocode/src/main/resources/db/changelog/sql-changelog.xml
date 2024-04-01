@@ -14,5 +14,7 @@
     <include file="classpath:db/changelog/sql/007-cities.sql"/>
     <include file="classpath:db/changelog/sql/008-cities.sql"/>
     <include file="classpath:db/changelog/sql/009-cities.sql"/>
+    <include file="classpath:db/changelog/sql/010-cities.sql"/>
+    <include file="classpath:db/changelog/sql/011-cities.sql"/>
 
 </databaseChangeLog>

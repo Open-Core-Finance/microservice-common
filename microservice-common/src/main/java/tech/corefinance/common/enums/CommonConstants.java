@@ -19,7 +19,9 @@ public final class CommonConstants {
     public static final String HEADER_KEY_INTERNAL_API_KEY = "x-internal-api-key";
 
     public static final String DEVICE_ID = "x-device-id";
-    public static final String EXTERNAL_IP_ADDRESS = "x-external-ip";
+    public static final String HEADER_KEY_EXTERNAL_IP_ADDRESS = "x-external-ip";
+    public static final String HEADER_KEY_REAL_IP_ADDRESS = "X-Real-IP";
+    public static final String HEADER_KEY_FORWARDED_FOR = "X-Forwarded-For";
     public static final String BEARER_PREFIX = "Bearer ";
 
     public static final String ATTRIBUTE_NAME_DEVICE_ID = "deviceId";

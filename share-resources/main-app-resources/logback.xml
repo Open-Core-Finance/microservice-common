@@ -41,8 +41,8 @@
 	<logger name="org.hibernate" level="WARN" />
 	<logger name="tech.corefinance.common.converter" level="WARN" />
 	<logger name="tech.corefinance.common.audit" level="WARN" />
-	<logger name="tech.corefinance.common.aop.ApiAuthorizationCheck" level="WARN" />
-	<logger name="tech.corefinance.common.service.JwtServiceImpl" level="WARN" />
+<!--	<logger name="tech.corefinance.common.aop.ApiAuthorizationCheck" level="WARN" />-->
+<!--	<logger name="tech.corefinance.common.service.JwtServiceImpl" level="WARN" />-->
 
 	<root level="INFO">
 		<appender-ref ref="STDOUT" />

@@ -177,7 +177,8 @@ public class JwtServiceImpl implements JwtService {
             }
         }
         if (!ipaddress.equalsIgnoreCase(decodedJWT.getClaim(CommonConstants.ATTRIBUTE_NAME_IP_ADDRESS).asString())) {
-            throw new JWTVerificationException("IP Address miss matched in token and request!!");
+            throw new JWTVerificationException("IP Address [" + ipaddress + "] miss matched in token and request ["
+                    + decodedJWT.getClaim(CommonConstants.ATTRIBUTE_NAME_IP_ADDRESS) + "]!!");
         }
         var requestTenant = TenantContext.getInstance().getTenantId();
         var tokenTenant = decodedJWT.getClaim("tenantId").asString();
@@ -191,12 +192,20 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public String extractIpAddress(HttpServletRequest httpServletRequest) throws UnknownHostException {
-        String externalIpaddress = httpServletRequest.getHeader(CommonConstants.EXTERNAL_IP_ADDRESS);
-        if (StringUtils.isBlank(externalIpaddress)) {
-            return httpServletRequest.getRemoteAddr();
-        } else {
-            return externalIpaddress;
+        var listHeaders = new String[] {
+                CommonConstants.HEADER_KEY_EXTERNAL_IP_ADDRESS, CommonConstants.HEADER_KEY_REAL_IP_ADDRESS,
+                CommonConstants.HEADER_KEY_FORWARDED_FOR
+        };
+        for (var headerKey : listHeaders) {
+            var ipAddress = httpServletRequest.getHeader(headerKey);
+            if (!StringUtils.isBlank(ipAddress)) {
+                log.debug("Found IP address in header [{}] is [{}]", headerKey, ipAddress);
+                return ipAddress;
+            }
         }
+        var remoteIp = httpServletRequest.getRemoteAddr();
+        log.debug("Retreived IP Address from request [{}]", remoteIp);
+        return remoteIp;
     }
 
     @Override

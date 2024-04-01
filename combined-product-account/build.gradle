@@ -8,6 +8,7 @@ dependencies {
     implementation project(":gl-account")
     implementation project(":loan-account")
     implementation project(":customer")
+    implementation project(":common-feign-client")
 }
 
 processResources {

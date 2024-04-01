@@ -14,7 +14,7 @@ import tech.corefinance.common.service.CommonService;
 import java.io.Serializable;
 import java.util.List;
 
-public interface CrudController<I extends Serializable ,T extends GenericModel<I>, D extends CreateUpdateDto<I>> {
+public interface CrudController<I extends Serializable, T extends GenericModel<I>, D extends CreateUpdateDto<I>> {
 
     CommonService<I, T, ?> getHandlingService();
 

@@ -33,6 +33,9 @@ export class AddRegionComponent extends GeneralEntityAddComponent<Region> implem
     if (this.commonService.isNullOrEmpty(formData.name)) {
       errors.push("name_empty")
     }
+    if (!formData.translations || formData.translations.trim() == '' || formData.translations == '{}') {
+      formData.translations = null;
+    }
   }
 
   protected override newEmptyEntity(): Region {

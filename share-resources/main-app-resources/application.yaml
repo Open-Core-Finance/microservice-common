@@ -31,6 +31,7 @@ spring:
     drop-first: false
     enabled: true
     contexts: development
+
 tech:
   corefinance:
     app:
@@ -64,6 +65,7 @@ tech:
         repositories: true
         api: true
     security:
+      exclude-classes-authorize-check: "feign.Target"
       internal-api-key: No-key
       # Json Web Token
       jwt:
@@ -119,6 +121,9 @@ tech:
         zoned-date-time: true
         basic-user: true
         delete-track: true
+    services:
+      url:
+        geocode: ${GEOCODE_SERVICE_URL:http://localhost:8086}
 export:
   format:
     date: yyyy/MM/dd

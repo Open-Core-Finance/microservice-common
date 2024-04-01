@@ -33,6 +33,9 @@ export class ReactiveFormTextareaComponent implements OnInit, ControlValueAccess
   @Input()
   placeHolderKey: string = "";
 
+  @Input()
+  readonly = false;
+
   constructor(public languageService: LanguageService) {
   }
 

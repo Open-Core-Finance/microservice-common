@@ -39,6 +39,8 @@ export class ReactiveFormInputComponent implements OnInit, ControlValueAccessor,
   postFixLabelKey: string = "";
   @Input()
   autoComleteItems: UiSelectItem[] = [];
+  @Input()
+  readonly = false;
 
   constructor(public languageService: LanguageService) {
   }

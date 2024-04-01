@@ -58,6 +58,9 @@ export class AddStateComponent extends GeneralEntityAddComponent<State> implemen
     if (this.commonService.isNullOrEmpty(formData.name)) {
       errors.push("name_empty")
     }
+    if (!formData.translations || formData.translations.trim() == '' || formData.translations == '{}') {
+      formData.translations = null;
+    }
   }
 
   protected override newEmptyEntity(): State {

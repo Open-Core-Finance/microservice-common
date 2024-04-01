@@ -35,6 +35,9 @@ export class ReactiveFormSelectComponent implements OnInit, ControlValueAccessor
   @Input()
   selectItems: UiSelectItem[] = [];
 
+  @Input()
+  readonly = false;
+
   constructor(public languageService: LanguageService) {
   }
 

@@ -29,7 +29,7 @@ public class ApiLogging extends MethodDataLoging {
     @Autowired
     private HttpServletRequest request;
 
-    public ApiLogging(@Value("${tech.corefinance.log.exclude-classes:}") List<String> excludeClasses) {
+    public ApiLogging(@Value("${tech.corefinance.log.exclude-classes:feign.Target}") List<String> excludeClasses) {
         super(excludeClasses);
     }
 

@@ -58,6 +58,9 @@ export class AddSubRegionComponent extends GeneralEntityAddComponent<SubRegion> 
     if (this.commonService.isNullOrEmpty(formData.name)) {
       errors.push("name_empty")
     }
+    if (!formData.translations || formData.translations.trim() == '' || formData.translations == '{}') {
+      formData.translations = null;
+    }
   }
 
   protected override newEmptyEntity(): SubRegion {

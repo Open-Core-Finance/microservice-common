@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS individual_customer
     mailing_zip_postal_code character varying(255),
     malling_country character varying(255),
     malling_country_id int,
+    malling_same_with_address boolean NOT NULL DEFAULT true,
     street_address_line_1 character varying(255),
     street_address_line_2 character varying(255),
     district character varying(255),
@@ -47,6 +48,7 @@ CREATE TABLE IF NOT EXISTS individual_customer
     place_of_birth character varying(255),
     dob date,
     nationality jsonb,
+    single_nationality boolean NOT NULL DEFAULT true,
     second_nationality jsonb,
     marital_status character varying(255),
     CONSTRAINT individual_customer_marital_status_check CHECK (marital_status::text = ANY (ARRAY['SINGLE'::character varying, 'MARRIED'::character varying, 'WINDOWED'::character varying, 'DIVORCED'::character varying, 'SEPARATED'::character varying, 'UNKNOWN'::character varying]::text[]))
@@ -73,6 +75,7 @@ CREATE TABLE IF NOT EXISTS individual_customer
      mailing_zip_postal_code character varying(255),
      malling_country character varying(255),
      malling_country_id int,
+     malling_same_with_address boolean NOT NULL DEFAULT true,
      street_address_line_1 character varying(255),
      street_address_line_2 character varying(255),
      district character varying(255),

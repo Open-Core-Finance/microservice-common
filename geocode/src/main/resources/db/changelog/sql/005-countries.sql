@@ -1,7 +1,7 @@
 -- Liquibase formatted SQL
 -- ChangeSet Trung.Doan:5 labels:countries runOnChange:true
 
-CREATE SEQUENCE IF NOT EXISTS public.country_id_seq AS integer START WITH 250 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
+CREATE SEQUENCE IF NOT EXISTS public.country_id_seq AS integer START WITH 251 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
 
 CREATE TABLE IF NOT EXISTS public.country (
     id integer NOT NULL DEFAULT nextval('public.country_id_seq'::regclass) PRIMARY KEY,

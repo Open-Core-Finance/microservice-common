@@ -761,7 +761,9 @@
     "contactInfo": "Contact info",
     "mailingInfo": "Mailing info",
     "deleteConfirmContent": "Are you sure to delete customer \"${0}\"?",
-    "deleteConfirmTitle": "Confirm delete customer"
+    "deleteConfirmTitle": "Confirm delete customer",
+    "mailingSameWithAddress": "Mailing address is the same with contact address",
+    "singleNationality": "Single nationality"
   },
   "corporateCustomer": {
     "id": "ID",
@@ -797,7 +799,8 @@
     "contactInfo": "Contact info",
     "mailingInfo": "Mailing info",
     "deleteConfirmContent": "Are you sure to delete customer \"${0}\"?",
-    "deleteConfirmTitle": "Confirm delete customer"
+    "deleteConfirmTitle": "Confirm delete customer",
+    "mailingSameWithAddress": "Mailing address is the same with contact address"
   },
   "maritalStatus": {
     "SINGLE": "Single",

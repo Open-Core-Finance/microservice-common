@@ -4,20 +4,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tech.corefinance.common.annotation.ControllerManagedResource;
-import tech.corefinance.common.controller.CrudServiceAndController;
+import tech.corefinance.common.controller.CrudController;
+import tech.corefinance.common.service.CommonService;
 import tech.corefinance.geocode.entity.State;
-import tech.corefinance.geocode.repository.StateRepository;
+import tech.corefinance.geocode.service.StateService;
 
 @RestController
 @RequestMapping("/states")
 @ControllerManagedResource("state")
-public class StateController implements CrudServiceAndController<Integer, State, State, StateRepository> {
+public class StateController implements CrudController<Integer, State, State> {
 
     @Autowired
-    private StateRepository stateRepository;
+    private StateService stateService;
 
     @Override
-    public StateRepository getRepository() {
-        return stateRepository;
+    public CommonService<Integer, State, ?> getHandlingService() {
+        return stateService;
     }
 }
