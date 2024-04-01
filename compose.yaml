@@ -34,6 +34,7 @@ services:
       - SERVICE_ENV=local
       - SERVICE_PORT=${combined_nontenancy_port}
       - GIT_COMMIT=${GIT_COMMIT}
+      - GEOCODE_SERVICE_URL=http://corefinance-ngnix-server:87
     deploy:
       mode: replicated
       replicas: 1
@@ -59,6 +60,7 @@ services:
       - SERVICE_ENV=local
       - SERVICE_PORT=${combined_product_account_port}
       - GIT_COMMIT=${GIT_COMMIT}
+      - GEOCODE_SERVICE_URL=http://corefinance-ngnix-server:87
     deploy:
       mode: replicated
       replicas: 2
@@ -71,6 +73,7 @@ services:
         - PROJECT_NAME=adminweb
       context: .
       dockerfile: share-resources/Dockerfile-AdminWeb
+    container_name: corefinance-ngnix-server
     ports:
       - "9090:80" # Admin Web
       - "9091:81" # Userprofile

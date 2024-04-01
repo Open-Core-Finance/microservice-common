@@ -41,8 +41,11 @@ public class IndividualCustomer extends Customer implements CreateUpdateDto<Long
 
     @JdbcTypeCode(SqlTypes.JSON)
     private Nationality nationality;
+    @Column(name = "single_nationality")
+    private boolean singleNationality = true;
 
     @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "second_nationality")
     private Nationality secondNationality;
 
     @Column(name = "marital_status")

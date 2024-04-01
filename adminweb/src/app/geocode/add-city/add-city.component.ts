@@ -74,6 +74,9 @@ export class AddCityComponent extends GeneralEntityAddComponent<City> implements
     if (this.commonService.isNullOrEmpty(formData.name)) {
       errors.push("name_empty")
     }
+    if (!formData.translations || formData.translations.trim() == '' || formData.translations == '{}') {
+      formData.translations = null;
+    }
   }
 
   protected override newEmptyEntity(): City {

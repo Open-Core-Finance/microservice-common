@@ -2,13 +2,13 @@
     <mat-label *ngIf="addLabel">{{languageService.formatLanguage(placeHolderKey, [])}}</mat-label>
 
     <input [type]="inputType" matInput placeholder="{{languageService.formatLanguage(placeHolderKey, [])}}"
-        [(ngModel)]="value" [attr.required]="required ? '' : null" (change)="onChanged()"
-        *ngIf="autoComleteItems.length < 1">
+        [(ngModel)]="value" [required]="required" (change)="onChanged()"
+        *ngIf="autoComleteItems.length < 1" [disabled]="readonly">
     
     <ng-container *ngIf="autoComleteItems.length > 0">
         <input [type]="inputType" matInput placeholder="{{languageService.formatLanguage(placeHolderKey, [])}}"
-            [(ngModel)]="value" [attr.required]="required ? '' : null" (change)="onChanged()"
-            [matAutocomplete]="auto">
+            [(ngModel)]="value" [required]="required" (change)="onChanged()"
+            [matAutocomplete]="auto" [disabled]="readonly">
         <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
             @for (option of autoComleteItems; track option) {
                 <mat-option [value]="option.selectValue">

@@ -1,7 +1,7 @@
 -- Liquibase formatted SQL
 -- ChangeSet Trung.Doan:4 labels:sub-regions runOnChange:true
 
-CREATE SEQUENCE IF NOT EXISTS public.subregion_id_seq AS integer START WITH 22 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
+CREATE SEQUENCE IF NOT EXISTS public.subregion_id_seq AS integer START WITH 23 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
 
 CREATE TABLE IF NOT EXISTS public.subregion (
     id integer NOT NULL DEFAULT nextval('public.subregion_id_seq'::regclass) PRIMARY KEY,

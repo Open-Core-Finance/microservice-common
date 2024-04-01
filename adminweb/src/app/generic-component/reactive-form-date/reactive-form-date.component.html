@@ -1,7 +1,8 @@
 <mat-form-field class="{{additionClass}}" [appearance]="appearance" [color]="colorScheme">
     <mat-label *ngIf="addLabel">{{languageService.formatLanguage(placeHolderKey, [])}}</mat-label>
     <input [type]="inputType" matInput placeholder="{{languageService.formatLanguage(placeHolderKey, [])}}"
-        [(ngModel)]="value" [attr.required]="required ? '' : null" (ngModelChange)="onChanged()" (change)="onChanged()" [matDatepicker]="datePicker">
+        [(ngModel)]="value" [required]="required" (ngModelChange)="onChanged()" (change)="onChanged()" [matDatepicker]="datePicker"
+        [disabled]="readonly">
     <mat-datepicker-toggle matIconSuffix [for]="datePicker"></mat-datepicker-toggle>
     <mat-datepicker #datePicker></mat-datepicker>
 </mat-form-field>

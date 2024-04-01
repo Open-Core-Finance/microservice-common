@@ -1,7 +1,7 @@
 -- Liquibase formatted SQL
 -- ChangeSet Trung.Doan:6 labels:states runOnChange:true
 
-CREATE SEQUENCE IF NOT EXISTS public.state_id_seq AS integer START WITH 5227 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
+CREATE SEQUENCE IF NOT EXISTS public.state_id_seq AS integer START WITH 5228 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
 
 CREATE TABLE public.state (
     id integer NOT NULL DEFAULT nextval('public.state_id_seq'::regclass) PRIMARY KEY,

@@ -4,20 +4,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tech.corefinance.common.annotation.ControllerManagedResource;
-import tech.corefinance.common.controller.CrudServiceAndController;
+import tech.corefinance.common.controller.CrudController;
+import tech.corefinance.common.service.CommonService;
 import tech.corefinance.geocode.entity.SubRegion;
-import tech.corefinance.geocode.repository.SubRegionRepository;
+import tech.corefinance.geocode.service.SubRegionService;
 
 @RestController
 @RequestMapping("/sub-regions")
 @ControllerManagedResource("subRegion")
-public class SubRegionController implements CrudServiceAndController<Integer, SubRegion, SubRegion, SubRegionRepository> {
+public class SubRegionController implements CrudController<Integer, SubRegion, SubRegion> {
 
     @Autowired
-    private SubRegionRepository subRegionRepository;
+    private SubRegionService subRegionService;
 
     @Override
-    public SubRegionRepository getRepository() {
-        return subRegionRepository;
+    public CommonService<Integer, SubRegion, ?> getHandlingService() {
+        return subRegionService;
     }
 }

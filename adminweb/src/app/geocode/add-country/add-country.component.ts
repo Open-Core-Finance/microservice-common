@@ -74,6 +74,12 @@ export class AddCountryComponent extends GeneralEntityAddComponent<Country> impl
     if (this.commonService.isNullOrEmpty(formData.name)) {
       errors.push("name_empty")
     }
+    if (!formData.translations || formData.translations.trim() == '' || formData.translations == '{}') {
+      formData.translations = null;
+    }
+    if (!formData.timezones || formData.timezones.trim() == '' || formData.timezones == '{}') {
+      formData.timezones = null;
+    }
   }
 
   protected override newEmptyEntity(): Country {

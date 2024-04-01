@@ -10,13 +10,14 @@ import org.springframework.boot.context.ApplicationPidFileWriter;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.util.StringUtils;
 import tech.corefinance.common.enums.CommonConstants;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 import java.io.File;
 
 @SpringBootApplication(scanBasePackages = {
         "tech.corefinance.product", "tech.corefinance.account.deposit", "tech.corefinance.account.common",
         "tech.corefinance.account.gl", "tech.corefinance.account.loan", "tech.corefinance.common",
-        "tech.corefinance.customer"
+        "tech.corefinance.customer", "tech.corefinance.feign.client"
 })
 @EnableJpaRepositories(basePackages = {
         "tech.corefinance.product.repository", "tech.corefinance.account.loan.repository", "tech.corefinance.account.gl.repository",
@@ -30,6 +31,7 @@ import java.io.File;
         "tech.corefinance.account.loan.entity", "tech.corefinance.account.gl.entity", "tech.corefinance.customer.entity"
 })
 @ConditionalOnProperty(prefix = "tech.app.enabled", name = "combined-product-account", havingValue = "true",matchIfMissing = true)
+@EnableFeignClients(basePackages = {"tech.corefinance.feign.client"})
 public class CombinedAccountApplication {
 
     public static void main(String[] args) {

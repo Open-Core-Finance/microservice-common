@@ -24,6 +24,7 @@ export class Customer implements GeneralModel<number>, ListableItem {
     mailingZipPostalCode = "";
     mailingCountry = "";
     mailingCountryId = 0;
+    mailingSameWithAddress = true;
     streetAddressLine1 = "";
     streetAddressLine2 = "";
     district = "";

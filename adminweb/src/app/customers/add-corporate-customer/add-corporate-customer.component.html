@@ -1,1 +1,4 @@
-<p>add-corporate-customer works!</p>
+<app-generic-form (cancel)="this.cancelClick($event)" (save)="this.saveClick($event)" [formGroup]="addForm"
+  [inputGroups]="inputGroups"
+  [formItems]="formItems" formTitleKey="individualCustomer.addTitle" [message]="message">
+</app-generic-form>

@@ -10,13 +10,15 @@ import org.springframework.boot.context.ApplicationPidFileWriter;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.util.StringUtils;
 import tech.corefinance.common.enums.CommonConstants;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 import java.io.File;
 
-@SpringBootApplication(scanBasePackages = {"tech.corefinance.customer", "tech.corefinance.common"})
+@SpringBootApplication(scanBasePackages = {"tech.corefinance.customer", "tech.corefinance.common", "tech.corefinance.feign.client"})
 @EnableJpaRepositories(basePackages = {"tech.corefinance.customer.repository", "tech.corefinance.common.jpa.repository", "tech.corefinance.common.repository"})
 @EntityScan(basePackages = {"tech.corefinance.common.jpa.model", "tech.corefinance.customer.entity", "tech.corefinance.common.model"})
 @ConditionalOnProperty(prefix = "tech.app.enabled", name = "customer", havingValue = "true",matchIfMissing = true)
+@EnableFeignClients(basePackages = {"tech.corefinance.feign.client.geocode"})
 public class CustomerApplication {
 
     public static void main(String[] args) {

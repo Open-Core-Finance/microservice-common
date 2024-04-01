@@ -3,6 +3,7 @@ import groovy.xml.*
 dependencies {
     implementation project(":geocode")
     implementation project(":userprofile")
+    implementation project(":common-feign-client")
 }
 
 processResources {

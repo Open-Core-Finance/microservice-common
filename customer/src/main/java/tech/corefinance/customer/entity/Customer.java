@@ -68,6 +68,8 @@ public abstract class Customer implements GenericModel<Long>, AuditableEntity<Ba
     private String mailingCountry;
     @Column(name = "malling_country_id")
     private Integer mailingCountryId;
+    @Column(name = "malling_same_with_address")
+    private boolean mailingSameWithAddress = true;
 
     @Column(name = "street_address_line_1")
     private String streetAddressLine1;

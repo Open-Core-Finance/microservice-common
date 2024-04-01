@@ -29,6 +29,9 @@ export class ReactiveFormCheckboxComponent implements OnInit, ControlValueAccess
   @Input()
   labelKey: string = "";
 
+  @Input()
+  readonly = false;
+
   constructor(public languageService: LanguageService) {
   }
 

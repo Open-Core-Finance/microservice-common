@@ -7,6 +7,7 @@ ARG GIT_COMMIT
 ARG DB_NAME
 COPY gradle gradlew gradlew.bat build.gradle gradle ./
 COPY artifact-credential*.gradle ./
+COPY gradle.properties ./gradle.properties
 COPY share-resources/docker-scripts/*.sh ./
 COPY share-resources/main-app-resources/public_key.der ./share-resources/main-app-resources/public_key.der
 COPY share-resources/main-app-resources/logback.xml ./
@@ -22,7 +23,8 @@ COPY common-account/src ./common-account/src
 COPY common-account/build.gradle ./common-account/build.gradle
 COPY common-product/src ./common-product/src
 COPY common-product/build.gradle ./common-product/build.gradle
-COPY gradle.properties ./gradle.properties
+COPY common-feign-client/src ./common-feign-client/src
+COPY common-feign-client/build.gradle ./common-feign-client/build.gradle
 RUN find ./
 
 # Build for userprofile component

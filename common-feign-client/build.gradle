@@ -1,0 +1,4 @@
+dependencies {
+//    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '4.1.1'
+    api group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
+}

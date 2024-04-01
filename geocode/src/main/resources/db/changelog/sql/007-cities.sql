@@ -1,7 +1,7 @@
 -- Liquibase formatted SQL
 -- ChangeSet Trung.Doan:7 labels:cities runOnChange:true
 
-CREATE SEQUENCE IF NOT EXISTS public.city_id_seq AS integer START WITH 153660 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
+CREATE SEQUENCE IF NOT EXISTS public.city_id_seq AS integer START WITH 153661 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
 
 CREATE TABLE public.city
 (

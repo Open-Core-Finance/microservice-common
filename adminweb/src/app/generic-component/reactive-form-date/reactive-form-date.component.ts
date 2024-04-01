@@ -35,6 +35,9 @@ export class ReactiveFormDateComponent implements OnInit, ControlValueAccessor, 
   @Input()
   placeHolderKey: string = "";
 
+  @Input()
+  readonly = false;
+
   constructor(public languageService: LanguageService) {
   }
 
