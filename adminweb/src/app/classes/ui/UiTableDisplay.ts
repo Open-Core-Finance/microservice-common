@@ -59,6 +59,7 @@ export class TableColumnUi {
      * 4. function: (input) => {}
      * 5. labelPrefix: "display.column_"
      * 6. complex: true => Other display can set by html template for complexCellTemplate[column.columnName]
+     * 7. subField: childattr
      */
     columnTransformOptions: any = {
         plainTextDisplay: true

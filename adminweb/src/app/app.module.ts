@@ -56,7 +56,6 @@ import { AddDepositProductComponent } from './products/add-deposit-product/add-d
 import {ProductTypeComponent} from "./product-master/product-type/product-type.component";
 import {AddProductTypeComponent} from "./product-master/add-product-type/add-product-type.component";
 import {BranchesSelectionComponent} from "./generic-component/branches-selection/branches-selection.component";
-import { CurrenciesSelectionComponent } from './generic-component/currencies-selection/currencies-selection.component';
 import { DepositProductFeeInputComponent } from './product-master/deposit-product-fee-input/deposit-product-fee-input.component';
 import { AddGlProductComponent } from './products/add-gl-product/add-gl-product.component';
 import { GlProductComponent } from './products/gl-product/gl-product.component';
@@ -76,47 +75,49 @@ import { LoanRepaymentCollectionInputComponent } from './products/loan-repayment
 import { CdkDropList, CdkDrag} from '@angular/cdk/drag-drop';
 import { SharedModule } from './generic-component/SharedModule';
 import { LoanProductFeeInputComponent } from './product-master/loan-product-fee-input/loan-product-fee-input.component';
+import { CurrencyModule } from './generic-component/CurrencyModule';
+import { NewAccountSettingComponent } from "./products/new-account-setting/new-account-setting.component";
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    HeaderComponent,
-    LeftMenuComponent,
-    SettingsComponent,
-    OrganizationComponent, AddOrganizationComponent, OrganizationDetailsComponent,
-    CurrenyComponent,
-    AddCurrenyComponent,
-    HolidayComponent, AddHolidayComponent,
-    BranchComponent, AddBranchComponent,
-    ProductCategoryComponent, AddProductCategoryComponent,
-    ExchangeRateComponent, AddExchangeRateComponent,
-    RateComponent, AddRateComponent,
-    RateSourceComponent, AddRateSourceComponent,
-    DepositProductComponent, AddDepositProductComponent, BranchesSelectionComponent, CurrenciesSelectionComponent,
-    ProductTypeComponent, AddProductTypeComponent, DepositProductFeeInputComponent,
-    AddGlProductComponent, GlProductComponent, CurrencyValueInputComponent,
-    AddCryptoProductComponent, CryptoProductComponent, LoanRepaymentCollectionInputComponent,
-    AddLoanProductComponent, LoanProductComponent,
-    DepositInterestRateInputComponent, DepositLimitInputComponent, WithdrawalLimitInputComponent,
-    LoanInterestRateInputComponent, LoanRepaymentSchedulingInputComponent, ValueConstraintsInputComponent, LoanProductFeeInputComponent
-  ],
-  imports: [
-    BrowserModule, FormsModule, ReactiveFormsModule, SharedModule,
-    AppRoutingModule, HttpClientModule,
-    BrowserAnimationsModule, MatTooltipModule,
-    MatButtonModule, MatInputModule, MatMenuModule, MatIconModule, MatCardModule, MatSelectModule,
-    MatExpansionModule, MatPaginatorModule, MatTableModule, MatSortModule, MatProgressSpinnerModule,
-    MatDialogModule, MatAutocompleteModule, MatDatepickerModule, MatNativeDateModule, MatDividerModule,
-    MatListModule, MatToolbarModule, MatSidenavModule, AsyncPipe, MatCheckboxModule,
-    CdkDropList, CdkDrag
-  ],
-  providers: [
-    {provide: MAT_DATE_FORMATS, useClass: CustomDateFormat},
-  ],
-  bootstrap: [AppComponent],
-  exports: [
-    MatButtonModule, MatInputModule
-  ]
+    declarations: [
+        AppComponent,
+        LoginComponent,
+        HeaderComponent,
+        LeftMenuComponent,
+        SettingsComponent,
+        OrganizationComponent, AddOrganizationComponent, OrganizationDetailsComponent,
+        CurrenyComponent,
+        AddCurrenyComponent,
+        HolidayComponent, AddHolidayComponent,
+        BranchComponent, AddBranchComponent,
+        ProductCategoryComponent, AddProductCategoryComponent,
+        ExchangeRateComponent, AddExchangeRateComponent,
+        RateComponent, AddRateComponent,
+        RateSourceComponent, AddRateSourceComponent,
+        DepositProductComponent, AddDepositProductComponent, BranchesSelectionComponent,
+        ProductTypeComponent, AddProductTypeComponent, DepositProductFeeInputComponent,
+        AddGlProductComponent, GlProductComponent, CurrencyValueInputComponent,
+        AddCryptoProductComponent, CryptoProductComponent, LoanRepaymentCollectionInputComponent,
+        AddLoanProductComponent, LoanProductComponent,
+        DepositInterestRateInputComponent, DepositLimitInputComponent, WithdrawalLimitInputComponent,
+        LoanInterestRateInputComponent, LoanRepaymentSchedulingInputComponent, ValueConstraintsInputComponent, LoanProductFeeInputComponent
+    ],
+    providers: [
+        { provide: MAT_DATE_FORMATS, useClass: CustomDateFormat },
+    ],
+    bootstrap: [AppComponent],
+    exports: [
+        MatButtonModule, MatInputModule, CurrencyModule, MatIconModule
+    ],
+    imports: [
+        BrowserModule, FormsModule, ReactiveFormsModule, SharedModule,
+        AppRoutingModule, HttpClientModule,
+        BrowserAnimationsModule, MatTooltipModule,
+        MatButtonModule, MatInputModule, MatMenuModule, MatIconModule, MatCardModule, MatSelectModule,
+        MatExpansionModule, MatPaginatorModule, MatTableModule, MatSortModule, MatProgressSpinnerModule,
+        MatDialogModule, MatAutocompleteModule, MatDatepickerModule, MatNativeDateModule, MatDividerModule,
+        MatListModule, MatToolbarModule, MatSidenavModule, AsyncPipe, MatCheckboxModule,
+        CdkDropList, CdkDrag, CurrencyModule, NewAccountSettingComponent
+    ]
 })
 export class AppModule { }

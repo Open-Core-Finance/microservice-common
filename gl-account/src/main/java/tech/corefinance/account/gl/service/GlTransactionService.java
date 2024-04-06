@@ -7,8 +7,9 @@ import tech.corefinance.common.model.CreateUpdateDto;
 
 public interface GlTransactionService extends AccountTransactionService<GlTransaction, GlTransactionRepository> {
     @Override
-    default <D extends CreateUpdateDto<String>> void copyAdditionalPropertiesFromDtoToEntity(D source,
+    default <D extends CreateUpdateDto<String>> GlTransaction copyAdditionalPropertiesFromDtoToEntity(D source,
                                                                                              GlTransaction dest) {
         // Should do nothing because transaction details was build from original service to make it consistent.
+        return dest;
     }
 }

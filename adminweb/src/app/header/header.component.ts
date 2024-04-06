@@ -3,7 +3,6 @@ import { LanguageService } from '../services/language.service';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../services/authentication.service';
 import { LoginSession } from '../classes/LoginSession';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-header',

@@ -229,7 +229,7 @@ export abstract class GeneralProductAddComponent<T extends Product> extends Gene
         return {
             productAvailabilityModeInfo: new FormControl<string[]>([]),
             productAvailabilities: new FormControl<ProductAvailability[]>([]),
-            newAccountSetting: this.formBuilder.group(new ProductNewAccountSetting()),
+            newAccountSetting: this.formBuilder.control(new ProductNewAccountSetting()),
             currencies: new FormControl<string[]>([])
         };
       }

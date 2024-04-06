@@ -10,8 +10,8 @@ public interface ProductService<T extends Product, R extends CommonResourceRepos
         extends CommonService<String, T, R> {
 
     @Override
-    default <D extends CreateUpdateDto<String>> void customEntityValidation(D source, T dest) {
-        CommonService.super.customEntityValidation(source, dest);
+    default <D extends CreateUpdateDto<String>> T customEntityValidation(D source, T dest) {
+        dest = CommonService.super.customEntityValidation(source, dest);
         var currencies = dest.getCurrencies();
         if (currencies == null || currencies.length < 1) {
             throw new ServiceProcessingException("currencies_empty");
@@ -20,5 +20,6 @@ public interface ProductService<T extends Product, R extends CommonResourceRepos
         if (newAccountSetting == null || newAccountSetting.getType() == null) {
             throw new ServiceProcessingException("new_account_type_empty");
         }
+        return dest;
     }
 }

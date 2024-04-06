@@ -5,7 +5,9 @@ import feign.RequestTemplate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import tech.corefinance.common.context.JwtContext;
+import tech.corefinance.common.context.TenantContext;
 import tech.corefinance.common.dto.JwtTokenDto;
+import tech.corefinance.common.enums.CommonConstants;
 
 import static tech.corefinance.common.enums.CommonConstants.*;
 
@@ -14,6 +16,9 @@ public class AuthFeignInterceptor implements RequestInterceptor {
     @Override
     public void apply(RequestTemplate template) {
         JwtTokenDto jwtTokenDto = JwtContext.getInstance().getJwt();
+        var tenantId = TenantContext.getInstance().getTenantId();
+        log.debug("Tenant ID [{}]", tenantId);
+        template.header(HEADER_KEY_TENANT_ID, tenantId);
         if (jwtTokenDto != null) {
             log.debug("Found JWT token in context!");
             template.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtTokenDto.getOriginalToken());

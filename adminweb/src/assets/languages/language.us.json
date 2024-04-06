@@ -293,7 +293,11 @@
     "newAccountSetting": "New account setting",
     "idType": "ID type",
     "idType_INCREASEMENT": "Incremental number",
+    "idType_UUID": "UUID",
     "idType_RANDOM_PATTERN": "Random pattern",
+    "idType_RANDOM_PATTERN_at": "@: Character",
+    "idType_RANDOM_PATTERN_hashtag": "#: Mumber",
+    "idType_RANDOM_PATTERN_dolar": "$: Mumber or Character",
     "patternUsingLabel": "using template",
     "increasementStartingFrom": "starting from",
     "currencies": "Currencies",
@@ -310,7 +314,11 @@
     "accountInitState_PENDING_APPROVAL": "Pending approval",
     "accountInitState_DORMANT": "Dormant",
     "accountInitState_CLOSED": "Closed",
-    "accountInitState_OPEN": "Open"
+    "accountInitState_OPEN": "Open",
+    "newAccountSetting_fixIdLength": "Fix ID length",
+    "newAccountSetting_accountLength": "Account length",
+    "newAccountSetting_idPrefix": "ID prefix",
+    "newAccountSetting_idSuffix": "ID suffix"
   },
   "productFee": {
     "id": "ID",

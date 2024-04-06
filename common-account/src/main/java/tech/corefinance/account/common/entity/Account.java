@@ -40,8 +40,14 @@ public class Account implements GenericModel<String>, AuditableEntity<BasicUserD
     @NotBlank(message = "account_name_empty")
     private String name;
     @NotBlank(message = "product_category_empty")
-    private String category;
-    private String type;
+    @Column(name = "category_id")
+    private String categoryId;
+    @Column(name = "category_name")
+    private String categoryName;
+    @Column(name = "type_id")
+    private String typeId;
+    @Column(name = "type_name")
+    private String typeName;
     private String description;
     @Enumerated(EnumType.STRING)
     private AccountState status;

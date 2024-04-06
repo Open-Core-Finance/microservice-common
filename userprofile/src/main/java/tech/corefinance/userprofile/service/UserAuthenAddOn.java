@@ -29,7 +29,7 @@ public interface UserAuthenAddOn extends Ordered {
             throws UnknownHostException {
         JwtTokenDto jwtTokenDto = new JwtTokenDto(loginSession.getId(), userProfile.getId(),
                 clientAppId, appPlatform, appVersion, deviceId, getJwtService().extractIpAddress(request));
-        jwtTokenDto.setUserDisplayName(userProfile.getLastName() + " " + userProfile.getFirstName());
+        jwtTokenDto.setUserDisplayName(userProfile.getDisplayName());
         jwtTokenDto.setUsername(userProfile.getUsername());
         jwtTokenDto.setUserEmail(userProfile.getEmail());
         jwtTokenDto.setUserRoles(userRoles);

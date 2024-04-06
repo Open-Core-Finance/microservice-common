@@ -1,4 +1,7 @@
 dependencies {
-//    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '4.1.1'
+    // Internal
+    implementation project(":common-account")
+    implementation project(":common-product")
+    // Libraries
     api group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
 }

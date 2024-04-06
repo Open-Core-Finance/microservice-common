@@ -6,6 +6,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import tech.corefinance.account.common.enums.CustomerType;
 import tech.corefinance.account.common.model.TransactionFee;
 import tech.corefinance.account.common.model.TransactionSide;
 import tech.corefinance.common.model.GenericModel;
@@ -85,6 +86,12 @@ public class AccountTransaction implements GenericModel<String>, ModifiedDateTra
 
     @Column(name = "counter_account_id")
     private String counterAccountId;
+
+    @Column(name = "counter_customer_type")
+    @Enumerated(EnumType.STRING)
+    private CustomerType counterCustomerType;
+    @Column(name = "counter_customer_id")
+    private long counterCustomerId;
 
     @Column(name = "counter_account_type")
     private String counterAccountType;

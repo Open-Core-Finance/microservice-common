@@ -104,7 +104,7 @@ public class JwtServiceTest {
                 AppPlatform.ANDROID, new AppVersion(), deviceId, "127.0.1.1");
         String token = jwtService.buildLoginToken(loginInfo);
         request.addHeader(HttpHeaders.AUTHORIZATION, CommonConstants.BEARER_PREFIX + token);
-        request.addHeader(CommonConstants.EXTERNAL_IP_ADDRESS, "127.0.1.1");
+        request.addHeader(CommonConstants.HEADER_KEY_EXTERNAL_IP_ADDRESS, "127.0.1.1");
         request.addHeader(CommonConstants.DEVICE_ID, deviceId);
         Map<String, JwtTokenDto> map = jwtService.retrieveTokenFromRequest(request, response);
         JwtTokenDto jwtTokenDto = null;
@@ -125,7 +125,7 @@ public class JwtServiceTest {
                 AppPlatform.ANDROID, new AppVersion(), deviceId, "127.0.1.1");
         String token = jwtService.buildLoginToken(loginInfo);
         request.addHeader(HttpHeaders.AUTHORIZATION, CommonConstants.BEARER_PREFIX + token);
-        request.addHeader(CommonConstants.EXTERNAL_IP_ADDRESS, "127.0.1.1");
+        request.addHeader(CommonConstants.HEADER_KEY_EXTERNAL_IP_ADDRESS, "127.0.1.1");
         request.addHeader(CommonConstants.DEVICE_ID, "In-correct DeviceID");
         assertThrows(JWTVerificationException.class, () -> jwtService.retrieveTokenFromRequest(request, response));
     }
@@ -154,7 +154,7 @@ public class JwtServiceTest {
                 AppPlatform.ANDROID, new AppVersion(), deviceId, "127.0.1.1");
         String token = jwtService.buildLoginToken(loginInfo);
         request.addHeader(HttpHeaders.AUTHORIZATION, CommonConstants.BEARER_PREFIX + token);
-        request.addHeader(CommonConstants.EXTERNAL_IP_ADDRESS, "127.0.1.1");
+        request.addHeader(CommonConstants.HEADER_KEY_EXTERNAL_IP_ADDRESS, "127.0.1.1");
         request.addHeader(CommonConstants.DEVICE_ID, deviceId);
         JwtService jwtService2 = new JwtServiceImpl("classpath:public_key.der", "", resourceLoader);
         PowerMockito.field(JwtServiceImpl.class, "objectMapper").set(jwtService2, objectMapper);
@@ -234,7 +234,7 @@ public class JwtServiceTest {
         String token = jwtService.buildRefreshToken(loginInfo, jwtService.buildLoginToken(loginInfo));
         DecodedJWT decodedJWT = jwtService.verify(token, loginInfo.getDeviceId(), loginInfo.getLoginIpAddr());
         log.info("Decoded json: [{}]", decodedJWT.getClaims());
-        assertEquals(loginInfo.getLoginId().toString(), decodedJWT.getClaim("loginId").asString());
+        assertEquals(loginInfo.getLoginId(), decodedJWT.getClaim("loginId").asString());
         assertEquals(loginInfo.getUserId(), decodedJWT.getClaim("userId").asString());
     }
 

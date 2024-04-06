@@ -28,8 +28,9 @@ public class CorporateCustomerServiceImpl extends CustomerServiceImpl implements
     }
 
     @Override
-    public <D extends CreateUpdateDto<Long>> void copyAdditionalPropertiesFromDtoToEntity(D source, CorporateCustomer dest) {
-        CorporateCustomerService.super.copyAdditionalPropertiesFromDtoToEntity(source, dest);
+    public <D extends CreateUpdateDto<Long>> CorporateCustomer copyAdditionalPropertiesFromDtoToEntity(D source, CorporateCustomer dest) {
+        dest = CorporateCustomerService.super.copyAdditionalPropertiesFromDtoToEntity(source, dest);
         this.validateCreateCustomer(dest);
+        return dest;
     }
 }

@@ -10,5 +10,9 @@ public class ProductNewAccountSetting {
     private ProductNewAccountSettingType type;
     private String randomPatternTemplate;
     private int increasementStartingFrom;
+    private boolean fixLengthId;
+    private Integer fixAccountLength;
     private AccountState initialState;
+    private String idPrefix;
+    private String idSuffix;
 }

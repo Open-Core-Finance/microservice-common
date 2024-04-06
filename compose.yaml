@@ -35,6 +35,7 @@ services:
       - SERVICE_PORT=${combined_nontenancy_port}
       - GIT_COMMIT=${GIT_COMMIT}
       - GEOCODE_SERVICE_URL=http://corefinance-ngnix-server:87
+      - PRODUCT_SERVICE_URL=http://corefinance-ngnix-server:82
     deploy:
       mode: replicated
       replicas: 1
@@ -61,6 +62,7 @@ services:
       - SERVICE_PORT=${combined_product_account_port}
       - GIT_COMMIT=${GIT_COMMIT}
       - GEOCODE_SERVICE_URL=http://corefinance-ngnix-server:87
+      - PRODUCT_SERVICE_URL=http://corefinance-ngnix-server:82
     deploy:
       mode: replicated
       replicas: 2

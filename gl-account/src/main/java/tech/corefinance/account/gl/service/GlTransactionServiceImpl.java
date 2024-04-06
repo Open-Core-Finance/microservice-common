@@ -25,8 +25,9 @@ public class GlTransactionServiceImpl extends AccountTransactionServiceImpl<GlTr
     }
 
     @Override
-    public <D extends CreateUpdateDto<String>> void copyAdditionalPropertiesFromDtoToEntity(D source,
+    public <D extends CreateUpdateDto<String>> GlTransaction copyAdditionalPropertiesFromDtoToEntity(D source,
                                                                                             GlTransaction dest) {
         // Should do nothing because transaction details was build from original service to make it consistent.
+        return dest;
     }
 }

@@ -26,10 +26,11 @@ public class SubRegionServiceImpl implements SubRegionService {
     }
 
     @Override
-    public <D extends CreateUpdateDto<Integer>> void copyAdditionalPropertiesFromDtoToEntity(D source, SubRegion dest) {
-        SubRegionService.super.copyAdditionalPropertiesFromDtoToEntity(source, dest);
+    public <D extends CreateUpdateDto<Integer>> SubRegion copyAdditionalPropertiesFromDtoToEntity(D source, SubRegion dest) {
+        dest = SubRegionService.super.copyAdditionalPropertiesFromDtoToEntity(source, dest);
         int regionId = dest.getRegionId();
         Optional<Region> optionalRegion = regionRepository.findById(regionId);
         optionalRegion.ifPresent(dest::setRegion);
+        return dest;
     }
 }

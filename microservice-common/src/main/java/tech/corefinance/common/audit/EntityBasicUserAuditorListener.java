@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.util.ReflectionUtils;
 import tech.corefinance.common.annotation.CustomAuditor;
 import tech.corefinance.common.context.ApplicationContextHolder;
 import tech.corefinance.common.dto.BasicUserDto;
@@ -17,7 +16,6 @@ import tech.corefinance.common.model.AuditableEntity;
 import tech.corefinance.common.util.CoreFinanceUtil;
 
 import java.io.Serializable;
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -35,10 +33,10 @@ public class EntityBasicUserAuditorListener {
         var util = context.getBean(CoreFinanceUtil.class);
         var objClass = obj.getClass();
         var customAuditor = objClass.getAnnotation(CustomAuditor.class);
-        if (customAuditor != null) {
-            setAuditorToAuditableEntity(userAuditorAware, customAuditor, obj, objClass, util);
-        } else if (obj instanceof AuditableEntity en) {
+        if (obj instanceof AuditableEntity en) {
             setAuditorToAuditableEntity(en, userAuditorAware);
+        } else if (customAuditor != null) {
+            setAuditorToAuditableEntity(userAuditorAware, customAuditor, obj, objClass, util);
         } else {
             log.debug("{} is not auditable.", obj);
         }
@@ -52,10 +50,10 @@ public class EntityBasicUserAuditorListener {
         var util = context.getBean(CoreFinanceUtil.class);
         var objClass = obj.getClass();
         var customAuditor = objClass.getAnnotation(CustomAuditor.class);
-        if (customAuditor != null) {
-            updateAuditorToAuditableEntity(userAuditorAware, customAuditor, obj, objClass, util);
-        } else if (obj instanceof AuditableEntity en) {
+        if (obj instanceof AuditableEntity en) {
             updateAuditorToAuditableEntity(en, userAuditorAware);
+        } else if (customAuditor != null) {
+            updateAuditorToAuditableEntity(userAuditorAware, customAuditor, obj, objClass, util);
         } else {
             log.debug("{} is not auditable.", obj);
         }
@@ -141,20 +139,5 @@ public class EntityBasicUserAuditorListener {
             case USERNAME -> auditor.getUsername();
             default -> auditor;
         };
-    }
-
-    private AccessibleObject findCreatedByField(Object obj, Class<?> objClass, CoreFinanceUtil util)
-            throws NoSuchFieldException {
-        var result = util.findAnnotatedField(obj, objClass, CreatedBy.class);
-        if (result == null) {
-            Method[] methods = ReflectionUtils.getAllDeclaredMethods(objClass);
-            for (var method : methods) {
-                if (method.getName().equalsIgnoreCase("setCreatedBy")) {
-                    return method;
-                }
-            }
-            result = objClass.getField("setCreatedBy");
-        }
-        return result;
     }
 }

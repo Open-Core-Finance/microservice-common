@@ -27,13 +27,13 @@ public class BranchServiceImpl implements BranchService {
     }
 
     @Override
-    public <D extends CreateUpdateDto<String>> void copyAdditionalPropertiesFromDtoToEntity(D source, Branch dest) {
-        BranchService.super.copyAdditionalPropertiesFromDtoToEntity(source, dest);
+    public <D extends CreateUpdateDto<String>> Branch copyAdditionalPropertiesFromDtoToEntity(D source, Branch dest) {
+        var result = BranchService.super.copyAdditionalPropertiesFromDtoToEntity(source, dest);
         var tenantContext = TenantContext.getInstance();
         var currentTenant = tenantContext.getTenantId();
         log.debug("Current tenant [{}]", currentTenant);
 
-        if (dest.isInheritNonWorkingDays()) {
+        if (result.isInheritNonWorkingDays()) {
             var errorMarker = new ErrorHolder(null);
             // Start a virtual thread to run a task
             Thread thread = new Thread(() -> {
@@ -41,7 +41,7 @@ public class BranchServiceImpl implements BranchService {
                     tenantContext.clearTenantId();
                     var org = organizationRepository.findById(currentTenant).orElseThrow(() ->
                             new ServiceProcessingException("organization_not_found"));
-                    dest.setNonWorkingDays(org.getNonWorkingDays());
+                    result.setNonWorkingDays(org.getNonWorkingDays());
                 } catch (Throwable e) {
                     errorMarker.value = e;
                 } finally {
@@ -62,7 +62,10 @@ public class BranchServiceImpl implements BranchService {
                 }
             }
         }
+
+        return result;
     }
+
     private static class ErrorHolder {
         Throwable value;
         ErrorHolder(Throwable value) {

@@ -5,7 +5,7 @@
   <div>
     <mat-form-field class="example-full-width" *ngIf="selectedCurrenciesDisplay.length < currencies.length">
       <mat-autocomplete #auto="matAutocomplete">
-        @for (currency of currencies; track currency) {
+        @for (currency of filteredCurrencies; track currency) {
           <mat-option [value]="currency" *ngIf="!isSelectedCurrency(currency)">{{currency.id}}</mat-option>
         }
       </mat-autocomplete>

@@ -8,5 +8,6 @@
     <include file="classpath:db/changelog/sql/001-create-basic-tables.sql"/>
     <include file="classpath:db/changelog/sql/002-no-authen-access-urls.sql"/>
     <include file="classpath:db/changelog/sql/003-create-main-tables.sql"/>
+    <include file="classpath:db/changelog/sql/004-insert-sample-data.sql"/>
 
 </databaseChangeLog>

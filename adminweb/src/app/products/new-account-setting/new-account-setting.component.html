@@ -1,0 +1,67 @@
+<div>
+    <mat-form-field appearance="fill" color="primary">
+        <mat-label>{{languageService.formatLanguage('product.accountInitState', [])}}:&nbsp;</mat-label>
+        <mat-select required [(ngModel)]="value.initialState">
+            <mat-option *ngFor="let state of allAccountStates"
+                [value]="state">{{languageService.formatLanguage('product.accountInitState_' + state, [])}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill" color="primary">
+        <mat-label>{{languageService.formatLanguage('product.idType', [])}}:&nbsp;</mat-label>
+        <mat-select required [(ngModel)]="value.type">
+            <mat-option *ngFor="let option of allNewAccountTypes" [value]="option">
+                {{languageService.formatLanguage('product.idType_' + option, [])}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="value.type == newAccountIdTypeEnum.RANDOM_PATTERN">
+        <mat-label>
+            {{languageService.formatLanguage('product.patternUsingLabel', [])}}&nbsp;
+        </mat-label>
+        <input type="text" matInput placeholder="{{languageService.formatLanguage('product.patternUsingLabel', [])}}"
+            [(ngModel)]="value.randomPatternTemplate">
+    </mat-form-field>
+    <ng-container *ngIf="value.type == newAccountIdTypeEnum.INCREASEMENT">
+        <mat-form-field color="primary">
+            <mat-label>
+                {{languageService.formatLanguage('product.increasementStartingFrom', [])}}&nbsp;
+            </mat-label>
+            <input type="number" matInput placeholder="{{languageService.formatLanguage('product.increasementStartingFrom', [])}}"
+                [(ngModel)]="value.increasementStartingFrom">
+        </mat-form-field>
+
+        <mat-checkbox color="primary" [(ngModel)]="value.fixLengthId">
+            <mat-label>{{languageService.formatLanguage('product.newAccountSetting_fixIdLength', [])}}</mat-label>
+        </mat-checkbox>
+
+        <mat-form-field color="primary" *ngIf="value.fixLengthId">
+            <mat-label>
+                {{languageService.formatLanguage('product.newAccountSetting_accountLength', [])}}&nbsp;
+            </mat-label>
+            <input type="number" matInput placeholder="{{languageService.formatLanguage('product.newAccountSetting_accountLength', [])}}"
+                [(ngModel)]="value.fixAccountLength">
+        </mat-form-field>
+
+        <mat-form-field color="primary" *ngIf="value.fixLengthId">
+            <mat-label>
+                {{languageService.formatLanguage('product.newAccountSetting_idPrefix', [])}}&nbsp;
+            </mat-label>
+            <input type="text" matInput placeholder="{{languageService.formatLanguage('product.newAccountSetting_idPrefix', [])}}"
+                [(ngModel)]="value.idPrefix">
+        </mat-form-field>
+
+        <mat-form-field color="primary" *ngIf="value.fixLengthId">
+            <mat-label>
+                {{languageService.formatLanguage('product.newAccountSetting_idSuffix', [])}}&nbsp;
+            </mat-label>
+            <input type="text" matInput placeholder="{{languageService.formatLanguage('product.newAccountSetting_idSuffix', [])}}"
+                [(ngModel)]="value.idSuffix">
+        </mat-form-field>
+    </ng-container>
+
+    <div *ngIf="value.type == newAccountIdTypeEnum.RANDOM_PATTERN">
+        <div>{{languageService.formatLanguage("product.idType_RANDOM_PATTERN_at")}}</div>
+        <div>{{languageService.formatLanguage("product.idType_RANDOM_PATTERN_hashtag")}}</div>
+        <div>{{languageService.formatLanguage("product.idType_RANDOM_PATTERN_dolar")}}</div>
+    </div>
+</div>

@@ -48,7 +48,8 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
      * @param dest   Entity object
      * @param <D>    DTO type
      */
-    default <D extends CreateUpdateDto<I>> void copyAdditionalPropertiesFromDtoToEntity(D source, T dest) {
+    default <D extends CreateUpdateDto<I>> T copyAdditionalPropertiesFromDtoToEntity(D source, T dest) {
+        return dest;
     }
 
     /**
@@ -58,7 +59,8 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
      * @param dest   Entity object
      * @param <D>    DTO type
      */
-    default <D extends CreateUpdateDto<I>> void customEntityValidation(D source, T dest) {
+    default <D extends CreateUpdateDto<I>> T customEntityValidation(D source, T dest) {
+        return dest;
     }
 
     /**
@@ -110,9 +112,9 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
         logger.info("Copying matched properties from DTO to entity...");
         BeanUtils.copyProperties(dto, entity);
         logger.info("Calling copyAdditionalPropertiesFromDtoToEntity...");
-        copyAdditionalPropertiesFromDtoToEntity(dto, entity);
+        entity = copyAdditionalPropertiesFromDtoToEntity(dto, entity);
         logger.info("Calling customEntityValidation...");
-        customEntityValidation(dto, entity);
+        entity = customEntityValidation(dto, entity);
         logger.info("Save entity and response");
         return repository.save(entity);
     }
