@@ -1,4 +1,4 @@
-import {Component, forwardRef, OnInit, ViewChild, ElementRef, OnDestroy} from '@angular/core';
+import {Component, forwardRef, OnInit, ViewChild, ElementRef, OnDestroy, Input} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {LanguageService} from "../../services/language.service";
 import { Currency } from 'src/app/classes/Currency';
@@ -21,9 +21,12 @@ export class CurrenciesSelectionComponent implements OnInit, ControlValueAccesso
 
   selectedCurrenciesDisplay: Currency[] = [];
   currencies: Currency[] = [];
+  filteredCurrencies: Currency[] = [];
   _selectedCurrency: Currency | null = null;
   currenciesSubscription: Subscription | undefined;
   lastWriteValues: string[] | undefined;
+
+  _preDefinedListCurrencies: string[] | undefined;
 
   @ViewChild("selectionInput") input: ElementRef | undefined = undefined;
 
@@ -38,6 +41,7 @@ export class CurrenciesSelectionComponent implements OnInit, ControlValueAccesso
     this.currenciesSubscription?.unsubscribe();
     this.currenciesSubscription = this.currencyService.currenciesSubject.subscribe( c => {
       this.currencies = c;
+      this.refreshFilteredCurrencies();
       this.populateValue(this.lastWriteValues);
     });
   }
@@ -117,5 +121,23 @@ export class CurrenciesSelectionComponent implements OnInit, ControlValueAccesso
   private triggerCurrenciesChanged() {
     const value = this.selectedCurrenciesDisplay.map((value, _, __) => value.id);
     this.propagateChange(value);
+  }
+
+  @Input()
+  set preDefinedListCurrencies(preDefinedListCurrencies: string[]) {
+    this._preDefinedListCurrencies = preDefinedListCurrencies;
+    this.refreshFilteredCurrencies();
+  }
+
+  get preDefinedListCurrencies(): string[] | undefined {
+    return this._preDefinedListCurrencies;
+  }
+
+  refreshFilteredCurrencies() {
+    if (!this._preDefinedListCurrencies) {
+      this.filteredCurrencies = this.currencies;
+    } else {
+      this.filteredCurrencies = this.currencies.filter(item => this._preDefinedListCurrencies?.includes(item.id));
+    }
   }
 }

@@ -21,9 +21,9 @@ public class DepositProductServiceImpl implements DepositProductService {
     }
 
     @Override
-    public <D extends CreateUpdateDto<String>> void copyAdditionalPropertiesFromDtoToEntity(D source,
+    public <D extends CreateUpdateDto<String>> DepositProduct copyAdditionalPropertiesFromDtoToEntity(D source,
                                                                                             DepositProduct dest) {
-        DepositProductService.super.copyAdditionalPropertiesFromDtoToEntity(source, dest);
+        dest = DepositProductService.super.copyAdditionalPropertiesFromDtoToEntity(source, dest);
         if (source instanceof DepositProductDto dto) {
             if (!dto.isAutoSetAsDormant()) {
                 dest.setDaysToSetToDormant(null);
@@ -35,5 +35,6 @@ public class DepositProductServiceImpl implements DepositProductService {
                 dest.setInterestRate(null);
             }
         }
+        return dest;
     }
 }

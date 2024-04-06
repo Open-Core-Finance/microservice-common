@@ -26,11 +26,12 @@ public class RateServiceImpl implements RateService {
     }
 
     @Override
-    public <D extends CreateUpdateDto<String>> void copyAdditionalPropertiesFromDtoToEntity(D source, Rate dest) {
-        RateService.super.copyAdditionalPropertiesFromDtoToEntity(source, dest);
+    public <D extends CreateUpdateDto<String>> Rate copyAdditionalPropertiesFromDtoToEntity(D source, Rate dest) {
+        dest = RateService.super.copyAdditionalPropertiesFromDtoToEntity(source, dest);
         if (source instanceof RateResponse rateResponse && StringUtils.hasText(rateResponse.getRateSourceId())) {
             var optional = rateSourceRepository.findById(rateResponse.getRateSourceId());
             dest.setRateSource(optional.orElseThrow(() -> new ServiceProcessingException("rate_source_not_found")));
         }
+        return dest;
     }
 }

@@ -12,8 +12,10 @@ export abstract class Account implements GeneralModel<string>, ListableItem {
     lastModifiedDate =  new Date();
     lastModifiedBy = new UserDto();
 
-    category = "";
-    type = "";
+    categoryId = "";
+    categoryName = "";
+    typeId = "";
+    typeName = "";
     description = "";
     status: AccountState = AccountState.NEW;
 

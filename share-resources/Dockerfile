@@ -8,6 +8,8 @@ ARG DB_NAME
 COPY gradle gradlew gradlew.bat build.gradle gradle ./
 COPY artifact-credential*.gradle ./
 COPY gradle.properties ./gradle.properties
+RUN echo "org.gradle.daemon=true" >> gradle.properties
+COPY share-resources/docker-scripts/settings_common_build.gradle ./settings.gradle
 COPY share-resources/docker-scripts/*.sh ./
 COPY share-resources/main-app-resources/public_key.der ./share-resources/main-app-resources/public_key.der
 COPY share-resources/main-app-resources/logback.xml ./
@@ -15,17 +17,19 @@ COPY share-resources/main-app-resources/application.yaml ./
 COPY share-resources/test-app-resources ./share-resources/test-app-resources
 COPY microservice-common/src ./microservice-common/src
 COPY microservice-common/build.gradle ./microservice-common/build.gradle
+RUN gradle :microservice-common:build -x test
 COPY microservice-common-jpa/src ./microservice-common-jpa/src
 COPY microservice-common-jpa/build.gradle ./microservice-common-jpa/build.gradle
+RUN gradle :microservice-common-jpa:build -x test
 COPY microservice-common-mongodb/src ./microservice-common-mongodb/src
 COPY microservice-common-mongodb/build.gradle ./microservice-common-mongodb/build.gradle
-COPY common-account/src ./common-account/src
-COPY common-account/build.gradle ./common-account/build.gradle
+RUN gradle :microservice-common-mongodb:build -x test
 COPY common-product/src ./common-product/src
 COPY common-product/build.gradle ./common-product/build.gradle
-COPY common-feign-client/src ./common-feign-client/src
-COPY common-feign-client/build.gradle ./common-feign-client/build.gradle
-RUN find ./
+RUN gradle :common-product:build -x test
+COPY common-account/src ./common-account/src
+COPY common-account/build.gradle ./common-account/build.gradle
+RUN gradle :common-account:build -x test
 
 # Build for userprofile component
 FROM build-base as combined-nontenancy-build
@@ -33,8 +37,13 @@ WORKDIR /app
 COPY share-resources/docker-scripts/settings_combined_nontenancy.gradle ./settings.gradle
 COPY userprofile/src ./userprofile/src
 COPY userprofile/build.gradle ./userprofile/build.gradle
+RUN gradle :userprofile:build -x test
 COPY geocode/src ./geocode/src
 COPY geocode/build.gradle ./geocode/build.gradle
+RUN gradle :geocode:build -x test
+COPY common-feign-client/src ./common-feign-client/src
+COPY common-feign-client/build.gradle ./common-feign-client/build.gradle
+RUN gradle :common-feign-client:build -x test
 COPY combined-nontenancy/src ./combined-nontenancy/src
 COPY combined-nontenancy/build.gradle ./combined-nontenancy/build.gradle
 ARG GIT_COMMIT
@@ -46,16 +55,25 @@ RUN chmod +x build_and_mv.sh && bash build_and_mv.sh "${PROJECT_NAME}" "${PROJEC
 FROM build-base as combined-product-account-build
 WORKDIR /app
 COPY share-resources/docker-scripts/settings_combined_product_account.gradle ./settings.gradle
+RUN gradle :common-account:build :common-product:build -x test
 COPY product/src ./product/src
 COPY product/build.gradle ./product/build.gradle
+RUN gradle :product:build -x test
+COPY common-feign-client/src ./common-feign-client/src
+COPY common-feign-client/build.gradle ./common-feign-client/build.gradle
+RUN gradle :common-feign-client:build -x test
 COPY customer/src ./customer/src
 COPY customer/build.gradle ./customer/build.gradle
+RUN gradle :customer:build -x test
 COPY gl-account/src ./gl-account/src
 COPY gl-account/build.gradle ./gl-account/build.gradle
+RUN gradle :gl-account:build -x test
 COPY deposit-account/src ./deposit-account/src
 COPY deposit-account/build.gradle ./deposit-account/build.gradle
+RUN gradle :deposit-account:build -x test
 COPY loan-account/src ./loan-account/src
 COPY loan-account/build.gradle ./loan-account/build.gradle
+RUN gradle :loan-account:build -x test
 COPY combined-product-account/src ./combined-product-account/src
 COPY combined-product-account/build.gradle ./combined-product-account/build.gradle
 ARG GIT_COMMIT

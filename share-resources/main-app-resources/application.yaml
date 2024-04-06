@@ -34,6 +34,8 @@ spring:
 
 tech:
   corefinance:
+    database:
+      mode: postgresql
     app:
       converter:
         local-date-to-string: true
@@ -124,6 +126,7 @@ tech:
     services:
       url:
         geocode: ${GEOCODE_SERVICE_URL:http://localhost:8086}
+        product: ${PRODUCT_SERVICE_URL:http://localhost:8081}
 export:
   format:
     date: yyyy/MM/dd

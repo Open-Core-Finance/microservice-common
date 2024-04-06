@@ -39,6 +39,8 @@ spring:
 
 tech:
   corefinance:
+    database:
+      mode: postgresql
     app:
       converter:
         local-date-to-string: true

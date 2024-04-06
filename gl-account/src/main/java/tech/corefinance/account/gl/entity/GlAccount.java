@@ -11,7 +11,6 @@ import tech.corefinance.common.audit.EntityBasicUserAuditorListener;
 import tech.corefinance.common.audit.EntityDeleteListener;
 import tech.corefinance.common.audit.EntityZonedDateTimeAuditListener;
 import tech.corefinance.common.enums.CustomAuditorField;
-import tech.corefinance.common.model.CreateUpdateDto;
 
 @Entity
 @Table(name = "gl_account")
@@ -19,6 +18,6 @@ import tech.corefinance.common.model.CreateUpdateDto;
 @EqualsAndHashCode(callSuper = true)
 @CustomAuditor(createdByType = CustomAuditorField.BASIC_USER_JSON, lastModifiedByType = CustomAuditorField.BASIC_USER_JSON)
 @EntityListeners({EntityBasicUserAuditorListener.class, EntityZonedDateTimeAuditListener.class, EntityDeleteListener.class})
-public class GlAccount extends Account implements CreateUpdateDto<String> {
+public class GlAccount extends Account {
 
 }

@@ -10,8 +10,8 @@ import java.util.LinkedList;
 public abstract class AccountTransactionServiceImpl<T extends AccountTransaction, R extends CommonResourceRepository<T, String>>
         implements AccountTransactionService<T, R> {
     @Override
-    public <D extends CreateUpdateDto<String>> void copyAdditionalPropertiesFromDtoToEntity(D source, T dest) {
-        AccountTransactionService.super.copyAdditionalPropertiesFromDtoToEntity(source, dest);
+    public <D extends CreateUpdateDto<String>> T copyAdditionalPropertiesFromDtoToEntity(D source, T dest) {
+        dest = AccountTransactionService.super.copyAdditionalPropertiesFromDtoToEntity(source, dest);
         if (source instanceof TransactionRequest tranRequest) {
             // TODO
             var fees = tranRequest.getTransactionFees();
@@ -23,5 +23,7 @@ public abstract class AccountTransactionServiceImpl<T extends AccountTransaction
                 dest.setTransactionFees(new LinkedList<>());
             }
         }
+
+        return dest;
     }
 }

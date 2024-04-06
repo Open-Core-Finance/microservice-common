@@ -271,7 +271,7 @@ configure(subprojects) {
             if (project.name != "microservice-common") {
                 implementation project(":microservice-common")
             }
-            if (!isLib && project.name != "jasypt-tool") {
+            if (!isLib && project.name != "jasypt-tool" && project.name != "common-feign-client") {
                 // Spring boot
                 implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
 

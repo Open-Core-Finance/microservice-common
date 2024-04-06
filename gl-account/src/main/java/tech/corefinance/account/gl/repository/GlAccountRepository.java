@@ -6,4 +6,5 @@ import tech.corefinance.common.repository.CommonResourceRepository;
 
 @Repository
 public interface GlAccountRepository extends CommonResourceRepository<GlAccount, String> {
+
 }

@@ -4,6 +4,7 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.corefinance.common.model.CreateUpdateDto;
+import tech.corefinance.customer.entity.CorporateCustomer;
 import tech.corefinance.customer.entity.IndividualCustomer;
 import tech.corefinance.customer.repository.IndividualCustomerRepository;
 import tech.corefinance.feign.client.geocode.CityClient;
@@ -28,11 +29,12 @@ public class IndividualCustomerServiceImpl extends CustomerServiceImpl implement
     }
 
     @Override
-    public <D extends CreateUpdateDto<Long>> void copyAdditionalPropertiesFromDtoToEntity(D source, IndividualCustomer dest) {
-        IndividualCustomerService.super.copyAdditionalPropertiesFromDtoToEntity(source, dest);
+    public <D extends CreateUpdateDto<Long>> IndividualCustomer copyAdditionalPropertiesFromDtoToEntity(D source, IndividualCustomer dest) {
+        dest = IndividualCustomerService.super.copyAdditionalPropertiesFromDtoToEntity(source, dest);
         this.validateCreateCustomer(dest);
         if (dest.isSingleNationality()) {
             dest.setSecondNationality(null);
         }
+        return dest;
     }
 }

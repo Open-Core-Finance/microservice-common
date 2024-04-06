@@ -1,8 +1,7 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {FormControl, FormGroup} from "@angular/forms";
+import {FormControl} from "@angular/forms";
 import {environment} from "../../../environments/environment";
-import {DepositProduct, DepositProductFee} from "../../classes/products/DepositProduct";
-import { ProductAvailability, ProductNewAccountSetting} from "../../classes/products/Product";
+import {DepositProductFee} from "../../classes/products/DepositProduct";
 import {CurrencyLimitValue} from "../../classes/products/ValueConstraint";
 import {WithdrawalLimit} from "../../classes/products/WithdrawalLimit";
 import {ProductCategoryType} from "../../classes/products/ProductCategory";

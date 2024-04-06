@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import tech.corefinance.account.common.entity.Account;
+import tech.corefinance.account.common.enums.CustomerType;
 import tech.corefinance.account.common.model.DepositAccountInterestRate;
 import tech.corefinance.common.annotation.CustomAuditor;
 import tech.corefinance.common.audit.EntityBasicUserAuditorListener;
@@ -81,6 +82,9 @@ public class DepositAccount extends Account {
     @Column(name = "term_length")
     private Integer termLength;
 
+    @Column(name = "customer_type")
+    @Enumerated(EnumType.STRING)
+    private CustomerType customerType;
     @Column(name = "customer_id")
-    private Long customerId;
+    private long customerId;
 }

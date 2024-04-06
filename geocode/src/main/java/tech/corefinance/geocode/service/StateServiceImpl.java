@@ -22,12 +22,13 @@ public class StateServiceImpl implements StateService {
     }
 
     @Override
-    public <D extends CreateUpdateDto<Integer>> void copyAdditionalPropertiesFromDtoToEntity(D source, State dest) {
-        StateService.super.copyAdditionalPropertiesFromDtoToEntity(source, dest);
-        int countryId = dest.getCountryId();
+    public <D extends CreateUpdateDto<Integer>> State copyAdditionalPropertiesFromDtoToEntity(D source, State dest) {
+        var result = StateService.super.copyAdditionalPropertiesFromDtoToEntity(source, dest);
+        int countryId = result.getCountryId();
         countryRepository.findById(countryId).ifPresent( c -> {
-            dest.setCountry(c);
-            dest.setCountryCode(c.getIso2());
+            result.setCountry(c);
+            result.setCountryCode(c.getIso2());
         });
+        return result;
     }
 }

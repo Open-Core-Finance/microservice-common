@@ -1,4 +1,9 @@
 <app-generic-form (cancel)="this.cancelClick($event)" (save)="this.saveClick($event)" [formGroup]="addForm"
-  [formItems]="formItems" formTitleKey="glaccount.addTitle" [message]="message" errorPrefix="glaccount.error.">
+  [formItems]="formItems" formTitleKey="glaccount.addTitle" [message]="message" errorPrefix="glaccount.error."
+  [complexInputTemplate]="{currencies: currenciesTemplate}">
+
+  <ng-template #currenciesTemplate let-data>
+    <app-currencies-selection formControlName="supportedCurrencies" [preDefinedListCurrencies]="productCurrencies"></app-currencies-selection>
+  </ng-template>
 
 </app-generic-form>

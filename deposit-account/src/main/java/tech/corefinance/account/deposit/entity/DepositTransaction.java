@@ -8,6 +8,7 @@ import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import tech.corefinance.account.common.entity.AccountTransaction;
+import tech.corefinance.account.common.enums.CustomerType;
 import tech.corefinance.account.common.model.TransactionFee;
 import tech.corefinance.account.common.model.TransactionSide;
 import tech.corefinance.common.audit.EntityDeleteListener;
@@ -30,4 +31,9 @@ public class DepositTransaction extends AccountTransaction {
     @JoinColumn(name = "deposit_account_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private DepositAccount depositAccount;
+    @Column(name = "deposit_customer_type")
+    @Enumerated(EnumType.STRING)
+    private CustomerType depositCustomerType;
+    @Column(name = "deposit_customer_id")
+    private long depositCustomerId;
 }

@@ -59,10 +59,14 @@ export enum ProductAvailabilityMode {
 }
 
 export class ProductNewAccountSetting {
-    type: ProductNewAccountSettingType = ProductNewAccountSettingType.RANDOM_PATTERN;
+    type: ProductNewAccountSettingType = ProductNewAccountSettingType.INCREASEMENT;
     randomPatternTemplate: string = "@@@$#####";
     increasementStartingFrom: number = 0;
     initialState: AccountState = AccountState.NEW;
+    fixAccountLength: number | null = 6;
+    fixLengthId = true;
+    idPrefix = "";
+    idSuffix = "";
 }
 
 export enum ProductNewAccountSettingType {
@@ -70,6 +74,10 @@ export enum ProductNewAccountSettingType {
    * Sequential ID numbers that begin with a specified number.
    */
   INCREASEMENT = "INCREASEMENT",
+  /**
+   * Generated UUID.
+   */
+  UUID = 'UUID',
   /**
    * Templates consist of the characters `#`, `@`, and `$`, where `#` specifies a number, `@` a letter, and `$` a number or a letter, chosen at random.
    * For example, `@#@#$` will configure system to generate five-character values of one letter, one number, one letter, one number, and one character

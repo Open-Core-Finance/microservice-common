@@ -31,10 +31,11 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public <D extends CreateUpdateDto<String>> void copyAdditionalPropertiesFromDtoToEntity(D source, Role dest) {
-        RoleService.super.copyAdditionalPropertiesFromDtoToEntity(source, dest);
+    public <D extends CreateUpdateDto<String>> Role copyAdditionalPropertiesFromDtoToEntity(D source, Role dest) {
+        dest = RoleService.super.copyAdditionalPropertiesFromDtoToEntity(source, dest);
         if (source instanceof RoleDto roleSrc) {
             dest.setAdditionalAttributes(roleSrc.getAdditionalAttributes());
         }
+        return dest;
     }
 }

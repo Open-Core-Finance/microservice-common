@@ -26,34 +26,7 @@
   </ng-template>
 
   <ng-template #newAccountSettingTemplate let-data>
-    <div [formGroup]="$any(addForm.controls).newAccountSetting">
-      <mat-label>{{languageService.formatLanguage('product.idType', [])}}:&nbsp;</mat-label>
-      <mat-form-field appearance="fill" color="primary">
-        <mat-select formControlName="type" required formControlName="type">
-          <mat-option [value]="newAccountIdTypeEnum.INCREASEMENT">{{languageService.formatLanguage('product.idType_INCREASEMENT', [])}}</mat-option>
-          <mat-option [value]="newAccountIdTypeEnum.RANDOM_PATTERN">{{languageService.formatLanguage('product.idType_RANDOM_PATTERN', [])}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-label *ngIf="$any(addForm.value).newAccountSetting?.type==newAccountIdTypeEnum.RANDOM_PATTERN">
-        {{languageService.formatLanguage('product.patternUsingLabel', [])}}&nbsp;
-      </mat-label>
-      <mat-form-field *ngIf="$any(addForm.value).newAccountSetting?.type==newAccountIdTypeEnum.RANDOM_PATTERN">
-        <input type="text" matInput placeholder="{{languageService.formatLanguage('product.patternUsingLabel', [])}}" formControlName="randomPatternTemplate">
-      </mat-form-field>
-      <mat-label *ngIf="$any(addForm.value).newAccountSetting?.type==newAccountIdTypeEnum.INCREASEMENT">
-        {{languageService.formatLanguage('product.increasementStartingFrom', [])}}&nbsp;
-      </mat-label>
-      <mat-form-field *ngIf="$any(addForm.value).newAccountSetting?.type==newAccountIdTypeEnum.INCREASEMENT">
-        <input type="number" matInput placeholder="{{languageService.formatLanguage('product.increasementStartingFrom', [])}}" formControlName="increasementStartingFrom">
-      </mat-form-field>
-
-      <mat-label>{{languageService.formatLanguage('product.accountInitState', [])}}:&nbsp;</mat-label>
-      <mat-form-field appearance="fill" color="primary">
-          <mat-select required formControlName="initialState">
-              <mat-option *ngFor="let state of allAccountStates" [value]="state">{{languageService.formatLanguage('product.accountInitState_' + state, [])}}</mat-option>
-          </mat-select>
-      </mat-form-field>
-    </div>
+    <app-new-account-setting formControlName="newAccountSetting"></app-new-account-setting>
   </ng-template>
 
   <ng-template #currenciesTemplate let-data>

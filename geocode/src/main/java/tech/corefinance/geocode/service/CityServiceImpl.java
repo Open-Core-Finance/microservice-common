@@ -26,17 +26,18 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public <D extends CreateUpdateDto<Integer>> void copyAdditionalPropertiesFromDtoToEntity(D source, City dest) {
-        CityService.super.copyAdditionalPropertiesFromDtoToEntity(source, dest);
-        int stateId = dest.getStateId();
+    public <D extends CreateUpdateDto<Integer>> City copyAdditionalPropertiesFromDtoToEntity(D source, City dest) {
+        var result = CityService.super.copyAdditionalPropertiesFromDtoToEntity(source, dest);
+        int stateId = result.getStateId();
         stateRepository.findById(stateId).ifPresent( s -> {
-            dest.setState(s);
-            dest.setStateCode(s.getIso2());
+            result.setState(s);
+            result.setStateCode(s.getIso2());
             int countryId = s.getCountryId();
             countryRepository.findById(countryId).ifPresent( c -> {
-                dest.setCountry(c);
-                dest.setCountryCode(c.getIso2());
+                result.setCountry(c);
+                result.setCountryCode(c.getIso2());
             });
         });
+        return result;
     }
 }

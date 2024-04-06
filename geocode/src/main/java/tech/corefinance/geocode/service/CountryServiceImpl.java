@@ -29,8 +29,8 @@ public class CountryServiceImpl implements CountryService {
     }
 
     @Override
-    public <D extends CreateUpdateDto<Integer>> void copyAdditionalPropertiesFromDtoToEntity(D source, Country dest) {
-        CountryService.super.copyAdditionalPropertiesFromDtoToEntity(source, dest);
+    public <D extends CreateUpdateDto<Integer>> Country copyAdditionalPropertiesFromDtoToEntity(D source, Country dest) {
+        dest = CountryService.super.copyAdditionalPropertiesFromDtoToEntity(source, dest);
         Integer subRegionId = dest.getSubRegionId();
         if (subRegionId != null) {
             subRegionRepository.findById(subRegionId).ifPresent(dest::setSubRegion);
@@ -39,5 +39,6 @@ public class CountryServiceImpl implements CountryService {
         if (regionId != null) {
             regionRepository.findById(regionId).ifPresent(dest::setRegion);
         }
+        return dest;
     }
 }

@@ -31,10 +31,11 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     @Override
-    public <D extends CreateUpdateDto<String>> void copyAdditionalPropertiesFromDtoToEntity(D source, UserProfile dest) {
-        UserProfileService.super.copyAdditionalPropertiesFromDtoToEntity(source, dest);
+    public <D extends CreateUpdateDto<String>> UserProfile copyAdditionalPropertiesFromDtoToEntity(D source, UserProfile dest) {
+        dest = UserProfileService.super.copyAdditionalPropertiesFromDtoToEntity(source, dest);
         if (source instanceof UserProfileCreatorDto creatorDto) {
             dest.setAdditionalAttributes(creatorDto.getAdditionalAttributes());
         }
+        return dest;
     }
 }
