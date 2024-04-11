@@ -68,21 +68,21 @@ CREATE TABLE IF NOT EXISTS tenant_0f522100_7d8c_4b67_9a7f_779e1b179eff.deposit_a
     customer_id bigint NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS account_balance
+CREATE TABLE IF NOT EXISTS deposit_account_balance
 (
     account_id character varying(255) NOT NULL,
     currency character varying(255) NOT NULL,
     account_type character varying(255) NOT NULL,
     amount double precision NOT NULL,
-    CONSTRAINT account_balance_pk PRIMARY KEY(account_id, currency, account_type)
+    CONSTRAINT deposit_account_balance_pk PRIMARY KEY(account_id, currency, account_type)
 );
-CREATE TABLE IF NOT EXISTS tenant_0f522100_7d8c_4b67_9a7f_779e1b179eff.account_balance
+CREATE TABLE IF NOT EXISTS tenant_0f522100_7d8c_4b67_9a7f_779e1b179eff.deposit_account_balance
 (
     account_id character varying(255) NOT NULL,
     currency character varying(255) NOT NULL,
     account_type character varying(255) NOT NULL,
     amount double precision NOT NULL,
-    CONSTRAINT account_balance_pk PRIMARY KEY(account_id, currency, account_type)
+    CONSTRAINT deposit_account_balance_pk PRIMARY KEY(account_id, currency, account_type)
 );
 
 CREATE TABLE IF NOT EXISTS deposit_transaction
@@ -153,3 +153,6 @@ CREATE TABLE IF NOT EXISTS tenant_0f522100_7d8c_4b67_9a7f_779e1b179eff.deposit_t
     deposit_customer_type character varying(255) NOT NULL,
     deposit_customer_id bigint NOT NULL
 );
+
+CREATE SEQUENCE IF NOT EXISTS deposit_account_id_seq INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1;
+CREATE SEQUENCE IF NOT EXISTS tenant_0f522100_7d8c_4b67_9a7f_779e1b179eff.deposit_account_id_seq INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1;

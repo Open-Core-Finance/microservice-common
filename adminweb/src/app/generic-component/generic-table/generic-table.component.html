@@ -47,7 +47,7 @@
                 {{languageService.formatLanguage(column.columnTransformOptions['labelPrefix'] + element.symbolAtBeginning, [])}}
             </ng-container>
             <ng-container *ngIf="!column.columnTransformOptions.plainTextDisplay && column.columnTransformOptions['subField'] != undefined">
-                {{retreiveSubField(element[column.columnName], column.columnTransformOptions['subField'])}}
+                {{retreiveSubField(element[column.columnName], column.columnTransformOptions['subField'], column.columnTransformOptions['jsonout'])}}
             </ng-container>
             <ng-container *ngIf="complexCellTemplate">
                 <ng-container *ngTemplateOutlet="complexCellTemplate[column.columnName]; context: { $implicit: element }"></ng-container>

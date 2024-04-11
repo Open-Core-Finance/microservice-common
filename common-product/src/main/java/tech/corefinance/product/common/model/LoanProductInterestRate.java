@@ -6,7 +6,7 @@ import tech.corefinance.product.common.enums.*;
 import java.util.List;
 
 @Data
-public class LoanProductInterestRate implements InterestRate {
+public class LoanProductInterestRate {
     private LoanInterestCalculationMethod interestCalculationMethod;
     private AccruedInterestPostingFrequency accruedInterestPostingFrequency;
     private InterestCalculationMethod interestCalculationPoint;

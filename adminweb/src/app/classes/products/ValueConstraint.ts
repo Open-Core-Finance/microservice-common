@@ -18,5 +18,5 @@ export class ValueConstraint extends CurrencyBasesValue {
 }
 
 export class CurrencyLimitValue extends CurrencyBasesValue {
-    limit = 0.0;
+    value: number = 0.0;
 }

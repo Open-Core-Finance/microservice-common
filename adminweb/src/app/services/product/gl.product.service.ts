@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { AbstractEntityListService } from '../abstract.entity.list.service';
 import { GlProduct } from 'src/app/classes/products/GlProduct';
 import { environment } from 'src/environments/environment';
-import { ProductCategory } from 'src/app/classes/products/ProductCategory';
 import { HttpClient } from '@angular/common/http';
 import { CommonService } from '../common.service';
 import { RestService } from '../rest.service';
 import { Observable } from 'rxjs';
 import { GeneralApiResponse } from 'src/app/classes/GeneralApiResponse';
 import { ProductCategoryType } from 'src/app/classes/products/ProductCategory';
+import { DepositProduct } from 'src/app/classes/products/DepositProduct';
 
 @Injectable({
   providedIn: 'root'
@@ -55,6 +55,17 @@ export class ProductTypeService {
       let body = {searchText: JSON.stringify({type:  type })};
       const requestBody = this.commonService.buildPostStringBody(body);
       return this.http.post<GeneralApiResponse>(serviceUrl, requestBody, {headers});
+  }
+
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class DepositProductService extends AbstractEntityListService<DepositProduct> {
+
+  override get entityServiceUrl(): string {
+    return environment.apiUrl.depositProduct + "/";
   }
 
 }

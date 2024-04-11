@@ -1,15 +1,11 @@
 package tech.corefinance.product.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
-import tech.corefinance.product.common.enums.CreditArrangementManaged;
-import tech.corefinance.product.common.enums.FrequencyOptionYearly;
-import tech.corefinance.product.common.model.*;
-
-import java.util.List;
 
 /**
  * <b>CurrentAccount:</b> <br/>
@@ -40,65 +36,6 @@ import java.util.List;
 @Table(name = "deposit_product")
 @EqualsAndHashCode(callSuper = true)
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class DepositProduct extends Product {
+public class DepositProduct extends GenericDepositProduct {
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "product_fees")
-    private List<DepositProductFee> productFees;
-
-    @Column(name = "allow_deposit_after_maturity_date")
-    private boolean allowDepositAfterMaturityDate;
-
-    /**
-     * Interest Rate.
-     */
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "interest_rate")
-    private DepositProductInterestRate interestRate;
-
-    // Internal control
-    @Column(name = "days_to_set_to_dormant")
-    private Integer daysToSetToDormant;
-
-    /**
-     * Deposit transaction limits.
-     */
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "deposit_limits")
-    private List<DepositLimit> depositLimits;
-    /**
-     * Withdrawal Limits.
-     */
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "withdrawal_limits")
-    private List<WithdrawalLimit> withdrawalLimits;
-    /**
-     * Early Closure Period.
-     */
-    @Column(name = "early_closure_period")
-    private Integer earlyClosurePeriod;
-
-    @Column(name = "allow_overdrafts")
-    private Boolean allowOverdrafts;
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "overdrafts_interest")
-    private DepositProductInterestRate overdraftsInterest;
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "max_overdraft_limit")
-    private List<CurrencyValue> maxOverdraftLimit;
-    @Enumerated(EnumType.STRING)
-    @Column(name = "overdrafts_under_credit_arrangement_managed")
-    private CreditArrangementManaged overdraftsUnderCreditArrangementManaged;
-
-    @Column(name = "enable_term_deposit")
-    private boolean enableTermDeposit;
-    @Enumerated(EnumType.STRING)
-    @Column(name = "term_unit")
-    private FrequencyOptionYearly termUnit;
-    @Column(name = "min_term_length")
-    private Integer minTermLength;
-    @Column(name = "max_term_length")
-    private Integer maxTermLength;
-    @Column(name = "default_term_length")
-    private Integer defaultTermLength;
 }

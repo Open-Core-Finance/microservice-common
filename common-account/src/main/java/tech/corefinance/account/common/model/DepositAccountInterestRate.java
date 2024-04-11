@@ -27,6 +27,7 @@ public class DepositAccountInterestRate {
      * Interest Spread Constraints (%) for index rate source.
      */
     private List<CurrencyValue> interestRateValues;
+    private boolean sameInterestForAllCurrency;
     private String interestRateIndexSource;
     // Tiered interest rate
     private List<TieredInterestItem> interestItems;

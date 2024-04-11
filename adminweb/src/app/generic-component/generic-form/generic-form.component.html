@@ -43,10 +43,11 @@
     </mat-card>
 
     <ng-template #fieldGenerateTemplate let-formItem [formGroup]="formGroup">
+
         <app-reactive-form-input *ngIf="isFormInput(formItem) && (formItem.visibleFn == null || formItem.visibleFn())" [placeHolderKey]="formItem.placeHolderKey"
-            [formControlName]="formItem.formControlName" [additionClass]="formItem.additionClass" [addLabel]="formItem.addLabel"
-            [inputType]="formItem.inputType" [appearance]="formItem.appearance" [colorScheme]="formItem.colorScheme"
-            [required]="formItem.required" [postFixLabelKey]="formItem.postFixLabelKey"  [readonly]="formItem.disabledFn && formItem.disabledFn()">
+            [formControlName]="formItem.formControlName" [additionClass]="formItem.additionClass" [addLabel]="formItem.addLabel" [readonly]="formItem.disabledFn && formItem.disabledFn()"
+            [inputType]="formItem.inputType" [appearance]="formItem.appearance" [colorScheme]="formItem.colorScheme" (inputEventOut)="onFieldInput.emit($event)" [formInputName]="formItem.formControlName"
+            [required]="formItem.required" [postFixLabelKey]="formItem.postFixLabelKey" [autoComleteItems]="formItem.autoComleteItems">
         </app-reactive-form-input>
 
         <app-reactive-form-select *ngIf="isFormSelect(formItem) && (formItem.visibleFn == null || formItem.visibleFn())" [labelKey]="formItem.labelKey" [formControlName]="formItem.formControlName"

@@ -53,7 +53,7 @@ public abstract class AccountServiceImpl<T extends Account, R extends CommonReso
         log.debug("Getting product [{}]...", productId);
         var productResult = getProductObject(productId);
         log.debug("Product [{}]", productResult);
-        return mapProductToAccount(productResult, dest);
+        return mapProductToAccount(source, productResult, dest);
     }
 
     private Object retrieveFieldName(Object obj, String fieldName) {
@@ -154,7 +154,7 @@ public abstract class AccountServiceImpl<T extends Account, R extends CommonReso
         return result.toString();
     }
 
-    protected T mapProductToAccount(Object productObject, T dest) {
+    protected <D extends CreateUpdateDto<String>> T mapProductToAccount(D source, Object productObject, T dest) {
         var newAccountSetting = (ProductNewAccountSetting) retrieveFieldName(productObject, "newAccountSetting");
         log.debug("New Account setting [{}]", newAccountSetting);
         if (!StringUtils.hasText(dest.getId())) {
@@ -197,9 +197,15 @@ public abstract class AccountServiceImpl<T extends Account, R extends CommonReso
             }
             return typeResult;
         }, taskExecutor));
+        List<CompletableFuture<?>> customTasks = addAsyncTaskCreateUpdateAccount();
+        tasks.addAll(customTasks);
         for (var task : tasks) {
             task.join();
         }
         return dest;
+    }
+
+    protected List<CompletableFuture<?>> addAsyncTaskCreateUpdateAccount() {
+        return new LinkedList<>();
     }
 }

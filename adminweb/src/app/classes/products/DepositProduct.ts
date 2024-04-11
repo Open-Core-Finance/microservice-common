@@ -13,6 +13,7 @@ import { WithdrawalLimit } from "./WithdrawalLimit";
 export class DepositProduct extends Product {
 
     productFees: DepositProductFee[] = [];
+    allowDepositAfterMaturityDate = false;
 
     /**
      * Interest Rate.
@@ -48,8 +49,6 @@ export class DepositProduct extends Product {
     minTermLength: number | null = 0.0;
     maxTermLength: number | null = 0.0;
     defaultTermLength: number | null = 0.0;
-
-    allowDepositAfterMaturityDate = false;
 }
 
 export class DepositInterestRate implements InterestRate {

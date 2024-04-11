@@ -30,6 +30,7 @@ export class GenericFormComponent implements OnInit, OnDestroy {
 
   @Output() cancel = new EventEmitter();
   @Output() save = new EventEmitter();
+  @Output() onFieldInput = new EventEmitter();
 
   constructor(public languageService: LanguageService) {
   }
