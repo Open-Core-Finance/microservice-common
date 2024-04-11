@@ -1,6 +1,5 @@
 import { Component, OnInit, forwardRef, OnDestroy, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Subscription } from 'rxjs';
 import { Currency } from 'src/app/classes/Currency';
 import { CurrencyLimitValue } from 'src/app/classes/products/ValueConstraint';
 import { CurrencyService } from 'src/app/services/currency.service';
@@ -54,7 +53,7 @@ export class CurrencyValueInputComponent implements OnInit, ControlValueAccessor
   @Input()
   set supportedCurrencies(supportedCurrencies: Currency[]) {
     this._supportedCurrencies = supportedCurrencies;
-    this.populateCurrenciesToUi(supportedCurrencies);
+    this.populateCurrenciesToUi(this._supportedCurrencies);
   }
 
   get supportedCurrencies(): Currency[] {
@@ -62,9 +61,9 @@ export class CurrencyValueInputComponent implements OnInit, ControlValueAccessor
   }
 
   private populateCurrenciesToUi(supportedCurrencies: Currency[]) {
-      for(let  i = 0; i < supportedCurrencies.length; i++) {
-        this.checkAndAddCurrencyLimit(supportedCurrencies[i]);
-      }
+    for(let  i = 0; i < supportedCurrencies.length; i++) {
+      this.checkAndAddCurrencyLimit(supportedCurrencies[i]);
+    }
   }
 
   private checkAndAddCurrencyLimit(currency: Currency) {

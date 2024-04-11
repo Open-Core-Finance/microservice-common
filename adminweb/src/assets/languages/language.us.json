@@ -921,5 +921,34 @@
     "identityType_SWIFT_CODE": "SWIFT code",
     "identityType_INVESTMENT_REGISTRATION_CERTIFICATE": "Investment registration certficate",
     "identityType_OTHER": "Other"
+  },
+  "depositAccount": {
+    "id": "ID",
+    "category": "Category",
+    "description": "Product description",
+    "name": "Product name",
+    "type": "Product type",
+    "activated": "Activated",
+    "lastModifyDate": "Last modified",
+    "currencies": "Currencies",
+    "error": {
+      "no_currency_selected": "Please select at least 1 currency to continue!"
+    },
+    "addFee": "Add fee",
+    "allowArbitraryFees": "Allow Arbitrary Fees",
+    "lastModifiedDate": "Last modified",
+    "lastModifiedBy": "Modified user",
+    "addTitle": "Add GL Account",
+    "product": "Product",
+    "customer": "Customer",
+    "enableTermDeposit": "Enable terms deposit",
+    "termLength": "Term length",
+    "termUnit": "Term unit",
+    "interestRateValue": "Interest rate values"
+  },
+  "customerType": {
+    "type": "Customer type",
+    "type_INDIVIDUAL": "Individual",
+    "type_CORPORATE": "Corporate"
   }
 }

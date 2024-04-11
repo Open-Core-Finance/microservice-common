@@ -17,18 +17,19 @@ import java.io.File;
 @SpringBootApplication(scanBasePackages = {
         "tech.corefinance.product", "tech.corefinance.account.deposit", "tech.corefinance.account.common",
         "tech.corefinance.account.gl", "tech.corefinance.account.loan", "tech.corefinance.common",
-        "tech.corefinance.customer", "tech.corefinance.feign.client"
+        "tech.corefinance.customer", "tech.corefinance.feign.client", "tech.corefinance.account.crypto"
 })
 @EnableJpaRepositories(basePackages = {
         "tech.corefinance.product.repository", "tech.corefinance.account.loan.repository", "tech.corefinance.account.gl.repository",
         "tech.corefinance.account.deposit.repository", "tech.corefinance.account.common.repository",
         "tech.corefinance.common.jpa.repository", "tech.corefinance.common.repository",
-        "tech.corefinance.customer.repository"
+        "tech.corefinance.customer.repository", "tech.corefinance.account.crypto.repository"
 })
 @EntityScan(basePackages = {
         "tech.corefinance.product.entity", "tech.corefinance.common.jpa.model", "tech.corefinance.common.model",
         "tech.corefinance.account.deposit.entity", "tech.corefinance.account.common.entity",
-        "tech.corefinance.account.loan.entity", "tech.corefinance.account.gl.entity", "tech.corefinance.customer.entity"
+        "tech.corefinance.account.loan.entity", "tech.corefinance.account.gl.entity", "tech.corefinance.customer.entity",
+        "tech.corefinance.account.crypto.entity"
 })
 @ConditionalOnProperty(prefix = "tech.app.enabled", name = "combined-product-account", havingValue = "true",matchIfMissing = true)
 @EnableFeignClients(basePackages = {"tech.corefinance.feign.client"})

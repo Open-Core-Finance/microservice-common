@@ -14,15 +14,17 @@ import tech.corefinance.common.enums.CommonConstants;
 import java.io.File;
 
 @SpringBootApplication(scanBasePackages = {
-        "tech.corefinance.account.deposit", "tech.corefinance.account.common", "tech.corefinance.common"
+        "tech.corefinance.account", "tech.corefinance.common"
 })
 @EnableJpaRepositories(basePackages = {
         "tech.corefinance.account.deposit.repository", "tech.corefinance.account.common.repository",
-        "tech.corefinance.common.jpa.repository", "tech.corefinance.common.repository"
+        "tech.corefinance.common.jpa.repository", "tech.corefinance.common.repository",
+        "tech.corefinance.account.crypto.repository"
 })
 @EntityScan(basePackages = {
         "tech.corefinance.common.jpa.model", "tech.corefinance.common.model",
-        "tech.corefinance.account.deposit.entity", "tech.corefinance.account.common.entity"
+        "tech.corefinance.account.deposit.entity", "tech.corefinance.account.common.entity",
+        "tech.corefinance.account.crypto.entity"
 })
 @ConditionalOnProperty(prefix = "tech.app.enabled", name = "deposit-account", havingValue = "true",matchIfMissing = true)
 public class DepositAccountApplication {

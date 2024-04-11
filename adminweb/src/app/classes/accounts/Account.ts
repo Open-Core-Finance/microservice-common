@@ -22,4 +22,24 @@ export abstract class Account implements GeneralModel<string>, ListableItem {
     supportedCurrencies: string[] = [];
 
     productId = "";
+
+    public assignDataTo<A extends CreateAccountRequest>(requestObj: A) {
+        requestObj.id = this.id;
+        requestObj.name = this.name;
+        requestObj.categoryId = this.categoryId;
+        requestObj.typeId = this.typeId;
+        requestObj.description = this.description;
+        requestObj.supportedCurrencies = this.supportedCurrencies;
+        requestObj.productId = this.productId;
+    }
+}
+
+export abstract class CreateAccountRequest implements GeneralModel<string> {
+    id = "";
+    name = "";
+    categoryId = "";
+    typeId = "";
+    description = "";
+    supportedCurrencies: string[] = [];
+    productId = "";
 }

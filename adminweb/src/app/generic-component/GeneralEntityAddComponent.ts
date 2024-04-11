@@ -115,7 +115,7 @@ export abstract class GeneralEntityAddComponent<T extends any> {
     return false;
   }
 
-  @Input() set addingItem(item: T| null) {
+  @Input() set addingItem(item: any| null) {
     this._addingItem = item;
     if (item) {
       this.addForm.setValue(item);

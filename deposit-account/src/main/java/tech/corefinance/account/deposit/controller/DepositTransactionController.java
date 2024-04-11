@@ -12,7 +12,7 @@ import tech.corefinance.common.service.CommonService;
 
 @RestController
 @RequestMapping("/deposit-transactions")
-@ControllerManagedResource("deposittransaction")
+@ControllerManagedResource("depositTransaction")
 public class DepositTransactionController implements CrudController<String, DepositTransaction, DepositTransactionRequest> {
 
     @Autowired

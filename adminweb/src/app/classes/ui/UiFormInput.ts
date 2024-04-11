@@ -1,5 +1,6 @@
 import { ThemePalette } from "@angular/material/core";
 import { MatFormFieldAppearance } from "@angular/material/form-field";
+import { Observable } from "rxjs";
 
 export class UiFormItem {
 
@@ -30,7 +31,7 @@ export class UiFormInput extends UiFormItem {
 
   placeHolderKey: string = "";
   postFixLabelKey = "";
-  autoComleteItems: UiSelectItem[] = [];
+  autoComleteItems: Observable<UiSelectItem[]> | undefined;
 
   constructor(placeHolderKey: string, formControlName: string, inputType?: string,
     visibleFn?: Function | null, disabledFn?: Function | null) {

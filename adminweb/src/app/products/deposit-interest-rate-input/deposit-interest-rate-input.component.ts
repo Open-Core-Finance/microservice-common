@@ -1,9 +1,8 @@
 import { Component, Input, OnDestroy, OnInit, forwardRef } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Currency } from 'src/app/classes/Currency';
 import { DepositBalanceInterestCalculation, DepositInterestRate, DepositInterestRateTerms, InterestCalculationDateOptionType } from 'src/app/classes/products/DepositProduct';
 import { LanguageService } from 'src/app/services/language.service';
-import { CurrencyService } from 'src/app/services/currency.service';
 import { InterestCalculationMethod } from 'src/app/classes/products/InterestCalculationMethod';
 import { InterestDayInYear } from 'src/app/classes/products/InterestDayInYear';
 import { ValueConstraint } from 'src/app/classes/products/ValueConstraint';
@@ -25,6 +24,7 @@ export class DepositInterestRateInputComponent implements OnInit, ControlValueAc
   isDisabled: boolean = false;
   _supportedCurrencies: Currency[] = [];
   value: DepositInterestRate = new DepositInterestRate();
+  childForm: FormGroup;
   depositInterestRateTermsEnum = DepositInterestRateTerms;
   allTerms = Object.keys(DepositInterestRateTerms);
   interestCalculationMethodEnum = InterestCalculationMethod;
@@ -36,7 +36,14 @@ export class DepositInterestRateInputComponent implements OnInit, ControlValueAc
   interestDayInYearEnum = InterestDayInYear;
   allDayInYearOption = Object.keys(InterestDayInYear);
 
-  public constructor(public languageService: LanguageService, private currencyService: CurrencyService) {
+  public constructor(public languageService: LanguageService, protected formBuilder: FormBuilder) {
+    this.childForm = this.buildChildForm();
+  }
+
+  private buildChildForm(): FormGroup {
+    return this.formBuilder.group({
+      interestItems: new FormControl<TieredInterestItem[]>([])
+    });
   }
 
   ngOnDestroy(): void {
@@ -61,8 +68,8 @@ export class DepositInterestRateInputComponent implements OnInit, ControlValueAc
     this.isDisabled = isDisabled;
   }
 
-  propagateChange = (_: DepositInterestRate[]) => { };
-  propagateTouched = (_: DepositInterestRate[]) => { };
+  propagateChange = (_: DepositInterestRate) => { };
+  propagateTouched = (_: DepositInterestRate) => { };
 
   @Input()
   set supportedCurrencies(supportedCurrencies: Currency[]) {
@@ -76,17 +83,24 @@ export class DepositInterestRateInputComponent implements OnInit, ControlValueAc
 
   private populateCurrenciesToUi(supportedCurrencies: Currency[]) {
     if (supportedCurrencies.length > 0) {
+      let changed = false;
       for(let  i = 0; i < supportedCurrencies.length; i++) {
-        this.checkAndUpdateCurrency(supportedCurrencies[i]);
+        if (this.checkAndUpdateCurrency(supportedCurrencies[i])) {
+          changed = true;
+        }
+      }
+      if (changed) {
+        this.propagateChange(this.value);
       }
     } else {
       this.value.interestRateConstraints = [];
-      this.value.interestItems = [];
+      this.propagateChange(this.value);
     }
   }
 
-  private checkAndUpdateCurrency(currency: Currency) {
+  private checkAndUpdateCurrency(currency: Currency): boolean {
     let found = false;
+    let changed = false;
     var constraints = this.value.interestRateConstraints;
     for (const currencyValue of constraints) {
       if (currencyValue.currencyId == currency.id) {
@@ -98,10 +112,11 @@ export class DepositInterestRateInputComponent implements OnInit, ControlValueAc
       const item = new ValueConstraint();
       item.currencyId = currency.id;
       this.value.interestRateConstraints.push(item);
+      changed = true;
     }
     if (this._supportedCurrencies.length < 1) {
       this.value.interestRateConstraints = [];
-      this.value.interestItems = [];
+      changed = true;
     } else {
       // Clean remove currencies constraint
       for(let  i = 0; i < constraints.length; i++) {
@@ -116,39 +131,15 @@ export class DepositInterestRateInputComponent implements OnInit, ControlValueAc
         if (!found) {
           constraints.splice(i, 1);
           i--;
+          changed = true;
         }
       }
-      // Check tier
-      if (this.value.interestItems.length < 1) {
-        var item = new TieredInterestItem();
-        item.currencyId = currency.id;
-        this.value.interestItems.push(item);
-      }
     }
+    return changed;
   }
 
-  addTierClick($event: MouseEvent) {
-    if (this.supportedCurrencies.length > 0) {
-      var currency = this.supportedCurrencies[0];
-      if (this.value.interestItems.length > 0) {
-        const last = this.value.interestItems[this.value.interestItems.length - 1];
-        for (const c of this.supportedCurrencies) {
-          if (c.id == last.currencyId) {
-            currency = c;
-            break;
-          }
-        }
-      }
-      var item = new TieredInterestItem();
-      item.currencyId = currency.id;
-      this.value.interestItems.push(item);
-    }
-  }
-
-  removeTierClick($event: MouseEvent, index: number) {
-    this.value.interestItems.splice(index, 1);
-  }
-
-  inerestTierCurrencyChanged($event: any, item: TieredInterestItem) {
+  tieredInterestSubComponentChanged() {
+    this.value.interestItems = this.childForm.controls['interestItems'].value;
+    this.propagateChange(this.value);
   }
 }

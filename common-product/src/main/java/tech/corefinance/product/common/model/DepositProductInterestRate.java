@@ -7,7 +7,7 @@ import tech.corefinance.product.common.enums.InterestDayInYear;
 import java.util.List;
 
 @Data
-public class DepositProductInterestRate implements InterestRate {
+public class DepositProductInterestRate {
     private DepositInterestRateTerms interestRateTerms;
     private InterestCalculationMethod interestCalculationMethod;
     private int percentPerDay;

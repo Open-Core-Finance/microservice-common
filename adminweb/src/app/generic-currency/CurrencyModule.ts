@@ -13,20 +13,22 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { CurrenciesSelectionComponent } from './currencies-selection/currencies-selection.component';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import { CurrencyValueInputComponent } from './currency-value-input/currency-value-input.component';
+import { TieredInterestInputComponent } from './tiered-interest-input/tiered-interest-input.component';
 
 @NgModule({
   declarations: [
-    CurrenciesSelectionComponent
+    CurrenciesSelectionComponent, CurrencyValueInputComponent, TieredInterestInputComponent
   ],
   imports: [
     CommonModule, MatInputModule, MatIconModule, FormsModule, ReactiveFormsModule,
     MatFormFieldModule, MatSelectModule, MatCardModule,
     MatSortModule, MatDividerModule, MatAutocompleteModule, MatExpansionModule,
-    MatToolbarModule
+    MatToolbarModule, MatIconModule
   ],
   // export the component to make it available in other modules where the Shared module is imported
   exports: [
-    CurrenciesSelectionComponent
+    CurrenciesSelectionComponent, CurrencyValueInputComponent, TieredInterestInputComponent
   ] 
 })
 export class CurrencyModule {  }

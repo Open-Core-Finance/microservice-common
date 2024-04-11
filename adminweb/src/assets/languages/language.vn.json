@@ -921,5 +921,34 @@
     "identityType_SWIFT_CODE": "Mã số SWIFT",
     "identityType_INVESTMENT_REGISTRATION_CERTIFICATE": "Giấy phép đăng ký đầu tư",
     "identityType_OTHER": "Giấy tờ khác"
+  },
+  "depositAccount": {
+    "id": "Mã số",
+    "category": "Chuyên mục",
+    "description": "Mô tả sản phẩm",
+    "name": "Tên sản phầm",
+    "type": "Loại sản phầm",
+    "activated": "Hoạt động",
+    "lastModifyDate": "Lần sửa cuối",
+    "currencies": "Tiền tệ",
+    "error": {
+      "no_currency_selected": "Xin hãy chọn ít nhất 1 đơn vị tiền tệ để tiếp tục!"
+    },
+    "addFee": "Thêm phí",
+    "allowArbitraryFees": "Allow Arbitrary Fees",
+    "lastModifiedDate": "Lần sửa cuối",
+    "lastModifiedBy": "Người sửa",
+    "addTitle": "Tạo TK GL",
+    "product": "Sản phẩm",
+    "customer": "Khách hàng",
+    "enableTermDeposit": "Enable terms deposit",
+    "termLength": "Term length",
+    "termUnit": "Term unit",
+    "interestRateValue": "Interest rate values"
+  },
+  "customerType": {
+    "type": "Loại khách hàng",
+    "type_INDIVIDUAL": "Cá nhân",
+    "type_CORPORATE": "Doanh nghiệp"
   }
 }

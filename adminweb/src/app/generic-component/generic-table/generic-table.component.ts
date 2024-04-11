@@ -69,20 +69,27 @@ export class GenericTableComponent implements OnInit, OnDestroy {
     this.pageAction.emit($event);
   }
 
-  retreiveSubField(element: any, subField: string): any {
+  retreiveSubField(element: any, subField: string, jsonout: boolean | null): any {
     if (!element) {
       return "";
     }
     if (subField) {
       const index = subField.indexOf('.');
+      let out: any = "";
       if (index > 0) {
         let suffix = subField.substring(index + 1);
         let prefix = subField.substring(0, index);
-        return this.retreiveSubField(element[prefix], suffix);
+        out = this.retreiveSubField(element[prefix], suffix, jsonout);
       } else {
-        return element[subField];
+        out = element[subField];
       }
+      if (!jsonout) {
+        return out;
+      } else {
+        return JSON.stringify(out);
+      }
+    } else {
+      return element;
     }
-    return element;
   }
 }

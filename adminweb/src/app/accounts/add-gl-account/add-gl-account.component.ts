@@ -2,8 +2,8 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GeneralEntityAddComponent } from 'src/app/generic-component/GeneralEntityAddComponent';
 import { SharedModule } from 'src/app/generic-component/SharedModule';
-import { GlAccount } from 'src/app/classes/accounts/GlAccount';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { CreateGlAccountRequest, GlAccount } from 'src/app/classes/accounts/GlAccount';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { UiFormComplexInput, UiFormDivider, UiFormInput, UiFormItem, UiFormSelect, UiFormTextarea, UiSelectItem } from 'src/app/classes/ui/UiFormInput';
 import { environment } from 'src/environments/environment';
 import { LanguageService } from 'src/app/services/language.service';
@@ -12,12 +12,10 @@ import { RestService } from 'src/app/services/rest.service';
 import { HttpClient } from '@angular/common/http';
 import { OrganizationService } from 'src/app/services/organization.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
-import { GlProductService, ProductCategoryService, ProductTypeService } from 'src/app/services/product/gl.product.service';
+import { GlProductService } from 'src/app/services/product/gl.product.service';
 import { GlProduct } from 'src/app/classes/products/GlProduct';
 import { Subscription } from 'rxjs';
-import { ProductCategory, ProductCategoryType } from 'src/app/classes/products/ProductCategory';
-import { ProductType } from 'src/app/classes/products/ProductType';
-import { CurrencyModule } from 'src/app/generic-component/CurrencyModule';
+import { CurrencyModule } from 'src/app/generic-currency/CurrencyModule';
 
 @Component({
   selector: 'app-add-gl-account',
@@ -26,7 +24,7 @@ import { CurrencyModule } from 'src/app/generic-component/CurrencyModule';
   templateUrl: './add-gl-account.component.html',
   styleUrl: './add-gl-account.component.sass'
 })
-export class AddGlAccountComponent extends GeneralEntityAddComponent<GlAccount> implements OnDestroy, OnInit {
+export class AddGlAccountComponent extends GeneralEntityAddComponent<CreateGlAccountRequest> implements OnDestroy, OnInit {
 
   glProducts: GlProduct[] = [];
   glProductSubscription: Subscription | undefined;
@@ -74,6 +72,7 @@ export class AddGlAccountComponent extends GeneralEntityAddComponent<GlAccount> 
   protected override buildFormItems(): UiFormItem[] {
     const formItems: UiFormItem[] = [];
     const prefix = "glaccount.";
+    const that = this;
     // ID auto generate
     formItems.push(new UiFormInput(prefix + "name", "name"));
     formItems.push(new UiFormSelect(prefix + "product", this.buildListSelection("productId"), "productId"));
@@ -83,7 +82,9 @@ export class AddGlAccountComponent extends GeneralEntityAddComponent<GlAccount> 
     formItems.push(item);
     formItems.push(new UiFormDivider());
     // Currencies
-    formItems.push(new UiFormComplexInput("currencies", "supportedCurrencies"));
+    formItems.push(new UiFormComplexInput("currencies", "supportedCurrencies", () => {
+      return that.previousProductId != null && that.previousProductId != '';
+    }));
     // Return
     return formItems;
   }
@@ -99,8 +100,8 @@ export class AddGlAccountComponent extends GeneralEntityAddComponent<GlAccount> 
     }
   }
 
-  protected override newEmptyEntity(): GlAccount {
-    return new GlAccount();
+  protected override newEmptyEntity(): CreateGlAccountRequest {
+    return new CreateGlAccountRequest();
   }
 
   protected override buildListSelection(selectName: string): UiSelectItem[] {
@@ -116,5 +117,14 @@ export class AddGlAccountComponent extends GeneralEntityAddComponent<GlAccount> 
     return {
       supportedCurrencies: new FormControl<string[]>([])
     };
+  }
+
+  override set addingItem(item: GlAccount | null) {
+    let settingItem: CreateGlAccountRequest | null = null;
+    if (item != null) {
+      settingItem = new CreateGlAccountRequest();
+      item.assignDataTo(settingItem);
+    }
+    super.addingItem = settingItem;
   }
 }

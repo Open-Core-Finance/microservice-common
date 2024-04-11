@@ -222,6 +222,7 @@ CREATE TABLE IF NOT EXISTS crypto_product
     created_by jsonb,
     last_modified_by jsonb,
     enable_term_deposit boolean NOT NULL default false,
+    enable_interest_rate boolean NOT NULL default false,
     CONSTRAINT crypto_product_overdrafts_under_credit_arrangement_manag_check CHECK (overdrafts_under_credit_arrangement_managed::text = ANY (ARRAY['REQUIRED'::character varying, 'NO'::character varying, 'OPTIONAL'::character varying]::text[])),
     CONSTRAINT crypto_product_term_unit_check CHECK (term_unit::text = ANY (ARRAY['DAY'::character varying, 'WEEK'::character varying, 'MONTH'::character varying]::text[]))
 );
@@ -258,6 +259,7 @@ CREATE TABLE IF NOT EXISTS tenant_0f522100_7d8c_4b67_9a7f_779e1b179eff.crypto_pr
     created_by jsonb,
     last_modified_by jsonb,
     enable_term_deposit boolean NOT NULL default false,
+    enable_interest_rate boolean NOT NULL default false,
     CONSTRAINT crypto_product_overdrafts_under_credit_arrangement_manag_check CHECK (overdrafts_under_credit_arrangement_managed::text = ANY (ARRAY['REQUIRED'::character varying, 'NO'::character varying, 'OPTIONAL'::character varying]::text[])),
     CONSTRAINT crypto_product_term_unit_check CHECK (term_unit::text = ANY (ARRAY['DAY'::character varying, 'WEEK'::character varying, 'MONTH'::character varying]::text[]))
 );
@@ -295,6 +297,7 @@ CREATE TABLE IF NOT EXISTS deposit_product
     created_by jsonb,
     last_modified_by jsonb,
     enable_term_deposit boolean NOT NULL default false,
+    enable_interest_rate boolean NOT NULL default false,
     CONSTRAINT deposit_product_overdrafts_under_credit_arrangement_manag_check CHECK (overdrafts_under_credit_arrangement_managed::text = ANY (ARRAY['REQUIRED'::character varying, 'NO'::character varying, 'OPTIONAL'::character varying]::text[])),
     CONSTRAINT deposit_product_term_unit_check CHECK (term_unit::text = ANY (ARRAY['DAY'::character varying, 'WEEK'::character varying, 'MONTH'::character varying]::text[]))
 );
@@ -331,6 +334,7 @@ CREATE TABLE IF NOT EXISTS tenant_0f522100_7d8c_4b67_9a7f_779e1b179eff.deposit_p
     created_by jsonb,
     last_modified_by jsonb,
     enable_term_deposit boolean NOT NULL default false,
+    enable_interest_rate boolean NOT NULL default false,
     CONSTRAINT deposit_product_overdrafts_under_credit_arrangement_manag_check CHECK (overdrafts_under_credit_arrangement_managed::text = ANY (ARRAY['REQUIRED'::character varying, 'NO'::character varying, 'OPTIONAL'::character varying]::text[])),
     CONSTRAINT deposit_product_term_unit_check CHECK (term_unit::text = ANY (ARRAY['DAY'::character varying, 'WEEK'::character varying, 'MONTH'::character varying]::text[]))
 );

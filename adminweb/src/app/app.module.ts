@@ -64,7 +64,6 @@ import { CryptoProductComponent } from './products/crypto-product/crypto-product
 import { AddLoanProductComponent } from './products/add-loan-product/add-loan-product.component';
 import { LoanProductComponent } from './products/loan-product/loan-product.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import { CurrencyValueInputComponent } from './products/currency-value-input/currency-value-input.component';
 import { DepositInterestRateInputComponent } from './products/deposit-interest-rate-input/deposit-interest-rate-input.component';
 import { DepositLimitInputComponent } from './products/deposit-limit-input/deposit-limit-input.component';
 import { WithdrawalLimitInputComponent } from './products/withdrawal-limit-input/withdrawal-limit-input.component';
@@ -75,7 +74,7 @@ import { LoanRepaymentCollectionInputComponent } from './products/loan-repayment
 import { CdkDropList, CdkDrag} from '@angular/cdk/drag-drop';
 import { SharedModule } from './generic-component/SharedModule';
 import { LoanProductFeeInputComponent } from './product-master/loan-product-fee-input/loan-product-fee-input.component';
-import { CurrencyModule } from './generic-component/CurrencyModule';
+import { CurrencyModule } from './generic-currency/CurrencyModule';
 import { NewAccountSettingComponent } from "./products/new-account-setting/new-account-setting.component";
 
 @NgModule({
@@ -96,9 +95,8 @@ import { NewAccountSettingComponent } from "./products/new-account-setting/new-a
         RateSourceComponent, AddRateSourceComponent,
         DepositProductComponent, AddDepositProductComponent, BranchesSelectionComponent,
         ProductTypeComponent, AddProductTypeComponent, DepositProductFeeInputComponent,
-        AddGlProductComponent, GlProductComponent, CurrencyValueInputComponent,
-        AddCryptoProductComponent, CryptoProductComponent, LoanRepaymentCollectionInputComponent,
-        AddLoanProductComponent, LoanProductComponent,
+        AddGlProductComponent, GlProductComponent, AddCryptoProductComponent, CryptoProductComponent,
+        LoanRepaymentCollectionInputComponent, AddLoanProductComponent, LoanProductComponent,
         DepositInterestRateInputComponent, DepositLimitInputComponent, WithdrawalLimitInputComponent,
         LoanInterestRateInputComponent, LoanRepaymentSchedulingInputComponent, ValueConstraintsInputComponent, LoanProductFeeInputComponent
     ],

@@ -1,7 +1,8 @@
-import {Component, forwardRef, OnInit, OnDestroy, Input} from '@angular/core';
+import {Component, forwardRef, OnInit, OnDestroy, Input, Output, EventEmitter} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
+import { Observable } from 'rxjs';
 import { UiSelectItem } from 'src/app/classes/ui/UiFormInput';
 import { LanguageService } from 'src/app/services/language.service';
 
@@ -38,9 +39,13 @@ export class ReactiveFormInputComponent implements OnInit, ControlValueAccessor,
   @Input()
   postFixLabelKey: string = "";
   @Input()
-  autoComleteItems: UiSelectItem[] = [];
+  autoComleteItems: Observable<UiSelectItem[]> | undefined;
   @Input()
   readonly = false;
+  @Input()
+  formInputName = "";
+  @Output()
+  inputEventOut = new EventEmitter();
 
   constructor(public languageService: LanguageService) {
   }
@@ -68,5 +73,11 @@ export class ReactiveFormInputComponent implements OnInit, ControlValueAccessor,
 
   onChanged() {
     this.propagateChange(this.value);
+  }
+
+  onInput($event: any, value: any) {
+    if (this.inputEventOut) {
+      this.inputEventOut.emit({event: $event, value: value, name: this.formInputName});
+    }
   }
 }
