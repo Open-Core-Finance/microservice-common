@@ -15,7 +15,7 @@ import tech.corefinance.common.model.CreateUpdateDto;
 import tech.corefinance.feign.client.product.DepositProductClient;
 import tech.corefinance.feign.client.product.ProductCategoryClient;
 import tech.corefinance.feign.client.product.ProductTypeClient;
-import tech.corefinance.feign.client.product.entity.DepositProductResponse;
+import tech.corefinance.product.common.dto.DepositProductDto;
 
 @Service
 @Transactional
@@ -71,7 +71,7 @@ public class DepositAccountServiceImpl extends AccountServiceImpl<DepositAccount
                                                                                      DepositAccount dest) {
         dest = super.mapProductToAccount(source, productObject, dest);
         // Additional mapping
-        if (productObject instanceof DepositProductResponse res) {
+        if (productObject instanceof DepositProductDto res) {
             dest = new DepositAccountProductMapper<>(source, dest, res).map();
             dest.setTermLength(((CreateDepositAccountRequest) source).getTermLength());
         } else {

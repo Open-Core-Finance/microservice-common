@@ -27,7 +27,7 @@ INSERT INTO tenant_0f522100_7d8c_4b67_9a7f_779e1b179eff.product_type (id, "name"
 INSERT INTO tenant_0f522100_7d8c_4b67_9a7f_779e1b179eff.product_type (id, name, "type") VALUES ('dcca66d6-090d-4384-922a-aa98e0254ddf','Crypto GL','GL') ON CONFLICT DO NOTHING;
 
 INSERT INTO tenant_0f522100_7d8c_4b67_9a7f_779e1b179eff.crypto_product (id, activated, allow_arbitrary_fees, category, currencies, description, "name", new_account_setting, product_availabilities, product_fees,
-show_inactive_fees, "type", allow_deposit_after_maturity_date, allow_overdrafts, days_to_set_to_dormant, default_term_length, deposit_limits, early_closure_period, interest_rate, max_overdraft_limit,
+show_inactive_fees, "type", allow_deposit_after_maturity_date, allow_overdrafts, days_to_set_to_dormant, default_term_length, deposit_limits, early_closure_period, interest_rate, max_overdraft_limits,
 max_term_length, min_term_length, overdrafts_interest, overdrafts_under_credit_arrangement_managed, term_unit, withdrawal_limits, created_date, last_modified_date, created_by,
 last_modified_by, enable_term_deposit, enable_interest_rate)
 VALUES('8188950b-9cd7-4dff-ab02-d1dbe6fe025c', true, false, '556dc67d-d9ae-44bd-b64a-c689d89fd807', '{BTC,ETH}',
@@ -96,7 +96,7 @@ false, false, 0.0, '{"acceptPrePayments": true, "repaymentHorizontal": true, "re
 '{"email": "admin@admin.com", "userId": "01", "lastName": null, "username": "admin", "firstName": null, "middleName": null, "displayName": "System Admin"}'::jsonb) ON CONFLICT DO NOTHING;
 
 INSERT INTO tenant_0f522100_7d8c_4b67_9a7f_779e1b179eff.deposit_product (id, activated, allow_arbitrary_fees, category, currencies, description, "name", new_account_setting, product_availabilities, product_fees, show_inactive_fees,
-"type", allow_deposit_after_maturity_date, allow_overdrafts, days_to_set_to_dormant, default_term_length, deposit_limits, early_closure_period, interest_rate, max_overdraft_limit,
+"type", allow_deposit_after_maturity_date, allow_overdrafts, days_to_set_to_dormant, default_term_length, deposit_limits, early_closure_period, interest_rate, max_overdraft_limits,
 max_term_length, min_term_length, overdrafts_interest, overdrafts_under_credit_arrangement_managed, term_unit, withdrawal_limits, created_date, last_modified_date, created_by,
 last_modified_by, enable_term_deposit, enable_interest_rate)
 VALUES('4187dc8e-d844-4ecc-a7e3-b5f5e8b9d73e', true, false, '6d19baa9-603a-48a5-bf29-2353d73d7d3d',
@@ -112,7 +112,7 @@ false, '36215f2f-4773-4ab8-ae7f-c031428d4086', false, false, NULL, 0, '[]'::json
 false, false) ON CONFLICT DO NOTHING;
 
 INSERT INTO tenant_0f522100_7d8c_4b67_9a7f_779e1b179eff.deposit_product (id, activated, allow_arbitrary_fees, category, currencies, description, "name", new_account_setting, product_availabilities, product_fees, show_inactive_fees,
-"type", allow_deposit_after_maturity_date, allow_overdrafts, days_to_set_to_dormant, default_term_length, deposit_limits, early_closure_period, interest_rate, max_overdraft_limit,
+"type", allow_deposit_after_maturity_date, allow_overdrafts, days_to_set_to_dormant, default_term_length, deposit_limits, early_closure_period, interest_rate, max_overdraft_limits,
 max_term_length, min_term_length, overdrafts_interest, overdrafts_under_credit_arrangement_managed, term_unit, withdrawal_limits, created_date, last_modified_date, created_by,
 last_modified_by, enable_term_deposit, enable_interest_rate)
 VALUES('121a89a3-5583-49c7-b9aa-1e25857e09c7', true, false, '6d19baa9-603a-48a5-bf29-2353d73d7d3d',

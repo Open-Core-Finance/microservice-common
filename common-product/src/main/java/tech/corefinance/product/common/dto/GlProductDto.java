@@ -1,9 +1,7 @@
-package tech.corefinance.product.dto;
+package tech.corefinance.product.common.dto;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data

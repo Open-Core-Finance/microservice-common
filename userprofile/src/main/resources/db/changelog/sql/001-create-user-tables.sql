@@ -1,18 +1,7 @@
 -- Liquibase formatted SQL
 -- ChangeSet Trung.Doan:1 labels:permission,basic-table runOnChange:true
 
-CREATE TABLE IF NOT EXISTS resource_action
-(
-    id character varying(255) DEFAULT gen_random_uuid()::character varying(255) PRIMARY KEY,
-    action character varying(255),
-    request_method character varying(255),
-    resource_type character varying(255),
-    url character varying(255),
-    CONSTRAINT resource_action_request_method_check CHECK (request_method::text = ANY (ARRAY['GET'::character varying, 'HEAD'::character varying, 'POST'::character varying, 'PUT'::character varying, 'PATCH'::character varying, 'DELETE'::character varying, 'OPTIONS'::character varying, 'TRACE'::character varying]::text[])),
-    CONSTRAINT resource_action_action_method_type_url_unique UNIQUE NULLS NOT DISTINCT (action, request_method, resource_type, url)
-);
-
-CREATE TABLE IF NOT EXISTS internal_service_config
+CREATE TABLE IF NOT EXISTS public.internal_service_config
 (
     id character varying(255) DEFAULT gen_random_uuid()::character varying(255) PRIMARY KEY,
     activated boolean NOT NULL,

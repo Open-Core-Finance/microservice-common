@@ -3,17 +3,6 @@
 
 CREATE SCHEMA IF NOT EXISTS tenant_0f522100_7d8c_4b67_9a7f_779e1b179eff;
 
-CREATE TABLE IF NOT EXISTS public.resource_action
-(
-    id character varying(255) DEFAULT gen_random_uuid()::character varying(255) PRIMARY KEY,
-    action character varying(255),
-    request_method character varying(255),
-    resource_type character varying(255),
-    url character varying(255),
-    CONSTRAINT resource_action_request_method_check CHECK (request_method::text = ANY (ARRAY['GET'::character varying, 'HEAD'::character varying, 'POST'::character varying, 'PUT'::character varying, 'PATCH'::character varying, 'DELETE'::character varying, 'OPTIONS'::character varying, 'TRACE'::character varying]::text[])),
-    CONSTRAINT resource_action_action_method_type_url_unique UNIQUE NULLS NOT DISTINCT (action, request_method, resource_type, url)
-);
-
 CREATE TABLE IF NOT EXISTS public.internal_service_config
 (
     id character varying(255) DEFAULT gen_random_uuid()::character varying(255) PRIMARY KEY,
@@ -210,7 +199,7 @@ CREATE TABLE IF NOT EXISTS crypto_product
     deposit_limits jsonb,
     early_closure_period integer,
     interest_rate jsonb,
-    max_overdraft_limit jsonb,
+    max_overdraft_limits jsonb,
     max_term_length integer,
     min_term_length integer,
     overdrafts_interest jsonb,
@@ -247,7 +236,7 @@ CREATE TABLE IF NOT EXISTS tenant_0f522100_7d8c_4b67_9a7f_779e1b179eff.crypto_pr
     deposit_limits jsonb,
     early_closure_period integer,
     interest_rate jsonb,
-    max_overdraft_limit jsonb,
+    max_overdraft_limits jsonb,
     max_term_length integer,
     min_term_length integer,
     overdrafts_interest jsonb,
@@ -285,7 +274,7 @@ CREATE TABLE IF NOT EXISTS deposit_product
     deposit_limits jsonb,
     early_closure_period integer,
     interest_rate jsonb,
-    max_overdraft_limit jsonb,
+    max_overdraft_limits jsonb,
     max_term_length integer,
     min_term_length integer,
     overdrafts_interest jsonb,
@@ -322,7 +311,7 @@ CREATE TABLE IF NOT EXISTS tenant_0f522100_7d8c_4b67_9a7f_779e1b179eff.deposit_p
     deposit_limits jsonb,
     early_closure_period integer,
     interest_rate jsonb,
-    max_overdraft_limit jsonb,
+    max_overdraft_limits jsonb,
     max_term_length integer,
     min_term_length integer,
     overdrafts_interest jsonb,

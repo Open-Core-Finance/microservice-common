@@ -5,16 +5,16 @@ import tech.corefinance.account.common.model.DepositAccountInterestRate;
 import tech.corefinance.account.deposit.dto.GenericCreateDepositAccountRequest;
 import tech.corefinance.account.deposit.entity.GenericDepositAccount;
 import tech.corefinance.common.model.CreateUpdateDto;
-import tech.corefinance.feign.client.product.entity.DepositProductResponse;
+import tech.corefinance.product.common.dto.DepositProductDto;
 import tech.corefinance.product.common.model.DepositProductInterestRate;
 
 public class DepositAccountProductMapper<T extends GenericDepositAccount, D extends CreateUpdateDto<String>> {
 
     private final T depositAccount;
     private final D source;
-    private final DepositProductResponse depositProductResponse;
+    private final DepositProductDto depositProductResponse;
 
-    public DepositAccountProductMapper(D source, T depositAccount, DepositProductResponse depositProductResponse) {
+    public DepositAccountProductMapper(D source, T depositAccount, DepositProductDto depositProductResponse) {
         this.source = source;
         this.depositAccount = depositAccount;
         this.depositProductResponse = depositProductResponse;
@@ -40,7 +40,7 @@ public class DepositAccountProductMapper<T extends GenericDepositAccount, D exte
         depositAccount.setEarlyClosurePeriod(product.getEarlyClosurePeriod());
         depositAccount.setAllowOverdrafts(product.getAllowOverdrafts());
         depositAccount.setOverdraftsInterest(createInterestRate(product.getOverdraftsInterest()));
-        depositAccount.setMaxOverdraftLimit(product.getMaxOverdraftLimit());
+        depositAccount.setMaxOverdraftLimits(product.getMaxOverdraftLimits());
         depositAccount.setOverdraftsUnderCreditArrangementManaged(product.getOverdraftsUnderCreditArrangementManaged());
         depositAccount.setEnableTermDeposit(product.isEnableTermDeposit());
         depositAccount.setTermUnit(product.getTermUnit());

@@ -14,7 +14,7 @@ import tech.corefinance.common.model.CreateUpdateDto;
 import tech.corefinance.feign.client.product.CryptoProductClient;
 import tech.corefinance.feign.client.product.ProductCategoryClient;
 import tech.corefinance.feign.client.product.ProductTypeClient;
-import tech.corefinance.feign.client.product.entity.DepositProductResponse;
+import tech.corefinance.product.common.dto.DepositProductDto;
 
 @Service
 @Transactional
@@ -68,7 +68,7 @@ public class CryptoAccountServiceImpl extends AccountServiceImpl<CryptoAccount, 
     protected <D extends CreateUpdateDto<String>> CryptoAccount mapProductToAccount(D source, Object productObject, CryptoAccount dest) {
         dest = super.mapProductToAccount(source, productObject, dest);
         // Additional mapping
-        dest = new DepositAccountProductMapper<>(source, dest, (DepositProductResponse) productObject).map();
+        dest = new DepositAccountProductMapper<>(source, dest, (DepositProductDto) productObject).map();
         // Return
         return dest;
     }
