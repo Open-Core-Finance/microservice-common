@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.corefinance.common.model.CreateUpdateDto;
-import tech.corefinance.product.dto.DepositProductDto;
+import tech.corefinance.product.common.dto.DepositProductDto;
 import tech.corefinance.product.entity.DepositProduct;
 import tech.corefinance.product.repository.DepositProductRepository;
 

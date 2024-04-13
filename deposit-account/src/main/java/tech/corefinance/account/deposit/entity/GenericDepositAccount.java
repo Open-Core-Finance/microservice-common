@@ -65,8 +65,8 @@ public abstract class GenericDepositAccount extends Account {
     @Column(name = "overdrafts_interest")
     private DepositAccountInterestRate overdraftsInterest;
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "max_overdraft_limit")
-    private List<CurrencyValue> maxOverdraftLimit;
+    @Column(name = "max_overdraft_limits")
+    private List<CurrencyValue> maxOverdraftLimits;
     @Enumerated(EnumType.STRING)
     @Column(name = "overdrafts_under_credit_arrangement_managed")
     private CreditArrangementManaged overdraftsUnderCreditArrangementManaged;

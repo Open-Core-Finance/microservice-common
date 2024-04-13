@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import tech.corefinance.common.ex.ServiceProcessingException;
 import tech.corefinance.common.model.CreateUpdateDto;
-import tech.corefinance.product.dto.RateResponse;
+import tech.corefinance.product.common.dto.RateResponse;
 import tech.corefinance.product.entity.Rate;
 import tech.corefinance.product.repository.RateRepository;
 import tech.corefinance.product.repository.RateSourceRepository;

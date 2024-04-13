@@ -7,11 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tech.corefinance.common.annotation.ControllerManagedResource;
 import tech.corefinance.common.controller.CrudController;
-import tech.corefinance.common.controller.CrudServiceAndController;
 import tech.corefinance.common.service.CommonService;
-import tech.corefinance.product.dto.RateResponse;
+import tech.corefinance.product.common.dto.RateResponse;
 import tech.corefinance.product.entity.Rate;
-import tech.corefinance.product.repository.RateRepository;
 import tech.corefinance.product.service.RateService;
 
 @RestController

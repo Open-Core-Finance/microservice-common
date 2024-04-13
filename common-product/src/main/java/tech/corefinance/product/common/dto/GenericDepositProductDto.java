@@ -1,4 +1,4 @@
-package tech.corefinance.feign.client.product.entity;
+package tech.corefinance.product.common.dto;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,7 +10,7 @@ import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public abstract class GenericDepositProductResponse extends Product {
+public abstract class GenericDepositProductDto extends ProductDto {
 
     private List<DepositProductFee> productFees;
 
@@ -19,9 +19,11 @@ public abstract class GenericDepositProductResponse extends Product {
     /**
      * Interest Rate.
      */
+    private boolean enableInterestRate;
     private DepositProductInterestRate interestRate;
 
     // Internal control
+    private boolean autoSetAsDormant;
     private Integer daysToSetToDormant;
 
     /**
@@ -35,11 +37,12 @@ public abstract class GenericDepositProductResponse extends Product {
     /**
      * Early Closure Period.
      */
+    private boolean enableEarlyClosurePeriod;
     private Integer earlyClosurePeriod;
 
     private Boolean allowOverdrafts;
     private DepositProductInterestRate overdraftsInterest;
-    private List<CurrencyValue> maxOverdraftLimit;
+    private List<CurrencyValue> maxOverdraftLimits;
     private CreditArrangementManaged overdraftsUnderCreditArrangementManaged;
 
     private boolean enableTermDeposit;

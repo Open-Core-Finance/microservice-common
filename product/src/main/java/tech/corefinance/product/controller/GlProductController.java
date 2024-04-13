@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import tech.corefinance.common.annotation.ControllerManagedResource;
 import tech.corefinance.common.controller.CrudController;
 import tech.corefinance.common.service.CommonService;
-import tech.corefinance.product.dto.GlProductDto;
+import tech.corefinance.product.common.dto.GlProductDto;
 import tech.corefinance.product.entity.GlProduct;
 import tech.corefinance.product.service.GlProductService;
 

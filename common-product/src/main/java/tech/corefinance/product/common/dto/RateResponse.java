@@ -1,4 +1,4 @@
-package tech.corefinance.product.dto;
+package tech.corefinance.product.common.dto;
 
 import lombok.Data;
 import tech.corefinance.common.model.CreateUpdateDto;

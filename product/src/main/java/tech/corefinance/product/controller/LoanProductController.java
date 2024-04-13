@@ -7,7 +7,7 @@ import tech.corefinance.common.annotation.ControllerManagedResource;
 import tech.corefinance.common.controller.CrudController;
 import tech.corefinance.common.controller.CrudServiceAndController;
 import tech.corefinance.common.service.CommonService;
-import tech.corefinance.product.dto.LoanProductDto;
+import tech.corefinance.product.common.dto.LoanProductDto;
 import tech.corefinance.product.entity.LoanProduct;
 import tech.corefinance.product.repository.LoanProductRepository;
 import tech.corefinance.product.service.LoanProductService;

@@ -323,16 +323,7 @@ public class CoreFinanceUtil {
                 return field;
             }
         }
-        if (StringUtils.hasText(fieldName)) {
-            String setMethodName = Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
-            for (var method : methods) {
-                if (method.getName().equalsIgnoreCase(setMethodName)) {
-                    return method;
-                }
-            }
-            return objClass.getField(fieldName);
-        }
-        return null;
+        return accessField(obj, objClass, fieldName);
     }
 
     public Method findGetterBySetter(Object obj, Class<?> objClass, Method setter)
@@ -351,6 +342,31 @@ public class CoreFinanceUtil {
             f.set(obj, value);
         } else if (accessibleObject instanceof Method m) {
             m.invoke(obj, value);
+        } else {
+            throw new NoSuchFieldException();
+        }
+    }
+
+    public AccessibleObject accessField(Object obj, Class<?> objClass, String fieldName) throws NoSuchFieldException {
+        Method[] methods = ReflectionUtils.getAllDeclaredMethods(objClass);
+        if (StringUtils.hasText(fieldName)) {
+            String setMethodName = "set" + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
+            for (var method : methods) {
+                if (method.getName().equalsIgnoreCase(setMethodName)) {
+                    return method;
+                }
+            }
+            return objClass.getField(fieldName);
+        }
+        return null;
+    }
+
+    public Object triggerGetFieldValue(AccessibleObject accessibleObject, Object obj, Class<?> objClass)
+            throws ReflectiveOperationException {
+        if (accessibleObject instanceof Field f) {
+            return f.get(obj);
+        } else if (accessibleObject instanceof Method m) {
+            return m.invoke(obj);
         } else {
             throw new NoSuchFieldException();
         }
