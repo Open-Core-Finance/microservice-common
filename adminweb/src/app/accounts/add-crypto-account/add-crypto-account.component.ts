@@ -11,35 +11,37 @@ import { RestService } from 'src/app/services/rest.service';
 import { HttpClient } from '@angular/common/http';
 import { OrganizationService } from 'src/app/services/organization.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
-import { DepositProductService } from 'src/app/services/product/product.service';
+import { CryptoProductService } from 'src/app/services/product/product.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { CurrencyModule } from 'src/app/generic-currency/CurrencyModule';
-import { CreateDepositAccountRequest, DepositAccount } from 'src/app/classes/accounts/DepositAccount';
+import { CreateCryptoAccountRequest, CryptoAccount } from 'src/app/classes/accounts/DepositAccount';
 import { CustomerType } from 'src/app/classes/customers/CustomerType';
 import { AbstractCustomerService, CorporateCustomerService, InvidualCustomerService } from 'src/app/services/customer.service';
-import { DepositInterestRateTerms, DepositProduct } from 'src/app/classes/products/DepositProduct';
+import { DepositInterestRateTerms } from 'src/app/classes/products/DepositProduct';
 import { Currency } from 'src/app/classes/Currency';
 import { CurrencyService } from 'src/app/services/currency.service';
 import { FrequencyOptionYearly } from 'src/app/classes/products/FrequencyOption';
 import { TieredInterestItem } from 'src/app/classes/products/TieredInterestItem';
+import { CryptoProduct } from 'src/app/classes/products/CryptoProduct';
+
 
 @Component({
-  selector: 'app-add-deposit-account',
+  selector: 'app-add-crypto-account',
   standalone: true,
-  imports: [CommonModule, CurrencyModule, SharedModule],
-  templateUrl: './add-deposit-account.component.html',
-  styleUrl: './add-deposit-account.component.sass'
+  imports: [CommonModule, SharedModule, CurrencyModule],
+  templateUrl: './add-crypto-account.component.html',
+  styleUrl: './add-crypto-account.component.sass'
 })
-export class AddDepositAccountComponent extends GeneralEntityAddComponent<CreateDepositAccountRequest> implements OnDestroy, OnInit {
+export class AddCryptoAccountComponent extends GeneralEntityAddComponent<CreateCryptoAccountRequest> implements OnDestroy, OnInit {
 
-  depositProducts: DepositProduct[] = [];
-  depositProductSubscription: Subscription | undefined;
+  cryptoProducts: CryptoProduct[] = [];
+  cryptoProductSubscription: Subscription | undefined;
   productCurrencies: string[] = [];
   currencies: Currency[] = [];
   currenciesSubscription: Subscription | undefined;
 
   previousProductId: String | undefined;
-  selectedProduct: DepositProduct | undefined;
+  selectedProduct: CryptoProduct | undefined;
   protected valueChangeSubscription: Subscription | undefined;
   customersObservable : undefined | BehaviorSubject<UiSelectItem[]>;
   protected supportedCurrenciesObjects: Currency[] = [];
@@ -47,16 +49,16 @@ export class AddDepositAccountComponent extends GeneralEntityAddComponent<Create
   constructor(public override languageService: LanguageService, protected override commonService: CommonService,
     protected override restService: RestService, protected override http: HttpClient, protected override formBuilder: FormBuilder,
     protected override organizationService: OrganizationService, protected override changeDetector: ChangeDetectorRef,
-    protected override authenticationService: AuthenticationService, private depositProductService: DepositProductService,
+    protected override authenticationService: AuthenticationService, private cryptoProductService: CryptoProductService,
     protected invidualCustomerService: InvidualCustomerService, protected corporateCustomerService: CorporateCustomerService,
     protected currencyService: CurrencyService) {
       super(languageService, commonService, restService, http, formBuilder, organizationService, changeDetector, authenticationService);
   }
 
   ngOnInit(): void {
-    this.depositProductSubscription?.unsubscribe();
-    this.depositProductSubscription = this.depositProductService.entityListSubject.subscribe( depositProducts => {
-      this.depositProducts = depositProducts ? depositProducts : [];
+    this.cryptoProductSubscription?.unsubscribe();
+    this.cryptoProductSubscription = this.cryptoProductService.entityListSubject.subscribe( cryptoProducts => {
+      this.cryptoProducts = cryptoProducts ? cryptoProducts : [];
       this.updateSelectItem("productId");
       this.updateSelectedProduct();
     });
@@ -80,9 +82,9 @@ export class AddDepositAccountComponent extends GeneralEntityAddComponent<Create
   }
 
   updateSelectedProduct() {
-    if (this.depositProducts) {
-      for (let i = 0; i < this.depositProducts.length; i++) {
-        const depositProduct = this.depositProducts[i];
+    if (this.cryptoProducts) {
+      for (let i = 0; i < this.cryptoProducts.length; i++) {
+        const depositProduct = this.cryptoProducts[i];
         if (depositProduct.id == this.previousProductId) {
           this.productCurrencies = depositProduct.currencies;
           this.selectedProduct = depositProduct;
@@ -101,7 +103,7 @@ export class AddDepositAccountComponent extends GeneralEntityAddComponent<Create
   }
 
   ngOnDestroy(): void {
-    this.depositProductSubscription?.unsubscribe();
+    this.cryptoProductSubscription?.unsubscribe();
     this.valueChangeSubscription?.unsubscribe();
     this.currenciesSubscription?.unsubscribe();
   }
@@ -109,7 +111,7 @@ export class AddDepositAccountComponent extends GeneralEntityAddComponent<Create
   protected override buildFormItems(): UiFormItem[] {
     this.customersObservable = new BehaviorSubject<UiSelectItem[]>([]);
     const formItems: UiFormItem[] = [];
-    const prefix = "depositAccount.";
+    const prefix = "cryptoAccount.";
     const that = this;
     // ID auto generate
     formItems.push(new UiFormInput(prefix + "name", "name"));
@@ -147,7 +149,7 @@ export class AddDepositAccountComponent extends GeneralEntityAddComponent<Create
   }
 
   protected override getServiceUrl(): string {
-    return environment.apiUrl.depositAccount;
+    return environment.apiUrl.cryptoAccount;
   }
 
   protected override validateFormData(formData: any): void {
@@ -167,13 +169,13 @@ export class AddDepositAccountComponent extends GeneralEntityAddComponent<Create
     }
   }
 
-  protected override newEmptyEntity(): CreateDepositAccountRequest {
-    return new CreateDepositAccountRequest();
+  protected override newEmptyEntity(): CreateCryptoAccountRequest {
+    return new CreateCryptoAccountRequest();
   }
 
   protected override buildListSelection(selectName: string): UiSelectItem[] {
     if (selectName == 'productId') {
-      return this.depositProducts ? this.depositProducts.map( m => ({ selectValue: m.id, labelKey: m.name} as UiSelectItem)) : [];
+      return this.cryptoProducts ? this.cryptoProducts.map( m => ({ selectValue: m.id, labelKey: m.name} as UiSelectItem)) : [];
     } else if (selectName == 'customerType') {
       return Object.keys(CustomerType).map( m => ({ selectValue: m, labelKey: "customerType.type_" + m} as UiSelectItem));
     } else if (selectName == "termUnit") {
@@ -209,10 +211,10 @@ export class AddDepositAccountComponent extends GeneralEntityAddComponent<Create
     }
   }
 
-  override set addingItem(item: DepositAccount | null) {
-    let settingItem: CreateDepositAccountRequest | null = null;
+  override set addingItem(item: CryptoAccount | null) {
+    let settingItem: CreateCryptoAccountRequest | null = null;
     if (item != null) {
-      settingItem = new CreateDepositAccountRequest();
+      settingItem = new CreateCryptoAccountRequest();
       item.assignDataTo(settingItem);
       this.previousProductId = settingItem.productId;
     }

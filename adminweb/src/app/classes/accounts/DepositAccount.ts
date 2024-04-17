@@ -9,7 +9,7 @@ import { WithdrawalLimit } from "../products/WithdrawalLimit";
 import { Account, CreateAccountRequest } from "./Account";
 import { DepositAccountInterestRate } from "./DepositAccountInterestRate";
 
-export class DepositAccount extends Account {
+export abstract class GenericDepositAccount extends Account {
     
     productFees: DepositProductFee[] = [];
     allowDepositAfterMaturityDate = false;
@@ -64,7 +64,13 @@ export class DepositAccount extends Account {
     }
 }
 
-export class CreateDepositAccountRequest extends CreateAccountRequest {
+export class DepositAccount extends GenericDepositAccount {
+}
+
+export class CryptoAccount extends GenericDepositAccount {
+}
+
+export abstract class GenericCreateDepositAccountRequest extends CreateAccountRequest {
     termLength: number| null = 3;
     customerId:any = 0;
     customerType = CustomerType.INDIVIDUAL;
@@ -74,4 +80,10 @@ export class CreateDepositAccountRequest extends CreateAccountRequest {
     enableTermDeposit: boolean = false;
     enableInterestRate: boolean = false;
     termUnit: FrequencyOptionYearly | null = FrequencyOptionYearly.DAY;
+}
+
+export class CreateDepositAccountRequest extends GenericCreateDepositAccountRequest {
+}
+
+export class CreateCryptoAccountRequest extends GenericCreateDepositAccountRequest {
 }

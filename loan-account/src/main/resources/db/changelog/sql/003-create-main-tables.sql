@@ -19,7 +19,21 @@ CREATE TABLE IF NOT EXISTS loan_account
     supported_currencies character varying[] NOT NULL,
     product_id character varying(255) NOT NULL,
     customer_type character varying(255) NOT NULL,
-    customer_id bigint NOT NULL
+    customer_id bigint NOT NULL,
+    product_fees jsonb,
+    loan_applied_values jsonb,
+    under_credit_arrangement_managed character varying(255),
+    account_interest_rate jsonb,
+    account_repayment_scheduling jsonb,
+    repayment_collection jsonb,
+    account_arrears_setting jsonb,
+    account_penalty_setting jsonb,
+    close_dormant_accounts boolean NOT NULL,
+    lock_arrears_accounts boolean NOT NULL,
+    cap_charges boolean NOT NULL,
+    enable_guarantors boolean NOT NULL,
+    enable_collateral boolean NOT NULL,
+    percent_security_per_loan double precision
 );
 CREATE TABLE IF NOT EXISTS tenant_0f522100_7d8c_4b67_9a7f_779e1b179eff.loan_account
 (
@@ -39,7 +53,21 @@ CREATE TABLE IF NOT EXISTS tenant_0f522100_7d8c_4b67_9a7f_779e1b179eff.loan_acco
     supported_currencies character varying[] NOT NULL,
     product_id character varying(255) NOT NULL,
     customer_type character varying(255) NOT NULL,
-    customer_id bigint NOT NULL
+    customer_id bigint NOT NULL,
+    product_fees jsonb,
+    loan_applied_values jsonb,
+    under_credit_arrangement_managed character varying(255),
+    account_interest_rate jsonb,
+    account_repayment_scheduling jsonb,
+    repayment_collection jsonb,
+    account_arrears_setting jsonb,
+    account_penalty_setting jsonb,
+    close_dormant_accounts boolean NOT NULL,
+    lock_arrears_accounts boolean NOT NULL,
+    cap_charges boolean NOT NULL,
+    enable_guarantors boolean NOT NULL,
+    enable_collateral boolean NOT NULL,
+    percent_security_per_loan double precision
 );
 
 CREATE TABLE IF NOT EXISTS account_balance
@@ -127,3 +155,6 @@ CREATE TABLE IF NOT EXISTS tenant_0f522100_7d8c_4b67_9a7f_779e1b179eff.loan_tran
     loan_customer_type character varying(255) NOT NULL,
     loan_customer_id bigint NOT NULL
 );
+
+CREATE SEQUENCE IF NOT EXISTS loan_account_id_seq INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1;
+CREATE SEQUENCE IF NOT EXISTS tenant_0f522100_7d8c_4b67_9a7f_779e1b179eff.loan_account_id_seq INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1;

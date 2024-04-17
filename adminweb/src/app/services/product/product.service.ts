@@ -9,6 +9,8 @@ import { Observable } from 'rxjs';
 import { GeneralApiResponse } from 'src/app/classes/GeneralApiResponse';
 import { ProductCategoryType } from 'src/app/classes/products/ProductCategory';
 import { DepositProduct } from 'src/app/classes/products/DepositProduct';
+import { CryptoProduct } from 'src/app/classes/products/CryptoProduct';
+import { LoanProduct } from 'src/app/classes/products/LoanProduct';
 
 @Injectable({
   providedIn: 'root'
@@ -66,6 +68,28 @@ export class DepositProductService extends AbstractEntityListService<DepositProd
 
   override get entityServiceUrl(): string {
     return environment.apiUrl.depositProduct + "/";
+  }
+
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CryptoProductService extends AbstractEntityListService<CryptoProduct> {
+
+  override get entityServiceUrl(): string {
+    return environment.apiUrl.cryptoProduct + "/";
+  }
+
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class LoanProductService extends AbstractEntityListService<LoanProduct> {
+
+  override get entityServiceUrl(): string {
+    return environment.apiUrl.loanProduct + "/";
   }
 
 }

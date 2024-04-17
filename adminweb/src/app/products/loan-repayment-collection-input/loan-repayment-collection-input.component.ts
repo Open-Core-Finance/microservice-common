@@ -2,10 +2,8 @@ import { Component, Input, OnDestroy, OnInit, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { PrePaymentRecalculation, RepaymentCollection, RepaymentType } from 'src/app/classes/products/Repayment';
 import { Currency } from 'src/app/classes/Currency';
-import { Subscription } from 'rxjs';
 import { LanguageService } from 'src/app/services/language.service';
-import { CurrencyService } from 'src/app/services/currency.service';
-import {CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray} from '@angular/cdk/drag-drop';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-loan-repayment-collection-input',
