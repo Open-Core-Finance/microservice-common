@@ -12,7 +12,7 @@ import { RestService } from 'src/app/services/rest.service';
 import { HttpClient } from '@angular/common/http';
 import { OrganizationService } from 'src/app/services/organization.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
-import { GlProductService } from 'src/app/services/product/gl.product.service';
+import { GlProductService } from 'src/app/services/product/product.service';
 import { GlProduct } from 'src/app/classes/products/GlProduct';
 import { Subscription } from 'rxjs';
 import { CurrencyModule } from 'src/app/generic-currency/CurrencyModule';

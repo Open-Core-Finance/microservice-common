@@ -9,7 +9,7 @@ export const environment = {
         depositProduct: '', productType: '', glProduct: '', cryptoProduct: '', loanProduct: '', withdrawalChannel: '',
         user: '', glAccountService: '', glAccount: '', customerService: '', individualCustomer: '', corporateCustomer: '',
         depositAccountService: '', loanAccountService: '', depositAccount: '', loanAccount: '', goecodeService: '',
-        region: '', subRegion: '', country: '', state: '', city: ''
+        region: '', subRegion: '', country: '', state: '', city: '', cryptoAccount: ''
     },
     apiPrefix: {
         userLogin: '/login',
@@ -84,6 +84,7 @@ export function rebuildEnvironment() {
     environment.apiUrl.glAccount = environment.apiUrl.glAccountService + "/gl-accounts";
     // Deposit Account
     environment.apiUrl.depositAccount = environment.apiUrl.depositAccountService + "/deposit-accounts";
+    environment.apiUrl.cryptoAccount = environment.apiUrl.depositAccountService + "/crypto-accounts";
     // Loan Account
     environment.apiUrl.loanAccount = environment.apiUrl.loanAccountService + "/loan-accounts";
     // Customer

@@ -4,10 +4,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.openfeign.FeignClient;
 import tech.corefinance.feign.client.GenericClient;
 import tech.corefinance.feign.client.GenericFeignClientConfig;
-import tech.corefinance.feign.client.product.entity.ProductCategoryResponse;
+import tech.corefinance.product.common.dto.LoanProductDto;
 
-@FeignClient(name = "product-product-category-client", url = "${tech.corefinance.services.url.product}/product-categories",
+@FeignClient(name = "product-loan-product-client", url = "${tech.corefinance.services.url.product}/loan-products",
     configuration = GenericFeignClientConfig.class)
 @ConditionalOnProperty(prefix = "tech.corefinance.services.url", name = "product")
-public interface ProductCategoryClient extends GenericClient<String, ProductCategoryResponse, ProductCategoryResponse> {
+public interface LoanProductClient extends GenericClient<String, LoanProductDto, LoanProductDto> {
 }

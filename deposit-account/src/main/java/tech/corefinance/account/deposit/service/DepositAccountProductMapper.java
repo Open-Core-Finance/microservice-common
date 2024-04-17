@@ -1,20 +1,22 @@
 package tech.corefinance.account.deposit.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import tech.corefinance.account.common.model.DepositAccountInterestRate;
 import tech.corefinance.account.deposit.dto.GenericCreateDepositAccountRequest;
 import tech.corefinance.account.deposit.entity.GenericDepositAccount;
 import tech.corefinance.common.model.CreateUpdateDto;
-import tech.corefinance.product.common.dto.DepositProductDto;
+import tech.corefinance.product.common.dto.GenericDepositProductDto;
 import tech.corefinance.product.common.model.DepositProductInterestRate;
 
+@Slf4j
 public class DepositAccountProductMapper<T extends GenericDepositAccount, D extends CreateUpdateDto<String>> {
 
     private final T depositAccount;
     private final D source;
-    private final DepositProductDto depositProductResponse;
+    private final GenericDepositProductDto depositProductResponse;
 
-    public DepositAccountProductMapper(D source, T depositAccount, DepositProductDto depositProductResponse) {
+    public DepositAccountProductMapper(D source, T depositAccount, GenericDepositProductDto depositProductResponse) {
         this.source = source;
         this.depositAccount = depositAccount;
         this.depositProductResponse = depositProductResponse;
@@ -26,14 +28,15 @@ public class DepositAccountProductMapper<T extends GenericDepositAccount, D exte
         depositAccount.setAccountFees(product.getProductFees());
 
         var productInterestRate = product.getInterestRate();
-        if (productInterestRate != null) {
-            var accountInterestRate = createInterestRate(productInterestRate);
-            depositAccount.setInterestRate(accountInterestRate);
-            if (source instanceof GenericCreateDepositAccountRequest request) {
-                accountInterestRate.setInterestRateValues(request.getInterestRateValues());
-                accountInterestRate.setInterestItems(request.getInterestItems());
-            }
+        log.debug("Product interest rate [{}]", productInterestRate);
+        var accountInterestRate = createInterestRate(productInterestRate);
+        depositAccount.setInterestRate(accountInterestRate);
+        if (source instanceof GenericCreateDepositAccountRequest request) {
+            accountInterestRate.setInterestRateValues(request.getInterestRateValues());
+            accountInterestRate.setInterestItems(request.getInterestItems());
         }
+        log.debug("Converted account interest rate [{}]", productInterestRate);
+
         depositAccount.setDaysToSetToDormant(product.getDaysToSetToDormant());
         depositAccount.setDepositLimits(product.getDepositLimits());
         depositAccount.setWithdrawalLimits(product.getWithdrawalLimits());

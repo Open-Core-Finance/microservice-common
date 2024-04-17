@@ -38,7 +38,7 @@ background_pid=$!
 # Write PID to file
 echo "${background_pid}" >> "${pid_file}"
 # Wating for server start
-sleep 100
+sleep 50
 
 java -jar combined-product-account/build/libs/combined-product-account-0.0.16-SNAPSHOT-boot.jar --server.port=8988 &
 # Capture the PID of the background task
@@ -46,7 +46,7 @@ background_pid=$!
 # Write PID to file
 echo "${background_pid}" >> "${pid_file}"
 # Wating for server start
-sleep 100
+sleep 50
 
 java -jar combined-product-account/build/libs/combined-product-account-0.0.16-SNAPSHOT-boot.jar --server.port=8989 &
 # Capture the PID of the background task

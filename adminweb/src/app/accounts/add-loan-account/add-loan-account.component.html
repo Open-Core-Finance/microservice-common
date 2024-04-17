@@ -1,0 +1,48 @@
+<app-generic-form (cancel)="this.cancelClick($event)" (save)="this.saveClick($event)" [formGroup]="addForm"
+  [formItems]="formItems" formTitleKey="cryptoAccount.addTitle" [message]="message" errorPrefix="cryptoAccount.error."
+  [complexInputTemplate]="{
+    currencies: currenciesTemplate, loanAppliedValues: loanAppliedValuesTemplate,
+    interestRateValues: interestRateValuesTemplate, installmentsValues: installmentsValuesTemplate,
+    firstDueDateOffsetValues: firstDueDateOffsetValuesTemplate, gracePeriodValues: gracePeriodValuesTemplate,
+    tolerancePeriods: tolerancePeriodsTemplate, toleranceAmounts: toleranceAmountsTemplate,
+    penaltyRateValues: penaltyRateValuesTemplate
+  }" (onFieldInput)="fieldInput($event)">
+
+  <ng-template #currenciesTemplate let-data>
+    <app-currencies-selection formControlName="supportedCurrencies" [preDefinedListCurrencies]="productCurrencies"
+      (ngModelChange)="currenciesChanged();"></app-currencies-selection>
+  </ng-template>
+
+  <ng-template #loanAppliedValuesTemplate let-data>
+    <app-currency-value-input [supportedCurrencies]="supportedCurrenciesObjects" formControlName="loanAppliedValues"></app-currency-value-input>
+  </ng-template>
+
+  <ng-template #interestRateValuesTemplate let-data>
+    <app-currency-value-input [supportedCurrencies]="supportedCurrenciesObjects" formControlName="interestRateValues"></app-currency-value-input>
+  </ng-template>
+
+  <ng-template #installmentsValuesTemplate let-data>
+    <app-currency-value-input [supportedCurrencies]="supportedCurrenciesObjects" formControlName="installmentsValues"></app-currency-value-input>
+  </ng-template>
+
+  <ng-template #firstDueDateOffsetValuesTemplate let-data>
+    <app-currency-value-input [supportedCurrencies]="supportedCurrenciesObjects" formControlName="firstDueDateOffsetValues"></app-currency-value-input>
+  </ng-template>
+
+  <ng-template #gracePeriodValuesTemplate let-data>
+    <app-currency-value-input [supportedCurrencies]="supportedCurrenciesObjects" formControlName="gracePeriodValues"></app-currency-value-input>
+  </ng-template>
+
+  <ng-template #tolerancePeriodsTemplate let-data>
+    <app-currency-value-input [supportedCurrencies]="supportedCurrenciesObjects" formControlName="tolerancePeriods"></app-currency-value-input>
+  </ng-template>
+
+  <ng-template #toleranceAmountsTemplate let-data>
+    <app-currency-value-input [supportedCurrencies]="supportedCurrenciesObjects" formControlName="toleranceAmounts"></app-currency-value-input>
+  </ng-template>
+
+  <ng-template #penaltyRateValuesTemplate let-data>
+    <app-currency-value-input [supportedCurrencies]="supportedCurrenciesObjects" formControlName="penaltyRateValues"></app-currency-value-input>
+  </ng-template>
+
+</app-generic-form>
