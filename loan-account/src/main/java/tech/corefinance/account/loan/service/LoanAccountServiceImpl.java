@@ -74,6 +74,7 @@ public class LoanAccountServiceImpl extends AccountServiceImpl<LoanAccount, Loan
         dest = super.mapProductToAccount(source, productObject, dest);
         // Additional mapping
         if (productObject instanceof LoanProductDto product && source instanceof CreateLoanAccountRequest request) {
+
             var productInterestRate = product.getInterestRate();
             log.debug("Product interest rate [{}]", productInterestRate);
             if (productInterestRate != null) {
@@ -82,6 +83,7 @@ public class LoanAccountServiceImpl extends AccountServiceImpl<LoanAccount, Loan
                 accountInterestRate.setInterestRateValues(request.getInterestRateValues());
                 log.debug("Converted account interest rate [{}]", accountInterestRate);
             }
+
             var productRepaymentScheduling = product.getRepaymentScheduling();
             log.debug("Product repayment scheduling [{}]", productRepaymentScheduling);
             if (productRepaymentScheduling != null) {
@@ -92,6 +94,7 @@ public class LoanAccountServiceImpl extends AccountServiceImpl<LoanAccount, Loan
                 accountRepaymentScheduling.setGracePeriodValues(request.getGracePeriodValues());
                 log.debug("Converted account repayment scheduling [{}]", accountRepaymentScheduling);
             }
+
             var productArrearsSetting = product.getArrearsSetting();
             log.debug("Product arrears setting [{}]", productArrearsSetting);
             if (productArrearsSetting != null) {
@@ -101,6 +104,7 @@ public class LoanAccountServiceImpl extends AccountServiceImpl<LoanAccount, Loan
                 accountArrearsSetting.setToleranceAmounts(request.getToleranceAmounts());
                 log.debug("Converted account arrears setting [{}]", accountArrearsSetting);
             }
+
             var productPenaltySetting = product.getPenaltySetting();
             log.debug("Product penalty setting [{}]", productPenaltySetting);
             if (productPenaltySetting != null) {
@@ -109,6 +113,8 @@ public class LoanAccountServiceImpl extends AccountServiceImpl<LoanAccount, Loan
                 accountPenaltySetting.setPenaltyRateValues(request.getPenaltyRateValues());
                 log.debug("Converted account penalty setting [{}]", accountPenaltySetting);
             }
+
+            dest.setRepaymentCollection(product.getRepaymentCollection());
         } else {
             throw new ServiceProcessingException("invalid_api_call");
         }

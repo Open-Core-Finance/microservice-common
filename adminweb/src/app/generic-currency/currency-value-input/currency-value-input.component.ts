@@ -21,6 +21,9 @@ export class CurrencyValueInputComponent implements OnInit, ControlValueAccessor
   isDisabled: boolean = false;
   _supportedCurrencies: Currency[] = [];
   values: CurrencyLimitValue[] = [];
+  _headerKey = "";
+  _customValueKey = "";
+  _customCurrencyKey = "";
 
   public constructor(public languageService: LanguageService, private currencyService: CurrencyService) {
   }
@@ -85,4 +88,30 @@ export class CurrencyValueInputComponent implements OnInit, ControlValueAccessor
     }
   }
   
+  @Input()
+  set headerKey(headerKey: string) {
+    this._headerKey = headerKey;
+  }
+
+  get headerKey(): string {
+    return this._headerKey;
+  }
+
+  @Input()
+  set customValueKey(customValueKey: string) {
+    this._customValueKey = customValueKey;
+  }
+
+  get customValueKey(): string {
+    return this._customValueKey == '' ? "limitValue" : this._customValueKey;
+  }
+
+  @Input()
+  set customCurrencyKey(customCurrencyKey: string) {
+    this._customCurrencyKey = customCurrencyKey;
+  }
+
+  get customCurrencyKey(): string {
+    return this._customCurrencyKey == '' ? "currency" : this._customCurrencyKey;
+  }
 }

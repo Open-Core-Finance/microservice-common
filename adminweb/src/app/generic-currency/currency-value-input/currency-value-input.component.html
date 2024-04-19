@@ -1,9 +1,12 @@
 <div>
+    <div *ngIf="headerKey != ''" class="currencies-value-input-header">
+        <mat-label>{{languageService.formatLanguage(headerKey, [])}}:&nbsp;</mat-label>
+    </div>
     <table *ngIf="values && values.length > 0">
         <thead>
             <tr>
-                <th>{{languageService.formatLanguage("currency", [])}}</th>
-                <th>{{languageService.formatLanguage("limitValue", [])}}</th>
+                <th>{{languageService.formatLanguage(customCurrencyKey, [])}}</th>
+                <th>{{languageService.formatLanguage(customValueKey, [])}}</th>
             </tr>
         </thead>
         <tbody>
@@ -12,7 +15,7 @@
                     <td>{{val.currencyId}}</td>
                     <td>
                         <mat-form-field appearance="fill" color="primary">
-                            <input type="number" matInput placeholder="{{languageService.formatLanguage('limitValue', [])}}"
+                            <input type="number" matInput placeholder="{{languageService.formatLanguage(customValueKey, [])}}"
                                 [(ngModel)]="val.value" required>
                         </mat-form-field>
                     </td>

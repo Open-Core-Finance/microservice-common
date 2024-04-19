@@ -102,8 +102,7 @@
       </app-value-constraints-input>
 
       <div *ngIf="$any(addForm.value).arrearsSetting?.floors?.length">
-        <mat-label>{{languageService.formatLanguage('arrearsSetting.floor', [])}}:&nbsp;</mat-label>
-        <app-currency-value-input [supportedCurrencies]="currenciesToDisplay"
+        <app-currency-value-input [supportedCurrencies]="currenciesToDisplay" headerKey="arrearsSetting.floor"
             formControlName="floors"></app-currency-value-input>
       </div>
     </div>

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { GeneralEntityAddComponent } from 'src/app/generic-component/GeneralEntityAddComponent';
 import { SharedModule } from 'src/app/generic-component/SharedModule';
 import { FormBuilder, FormControl } from '@angular/forms';
-import { UiFormComplexInput, UiFormDivider, UiFormInput, UiFormItem, UiFormSelect, UiFormTextarea, UiSelectItem } from 'src/app/classes/ui/UiFormInput';
+import { ExpansionPanelInputGroup, UiFormComplexInput, UiFormDivider, UiFormInput, UiFormItem, UiFormSelect, UiFormTextarea, UiSelectItem } from 'src/app/classes/ui/UiFormInput';
 import { environment } from 'src/environments/environment';
 import { LanguageService } from 'src/app/services/language.service';
 import { CommonService } from 'src/app/services/common.service';
@@ -121,13 +121,35 @@ export class AddLoanAccountComponent extends GeneralEntityAddComponent<CreateLoa
     formItems.push(new UiFormComplexInput("currencies", "supportedCurrencies", () => {
       return that.selectedProduct != undefined;
     }));
-    // Loan values
-    formItems.push(new UiFormComplexInput("loanAppliedValues", "loanAppliedValues"));
-    // interestRateValues
+
+    // Return
+    return formItems;
+  }
+
+  protected override buildFormInputGroups(): ExpansionPanelInputGroup[] {
+    const that = this;
+    var result: ExpansionPanelInputGroup[] = [];
+    let prefix = "loanAccount.";
+
+    // Loan value tab
+    let formItems:UiFormItem[] = [];
+    result.push(new ExpansionPanelInputGroup(prefix + 'loanValues', formItems,
+      () => this.selectedCurrencies.length > 0));
+    // Loan amount
+    formItems.push(new UiFormComplexInput("loanAppliedValues", "loanAppliedValues",
+      () => this.selectedCurrencies.length > 0));
+    // Interest rate
     formItems.push(new UiFormComplexInput("interestRateValues", "interestRateValues", () => {
-      return that.selectedProduct != undefined && that.selectedProduct.interestRate != null;
+      return that.selectedProduct != undefined && that.selectedProduct.interestRate != null
+        && this.selectedCurrencies.length > 0;
     }));
-    // Repayment Setting
+
+    // Repayment
+    formItems = [];
+    result.push(new ExpansionPanelInputGroup(prefix + 'repayment', formItems,
+      () => that.selectedProduct != undefined && that.selectedProduct.repaymentScheduling != null
+        && this.selectedCurrencies.length > 0
+    ));
     formItems.push(new UiFormComplexInput("installmentsValues", "installmentsValues", () => {
       return that.selectedProduct != undefined && that.selectedProduct.repaymentScheduling != null;
     }));
@@ -137,19 +159,32 @@ export class AddLoanAccountComponent extends GeneralEntityAddComponent<CreateLoa
     formItems.push(new UiFormComplexInput("gracePeriodValues", "gracePeriodValues", () => {
       return that.selectedProduct != undefined && that.selectedProduct.repaymentScheduling != null;
     }));
-    // Arrears Setting
+
+    // Repayment
+    formItems = [];
+    result.push(new ExpansionPanelInputGroup(prefix + 'arrearsSettings', formItems,
+      () => that.selectedProduct != undefined && that.selectedProduct.arrearsSetting != null
+        && this.selectedCurrencies.length > 0
+    ));
     formItems.push(new UiFormComplexInput("tolerancePeriods", "tolerancePeriods", () => {
       return that.selectedProduct != undefined && that.selectedProduct.arrearsSetting != null;
     }));
     formItems.push(new UiFormComplexInput("toleranceAmounts", "toleranceAmounts", () => {
       return that.selectedProduct != undefined && that.selectedProduct.arrearsSetting != null;
     }));
+
     // Penalty Setting
+    formItems = [];
+    result.push(new ExpansionPanelInputGroup(prefix + 'penaltySetting', formItems,
+      () => that.selectedProduct != undefined && that.selectedProduct.penaltySetting != null
+        && this.selectedCurrencies.length > 0
+    ));
     formItems.push(new UiFormComplexInput("penaltyRateValues", "penaltyRateValues", () => {
       return that.selectedProduct != undefined && that.selectedProduct.penaltySetting != null;
     }));
+
     // Return
-    return formItems;
+    return result;
   }
 
   protected override getServiceUrl(): string {
@@ -200,6 +235,10 @@ export class AddLoanAccountComponent extends GeneralEntityAddComponent<CreateLoa
       toleranceAmounts: new FormControl<CurrencyLimitValue[]>([]),
       penaltyRateValues: new FormControl<CurrencyLimitValue[]>([])
     };
+  }
+
+  private get selectedCurrencies(): string[] {
+    return this.addForm.value.supportedCurrencies;
   }
 
   fieldInput($event: any) {

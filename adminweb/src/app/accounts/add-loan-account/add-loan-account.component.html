@@ -6,7 +6,7 @@
     firstDueDateOffsetValues: firstDueDateOffsetValuesTemplate, gracePeriodValues: gracePeriodValuesTemplate,
     tolerancePeriods: tolerancePeriodsTemplate, toleranceAmounts: toleranceAmountsTemplate,
     penaltyRateValues: penaltyRateValuesTemplate
-  }" (onFieldInput)="fieldInput($event)">
+  }" (onFieldInput)="fieldInput($event)" [inputGroups]="inputGroups">
 
   <ng-template #currenciesTemplate let-data>
     <app-currencies-selection formControlName="supportedCurrencies" [preDefinedListCurrencies]="productCurrencies"
@@ -14,35 +14,43 @@
   </ng-template>
 
   <ng-template #loanAppliedValuesTemplate let-data>
-    <app-currency-value-input [supportedCurrencies]="supportedCurrenciesObjects" formControlName="loanAppliedValues"></app-currency-value-input>
+    <app-currency-value-input [supportedCurrencies]="supportedCurrenciesObjects" formControlName="loanAppliedValues"
+      customValueKey="loanAccount.loanApplied" headerKey="loanAccount.loanValues"></app-currency-value-input>
   </ng-template>
 
   <ng-template #interestRateValuesTemplate let-data>
-    <app-currency-value-input [supportedCurrencies]="supportedCurrenciesObjects" formControlName="interestRateValues"></app-currency-value-input>
+    <app-currency-value-input [supportedCurrencies]="supportedCurrenciesObjects" formControlName="interestRateValues"
+      headerKey="loanAccount.interestRateValue" customValueKey="loanAccount.interestRate"></app-currency-value-input>
   </ng-template>
 
   <ng-template #installmentsValuesTemplate let-data>
-    <app-currency-value-input [supportedCurrencies]="supportedCurrenciesObjects" formControlName="installmentsValues"></app-currency-value-input>
+    <app-currency-value-input [supportedCurrencies]="supportedCurrenciesObjects" formControlName="installmentsValues"
+      headerKey="loanAccount.installmentAmounts" customValueKey="loanAccount.installmentAmount"></app-currency-value-input>
   </ng-template>
 
   <ng-template #firstDueDateOffsetValuesTemplate let-data>
-    <app-currency-value-input [supportedCurrencies]="supportedCurrenciesObjects" formControlName="firstDueDateOffsetValues"></app-currency-value-input>
+    <app-currency-value-input [supportedCurrencies]="supportedCurrenciesObjects" formControlName="firstDueDateOffsetValues"
+      headerKey="loanAccount.firstDueDateOffsetInstallment" customValueKey="loanAccount.value"></app-currency-value-input>
   </ng-template>
 
   <ng-template #gracePeriodValuesTemplate let-data>
-    <app-currency-value-input [supportedCurrencies]="supportedCurrenciesObjects" formControlName="gracePeriodValues"></app-currency-value-input>
+    <app-currency-value-input [supportedCurrencies]="supportedCurrenciesObjects" formControlName="gracePeriodValues"
+      headerKey="loanAccount.gracePeriod" customValueKey="loanAccount.value"></app-currency-value-input>
   </ng-template>
 
   <ng-template #tolerancePeriodsTemplate let-data>
-    <app-currency-value-input [supportedCurrencies]="supportedCurrenciesObjects" formControlName="tolerancePeriods"></app-currency-value-input>
+    <app-currency-value-input [supportedCurrencies]="supportedCurrenciesObjects" formControlName="tolerancePeriods"
+      headerKey="loanAccount.tolerancePeriods" customValueKey="loanAccount.tolerancePeriodDays"></app-currency-value-input>
   </ng-template>
 
   <ng-template #toleranceAmountsTemplate let-data>
-    <app-currency-value-input [supportedCurrencies]="supportedCurrenciesObjects" formControlName="toleranceAmounts"></app-currency-value-input>
+    <app-currency-value-input [supportedCurrencies]="supportedCurrenciesObjects" formControlName="toleranceAmounts"
+      headerKey="loanAccount.toleranceAmounts" customValueKey="loanAccount.value"></app-currency-value-input>
   </ng-template>
 
   <ng-template #penaltyRateValuesTemplate let-data>
-    <app-currency-value-input [supportedCurrencies]="supportedCurrenciesObjects" formControlName="penaltyRateValues"></app-currency-value-input>
+    <app-currency-value-input [supportedCurrencies]="supportedCurrenciesObjects" formControlName="penaltyRateValues"
+      headerKey="loanAccount.penaltyRates" customValueKey="loanAccount.penaltyRate"></app-currency-value-input>
   </ng-template>
 
 </app-generic-form>
