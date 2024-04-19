@@ -994,6 +994,22 @@
     "enableTermDeposit": "Enable terms deposit",
     "termLength": "Term length",
     "termUnit": "Term unit",
-    "interestRateValue": "Interest rate values"
+    "interestRateValue": "Lãi xuất theo tiền tệ",
+    "interestRate": "Lãi",
+    "loanValues": "Số tiền vay theo tiền tệ",
+    "loanApplied": "Số tiền vay",
+    "repayment": "Trả nợ",
+    "installmentAmounts": "Tiền trả góp theo tiền tệ",
+    "installmentAmount": "Tiền trả góp",
+    "firstDueDateOffsetInstallment": "Số tiền trả lầu đầu",
+    "value": "Giá trị",
+    "gracePeriod": "Grace periods",
+    "arrearsSettings": "Arrears settings",
+    "tolerancePeriods": "Arrears Tolerance Period (days)",
+    "tolerancePeriodDays": "Days",
+    "toleranceAmounts": "Arrears Tolerance Amount (% of Outstanding Principal)",
+    "penaltySetting": "Penalties setting",
+    "penaltyRates": "Tỉ lệ phạt theo tiền tệ",
+    "penaltyRate": "Tỉ lệ"
   }
 }

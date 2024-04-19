@@ -994,6 +994,22 @@
     "addTitle": "Add GL Account",
     "product": "Product",
     "customer": "Customer",
-    "interestRateValue": "Interest rate values"
+    "interestRateValue": "Interest rate values",
+    "interestRate": "Interest rate",
+    "loanValues": "Loan amount for each currencies",
+    "loanApplied": "Loan amount",
+    "repayment": "Repayments",
+    "installmentAmounts": "Installment amounts",
+    "installmentAmount": "Installment amount",
+    "firstDueDateOffsetInstallment": "First due date offset value",
+    "value": "Value",
+    "gracePeriod": "Grace periods",
+    "arrearsSettings": "Arrears settings",
+    "tolerancePeriods": "Arrears Tolerance Period (days)",
+    "tolerancePeriodDays": "Days",
+    "toleranceAmounts": "Arrears Tolerance Amount (% of Outstanding Principal)",
+    "penaltySetting": "Penalties setting",
+    "penaltyRates": "Penalty rates",
+    "penaltyRate": "Rate"
   }
 }
