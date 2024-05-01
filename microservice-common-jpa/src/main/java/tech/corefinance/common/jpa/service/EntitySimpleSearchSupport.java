@@ -156,7 +156,7 @@ public class EntitySimpleSearchSupport implements SimpleSearchSupport<GenericMod
                 var key = param.getKey();
                 var value = param.getValue();
                 if (index > 0) {
-                    sqlBuilder.append(" OR ");
+                    sqlBuilder.append(" AND ");
                 }
                 index++;
                 if (value instanceof String) {
@@ -169,7 +169,7 @@ public class EntitySimpleSearchSupport implements SimpleSearchSupport<GenericMod
             var attributes = getEntitySearchableAttr(clzz);
             for (var a : attributes) {
                 if (index > 0) {
-                    sqlBuilder.append(" OR ");
+                    sqlBuilder.append(" AND ");
                 }
                 sqlBuilder.append("lower(").append(a.getName()).append(") like lower(:searchText)");
                 index++;

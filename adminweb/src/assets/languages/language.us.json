@@ -81,7 +81,9 @@
       "subregion": "Subregions",
       "country": "Countries",
       "state": "States",
-      "city": "Cities"
+      "city": "Cities",
+      "groupTransactions": "Transactions",
+      "fundTransfer": "Fund transfer"
   },
   "organization": {
       "id": "ID",
@@ -143,6 +145,7 @@
   "currencyId": "ID",
   "currencyScreens": {
       "addTitle": "Add new currency",
+      "viewTitle": "Currency details",
       "error": {
           "name_empty": "Currency name cannot be empty!",
           "symbol_empty": "Symbol cannot be empty!",
@@ -1011,5 +1014,23 @@
     "penaltySetting": "Penalties setting",
     "penaltyRates": "Penalty rates",
     "penaltyRate": "Rate"
-  }
+  },
+  "internalFundTransfer": {
+    "viewFundTransfer": "View transfer details",
+    "addTitle": "Transfer money",
+    "fromAccount": "From account",
+    "fromAccountType": "From account type",
+    "toAccount": "To account",
+    "toAccountType": "To account type",
+    "sender": "Sender",
+    "receiver": "Receiver",
+    "fromCustomer": "From customer",
+    "toCustomer": "To customer",
+    "fromCurrency": "Currency",
+    "fromAmount": "Amount"
+  },
+  "accountType_DEPOSIT": "Deposit account",
+  "accountType_CRYPTO": "Crypto account",
+  "accountType_LOAN": "Loan account",
+  "accountType_GL": "GL account"
 }

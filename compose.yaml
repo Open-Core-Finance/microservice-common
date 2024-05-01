@@ -85,6 +85,7 @@ services:
       - "9095:85" # Deposit Account
       - "9096:86" # Loan Account
       - "9097:87" # Geocode
+      - "9098:88" # Payment
     depends_on:
       - postgresql
       - kafka

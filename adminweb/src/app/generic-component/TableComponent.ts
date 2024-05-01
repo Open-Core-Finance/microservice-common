@@ -36,6 +36,7 @@ export abstract class TableComponent<T extends any> implements AfterViewInit, On
     public searchText: string;
     public itemPerPage: number;
     public addMode: boolean = false;
+    public detailsMode: boolean = false;
     public addingItem: T | null = null;
     loginSession: LoginSession | null = null;
     pageEvent: PageEvent;
@@ -305,6 +306,7 @@ export abstract class TableComponent<T extends any> implements AfterViewInit, On
         const newItem = this.createNewItem();
         this.addingItem = newItem;
         this.addModeSubject.next(true);
+        this.detailsMode = false;
     }
 
     abstract createNewItem(): T;
@@ -313,6 +315,14 @@ export abstract class TableComponent<T extends any> implements AfterViewInit, On
         this.addingItem = item;
         this.addModeSubject.next(true);
         this.clearMessages();
+        this.detailsMode = false;
+    }
+
+    detailsClick(item: T) {
+        this.addingItem = item;
+        this.addModeSubject.next(true);
+        this.clearMessages();
+        this.detailsMode = true;
     }
 
     refreshLanguage(languageData: Record<string, any>) {
@@ -362,6 +372,10 @@ export abstract class TableComponent<T extends any> implements AfterViewInit, On
         return this.canDoAction(ResourceAction.COMMON_ACTION_DELETE);
     }
 
+    canViewItemDetails(): boolean {
+        return this.canDoAction(ResourceAction.COMMON_ACTION_VIEW);
+    }
+
     canDoAction(action: string) {
         const a: ResourceAction | null = this.permissionService.filterResourceActionByResourceNameAndAction(
             this.permissionService.currentPermissionConfigs, this.permissionResourceName(), action
@@ -381,11 +395,13 @@ export abstract class TableComponent<T extends any> implements AfterViewInit, On
     }
 
     protected buildTableUi(): TableUi {
+        var that = this;
         var result = this.newEmptyTableUi();
-        result.enabledActionAdd = this.canAddItem();
-        result.enabledActionDelete = this.canDeleteItem();
-        result.enabledActionEdit = this.canUpdateItem();
-        result.enabledTopPaging = this.enabledTopPaging();
+        result.enabledActionAdd = () => that.canAddItem();
+        result.enabledActionDelete = () => that.canDeleteItem();
+        result.enabledActionEdit = this.canUpdateItem;
+        result.enabledActionViewDetails = () => that.canViewItemDetails();
+        result.enabledTopPaging = () => that.enabledTopPaging();
         result.indexColumnLabelKey = this.indexColumnLabelKey;
         result.columns = this.tableUiColumns;
         return result;

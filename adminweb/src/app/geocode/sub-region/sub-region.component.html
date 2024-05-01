@@ -2,7 +2,7 @@
   [message]="message" [pageEvent]="pageEvent" [paging]="paging" [pageSizeOptions]="pageSizeOptions" (pageAction)="handlePageEvent($event)"
   [complexCellTemplate]="{'regionId': regionColumn}">
   <ng-container additemform>
-    <app-add-sub-region (cancel)="cancelAdd($event)" *ngIf="addMode" (save)="submitAdd($event)" [addingItem]="addingItem"></app-add-sub-region>
+    <app-add-sub-region (cancel)="cancelAdd($event)" (save)="submitAdd($event)" [addingItem]="addingItem"></app-add-sub-region>
   </ng-container>
 
   <ng-template #regionColumn let-data>

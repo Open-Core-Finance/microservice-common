@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableComponent } from 'src/app/generic-component/TableComponent';
 import { AppComponent } from 'src/app/app.component';
@@ -16,6 +16,8 @@ import { AddLoanAccountComponent } from '../add-loan-account/add-loan-account.co
   styleUrl: './loan-account.component.sass'
 })
 export class LoanAccountComponent extends TableComponent<LoanAccount> {
+
+  _customerId = 0;
 
   override permissionResourceName(): string {
     return "loanAccount";
@@ -42,6 +44,26 @@ export class LoanAccountComponent extends TableComponent<LoanAccount> {
   }
 
   override createNewItem(): LoanAccount {
-    return new LoanAccount();
+    var result = new LoanAccount();
+    if (this._customerId > 0) {
+      result.customerId = this._customerId;
+    }
+    return result;
   }
+
+  @Input()
+  set customerId(customerId: number) {
+    this._customerId = customerId;
+    if (this._customerId > 0) {
+      this.searchText = '{"customerId": ' + this._customerId + '}';
+    } else {
+      this.searchText = "";
+    }
+    this.reloadData();
+  }
+
+  get customerId(): number {
+    return this._customerId;
+  }
+
 }

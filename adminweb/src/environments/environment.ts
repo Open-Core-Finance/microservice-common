@@ -13,5 +13,6 @@ environment.apiUrl.depositAccountService = "http://localhost:9094";
 environment.apiUrl.loanAccountService = "http://localhost:9095";
 environment.apiUrl.customerService = "http://localhost:9096";
 environment.apiUrl.goecodeService = "http://localhost:9097";
+environment.apiUrl.paymentService = "http://localhost:9098";
 
 rebuildEnvironment();

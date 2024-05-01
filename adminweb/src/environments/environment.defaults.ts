@@ -9,7 +9,8 @@ export const environment = {
         depositProduct: '', productType: '', glProduct: '', cryptoProduct: '', loanProduct: '', withdrawalChannel: '',
         user: '', glAccountService: '', glAccount: '', customerService: '', individualCustomer: '', corporateCustomer: '',
         depositAccountService: '', loanAccountService: '', depositAccount: '', loanAccount: '', goecodeService: '',
-        region: '', subRegion: '', country: '', state: '', city: '', cryptoAccount: ''
+        region: '', subRegion: '', country: '', state: '', city: '', cryptoAccount: '', paymentService: '',
+        internalFundTransfer: ''
     },
     apiPrefix: {
         userLogin: '/login',
@@ -48,8 +49,8 @@ export const environment = {
         subRegion: "sub-regions",
         country: "Countries",
         state: "States",
-        city: "Cities"
-
+        city: "Cities",
+        fundTransfer: "fund-transfer"
     },
     appVersion: "1.0.0-SNAPSHOT",
     appClientId: "corefinance-ADMIN-WEB",
@@ -96,4 +97,6 @@ export function rebuildEnvironment() {
     environment.apiUrl.country = environment.apiUrl.goecodeService + "/countries";
     environment.apiUrl.state = environment.apiUrl.goecodeService + "/states";
     environment.apiUrl.city = environment.apiUrl.goecodeService + "/cities";
+    // Payment
+    environment.apiUrl.internalFundTransfer = environment.apiUrl.paymentService + "/internal-fund-transfers";
 }

@@ -24,4 +24,5 @@ tech:
       deposit-account: false
       gl-account: false
       loan-account: false
+      payment: false
       combined-product-account: true

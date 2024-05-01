@@ -55,6 +55,8 @@ export class CurrenyComponent extends TableComponent<Currency> {
   }
 
   override createNewItem(): Currency {
-    return new Currency();
+    const result = new Currency();
+    result.id = "";
+    return result;
   }
 }

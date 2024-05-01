@@ -3,7 +3,7 @@
   [complexCellTemplate]="{countryId: countryColumn}">
 
   <ng-container additemform>
-    <app-add-state (cancel)="cancelAdd($event)" *ngIf="addMode" (save)="submitAdd($event)" [addingItem]="addingItem"></app-add-state>
+    <app-add-state (cancel)="cancelAdd($event)" (save)="submitAdd($event)" [addingItem]="addingItem"></app-add-state>
   </ng-container>
 
   <ng-template #countryColumn let-data>

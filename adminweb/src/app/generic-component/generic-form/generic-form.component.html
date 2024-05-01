@@ -1,7 +1,8 @@
 <div class="add-item-page">
     <mat-card>
         <mat-card-title>
-            {{languageService.formatLanguage(formTitleKey, [])}}
+            <span *ngIf="formTitleKey != '' && !readonly">{{languageService.formatLanguage(formTitleKey, [])}}</span>
+            <span *ngIf="readonlyTitleKey != '' && readonly">{{languageService.formatLanguage(readonlyTitleKey, [])}}</span>
         </mat-card-title>
         <mat-card-content>
             <form [formGroup]="formGroup">
@@ -26,6 +27,8 @@
                     </mat-expansion-panel>
                 </ng-container>
 
+                <ng-content select="[customformitems]"></ng-content>
+
                 <app-general-error-panel [message]="message" [errorPrefix]="errorPrefix"></app-general-error-panel>
                 
             </form>
@@ -35,8 +38,11 @@
             <button mat-raised-button color="primary" (click)="saveClick($event);">
                 {{languageService.formatLanguage('action.save', [])}}
             </button>
-            <button mat-raised-button color="warn" (click)="cancelClick($event);">
+            <button mat-raised-button color="warn" (click)="cancelClick($event);" *ngIf="showCancel">
                 {{languageService.formatLanguage('action.cancel', [])}}
+            </button>
+            <button mat-raised-button color="warn" (click)="resetClick($event);" *ngIf="showReset">
+                {{languageService.formatLanguage('action.reset', [])}}
             </button>
         </mat-card-actions>
 
@@ -45,29 +51,29 @@
     <ng-template #fieldGenerateTemplate let-formItem [formGroup]="formGroup">
 
         <app-reactive-form-input *ngIf="isFormInput(formItem) && (formItem.visibleFn == null || formItem.visibleFn())" [placeHolderKey]="formItem.placeHolderKey"
-            [formControlName]="formItem.formControlName" [additionClass]="formItem.additionClass" [addLabel]="formItem.addLabel" [readonly]="formItem.disabledFn && formItem.disabledFn()"
+            [formControlName]="formItem.formControlName" [additionClass]="formItem.additionClass" [addLabel]="formItem.addLabel" [readonly]="readonly || (formItem.disabledFn && formItem.disabledFn())"
             [inputType]="formItem.inputType" [appearance]="formItem.appearance" [colorScheme]="formItem.colorScheme" (inputEventOut)="onFieldInput.emit($event)" [formInputName]="formItem.formControlName"
-            [required]="formItem.required" [postFixLabelKey]="formItem.postFixLabelKey" [autoComleteItems]="formItem.autoComleteItems">
+            [required]="formItem.required" [postFixLabelKey]="formItem.postFixLabelKey" [autoComleteItems]="formItem.autoComleteItems" (optionSelected)="onOptionSelected($event);">
         </app-reactive-form-input>
 
         <app-reactive-form-select *ngIf="isFormSelect(formItem) && (formItem.visibleFn == null || formItem.visibleFn())" [labelKey]="formItem.labelKey" [formControlName]="formItem.formControlName"
-            [selectItems]="formItem.selectItems" [additionClass]="formItem.additionClass" [appearance]="formItem.appearance" [colorScheme]="formItem.colorScheme"
-            [required]="formItem.required"  [readonly]="formItem.disabledFn && formItem.disabledFn()"></app-reactive-form-select>
+            [selectItems]="formItem.selectItems" [additionClass]="formItem.additionClass" [appearance]="formItem.appearance" [colorScheme]="formItem.colorScheme" [formInputName]="formItem.formControlName"
+            [required]="formItem.required" [readonly]="readonly || (formItem.disabledFn && formItem.disabledFn())" (optionSelected)="this.onOptionSelected($event);"></app-reactive-form-select>
 
         <app-reactive-form-checkbox *ngIf="isFormCheckbox(formItem) && (formItem.visibleFn == null || formItem.visibleFn())" [labelKey]="formItem.labelKey" [formControlName]="formItem.formControlName"
             [additionClass]="formItem.additionClass" [colorScheme]="formItem.colorScheme" [required]="formItem.required"
-             [readonly]="formItem.disabledFn && formItem.disabledFn()"></app-reactive-form-checkbox>
+             [readonly]="readonly || (formItem.disabledFn && formItem.disabledFn())"></app-reactive-form-checkbox>
 
         <app-reactive-form-date *ngIf="isFormDate(formItem) && (formItem.visibleFn == null || formItem.visibleFn())" [placeHolderKey]="formItem.placeHolderKey"
             [formControlName]="formItem.formControlName" [additionClass]="formItem.additionClass" [addLabel]="formItem.addLabel"
             [inputType]="formItem.inputType" [appearance]="formItem.appearance" [colorScheme]="formItem.colorScheme"
-            [required]="formItem.required" [readonly]="formItem.disabledFn && formItem.disabledFn()">
+            [required]="formItem.required" [readonly]="readonly || (formItem.disabledFn && formItem.disabledFn())">
         </app-reactive-form-date>
 
         <app-reactive-form-textarea *ngIf="isFormTextarea(formItem) && (formItem.visibleFn == null || formItem.visibleFn())" [placeHolderKey]="formItem.placeHolderKey"
             [formControlName]="formItem.formControlName" [additionClass]="formItem.additionClass" [addLabel]="formItem.addLabel"
             [appearance]="formItem.appearance" [colorScheme]="formItem.colorScheme" [required]="formItem.required"
-             [readonly]="formItem.disabledFn && formItem.disabledFn()">
+             [readonly]="readonly || (formItem.disabledFn && formItem.disabledFn())">
         </app-reactive-form-textarea>
 
         <ng-container *ngIf="complexInputTemplate && isFormComplextInput(formItem) && (formItem.visibleFn == null || formItem.visibleFn())">

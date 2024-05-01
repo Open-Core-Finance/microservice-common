@@ -1,4 +1,5 @@
 <app-generic-form (cancel)="this.cancelClick($event)" (save)="this.saveClick($event)" [formGroup]="addForm"
-  [formItems]="formItems" formTitleKey="currencyScreens.addTitle" [message]="message">
+  [formItems]="formItems" formTitleKey="currencyScreens.addTitle" [message]="message" [readonly]="readonly"
+  readonlyTitleKey="currencyScreens.viewTitle">
 
 </app-generic-form>

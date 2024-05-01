@@ -32,6 +32,7 @@ export class GenericTableComponent implements OnInit, OnDestroy {
   @Output() add = new EventEmitter();
   @Output() edit = new EventEmitter();
   @Output() delete = new EventEmitter();
+  @Output() viewDetails = new EventEmitter();
   @Output() pageAction = new EventEmitter();
 
   @Input()
@@ -63,6 +64,10 @@ export class GenericTableComponent implements OnInit, OnDestroy {
 
   deleteClick(element: any) {
     this.delete.emit(element);
+  }
+
+  viewDetailsClick(element: any) {
+    this.viewDetails.emit(element);
   }
 
   handlePageEvent($event: any) {

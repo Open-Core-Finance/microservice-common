@@ -81,7 +81,9 @@
       "subregion": "Vùng miền",
       "country": "Quốc gia",
       "state": "Tỉnh/Thành phố",
-      "city": "Quận/Huyện"
+      "city": "Quận/Huyện",
+      "groupTransactions": "Giao dịch",
+      "fundTransfer": "Fund transfer"
   },
   "organization": {
       "id": "Mã số",
@@ -143,6 +145,7 @@
   "currencyId": "Mã số",
   "currencyScreens": {
       "addTitle": "Tạo tiền tệ mới",
+      "viewTitle": "Xem tiền tệ",
       "error": {
           "name_empty": "Tên không được bỏ trống!",
           "symbol_empty": "Ký hiệu không được bỏ trống!",
@@ -1011,5 +1014,23 @@
     "penaltySetting": "Penalties setting",
     "penaltyRates": "Tỉ lệ phạt theo tiền tệ",
     "penaltyRate": "Tỉ lệ"
-  }
+  },
+  "internalFundTransfer": {
+    "viewFundTransfer": "Xem thông tin chuyển tiền",
+    "addTitle": "Chuyển tiền",
+    "fromAccount": "Tài khoản nguồn",
+    "fromAccountType": "Loại TK nguồn",
+    "toAccount": "Tài khoản đích",
+    "toAccountType": "Loại TK đích",
+    "sender": "Người gửi",
+    "receiver": "Người nhận",
+    "fromCustomer": "Khách hàng",
+    "toCustomer": "Khách hàng",
+    "fromCurrency": "Tiền tệ",
+    "fromAmount": "Số tiền"
+  },
+  "accountType_DEPOSIT": "Deposit account",
+  "accountType_CRYPTO": "Crypto account",
+  "accountType_LOAN": "Loan account",
+  "accountType_GL": "GL account"
 }

@@ -2,7 +2,7 @@
   [inputGroups]="inputGroups"
   [formItems]="formItems" formTitleKey="individualCustomer.addTitle" [message]="message" [complexInputTemplate]="{
     nationality: nationalityTemplate, secondNationality: secondNationalityTemplate
-  }">
+  }" [readonly]="readonly">
 
   <ng-template #nationalityTemplate let-data>
     <ng-container *ngTemplateOutlet="nationalityInputTemplate; context: { $implicit: addForm.controls['nationality']}"></ng-container>
@@ -17,39 +17,68 @@
 
       <app-reactive-form-select labelKey="nationality.identityType" formControlName="identityType"
             [selectItems]="nationalityIdentityTypeItems" appearance="fill" colorScheme="primary"
-            [required]="true"></app-reactive-form-select>
+            [required]="true" [readonly]="readonly"></app-reactive-form-select>
 
       <app-reactive-form-input placeHolderKey="nationality.identityNumber" formControlName="identityNumber"
         [addLabel]="true" inputType="text" appearance="fill" colorScheme="primary"
-        [required]="true">
+        [required]="true" [readonly]="readonly">
       </app-reactive-form-input>
 
       <app-reactive-form-input placeHolderKey="nationality.issuingCountry" formControlName="issuingCountry"
         [addLabel]="true" inputType="text" appearance="fill" colorScheme="primary"
-        [required]="true">
+        [required]="true" [readonly]="readonly">
       </app-reactive-form-input>
 
       <app-reactive-form-input placeHolderKey="nationality.countryCode" formControlName="countryCode"
         [addLabel]="true" inputType="text" appearance="fill" colorScheme="primary"
-        [required]="true">
+        [required]="true" [readonly]="readonly">
       </app-reactive-form-input>
 
       <app-reactive-form-input placeHolderKey="nationality.issuingPlace" formControlName="issuingPlace"
         [addLabel]="true" inputType="text" appearance="fill" colorScheme="primary"
-        [required]="true">
+        [required]="true" [readonly]="readonly">
       </app-reactive-form-input>
 
       <app-reactive-form-date placeHolderKey="nationality.issuingDate"
         formControlName="issuingDate" [addLabel]="true" inputType="text" appearance="fill" colorScheme="primary"
-        [required]="true">
+        [required]="true" [readonly]="readonly">
       </app-reactive-form-date>
 
       <app-reactive-form-date placeHolderKey="nationality.expiringDate"
         formControlName="expiringDate" [addLabel]="true" inputType="text" appearance="fill" colorScheme="primary"
-        [required]="true">
+        [required]="true" [readonly]="readonly">
       </app-reactive-form-date>
 
     </div>
   </ng-template>
+
+  <ng-container *ngIf="readonly && _addingItem != null && isEditing" customformitems>
+    <mat-expansion-panel hideToggle="true" expanded="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>{{languageService.formatLanguage("menu.cryptoAccount", [])}}</mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="panel-body">
+          <app-crypto-account [customerId]="_addingItem!.id"></app-crypto-account>
+      </div>
+    </mat-expansion-panel>
+  
+    <mat-expansion-panel hideToggle="true" expanded="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>{{languageService.formatLanguage("menu.depositAccount", [])}}</mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="panel-body">
+          <app-deposit-account [customerId]="_addingItem!.id"></app-deposit-account>
+      </div>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel hideToggle="true" expanded="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>{{languageService.formatLanguage("menu.loanAccount", [])}}</mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="panel-body">
+          <app-loan-account [customerId]="_addingItem!.id"></app-loan-account>
+      </div>
+    </mat-expansion-panel>
+  </ng-container>
 
 </app-generic-form>

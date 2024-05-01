@@ -2,7 +2,7 @@
   [message]="message" [pageEvent]="pageEvent" [paging]="paging" [pageSizeOptions]="pageSizeOptions" (pageAction)="handlePageEvent($event)"
   [complexCellTemplate]="{'holidayDate': holidayDateColumn}">
   <ng-container additemform>
-    <app-add-holiday (cancel)="cancelAdd($event)" *ngIf="addMode" (save)="submitAdd($event)" [addingItem]="addingItem"></app-add-holiday>
+    <app-add-holiday (cancel)="cancelAdd($event)" (save)="submitAdd($event)" [addingItem]="addingItem"></app-add-holiday>
   </ng-container>
 
   <ng-template #holidayDateColumn let-data>
