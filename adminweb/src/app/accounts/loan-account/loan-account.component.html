@@ -2,7 +2,7 @@
   [message]="message" [pageEvent]="pageEvent" [paging]="paging" [pageSizeOptions]="pageSizeOptions" (pageAction)="handlePageEvent($event)">
 
   <ng-container additemform>
-    <app-add-loan-account (cancel)="cancelAdd($event)" *ngIf="addMode" (save)="submitAdd($event)" [addingItem]="addingItem"></app-add-loan-account>
+    <app-add-loan-account (cancel)="cancelAdd($event)" (save)="submitAdd($event)" [addingItem]="addingItem"></app-add-loan-account>
   </ng-container>
 
 </app-generic-table>

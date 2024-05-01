@@ -46,6 +46,8 @@ export class ReactiveFormInputComponent implements OnInit, ControlValueAccessor,
   formInputName = "";
   @Output()
   inputEventOut = new EventEmitter();
+  @Output()
+  optionSelected = new EventEmitter();
 
   constructor(public languageService: LanguageService) {
   }
@@ -71,13 +73,19 @@ export class ReactiveFormInputComponent implements OnInit, ControlValueAccessor,
   propagateChange = (value: any) => {};
   propagateTouched = (_: any) => { };
 
-  onChanged() {
+  onChanged($event: any) {
     this.propagateChange(this.value);
   }
 
   onInput($event: any, value: any) {
     if (this.inputEventOut) {
       this.inputEventOut.emit({event: $event, value: value, name: this.formInputName});
+    }
+  }
+
+  onOptionSelected($event: any) {
+    if (this.optionSelected) {
+      this.optionSelected.emit({event: $event, value: $event?.target?.value, name: this.formInputName});
     }
   }
 }

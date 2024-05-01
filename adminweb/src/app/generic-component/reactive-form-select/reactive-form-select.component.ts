@@ -1,4 +1,4 @@
-import {Component, forwardRef, OnInit, OnDestroy, Input} from '@angular/core';
+import {Component, forwardRef, OnInit, OnDestroy, Input, Output, EventEmitter} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
@@ -38,6 +38,12 @@ export class ReactiveFormSelectComponent implements OnInit, ControlValueAccessor
   @Input()
   readonly = false;
 
+  @Input()
+  formInputName = "";
+
+  @Output()
+  optionSelected = new EventEmitter();
+
   constructor(public languageService: LanguageService) {
   }
 
@@ -62,7 +68,14 @@ export class ReactiveFormSelectComponent implements OnInit, ControlValueAccessor
   propagateChange = (value: any) => {};
   propagateTouched = (_: any) => { };
 
-  onChanged() {
+  onChanged($event: any) {
     this.propagateChange(this.value);
+    this.onOptionSelected($event);
+  }
+
+  onOptionSelected($event: any) {
+    if (this.optionSelected) {
+      this.optionSelected.emit({event: $event, value: $event?.option?.value, name: this.formInputName});
+    }
   }
 }

@@ -10,11 +10,16 @@ import { MaritalStatus } from 'src/app/classes/customers/MaritalStatus';
 import { Nationality } from 'src/app/classes/customers/Nationality';
 import { CustomerIdentityType } from 'src/app/classes/customers/CustomerIdentityType';
 import { GeneralAddCustomerComponent } from '../general-add-customer.component';
+import {MatExpansionModule} from '@angular/material/expansion';
+import { CryptoAccountComponent } from 'src/app/accounts/crypto-account/crypto-account.component';
+import { DepositAccountComponent } from 'src/app/accounts/deposit-account/deposit-account.component';
+import { LoanAccountComponent } from 'src/app/accounts/loan-account/loan-account.component';
 
 @Component({
   selector: 'app-add-individual-customer',
   standalone: true,
-  imports: [CommonModule, SharedModule],
+  imports: [CommonModule, SharedModule, MatExpansionModule, CryptoAccountComponent, 
+    DepositAccountComponent, LoanAccountComponent],
   templateUrl: './add-individual-customer.component.html',
   styleUrl: './add-individual-customer.component.sass'
 })

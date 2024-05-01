@@ -1,0 +1,7 @@
+
+dependencies {
+    // Internal
+    implementation project(":common-account")
+    implementation project(":common-product")
+    implementation project(":common-feign-client")
+}

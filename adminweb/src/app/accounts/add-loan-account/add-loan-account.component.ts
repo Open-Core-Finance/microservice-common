@@ -202,7 +202,7 @@ export class AddLoanAccountComponent extends GeneralEntityAddComponent<CreateLoa
       } else {
         var index = formData.customerId.indexOf("-");
         if (index > 0) {
-          formData.customerId = formData.customerId.substring(0, index).trim();
+          formData.customerId = formData.customerId.substring(index + 1, formData.customerId.length).trim();
         }
       }
     }
@@ -251,7 +251,7 @@ export class AddLoanAccountComponent extends GeneralEntityAddComponent<CreateLoa
         var customers: any[] = r.result;
         if (customers) {
           that.customersObservable?.next(customers.map( m => {
-            const label = m.id + " - " + m[customerService.autocompleteAttr];
+            const label = m[customerService.autocompleteAttr] + " - " + m.id;
             return ({selectValue: label, labelKey: label} as UiSelectItem);
           }));
         } else {

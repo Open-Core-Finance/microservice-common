@@ -51,7 +51,7 @@ export abstract class GenericDepositAccount extends Account {
 
     public override assignDataTo<A extends CreateAccountRequest>(requestObj: A) {
         super.assignDataTo(requestObj);
-        if (requestObj instanceof CreateDepositAccountRequest) {
+        if (requestObj instanceof GenericCreateDepositAccountRequest) {
             requestObj.termLength = this.termLength;
             requestObj.customerId = this.customerId;
             requestObj.customerType = this.customerType;

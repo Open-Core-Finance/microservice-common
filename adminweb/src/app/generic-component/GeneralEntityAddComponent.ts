@@ -15,6 +15,7 @@ import { OrganizationService } from "../services/organization.service";
 })
 export abstract class GeneralEntityAddComponent<T extends any> {
   @Output() cancel = new EventEmitter();
+  @Output() reset = new EventEmitter();
   @Output() save = new EventEmitter();
   _addingItem: T | null = null;
   message = new UserMessage([], []);
@@ -22,6 +23,13 @@ export abstract class GeneralEntityAddComponent<T extends any> {
   inputGroups: ExpansionPanelInputGroup[] = [];
 
   addForm: FormGroup;
+  @Input()
+  readonly = false;
+  isEditing = false;
+  @Input()
+  showCancel = true;
+  @Input()
+  showReset = false;
 
   constructor(public languageService: LanguageService, protected commonService: CommonService,
     protected restService: RestService, protected http: HttpClient, protected formBuilder: FormBuilder,
@@ -44,6 +52,12 @@ export abstract class GeneralEntityAddComponent<T extends any> {
 
   protected buildFormInputGroups(): ExpansionPanelInputGroup[] {
     return [];
+  }
+
+  protected resetClick($event: any): any {
+    if (this.reset) {
+      this.reset.emit($event);
+    }
   }
 
   protected cancelClick($event: any): any {
@@ -116,10 +130,13 @@ export abstract class GeneralEntityAddComponent<T extends any> {
   }
 
   @Input() set addingItem(item: any| null) {
+    this.isEditing = false;
     this._addingItem = item;
     if (item) {
       this.addForm.setValue(item);
       this.afterBindingEnityToForm(false);
+      this.isEditing = this._addingItem != null && (this._addingItem as any).id != undefined
+        && (this._addingItem as any).id != null && (this._addingItem as any).id != ''
     } else {
       this.addForm.setValue(this.newEmptyEntity() as any);
       this.afterBindingEnityToForm(true);
@@ -133,14 +150,31 @@ export abstract class GeneralEntityAddComponent<T extends any> {
   }
 
   protected updateSelectItem(selectName: string) {
-    for (let item of this.formItems) {
-      if (item instanceof UiFormSelect) {
-        var select = (item as UiFormSelect);
-        if (select.formControlName == selectName) {
+    let select: null | UiFormSelect = this.findUiFormSelect(this.formItems, selectName);
+    if (select != null) {
+      select.selectItems = this.buildListSelection(selectName);
+    } else {
+      const groups = this.inputGroups;
+      for (let group of groups) {
+        select = this.findUiFormSelect(group.formItems, selectName);
+        if (select != null) {
           select.selectItems = this.buildListSelection(selectName);
+          break;
         }
       }
     }
+  }
+
+  private findUiFormSelect(formItems: UiFormItem[], selectName: string): UiFormSelect | null {
+    for (let item of formItems) {
+      if (item instanceof UiFormSelect) {
+        var select = (item as UiFormSelect);
+        if (select.formControlName == selectName) {
+          return select;
+        }
+      }
+    }
+    return null;
   }
 
   protected buildListSelection(selectName: string): UiSelectItem[] {

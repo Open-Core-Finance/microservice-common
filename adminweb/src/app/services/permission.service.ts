@@ -229,7 +229,6 @@ export class PermissionService implements OnDestroy {
   }
 
   public filterResourceActionByResourceNameAndAction(configMap: Map<string, PermissionConfig[]>, resourceName: string, action: string): ResourceAction | null {
-    let result: PermissionConfig[] = [];
     for(let permissionTab of configMap) {
       var values: PermissionConfig[] = permissionTab[1];
       for(let p of values) {

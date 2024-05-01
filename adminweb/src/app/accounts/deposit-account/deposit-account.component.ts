@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableComponent } from 'src/app/generic-component/TableComponent';
 import { AppComponent } from 'src/app/app.component';
@@ -16,6 +16,8 @@ import { DepositAccount } from 'src/app/classes/accounts/DepositAccount';
   styleUrl: './deposit-account.component.sass'
 })
 export class DepositAccountComponent extends TableComponent<DepositAccount> {
+
+  _customerId = 0;
 
   override permissionResourceName(): string {
     return "depositAccount";
@@ -45,6 +47,25 @@ export class DepositAccountComponent extends TableComponent<DepositAccount> {
   }
 
   override createNewItem(): DepositAccount {
-    return new DepositAccount();
+    var result = new DepositAccount();
+    if (this._customerId > 0) {
+      result.customerId = this._customerId;
+    }
+    return result;
+  }
+
+  @Input()
+  set customerId(customerId: number) {
+    this._customerId = customerId;
+    if (this._customerId > 0) {
+      this.searchText = '{"customerId": ' + this._customerId + '}';
+    } else {
+      this.searchText = "";
+    }
+    this.reloadData();
+  }
+
+  get customerId(): number {
+    return this._customerId;
   }
 }

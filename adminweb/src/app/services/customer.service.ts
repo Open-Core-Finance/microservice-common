@@ -5,7 +5,6 @@ import { environment } from "src/environments/environment";
 import { RestService } from "./rest.service";
 import { CommonService } from "./common.service";
 import { HttpClient } from "@angular/common/http";
-import { IndividualCustomer } from "../classes/customers/IndividualCustomer";
 
 @Injectable()
 export abstract class AbstractCustomerService {
@@ -13,13 +12,14 @@ export abstract class AbstractCustomerService {
     }
 
     filterCustomer(filterText: string): Observable<GeneralApiResponse> {
-        if (filterText.length < 3) {
+        if (filterText.length < 1) {
             const result = new GeneralApiResponse();
             result.result = [];
             return of(result);
         }
         let headers = this.restService.initRequestHeaders();
-        let body = {searchText: filterText.trim()};
+        let searchText = '{"' + this.autocompleteAttr + '":"' +  filterText.trim() + '"}';
+        let body = {searchText: searchText};
         const requestBody = this.commonService.buildPostStringBody(body);
         return this.http.post<GeneralApiResponse>(this.serviceUrl, requestBody, {headers});
     }

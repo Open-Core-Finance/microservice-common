@@ -5,11 +5,17 @@ import { CorporateCustomer } from 'src/app/classes/customers/CorporateCustomer';
 import { environment } from 'src/environments/environment';
 import { UiFormBigHeader, UiFormCheckbox, UiFormDate, UiFormDivider, UiFormInput, UiFormItem, UiFormSelect } from 'src/app/classes/ui/UiFormInput';
 import { SharedModule } from 'src/app/generic-component/SharedModule';
+import {MatExpansionModule} from '@angular/material/expansion';
+import { CryptoAccountComponent } from 'src/app/accounts/crypto-account/crypto-account.component';
+import { DepositAccountComponent } from 'src/app/accounts/deposit-account/deposit-account.component';
+import { LoanAccountComponent } from 'src/app/accounts/loan-account/loan-account.component';
 
 @Component({
   selector: 'app-add-corporate-customer',
   standalone: true,
-  imports: [CommonModule, SharedModule],
+  imports: [CommonModule, SharedModule, MatExpansionModule, CryptoAccountComponent,
+    DepositAccountComponent, LoanAccountComponent
+  ],
   templateUrl: './add-corporate-customer.component.html',
   styleUrl: './add-corporate-customer.component.sass'
 })

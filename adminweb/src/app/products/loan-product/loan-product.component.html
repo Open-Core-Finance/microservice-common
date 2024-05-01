@@ -1,6 +1,6 @@
 <app-generic-table (add)="addClick($event)" (delete)="showDeleteModel($event)" (edit)="genericTableUiEdit($event)" (reload)="reloadData()" [tableUi]="tableUi"
   [message]="message" [pageEvent]="pageEvent" [paging]="paging" [pageSizeOptions]="pageSizeOptions" (pageAction)="handlePageEvent($event)">
   <ng-container additemform>
-    <app-add-loan-product (cancel)="cancelAdd($event)" *ngIf="addMode" (save)="submitAdd($event)" [addingItem]="addingItem"></app-add-loan-product>
+    <app-add-loan-product (cancel)="cancelAdd($event)" (save)="submitAdd($event)" [addingItem]="addingItem"></app-add-loan-product>
   </ng-container>
 </app-generic-table>

@@ -31,6 +31,7 @@ import { SubRegionComponent } from './geocode/sub-region/sub-region.component';
 import { CountryComponent } from './geocode/country/country.component';
 import { StateComponent } from './geocode/state/state.component';
 import { CityComponent } from './geocode/city/city.component';
+import { FundTransferComponent } from './transactions/fund-transfer/fund-transfer.component';
 
 const routes: Routes = [
   { path: '', redirectTo: environment.frontEndUrl.organizations, pathMatch: 'full'},
@@ -62,7 +63,8 @@ const routes: Routes = [
   { path: environment.frontEndUrl.subRegion, component: SubRegionComponent, canActivate: [AuthGuard] },
   { path: environment.frontEndUrl.country, component: CountryComponent, canActivate: [AuthGuard] },
   { path: environment.frontEndUrl.state, component: StateComponent, canActivate: [AuthGuard] },
-  { path: environment.frontEndUrl.city, component: CityComponent, canActivate: [AuthGuard] }
+  { path: environment.frontEndUrl.city, component: CityComponent, canActivate: [AuthGuard] },
+  { path: environment.frontEndUrl.fundTransfer, component: FundTransferComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({

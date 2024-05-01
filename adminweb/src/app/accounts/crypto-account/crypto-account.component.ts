@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableComponent } from 'src/app/generic-component/TableComponent';
 import { AppComponent } from 'src/app/app.component';
@@ -16,6 +16,8 @@ import { AddCryptoAccountComponent } from '../add-crypto-account/add-crypto-acco
   styleUrl: './crypto-account.component.sass'
 })
 export class CryptoAccountComponent extends TableComponent<CryptoAccount> {
+
+  _customerId = 0;
 
   override permissionResourceName(): string {
     return "cryptoAccount";
@@ -42,6 +44,26 @@ export class CryptoAccountComponent extends TableComponent<CryptoAccount> {
   }
 
   override createNewItem(): CryptoAccount {
-    return new CryptoAccount();
+    var result = new CryptoAccount();
+    if (this._customerId > 0) {
+      result.customerId = this._customerId;
+    }
+    return result;
   }
+
+  @Input()
+  set customerId(customerId: number) {
+    this._customerId = customerId;
+    if (this._customerId > 0) {
+      this.searchText = '{"customerId": ' + this._customerId + '}';
+    } else {
+      this.searchText = "";
+    }
+    this.reloadData();
+  }
+
+  get customerId(): number {
+    return this._customerId;
+  }
+
 }

@@ -36,6 +36,30 @@ export class LoanAccount extends Account {
     percentSecurityPerLoan = 0.0;
     enableGuarantors = false;
     enableCollateral = false;
+
+    public override assignDataTo<A extends CreateAccountRequest>(requestObj: A) {
+        super.assignDataTo(requestObj);
+        if (requestObj instanceof CreateLoanAccountRequest) {
+            requestObj.loanAppliedValues = this.loanAppliedValues;
+            requestObj.customerId = this.customerId;
+            requestObj.customerType = this.customerType;
+            if (this.accountInterestRate) {
+                requestObj.interestRateValues = this.accountInterestRate.interestRateValues;
+            }
+            if (this.accountRepaymentScheduling) {
+                requestObj.installmentsValues = this.accountRepaymentScheduling.installmentsValues;
+                requestObj.firstDueDateOffsetValues = this.accountRepaymentScheduling.firstDueDateOffsetValues;
+                requestObj.gracePeriodValues = this.accountRepaymentScheduling.gracePeriodValues;
+            }
+            if (this.accountArrearsSetting) {
+                requestObj.tolerancePeriods = this.accountArrearsSetting.tolerancePeriods;
+                requestObj.toleranceAmounts = this.accountArrearsSetting.toleranceAmounts;
+            }
+            if (this.accountPenaltySetting) {
+                requestObj.penaltyRateValues = this.accountPenaltySetting.penaltyRateValues;
+            }
+        }
+    }
 }
 
 export class CreateLoanAccountRequest extends CreateAccountRequest {

@@ -9,14 +9,15 @@ export class TableUi {
     sortDirection: SortDirection = "asc";
     indexColumnLabelKey = "numberInList";
     indexColumnClass = "no-column";
-    enabledActionRefresh = true;
-    enabledActionEdit = true;
-    enabledActionAdd = true;
-    enabledActionDelete = true;
-    enabledActionCustom = true;
+    enabledActionRefresh: Function = () => true;
+    enabledActionEdit: Function = () => true;
+    enabledActionAdd: Function = () => true;
+    enabledActionDelete: Function = () => true;
+    enabledActionCustom: Function = () => true;
+    enabledActionViewDetails: Function = () => true;
     emptyDataMessageKey = "tableNoData";
-    enabledBottomPaging = true;
-    enabledTopPaging = true;
+    enabledBottomPaging: Function = () => true;
+    enabledTopPaging: Function = () => true;
     columns: TableColumnUi[] = [];
     actionLabelKey = "action.action";
 

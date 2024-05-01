@@ -3,7 +3,7 @@
   >
 
   <ng-container additemform>
-    <app-add-country (cancel)="cancelAdd($event)" *ngIf="addMode" (save)="submitAdd($event)" [addingItem]="addingItem"></app-add-country>
+    <app-add-country (cancel)="cancelAdd($event)" (save)="submitAdd($event)" [addingItem]="addingItem"></app-add-country>
   </ng-container>
 
 </app-generic-table>

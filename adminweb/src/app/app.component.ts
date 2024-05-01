@@ -54,7 +54,7 @@ export class AppComponent implements OnDestroy, OnInit, AfterViewInit {
 
   rebuildMenuItems() {
     // Main Group
-    this.menuGroups = [ this.masterMenu, this.productMenu, this.customerMenu, this.accountMenu,
+    this.menuGroups = [ this.masterMenu, this.productMenu, this.customerMenu, this.accountMenu, this.transactionMenu,
       this.uamMenu, this.languageMenu, this.geocodeMenu ];
     // Generate menu group ID
     for (let  i = 0; i < this.menuGroups.length; i++) {
@@ -184,6 +184,14 @@ export class AppComponent implements OnDestroy, OnInit, AfterViewInit {
     const cityItem = new MenuItem(environment.frontEndUrl.city, new LanguageKeyLabelProvider(languageService, "menu.city", []), "", "home_pin", null);
     return new MenuGroup("", new LanguageKeyLabelProvider(languageService, "menu.groupGeocode", []),
       [regionItem, subregionItem, countryItem, stateItem, cityItem], null);
+  }
+
+  private get transactionMenu(): MenuGroup {
+    const languageService = this.languageService;
+    const fundTransferMenuItem = new MenuItem(environment.frontEndUrl.fundTransfer, new LanguageKeyLabelProvider(languageService, "menu.fundTransfer", []), "", "move_down", null);
+    return new MenuGroup("", new LanguageKeyLabelProvider(languageService, "menu.groupTransactions", []), [
+      fundTransferMenuItem
+    ], this.isVisibleOrganizationDetailsMenu);
   }
 
   ngAfterViewInit(): void {

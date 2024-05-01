@@ -14,6 +14,8 @@ export class GenericFormComponent implements OnInit, OnDestroy {
   @Input()
   formTitleKey: string = "";
   @Input()
+  readonlyTitleKey: string = "";
+  @Input()
   formGroup: FormGroup = new FormGroup([]);
   @Input()
   formItems: UiFormItem[] = [];
@@ -28,9 +30,19 @@ export class GenericFormComponent implements OnInit, OnDestroy {
   @Input()
   inputGroups: ExpansionPanelInputGroup[] = [];
 
+  @Input()
+  readonly = false;
+  @Input()
+  showCancel = true;
+  @Input()
+  showReset = false;
+
   @Output() cancel = new EventEmitter();
   @Output() save = new EventEmitter();
   @Output() onFieldInput = new EventEmitter();
+  @Output() reset = new EventEmitter();
+  @Output()
+  optionSelected = new EventEmitter();
 
   constructor(public languageService: LanguageService) {
   }
@@ -81,7 +93,17 @@ export class GenericFormComponent implements OnInit, OnDestroy {
     this.cancel.emit($event);
   }
 
+  protected resetClick($event: any): any {
+    this.reset.emit($event);
+  }
+
   protected saveClick($event: any): any {
     this.save.emit($event);
+  }
+
+  onOptionSelected($event: any) {
+    if (this.optionSelected) {
+      this.optionSelected.emit($event);
+    }
   }
 }
