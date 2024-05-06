@@ -64,6 +64,13 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
     }
 
     /**
+     * This method will be called after persit entity to database.<br />
+     * @param entity   Entity object
+     */
+    default void afterEntitySaved(T entity) {
+    }
+
+    /**
      * Delete an entity from database.
      *
      * @param itemId Entity ID
@@ -74,7 +81,9 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
         Optional<T> optional = repository.findById(itemId);
         if (optional.isPresent()) {
             T item = optional.get();
+            beforeItemDeleted(item);
             repository.delete(item);
+            afterItemDeleted(item);
             return true;
         } else {
             return false;
@@ -115,8 +124,12 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
         entity = copyAdditionalPropertiesFromDtoToEntity(dto, entity);
         logger.info("Calling customEntityValidation...");
         entity = customEntityValidation(dto, entity);
-        logger.info("Save entity and response");
-        return repository.save(entity);
+        logger.info("Save entity to DB...");
+        entity = repository.save(entity);
+        logger.info("Call afterEntitySaved and then response");
+        afterEntitySaved(entity);
+        // Response
+        return entity;
     }
 
     /**
@@ -211,5 +224,11 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
     default Class<T> findEntityClass() {
         var context = ApplicationContextHolder.getInstance().getApplicationContext();
         return (Class<T>) context.getBean(CoreFinanceUtil.class).findEntityTypeFromCommonService(getClass());
+    }
+
+    default void beforeItemDeleted(T item) {
+    }
+
+    default void afterItemDeleted(T item) {
     }
 }

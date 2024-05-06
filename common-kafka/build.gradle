@@ -1,0 +1,5 @@
+
+dependencies {
+    api group: 'org.springframework.kafka', name: 'spring-kafka'
+    api group: 'io.confluent', name: 'kafka-avro-serializer', version: '7.6.0'
+}

@@ -1032,5 +1032,6 @@
   "accountType_DEPOSIT": "Deposit account",
   "accountType_CRYPTO": "Crypto account",
   "accountType_LOAN": "Loan account",
-  "accountType_GL": "GL account"
+  "accountType_GL": "GL account",
+  "mainCurrency": "Tiền tệ chính"
 }

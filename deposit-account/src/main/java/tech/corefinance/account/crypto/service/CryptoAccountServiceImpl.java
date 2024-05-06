@@ -3,13 +3,14 @@ package tech.corefinance.account.crypto.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.corefinance.account.common.config.AccountKafkaConfig;
 import tech.corefinance.account.common.service.AccountServiceImpl;
 import tech.corefinance.account.crypto.dto.CreateCryptoAccountRequest;
 import tech.corefinance.account.crypto.entity.CryptoAccount;
 import tech.corefinance.account.crypto.repository.CryptoAccountRepository;
-import tech.corefinance.account.deposit.dto.CreateDepositAccountRequest;
 import tech.corefinance.account.deposit.service.DepositAccountProductMapper;
 import tech.corefinance.common.ex.ServiceProcessingException;
 import tech.corefinance.common.jpa.repository.DbSequenceHandling;
@@ -18,8 +19,6 @@ import tech.corefinance.feign.client.product.CryptoProductClient;
 import tech.corefinance.feign.client.product.ProductCategoryClient;
 import tech.corefinance.feign.client.product.ProductTypeClient;
 import tech.corefinance.product.common.dto.CryptoProductDto;
-import tech.corefinance.product.common.dto.DepositProductDto;
-import tech.corefinance.product.common.dto.GenericDepositProductDto;
 
 @Service
 @Transactional
@@ -36,8 +35,9 @@ public class CryptoAccountServiceImpl extends AccountServiceImpl<CryptoAccount, 
     public CryptoAccountServiceImpl(@Value("${tech.corefinance.account.max-random-id-check:3}") int maxRandomIdCheck,
                                     TaskExecutor taskExecutor, DbSequenceHandling dbSequenceHandling,
                                     CryptoAccountRepository cryptoAccountRepository, ProductCategoryClient productCategoryClient,
+                                    KafkaTemplate<String, Object> kafkaTemplate, AccountKafkaConfig accountKafkaConfig,
                                     ProductTypeClient productTypeClient, CryptoProductClient cryptoProductClient) {
-        super(maxRandomIdCheck, taskExecutor, dbSequenceHandling);
+        super(maxRandomIdCheck, taskExecutor, dbSequenceHandling, kafkaTemplate, accountKafkaConfig);
         this.cryptoAccountRepository = cryptoAccountRepository;
         this.productCategoryClient = productCategoryClient;
         this.productTypeClient = productTypeClient;

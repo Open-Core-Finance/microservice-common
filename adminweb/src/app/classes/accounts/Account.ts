@@ -20,6 +20,7 @@ export abstract class Account implements GeneralModel<string>, ListableItem {
     status: AccountState = AccountState.NEW;
 
     supportedCurrencies: string[] = [];
+    mainCurrency: string= "";
 
     productId = "";
 
@@ -41,5 +42,6 @@ export abstract class CreateAccountRequest implements GeneralModel<string> {
     typeId = "";
     description = "";
     supportedCurrencies: string[] = [];
+    mainCurrency: string = "";
     productId = "";
 }

@@ -34,7 +34,7 @@ if (new File("artifact-credential.gradle").exists()) {
 
 def listJavaLibrariesProject = [
     "microservice-common", "microservice-common-jpa", "microservice-common-mongodb",
-    "common-account", "common-product", "common-feign-client"
+    "common-account", "common-product", "common-feign-client", "common-kafka"
 ]
 
 configure(subprojects) {
@@ -96,6 +96,9 @@ configure(subprojects) {
         mavenCentral()
         maven {
             url = "https://s01.oss.sonatype.org/content/groups/public/"
+        }
+        maven {
+            url = "https://packages.confluent.io/maven/"
         }
     }
 

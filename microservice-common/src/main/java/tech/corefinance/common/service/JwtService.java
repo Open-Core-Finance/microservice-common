@@ -55,6 +55,7 @@ public interface JwtService {
      * @throws IOException When read fail
      */
     Map<String, JwtTokenDto> retrieveTokenFromRequest(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException;
+
     /**
      * Build JWT token for login info
      * @param jwtTokenDto Token DTO
@@ -106,4 +107,6 @@ public interface JwtService {
      * @return User from token
      */
     BasicUserDto retrieveUserAsAttribute(JwtTokenDto jwtTokenDto);
+
+    JwtTokenDto decodeToken(String token, String deviceId, String ipAddress) throws JsonProcessingException;
 }

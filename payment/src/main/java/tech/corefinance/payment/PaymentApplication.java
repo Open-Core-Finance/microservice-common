@@ -14,7 +14,7 @@ import tech.corefinance.common.enums.CommonConstants;
 import java.io.File;
 
 @SpringBootApplication(scanBasePackages = {
-        "tech.corefinance.account", "tech.corefinance.common"
+        "tech.corefinance.payment", "tech.corefinance.common"
 })
 @EnableJpaRepositories(basePackages = {
         "tech.corefinance.payment.repository",

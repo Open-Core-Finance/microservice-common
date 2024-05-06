@@ -5,9 +5,14 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tech.corefinance.account.common.model.*;
+import tech.corefinance.account.common.config.AccountKafkaConfig;
+import tech.corefinance.account.common.model.AccountArrearsSetting;
+import tech.corefinance.account.common.model.AccountPenaltySetting;
+import tech.corefinance.account.common.model.AccountRepaymentScheduling;
+import tech.corefinance.account.common.model.LoanAccountInterestRate;
 import tech.corefinance.account.common.service.AccountServiceImpl;
 import tech.corefinance.account.loan.dto.CreateLoanAccountRequest;
 import tech.corefinance.account.loan.entity.LoanAccount;
@@ -19,7 +24,10 @@ import tech.corefinance.feign.client.product.LoanProductClient;
 import tech.corefinance.feign.client.product.ProductCategoryClient;
 import tech.corefinance.feign.client.product.ProductTypeClient;
 import tech.corefinance.product.common.dto.LoanProductDto;
-import tech.corefinance.product.common.model.*;
+import tech.corefinance.product.common.model.ArrearsSetting;
+import tech.corefinance.product.common.model.LoanProductInterestRate;
+import tech.corefinance.product.common.model.PenaltySetting;
+import tech.corefinance.product.common.model.RepaymentScheduling;
 
 @Service
 @Transactional
@@ -33,10 +41,11 @@ public class LoanAccountServiceImpl extends AccountServiceImpl<LoanAccount, Loan
 
     @Autowired
     public LoanAccountServiceImpl(@Value("${tech.corefinance.account.max-random-id-check:3}") int maxRandomIdCheck,
-                                     TaskExecutor taskExecutor, DbSequenceHandling dbSequenceHandling,
-                                     LoanAccountRepository loanAccountRepository, ProductCategoryClient productCategoryClient,
+                                  TaskExecutor taskExecutor, DbSequenceHandling dbSequenceHandling,
+                                  LoanAccountRepository loanAccountRepository, ProductCategoryClient productCategoryClient,
+                                  KafkaTemplate<String, Object> kafkaTemplate, AccountKafkaConfig accountKafkaConfig,
                                      ProductTypeClient productTypeClient, LoanProductClient loanProductClient) {
-        super(maxRandomIdCheck, taskExecutor, dbSequenceHandling);
+        super(maxRandomIdCheck, taskExecutor, dbSequenceHandling, kafkaTemplate, accountKafkaConfig);
         this.loanAccountRepository = loanAccountRepository;
         this.productCategoryClient = productCategoryClient;
         this.productTypeClient = productTypeClient;

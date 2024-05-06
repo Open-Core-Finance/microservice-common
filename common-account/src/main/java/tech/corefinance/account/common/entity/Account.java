@@ -54,6 +54,8 @@ public class Account implements GenericModel<String>, AuditableEntity<BasicUserD
 
     @Column(name = "supported_currencies")
     private String[] supportedCurrencies;
+    @Column(name = "main_currency")
+    private String mainCurrency;
 
     @Column(name = "product_id")
     private String productId;

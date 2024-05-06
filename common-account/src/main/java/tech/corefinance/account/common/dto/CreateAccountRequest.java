@@ -14,5 +14,6 @@ public abstract class CreateAccountRequest implements CreateUpdateDto<String> {
     private String typeName;
     private String description;
     private String[] supportedCurrencies;
+    private String mainCurrency;
     private String productId;
 }

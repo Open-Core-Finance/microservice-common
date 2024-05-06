@@ -219,17 +219,12 @@ public class JwtServiceImpl implements JwtService {
         String authorizationHeader = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
         log.debug("authorization in header [{}]", authorizationHeader);
         Map<String, JwtTokenDto> map = new HashMap<>();
-        JwtTokenDto jwtTokenDto;
         if (authorizationHeader != null) {
             if (authorizationHeader.length() <= CommonConstants.BEARER_PREFIX.length()) {
                 log.error("Invalid bearer token found!!! [{}]", authorizationHeader);
             } else {
                 String token = authorizationHeader.substring(CommonConstants.BEARER_PREFIX.length());
-                DecodedJWT decodedJWT = verify(token, deviceId, ipAddress);
-                String json = new String(Base64.getDecoder().decode(decodedJWT.getPayload().getBytes()), StandardCharsets.UTF_8);
-                jwtTokenDto = jwtTokenParser.parse(json);
-                jwtTokenDto.setOriginalToken(token);
-                log.debug("Decoded token [{}]", jwtTokenDto);
+                JwtTokenDto jwtTokenDto = decodeToken(token, deviceId, ipAddress);
                 jwtTokenDto = additionalJwtVerifyStep(jwtTokenDto, token, deviceId, ipAddress);
                 log.debug("Completed add on verify!");
                 if (jwtTokenDto != null) {
@@ -342,5 +337,15 @@ public class JwtServiceImpl implements JwtService {
         user.setDisplayName(jwtTokenDto.getUserDisplayName());
         user.setUsername(jwtTokenDto.getUsername());
         return user;
+    }
+
+    @Override
+    public JwtTokenDto decodeToken(String token, String deviceId, String ipAddress) throws JsonProcessingException {
+        DecodedJWT decodedJWT = verify(token, deviceId, ipAddress);
+        String json = new String(Base64.getDecoder().decode(decodedJWT.getPayload().getBytes()), StandardCharsets.UTF_8);
+        JwtTokenDto jwtTokenDto = jwtTokenParser.parse(json);
+        jwtTokenDto.setOriginalToken(token);
+        log.debug("Decoded token [{}]", jwtTokenDto);
+        return jwtTokenDto;
     }
 }
