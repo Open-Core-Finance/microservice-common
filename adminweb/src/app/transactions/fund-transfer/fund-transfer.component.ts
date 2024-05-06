@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { InternalFundTransfer } from 'src/app/classes/transactions/InternalFundTransfer';
 import { AccountType } from 'src/app/classes/accounts/AccountType';
 import { SharedModule } from 'src/app/generic-component/SharedModule';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { LanguageService } from 'src/app/services/language.service';
 import { CommonService } from 'src/app/services/common.service';
 import { RestService } from 'src/app/services/rest.service';

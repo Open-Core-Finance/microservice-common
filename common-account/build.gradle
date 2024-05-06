@@ -1,6 +1,8 @@
 
 dependencies {
     // Internal
-    implementation project(":common-product")
+    api project(":common-product")
     implementation project(":microservice-common-jpa")
+
+    api project(":common-kafka")
 }

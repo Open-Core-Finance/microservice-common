@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS deposit_account
     created_by jsonb,
     last_modified_by jsonb,
     supported_currencies character varying[] NOT NULL,
+    main_currency character varying(255) NOT NULL,
     product_id character varying(255) NOT NULL,
     allow_deposit_after_maturity_date boolean NOT NULL default false,
     allow_overdrafts boolean NOT NULL default false,
@@ -50,6 +51,7 @@ CREATE TABLE IF NOT EXISTS tenant_0f522100_7d8c_4b67_9a7f_779e1b179eff.deposit_a
     created_by jsonb,
     last_modified_by jsonb,
     supported_currencies character varying[] NOT NULL,
+    main_currency character varying(255) NOT NULL,
     product_id character varying(255) NOT NULL,
     allow_deposit_after_maturity_date boolean NOT NULL default false,
     allow_overdrafts boolean NOT NULL default false,
@@ -66,23 +68,6 @@ CREATE TABLE IF NOT EXISTS tenant_0f522100_7d8c_4b67_9a7f_779e1b179eff.deposit_a
     enable_term_deposit boolean NOT NULL default false,
     customer_type character varying(255) NOT NULL,
     customer_id bigint NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS deposit_account_balance
-(
-    account_id character varying(255) NOT NULL,
-    currency character varying(255) NOT NULL,
-    account_type character varying(255) NOT NULL,
-    amount double precision NOT NULL,
-    CONSTRAINT deposit_account_balance_pk PRIMARY KEY(account_id, currency, account_type)
-);
-CREATE TABLE IF NOT EXISTS tenant_0f522100_7d8c_4b67_9a7f_779e1b179eff.deposit_account_balance
-(
-    account_id character varying(255) NOT NULL,
-    currency character varying(255) NOT NULL,
-    account_type character varying(255) NOT NULL,
-    amount double precision NOT NULL,
-    CONSTRAINT deposit_account_balance_pk PRIMARY KEY(account_id, currency, account_type)
 );
 
 CREATE TABLE IF NOT EXISTS deposit_transaction

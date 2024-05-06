@@ -31,7 +31,24 @@ spring:
     drop-first: false
     enabled: true
     contexts: development
-
+  kafka:
+    bootstrap-servers: localhost:9192
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        interceptor.classes: "tech.corefinance.kafka.common.interceptor.CommonKafkaInterceptor"
+    consumer:
+      auto-offset-reset: earliest
+      enable-auto-commit: false # Disable automatic offset committing
+      auto-commit-interval: 1000 # Optionally, set auto-commit interval
+      auto-commit-offsets: false
+      auto-commit: true
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        interceptor.classes: "tech.corefinance.kafka.common.interceptor.CommonKafkaInterceptor"
 tech:
   corefinance:
     database:
@@ -127,6 +144,10 @@ tech:
       url:
         geocode: ${GEOCODE_SERVICE_URL:http://localhost:8086}
         product: ${PRODUCT_SERVICE_URL:http://localhost:8081}
+    account:
+      kafka:
+        balances-init-topic: account-balances-init
+        balances-cleanup-topic: account-balances-cleanup
 export:
   format:
     date: yyyy/MM/dd

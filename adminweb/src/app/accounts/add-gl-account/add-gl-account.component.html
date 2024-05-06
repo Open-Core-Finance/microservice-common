@@ -3,7 +3,8 @@
   [complexInputTemplate]="{currencies: currenciesTemplate}">
 
   <ng-template #currenciesTemplate let-data>
-    <app-currencies-selection formControlName="supportedCurrencies" [preDefinedListCurrencies]="productCurrencies"></app-currencies-selection>
+    <app-currencies-selection formControlName="supportedCurrencies" [preDefinedListCurrencies]="productCurrencies"
+      (ngModelChange)="currenciesChanged();"></app-currencies-selection>
   </ng-template>
 
 </app-generic-form>

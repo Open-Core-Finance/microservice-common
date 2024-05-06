@@ -132,6 +132,9 @@ export class AddDepositAccountComponent extends GeneralEntityAddComponent<Create
     formItems.push(new UiFormComplexInput("currencies", "supportedCurrencies", () => {
       return that.selectedProduct != undefined;
     }));
+    // Main currency
+    formItems.push(new UiFormSelect( "mainCurrency", that.buildListSelection("mainCurrency"), "mainCurrency",
+      () => that.previousProductId != null && that.previousProductId != ''));
     // interestRateValues
     formItems.push(new UiFormComplexInput("interestRateValues", "interestRateValues", () => {
       return that.selectedProduct != undefined && that.selectedProduct.enableInterestRate
@@ -178,6 +181,9 @@ export class AddDepositAccountComponent extends GeneralEntityAddComponent<Create
       return Object.keys(CustomerType).map( m => ({ selectValue: m, labelKey: "customerType.type_" + m} as UiSelectItem));
     } else if (selectName == "termUnit") {
       return Object.keys(FrequencyOptionYearly).map( m => ({ selectValue: m, labelKey: "depositProduct.termDepositUnit_" + m} as UiSelectItem));
+    } else if (selectName == 'mainCurrency') {
+      var supportedCurrencies: string[] = this.addForm.value.supportedCurrencies;
+      return supportedCurrencies.map( m => ({ selectValue: m, labelKey: m } as UiSelectItem));
     }
     return super.buildListSelection(selectName);
   }
@@ -233,6 +239,7 @@ export class AddDepositAccountComponent extends GeneralEntityAddComponent<Create
             }
         }
     }
+    this.updateSelectItem("mainCurrency");
   }
 
   tieredInterestSubComponentChanged() {

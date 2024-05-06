@@ -12,7 +12,9 @@ spring:
       minimum-idle: ${DB_MIN_CONNECTIONS:2}
       idle-timeout: 30000
       pool-name: deposit_account_service_pool
-
+  kafka:
+    producer:
+      client-id: loan_account_service
 management:
   server:
     port: ${server.port}

@@ -12,6 +12,9 @@ spring:
       minimum-idle: ${DB_MIN_CONNECTIONS:2}
       idle-timeout: 30000
       pool-name: combined_product_account_service_pool
+  kafka:
+    producer:
+      client-id: combined_service
 management:
   server:
     port: ${server.port}
@@ -25,4 +28,5 @@ tech:
       gl-account: false
       loan-account: false
       payment: false
+      balance: false
       combined-product-account: true

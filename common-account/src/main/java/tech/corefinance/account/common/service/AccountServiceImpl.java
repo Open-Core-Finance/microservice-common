@@ -2,9 +2,14 @@ package tech.corefinance.account.common.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
+import tech.corefinance.account.common.config.AccountKafkaConfig;
+import tech.corefinance.account.common.dto.BalanceCleanupMessage;
+import tech.corefinance.account.common.dto.BalanceInitialMessage;
 import tech.corefinance.account.common.entity.Account;
+import tech.corefinance.account.common.model.AccountType;
 import tech.corefinance.common.context.JwtContext;
 import tech.corefinance.common.dto.JwtTokenDto;
 import tech.corefinance.common.ex.ServiceProcessingException;
@@ -15,7 +20,10 @@ import tech.corefinance.common.util.RandomString;
 import tech.corefinance.product.common.model.ProductNewAccountSetting;
 
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
@@ -28,10 +36,16 @@ public abstract class AccountServiceImpl<T extends Account, R extends CommonReso
 
     protected DbSequenceHandling dbSequenceHandling;
 
-    public AccountServiceImpl(int maxRandomIdCheck, TaskExecutor taskExecutor, DbSequenceHandling dbSequenceHandling) {
+    private KafkaTemplate<String, Object> kafkaTemplate;
+    private AccountKafkaConfig accountKafkaConfig;
+
+    public AccountServiceImpl(int maxRandomIdCheck, TaskExecutor taskExecutor, DbSequenceHandling dbSequenceHandling,
+                              KafkaTemplate<String, Object> kafkaTemplate, AccountKafkaConfig accountKafkaConfig) {
         this.maxRandomIdCheck = maxRandomIdCheck;
         this.taskExecutor = taskExecutor;
         this.dbSequenceHandling = dbSequenceHandling;
+        this.kafkaTemplate = kafkaTemplate;
+        this.accountKafkaConfig = accountKafkaConfig;
     }
 
     protected abstract Object getCategoryObject(String categoryId);
@@ -207,5 +221,38 @@ public abstract class AccountServiceImpl<T extends Account, R extends CommonReso
 
     protected List<CompletableFuture<?>> addAsyncTaskCreateUpdateAccount() {
         return new LinkedList<>();
+    }
+
+    @Override
+    public void afterEntitySaved(T entity) {
+        AccountService.super.afterEntitySaved(entity);
+        BalanceInitialMessage balanceInitialMessage = new BalanceInitialMessage();
+        balanceInitialMessage.setAccountId(entity.getId());
+        AccountType accountType = getAccountType(entity);
+        balanceInitialMessage.setAccountType(accountType);
+        balanceInitialMessage.setSupportedCurrencies(entity.getSupportedCurrencies());
+        log.debug("Sending balance initial message [{}]", balanceInitialMessage);
+        kafkaTemplate.send(accountKafkaConfig.getBalancesInitTopic(), balanceInitialMessage).join();
+        log.debug("Sent balance initial message [{}]", balanceInitialMessage);
+    }
+
+    @Override
+    public void afterItemDeleted(T item) {
+        AccountService.super.afterItemDeleted(item);
+        BalanceCleanupMessage cleanupMessage = new BalanceCleanupMessage();
+        cleanupMessage.setAccountType(getAccountType(item));
+        cleanupMessage.setAccountId(item.getId());
+        log.debug("Sending balance cleanup message [{}]", cleanupMessage);
+        kafkaTemplate.send(accountKafkaConfig.getBalancesCleanupTopic(), cleanupMessage).join();
+        log.debug("Sent balance cleanup message [{}]", cleanupMessage);
+    }
+
+    private AccountType getAccountType(T account) {
+        return switch (account.getClass().getSimpleName()) {
+            case "GlAccount" -> AccountType.GL;
+            case "CryptoAccount" -> AccountType.CRYPTO;
+            case "LoanAccount" -> AccountType.LOAN;
+            default -> AccountType.DEPOSIT;
+        };
     }
 }

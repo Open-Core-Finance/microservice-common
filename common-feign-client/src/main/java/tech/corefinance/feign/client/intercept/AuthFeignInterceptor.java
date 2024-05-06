@@ -6,8 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import tech.corefinance.common.context.JwtContext;
 import tech.corefinance.common.context.TenantContext;
+import tech.corefinance.common.context.TraceIdContext;
 import tech.corefinance.common.dto.JwtTokenDto;
-import tech.corefinance.common.enums.CommonConstants;
 
 import static tech.corefinance.common.enums.CommonConstants.*;
 
@@ -19,9 +19,12 @@ public class AuthFeignInterceptor implements RequestInterceptor {
         var tenantId = TenantContext.getInstance().getTenantId();
         log.debug("Tenant ID [{}]", tenantId);
         template.header(HEADER_KEY_TENANT_ID, tenantId);
+        var traceId = TraceIdContext.getInstance().getTraceId();
+        log.debug("Trace ID [{}]", traceId);
+        template.header(HEADER_KEY_TRACE_ID, traceId);
         if (jwtTokenDto != null) {
             log.debug("Found JWT token in context!");
-            template.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtTokenDto.getOriginalToken());
+            template.header(HttpHeaders.AUTHORIZATION, BEARER_PREFIX + jwtTokenDto.getOriginalToken());
             log.debug("Forwarded device ID [{}]", jwtTokenDto.getDeviceId());
             template.header(DEVICE_ID, jwtTokenDto.getDeviceId());
             log.debug("Forwarded ip address [{}]", jwtTokenDto.getLoginIpAddr());

@@ -3,8 +3,10 @@ package tech.corefinance.account.deposit.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.corefinance.account.common.config.AccountKafkaConfig;
 import tech.corefinance.account.common.service.AccountServiceImpl;
 import tech.corefinance.account.deposit.dto.CreateDepositAccountRequest;
 import tech.corefinance.account.deposit.entity.DepositAccount;
@@ -31,10 +33,10 @@ public class DepositAccountServiceImpl extends AccountServiceImpl<DepositAccount
     @Autowired
     public DepositAccountServiceImpl(@Value("${tech.corefinance.account.max-random-id-check:3}") int maxRandomIdCheck,
                                      TaskExecutor taskExecutor, DbSequenceHandling dbSequenceHandling,
-                                     DepositAccountRepository depositAccountRepository,
-                                     ProductCategoryClient productCategoryClient,
+                                     DepositAccountRepository depositAccountRepository, ProductCategoryClient productCategoryClient,
+                                     KafkaTemplate<String, Object> kafkaTemplate, AccountKafkaConfig accountKafkaConfig,
                                      ProductTypeClient productTypeClient, DepositProductClient depositProductClient) {
-        super(maxRandomIdCheck, taskExecutor, dbSequenceHandling);
+        super(maxRandomIdCheck, taskExecutor, dbSequenceHandling, kafkaTemplate, accountKafkaConfig);
         this.depositAccountRepository = depositAccountRepository;
         this.productCategoryClient = productCategoryClient;
         this.productTypeClient = productTypeClient;

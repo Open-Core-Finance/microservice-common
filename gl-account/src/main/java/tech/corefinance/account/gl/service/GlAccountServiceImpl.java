@@ -3,8 +3,10 @@ package tech.corefinance.account.gl.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.corefinance.account.common.config.AccountKafkaConfig;
 import tech.corefinance.account.common.service.AccountServiceImpl;
 import tech.corefinance.account.gl.entity.GlAccount;
 import tech.corefinance.account.gl.repository.GlAccountRepository;
@@ -26,8 +28,9 @@ public class GlAccountServiceImpl extends AccountServiceImpl<GlAccount, GlAccoun
     public GlAccountServiceImpl(@Value("${tech.corefinance.account.max-random-id-check:3}") int maxRandomIdCheck,
                                 TaskExecutor taskExecutor, DbSequenceHandling dbSequenceHandling,
                                 GlAccountRepository glAccountRepository, ProductCategoryClient productCategoryClient,
+                                KafkaTemplate<String, Object> kafkaTemplate, AccountKafkaConfig accountKafkaConfig,
                                 ProductTypeClient productTypeClient, GlProductClient glProductClient) {
-        super(maxRandomIdCheck, taskExecutor, dbSequenceHandling);
+        super(maxRandomIdCheck, taskExecutor, dbSequenceHandling, kafkaTemplate, accountKafkaConfig);
         this.glAccountRepository = glAccountRepository;
         this.glProductClient = glProductClient;
         this.productCategoryClient = productCategoryClient;

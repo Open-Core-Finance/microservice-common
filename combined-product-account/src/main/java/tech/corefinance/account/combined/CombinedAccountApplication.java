@@ -7,10 +7,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.ApplicationPidFileWriter;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.util.StringUtils;
 import tech.corefinance.common.enums.CommonConstants;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 
 import java.io.File;
 
@@ -18,20 +18,20 @@ import java.io.File;
         "tech.corefinance.product", "tech.corefinance.account.deposit", "tech.corefinance.account.common",
         "tech.corefinance.account.gl", "tech.corefinance.account.loan", "tech.corefinance.common",
         "tech.corefinance.customer", "tech.corefinance.feign.client", "tech.corefinance.account.crypto",
-        "tech.corefinance.payment"
+        "tech.corefinance.payment", "tech.corefinance.balance"
 })
 @EnableJpaRepositories(basePackages = {
-        "tech.corefinance.product.repository", "tech.corefinance.account.loan.repository", "tech.corefinance.account.gl.repository",
-        "tech.corefinance.account.deposit.repository", "tech.corefinance.account.common.repository",
+        "tech.corefinance.product.repository",
+        "tech.corefinance.account.loan.repository", "tech.corefinance.account.gl.repository",
+        "tech.corefinance.account.deposit.repository", "tech.corefinance.account.crypto.repository",
         "tech.corefinance.common.jpa.repository", "tech.corefinance.common.repository",
-        "tech.corefinance.customer.repository", "tech.corefinance.account.crypto.repository",
-        "tech.corefinance.payment.repository"
+        "tech.corefinance.customer.repository", "tech.corefinance.payment.repository", "tech.corefinance.balance.repository"
 })
 @EntityScan(basePackages = {
         "tech.corefinance.product.entity", "tech.corefinance.common.jpa.model", "tech.corefinance.common.model",
         "tech.corefinance.account.deposit.entity", "tech.corefinance.account.common.entity",
         "tech.corefinance.account.loan.entity", "tech.corefinance.account.gl.entity", "tech.corefinance.customer.entity",
-        "tech.corefinance.account.crypto.entity", "tech.corefinance.payment.entity"
+        "tech.corefinance.account.crypto.entity", "tech.corefinance.payment.entity", "tech.corefinance.balance.entity"
 })
 @ConditionalOnProperty(prefix = "tech.app.enabled", name = "combined-product-account", havingValue = "true",matchIfMissing = true)
 @EnableFeignClients(basePackages = {"tech.corefinance.feign.client"})

@@ -85,6 +85,9 @@ export class AddGlAccountComponent extends GeneralEntityAddComponent<CreateGlAcc
     formItems.push(new UiFormComplexInput("currencies", "supportedCurrencies", () => {
       return that.previousProductId != null && that.previousProductId != '';
     }));
+    // Main currency
+    formItems.push(new UiFormSelect( "mainCurrency", that.buildListSelection("mainCurrency"), "mainCurrency",
+      () => that.previousProductId != null && that.previousProductId != ''));
     // Return
     return formItems;
   }
@@ -109,6 +112,9 @@ export class AddGlAccountComponent extends GeneralEntityAddComponent<CreateGlAcc
       return this.glProducts ? this.glProducts.map( m => ({
         selectValue: m.id, labelKey: m.name
       } as UiSelectItem)) : [];
+    } else if (selectName == 'mainCurrency') {
+      var supportedCurrencies: string[] = this.addForm.value.supportedCurrencies;
+      return supportedCurrencies.map( m => ({ selectValue: m, labelKey: m } as UiSelectItem));
     }
     return super.buildListSelection(selectName);
   }
@@ -126,5 +132,9 @@ export class AddGlAccountComponent extends GeneralEntityAddComponent<CreateGlAcc
       item.assignDataTo(settingItem);
     }
     super.addingItem = settingItem;
+  }
+
+  protected currenciesChanged(): void {
+    this.updateSelectItem("mainCurrency");
   }
 }
