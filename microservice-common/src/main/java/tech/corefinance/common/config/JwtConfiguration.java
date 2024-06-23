@@ -19,4 +19,5 @@ public class JwtConfiguration {
      * See {@link CommonConstants#JWT_VERIFY_MODE_MULTIPLE_LOGIN}
      */
     private String loginMode;
+    private boolean skipCompareIpAddress;
 }

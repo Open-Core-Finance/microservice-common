@@ -176,7 +176,8 @@ public class JwtServiceImpl implements JwtService {
                 throw new JWTVerificationException("Device ID miss matched in token and request!!");
             }
         }
-        if (!ipaddress.equalsIgnoreCase(decodedJWT.getClaim(CommonConstants.ATTRIBUTE_NAME_IP_ADDRESS).asString())) {
+        if (!jwtConfiguration.isSkipCompareIpAddress() &&
+            !ipaddress.equalsIgnoreCase(decodedJWT.getClaim(CommonConstants.ATTRIBUTE_NAME_IP_ADDRESS).asString())) {
             throw new JWTVerificationException("IP Address [" + ipaddress + "] miss matched in token and request ["
                     + decodedJWT.getClaim(CommonConstants.ATTRIBUTE_NAME_IP_ADDRESS) + "]!!");
         }
