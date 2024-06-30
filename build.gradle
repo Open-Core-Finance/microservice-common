@@ -257,16 +257,24 @@ configure(subprojects) {
     }
 
     if (!isLib) {
-        println("Configuring for project ${project.name}...")
-        sourceSets {
-            main {
-                resources {
-                    srcDirs = [ '../share-resources/main-app-resources' ]
-                    srcDirs += [ projectDir.absolutePath + "/src/main/resources" ]
-                }
-            }
+//        println("Configuring for project ${project.name}...")
+//        sourceSets {
+//            main {
+//                resources {
+//                    srcDirs = [ '../share-resources/main-app-resources' ]
+//                    srcDirs += [ projectDir.absolutePath + "/src/main/resources" ]
+//                }
+//            }
+//        }
+//        println sourceSets.main.resources.srcDirs
+        processResources {
+            from("../share-resources/main-app-resources")
+            include '**/*'
         }
-        println sourceSets.main.resources.srcDirs
+        processTestResources {
+            from("../share-resources/test-app-resources")
+            include '**/*'
+        }
     }
 
     afterEvaluate {
@@ -288,6 +296,7 @@ configure(subprojects) {
                 // Test
                 testImplementation 'org.springframework.boot:spring-boot-starter-test'
                 testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: "${powerMockitoVersion}"
+                testImplementation group: 'com.h2database', name: 'h2', version: '2.2.224'
             }
         }
     }

@@ -12,7 +12,33 @@ spring:
       write-durations-as-timestamps: true
       write-enums-using-to-string: false
       FAIL_ON_EMPTY_BEANS: false
-
+  datasource:
+    url: ${DB_URL:jdbc:h2:mem:testdb;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE}
+    username: ${DB_USERNAME:sa}
+    password: ${DB_PASSWORD:}
+    driver-class-name: ${JDBC_DRIVER_CLASS:org.h2.Driver}
+    hikari:
+      connection-test-query: SELECT 1
+      maximum-pool-size: 2 # Adjust as needed
+      minimum-idle: 1
+      idle-timeout: 30000
+      pool-name: test_pool
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+    jpa:
+      hibernate:
+        ddl-auto: update
+      show-sql: true
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.H2Dialect
+  liquibase:
+    change-log: ${LIQUIBASE_TEST_CHANGELOG:classpath:db/changelog/sql-changelog.xml}
+    drop-first: false
+    enabled: true
+    contexts: development
 tech:
   corefinance:
     app:

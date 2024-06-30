@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import tech.corefinance.common.enums.Gender;
@@ -49,6 +50,8 @@ public class UserProfile implements GenericModel<String> {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JsonIgnore
     private List<Role> roles;
 
     @JdbcTypeCode(SqlTypes.JSON)
