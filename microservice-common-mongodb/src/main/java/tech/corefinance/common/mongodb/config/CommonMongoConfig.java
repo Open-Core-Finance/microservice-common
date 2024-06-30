@@ -1,5 +1,6 @@
 package tech.corefinance.common.mongodb.config;
 
+import com.mongodb.lang.NonNull;
 import jakarta.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +19,19 @@ import org.springframework.data.mongodb.core.mapping.event.LoggingEventListener;
 import org.springframework.data.mongodb.core.mapping.event.ValidatingMongoEventListener;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import tech.corefinance.common.converter.DateToZonedDateTimeConverter;
+import tech.corefinance.common.converter.LocalDateTimeToZonedDateTimeConverter;
 import tech.corefinance.common.converter.ZonedDateTimeToDateConverter;
+import tech.corefinance.common.converter.ZonedDateTimeToLocalDateTimeConverter;
 import tech.corefinance.common.mongodb.converter.MongoConversionSupport;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 @Configuration
-@EnableMongoRepositories(basePackages = { "tech.corefinance.common-mongodb.repository" })
+@EnableMongoRepositories(basePackages = { "tech.corefinance.common.mongodb.repository" })
 @ConditionalOnProperty(name = "tech.corefinance.app.enabled.common", havingValue = "true", matchIfMissing = true)
 @Slf4j
 public class CommonMongoConfig extends MongoConfigurationSupport {
@@ -38,11 +42,35 @@ public class CommonMongoConfig extends MongoConfigurationSupport {
     @Bean
     public MongoCustomConversions customConversions(@Autowired List<MongoConversionSupport<?,?>> listConverters,
                                                     @Autowired DateToZonedDateTimeConverter dateToZonedDateTimeConverter,
-                                                    @Autowired ZonedDateTimeToDateConverter zonedDateTimeToDateConverter) {
+                                                    @Autowired ZonedDateTimeToDateConverter zonedDateTimeToDateConverter,
+                                                    @Autowired LocalDateTimeToZonedDateTimeConverter localDateTimeToZonedDateTimeConverter,
+                                                    @Autowired ZonedDateTimeToLocalDateTimeConverter zonedDateTimeToLocalDateTimeConverter) {
         List<MongoConversionSupport<?,?>> converters = new LinkedList<>(listConverters);
-        converters.add((MongoConversionSupport<Date, ZonedDateTime>) dateToZonedDateTimeConverter::convert);
-        converters.add((MongoConversionSupport<ZonedDateTime, Date>) zonedDateTimeToDateConverter::convert);
-        return new MongoCustomConversions(listConverters);
+        converters.add(new MongoConversionSupport<Date, ZonedDateTime>() {
+            @Override
+            public ZonedDateTime convert(@NonNull Date source) {
+                return dateToZonedDateTimeConverter.convert(source);
+            }
+        });
+        converters.add(new MongoConversionSupport<ZonedDateTime, Date>() {
+            @Override
+            public Date convert(@NonNull ZonedDateTime source) {
+                return zonedDateTimeToDateConverter.convert(source);
+            }
+        });
+        converters.add(new MongoConversionSupport<LocalDateTime, ZonedDateTime>() {
+            @Override
+            public ZonedDateTime convert(@NonNull LocalDateTime source) {
+                return localDateTimeToZonedDateTimeConverter.convert(source);
+            }
+        });
+        converters.add(new MongoConversionSupport<ZonedDateTime, LocalDateTime>() {
+            @Override
+            public LocalDateTime convert(@NonNull ZonedDateTime source) {
+                return zonedDateTimeToLocalDateTimeConverter.convert(source);
+            }
+        });
+        return new MongoCustomConversions(converters);
     }
 
     @Bean

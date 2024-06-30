@@ -23,9 +23,7 @@ import java.util.List;
 
 @Configuration
 @Slf4j
-@EnableMongoRepositories(
-        {"tech.corefinance.common.mongodb.support.repository", "tech.corefinance.common.mongodb.repository",
-                "tech.corefinance.common.repository"})
+@EnableMongoRepositories({"tech.corefinance.common.mongodb.support.repository", "tech.corefinance.common.repository"})
 @EnableMongoAuditing
 public class TestCommonApplicationConfig {
 

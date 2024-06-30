@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import tech.corefinance.common.dto.BasicUserDto;
 import tech.corefinance.common.mongodb.model.IdSequentialModel;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 @Document("custom_sequential_id_data")
@@ -16,9 +17,9 @@ public class CustomSequentialIdData implements IdSequentialModel {
     private Long id;
     private String name;
     @CreatedDate
-    private ZonedDateTime createdDate;
+    private LocalDateTime createdDate;
     @LastModifiedDate
-    private ZonedDateTime lastModifiedDate;
+    private LocalDateTime lastModifiedDate;
     @CreatedBy
     private BasicUserDto createdBy;
     @LastModifiedBy
