@@ -63,6 +63,8 @@ tech:
       userprofile:
         default-password-authen: true
         enable-index-controller: true
+        common-user-service: true
+        common-role-service: true
     common:
       filter-ordered:
         authen-filter: 2

@@ -4,9 +4,9 @@
           <mat-icon>menu</mat-icon>
         </button>
         <span>{{ languageService.formatLanguage("applicationName", []) }}</span>
-    
+
         <span class="spacer"></span>
-        <span>{{ languageService.formatLanguage("user.welcome", [loginSession?.displayName]) }}</span>
+        <span>{{ languageService.formatLanguage("user.welcome", [commonLoginSession?.displayName]) }}</span>
         <button mat-icon-button (click)="logout($event)" title="logout">
             <mat-icon aria-hidden="false" fontIcon="logout"></mat-icon>
         </button>

@@ -30,9 +30,9 @@ export class RestService {
         if (this.languageData['languageKey']) {
             headers = headers.set(AppSettings.REST_HEADER_LANGUAGE_KEY, this.languageData['languageKey']);
         }
-        var loginSession = this.currentSessionValue;
-        if (loginSession && loginSession.token) {
-            headers = headers.set('Authorization', 'Bearer ' + loginSession.token);
+        var commonLoginSession = this.currentSessionValue;
+        if (commonLoginSession && commonLoginSession.token) {
+            headers = headers.set('Authorization', 'Bearer ' + commonLoginSession.token);
         }
 
         var org = this.organization;

@@ -65,13 +65,13 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.auth.saveSelectedRole(this.roleList[0]);
       }
     });
-    this.selectedRoleSubscription = this.auth.selectedRoleSubject.subscribe( (role: Role | null) => {
-      if (role != null) {
+    this.selectedRoleSubscription = this.auth.selectedRoleSubject.subscribe( (commonRole: Role | null) => {
+      if (commonRole != null) {
         let urlToNavigate: string;
-        if (role.organization == null) {
+        if (commonRole.organization == null) {
           urlToNavigate = that.returnUrl || "/" + environment.frontEndUrl.organizations;
         } else {
-          this.organizationService.organizationSubject.next(role.organization);
+          this.organizationService.organizationSubject.next(commonRole.organization);
           urlToNavigate = that.returnUrl || "/" + environment.frontEndUrl.organizationDetails;
         }
         that.router.navigate([urlToNavigate]);
@@ -107,9 +107,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   selectRole(roleId: string) {
-    for (let role of this.roleList) {
-      if (role.id == roleId) {
-        this.auth.saveSelectedRole(role);
+    for (let commonRole of this.roleList) {
+      if (commonRole.id == roleId) {
+        this.auth.saveSelectedRole(commonRole);
         break;
       }
     }

@@ -19,7 +19,7 @@ import { GlProductComponent } from './products/gl-product/gl-product.component';
 import { CryptoProductComponent } from './products/crypto-product/crypto-product.component';
 import { LoanProductComponent } from './products/loan-product/loan-product.component';
 import { UserComponent } from './system/user/user.component';
-import { RoleComponent } from './system/role/role.component';
+import { RoleComponent } from './system/commonRole/commonRole.component';
 import { DepositAccountComponent } from './accounts/deposit-account/deposit-account.component';
 import { LoanAccountComponent } from './accounts/loan-account/loan-account.component';
 import { GlAccountComponent } from './accounts/gl-account/gl-account.component';

@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS user_profile
     phone_number character varying(255),
     username character varying(255),
     additional_attributes jsonb,
+    finance_level int,
     CONSTRAINT user_profile_pkey PRIMARY KEY (id),
     CONSTRAINT user_profile_gender_check CHECK (gender::text = ANY (ARRAY['MALE'::character varying, 'FEMALE'::character varying, 'UNKNOWN'::character varying]::text[]))
 );

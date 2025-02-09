@@ -20,7 +20,7 @@ import { Organization } from './classes/Organization';
 })
 export class AppComponent implements OnDestroy, OnInit, AfterViewInit {
   title = 'corefinance-adminweb';
-  loginSession: LoginSession | null = null;
+  commonLoginSession: LoginSession | null = null;
   menuGroups: MenuGroup[] = [];
   @ViewChild('drawer') drawer: MatDrawer | undefined;
   @ViewChild('leftMenu') leftMenu: LeftMenuComponent | undefined;
@@ -34,13 +34,13 @@ export class AppComponent implements OnDestroy, OnInit, AfterViewInit {
 
   constructor(private languageService: LanguageService,
      private authenticationService: AuthenticationService) {
-    this.loginSession = authenticationService.currentSessionValue;
+    this.commonLoginSession = authenticationService.currentSessionValue;
     this.selectedRole = null;
   }
 
   ngOnInit(): void {
     this.sessionSubscription?.unsubscribe();
-    this.sessionSubscription = this.authenticationService.currentSessionSubject.subscribe(session => this.loginSession = session);
+    this.sessionSubscription = this.authenticationService.currentSessionSubject.subscribe(session => this.commonLoginSession = session);
     this.selectedRoleSubscription?.unsubscribe();
     this.selectedRoleSubscription = this.authenticationService.selectedRoleSubject.subscribe(r => this.selectedRole = r);
     this.rebuildMenuItems();
@@ -162,7 +162,7 @@ export class AppComponent implements OnDestroy, OnInit, AfterViewInit {
     const languageService = this.languageService;
     const userManagementItem = new MenuItem(environment.frontEndUrl.userManagement, new LanguageKeyLabelProvider(languageService, "menu.user", []), "", "person", null);
     const roleManagementItem = new MenuItem(environment.frontEndUrl.roleManagement,
-        new LanguageKeyLabelProvider(languageService, "menu.role", []), "", "user_attributes", null);
+        new LanguageKeyLabelProvider(languageService, "menu.commonRole", []), "", "user_attributes", null);
     return new MenuGroup("", new LanguageKeyLabelProvider(languageService, "menu.groupUam", []),
       [userManagementItem, roleManagementItem], null);
   }

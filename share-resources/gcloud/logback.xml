@@ -12,7 +12,7 @@
 <!--			<MaxHistory>30</MaxHistory>-->
 <!--			&lt;!&ndash; or whenever the file size reaches 10MB &ndash;&gt;-->
 <!--			<timeBasedFileNamingAndTriggeringPolicy-->
-<!--					class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">-->
+<!--					class="ch.qos.logback.core.rolling.SizeAndTimeBasedFileNamingAndTriggeringPolicy">-->
 <!--				<maxFileSize>10MB</maxFileSize>-->
 <!--			</timeBasedFileNamingAndTriggeringPolicy>-->
 <!--			<maxHistory>10</maxHistory>-->

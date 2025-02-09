@@ -13,13 +13,13 @@ import org.powermock.api.mockito.PowerMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpHeaders;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import tech.corefinance.common.config.JwtConfiguration;
 import tech.corefinance.common.dto.JwtTokenDto;
 import tech.corefinance.common.dto.UserRoleDto;
@@ -61,7 +61,7 @@ public class JwtServiceTest {
     private JwtConfiguration jwtConfiguration;
     @Autowired
     private ObjectMapper objectMapper;
-    @MockBean
+    @MockitoBean
     private ResourceActionRepository resourceActionRepository;
 
     @BeforeEach
@@ -77,7 +77,7 @@ public class JwtServiceTest {
         Map<String, JwtTokenDto> map = jwtService.retrieveTokenFromRequest(request, response);
         JwtTokenDto jwtTokenDto = null;
         Set<String> set = map.keySet();
-        for (String key : set){
+        for (String key : set) {
             jwtTokenDto = map.get(key);
         }
         assertNull(jwtTokenDto);
@@ -88,7 +88,7 @@ public class JwtServiceTest {
         Map<String, JwtTokenDto> map = jwtService.retrieveTokenFromRequest(request, response);
         JwtTokenDto jwtTokenDto = null;
         Set<String> set = map.keySet();
-        for (String key : set){
+        for (String key : set) {
             jwtTokenDto = map.get(key);
         }
         assertNull(jwtTokenDto);
@@ -109,7 +109,7 @@ public class JwtServiceTest {
         Map<String, JwtTokenDto> map = jwtService.retrieveTokenFromRequest(request, response);
         JwtTokenDto jwtTokenDto = null;
         Set<String> set = map.keySet();
-        for (String key : set){
+        for (String key : set) {
             jwtTokenDto = map.get(key);
         }
         assertNotNull(jwtTokenDto);

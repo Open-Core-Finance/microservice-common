@@ -1,8 +1,5 @@
 package tech.corefinance.common.aop;
 
-import tech.corefinance.common.test.support.aop.AopTestController;
-import tech.corefinance.common.test.support.app.TestCommonApplication;
-import tech.corefinance.common.repository.ResourceActionRepository;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,11 +8,14 @@ import org.powermock.api.mockito.PowerMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import tech.corefinance.common.repository.ResourceActionRepository;
+import tech.corefinance.common.test.support.aop.AopTestController;
+import tech.corefinance.common.test.support.app.TestCommonApplication;
 
 import java.util.LinkedList;
 
@@ -35,7 +35,7 @@ public class ApiLoggingTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockitoBean
     private ResourceActionRepository resourceActionRepository;
 
     @BeforeEach
@@ -60,7 +60,7 @@ public class ApiLoggingTest {
     void test_RequestIndex_AopCalled_ThrowableThrown() throws Exception {
         String requestUrl = "/throwable";
         mockMvc.perform(get(requestUrl)).andDo((MvcResult result) ->
-            assertTrue(result.getResponse().getContentAsString().contains("\"statusCode\":\"system_error\""))
+                assertTrue(result.getResponse().getContentAsString().contains("\"statusCode\":\"system_error\""))
         );
     }
 
@@ -68,7 +68,7 @@ public class ApiLoggingTest {
     void test_RequestIndex_AopCalled_voidReturned() throws Exception {
         String requestUrl = "/void";
         mockMvc.perform(get(requestUrl)).andDo((MvcResult result) ->
-            assertEquals(HttpStatus.MOVED_PERMANENTLY.name(), result.getResponse().getContentAsString())
+                assertEquals(HttpStatus.MOVED_PERMANENTLY.name(), result.getResponse().getContentAsString())
         );
     }
 }

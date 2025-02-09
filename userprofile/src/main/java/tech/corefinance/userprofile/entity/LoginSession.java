@@ -1,55 +1,16 @@
 package tech.corefinance.userprofile.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Data;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+import lombok.EqualsAndHashCode;
 import tech.corefinance.common.model.CreateUpdateDto;
 import tech.corefinance.common.model.GenericModel;
+import tech.corefinance.userprofile.common.entity.CommonLoginSession;
 
-import java.sql.Types;
-import java.time.LocalDateTime;
-import java.util.Map;
-
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "login_session")
 @Data
-public class LoginSession implements GenericModel<String>, CreateUpdateDto<String> {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
-    @Column(name = "login_time")
-    private LocalDateTime loginTime;
-    @Column(name = "refresh_token")
-    @JdbcTypeCode(Types.LONGVARCHAR)
-    private String refreshToken;
-    @Column(name = "login_token")
-    @JdbcTypeCode(Types.LONGVARCHAR)
-    private String loginToken;
-    @Column(name = "valid_token")
-    private boolean validToken;
-    @Column(name = "verify_key")
-    private String verifyKey;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_profile_id")
-    @JsonBackReference
-    @JsonIgnore
-    private UserProfile userProfile;
-
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "additional_info")
-    private Map<String, Object> additionalInfo;
-
-    @Column(name = "input_account")
-    private String inputAccount;
-    @Column(name = "input_password")
-    private String inputPassword;
-
-    public LoginSession() {
-        this.loginTime = LocalDateTime.now();
-    }
+public class LoginSession extends CommonLoginSession<UserProfile> implements GenericModel<String>, CreateUpdateDto<String> {
 }

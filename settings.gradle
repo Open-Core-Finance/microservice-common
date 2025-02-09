@@ -3,4 +3,4 @@ include "microservice-common", "microservice-common-jpa", "microservice-common-m
 include "userprofile", "product", "gl-account", "customer", "common-account"
 include "deposit-account", "loan-account", "common-product", "jasypt-tool"
 include "combined-product-account", "geocode", "combined-nontenancy", "common-feign-client"
-include "payment", "balance", "common-kafka"
+include "payment", "balance", "common-kafka", "common-userprofile"

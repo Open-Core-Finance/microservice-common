@@ -1,19 +1,5 @@
 package tech.corefinance.common.converter;
 
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.LinkedList;
-
-import tech.corefinance.common.ex.ServiceProcessingException;
-import tech.corefinance.common.repository.ResourceActionRepository;
-import tech.corefinance.common.test.support.app.TestCommonApplication;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -22,8 +8,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import tech.corefinance.common.ex.ServiceProcessingException;
+import tech.corefinance.common.repository.ResourceActionRepository;
+import tech.corefinance.common.test.support.app.TestCommonApplication;
+
+import java.text.SimpleDateFormat;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.LinkedList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -45,7 +41,7 @@ public class DateExportConverterTest {
     private DateTimeFormatter dateTimeFormatter;
     private DateTimeFormatter instantFormatter;
 
-    @MockBean
+    @MockitoBean
     private ResourceActionRepository resourceActionRepository;
 
     @BeforeEach
@@ -97,7 +93,7 @@ public class DateExportConverterTest {
     void test_convert_InvalidType() {
         assertThrows(ServiceProcessingException.class, () -> converter.convert(10l));
     }
-    
+
     @Test
     void test_isSupport_happyCase() {
         assertTrue(converter.isSupport(Date.class));

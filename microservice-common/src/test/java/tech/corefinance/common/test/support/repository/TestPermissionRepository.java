@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+@SuppressWarnings({"unchecked"})
 @Component
 public class TestPermissionRepository implements PermissionRepository {
     @Override
