@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS user_profile
     password character varying(255),
     phone_number character varying(255),
     username character varying(255),
-    additional_attributes json
+    additional_attributes json,
+    finance_level int
 );
 
 CREATE TABLE IF NOT EXISTS attempted_login

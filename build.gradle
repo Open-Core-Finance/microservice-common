@@ -34,7 +34,7 @@ if (new File("artifact-credential.gradle").exists()) {
 
 def listJavaLibrariesProject = [
     "microservice-common", "microservice-common-jpa", "microservice-common-mongodb",
-    "common-account", "common-product", "common-feign-client", "common-kafka"
+    "common-account", "common-product", "common-feign-client", "common-kafka", "common-userprofile"
 ]
 
 configure(subprojects) {
@@ -68,7 +68,6 @@ configure(subprojects) {
         apply plugin: 'org.springframework.boot'
     }
     apply plugin: 'java-library'
-    apply plugin: 'java'
     apply plugin: 'jacoco'
     apply plugin: 'application'
     apply plugin: 'io.freefair.lombok'
@@ -82,8 +81,6 @@ configure(subprojects) {
     version = "${applicationVersion}"
 
     // Sub projects java version
-    sourceCompatibility = javaSourceCompatibility
-    targetCompatibility = javaSourceCompatibility
     java {
         toolchain {
             languageVersion.set(JavaLanguageVersion.of(javaSourceCompatibility))
@@ -257,16 +254,6 @@ configure(subprojects) {
     }
 
     if (!isLib) {
-//        println("Configuring for project ${project.name}...")
-//        sourceSets {
-//            main {
-//                resources {
-//                    srcDirs = [ '../share-resources/main-app-resources' ]
-//                    srcDirs += [ projectDir.absolutePath + "/src/main/resources" ]
-//                }
-//            }
-//        }
-//        println sourceSets.main.resources.srcDirs
         processResources {
             from("../share-resources/main-app-resources")
             include '**/*'
@@ -296,7 +283,9 @@ configure(subprojects) {
                 // Test
                 testImplementation 'org.springframework.boot:spring-boot-starter-test'
                 testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: "${powerMockitoVersion}"
-                testImplementation group: 'com.h2database', name: 'h2', version: '2.2.224'
+                testImplementation group: 'com.h2database', name: 'h2', version: "${h2Version}"
+                testImplementation "org.junit.jupiter:junit-jupiter:${junitVersion}"
+                testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
             }
         }
     }

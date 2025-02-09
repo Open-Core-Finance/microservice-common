@@ -48,6 +48,9 @@ tech:
         zoned-date-time-to-string: true
         zoned-date-time-to-local-date-time: true
         zoned-date-time-to-date: true
+      userprofile:
+        common-user-service: true
+        common-role-service: true
     common:
       filter-ordered:
         authen-filter: 2

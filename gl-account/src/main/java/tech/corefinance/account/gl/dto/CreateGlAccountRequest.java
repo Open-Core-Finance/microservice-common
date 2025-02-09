@@ -1,10 +1,12 @@
 package tech.corefinance.account.gl.dto;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import tech.corefinance.account.common.dto.CreateAccountRequest;
 import tech.corefinance.common.model.CreateUpdateDto;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class CreateGlAccountRequest extends CreateAccountRequest implements CreateUpdateDto<String> {
 
     private String id;

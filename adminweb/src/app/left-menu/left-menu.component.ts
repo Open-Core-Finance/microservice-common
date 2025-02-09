@@ -29,7 +29,7 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.selectedRoleSubscription?.unsubscribe();
-    this.selectedRoleSubscription = this.auth.selectedRoleSubject.subscribe( role => this.selectedRole = role);
+    this.selectedRoleSubscription = this.auth.selectedRoleSubject.subscribe( commonRole => this.selectedRole = commonRole);
     this.organizationSubscription?.unsubscribe();
     this.organizationSubscription = this.organizationService.organizationSubject.subscribe(org => this.organization = org);
   }

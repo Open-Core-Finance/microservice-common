@@ -38,11 +38,11 @@ export abstract class TableComponent<T extends any> implements AfterViewInit, On
     public addMode: boolean = false;
     public detailsMode: boolean = false;
     public addingItem: T | null = null;
-    loginSession: LoginSession | null = null;
+    commonLoginSession: LoginSession | null = null;
     pageEvent: PageEvent;
     pageSizeOptions = environment.pageSizeOptions;
     tableData: any[] = [];
-    displayedColumns: string[] 
+    displayedColumns: string[]
     isLoadingResults: boolean = true;
 
     @ViewChild(MatSort) sort: MatSort = new MatSort();
@@ -83,7 +83,7 @@ export abstract class TableComponent<T extends any> implements AfterViewInit, On
 
     ngOnInit(): void {
         this._sessionSubscription?.unsubscribe();
-        this._sessionSubscription = this.auth.currentSessionSubject.subscribe(x =>  this.loginSession = x);
+        this._sessionSubscription = this.auth.currentSessionSubject.subscribe(x =>  this.commonLoginSession = x);
         this._languageSubscription?.unsubscribe();
         this._languageSubscription = this.languageService.languageDataSubject.subscribe( languageData => this.refreshLanguage(languageData));
         this._organizationSubscription?.unsubscribe();
@@ -260,9 +260,9 @@ export abstract class TableComponent<T extends any> implements AfterViewInit, On
         const message = this.getDeleteConfirmContent(item);
         const title = this.getDeleteConfirmTitle(item);
         const dialogData = new ConfirmDialogModel(title, message);
-    
+
         const dialogRef = this.dialog.open(ConfirmDialogComponent, { data: dialogData });
-    
+
         this._deleteSubscription = dialogRef.afterClosed().subscribe(dialogResult => {
           if (dialogResult) {
             const requestHeaders = this.restService.initApplicationJsonRequestHeaders();
@@ -409,7 +409,7 @@ export abstract class TableComponent<T extends any> implements AfterViewInit, On
 
     newEmptyTableUi(): TableUi {
         return new TableUi(this.localizePrefix + ".error.");
-    }    
+    }
 
     enabledTopPaging(): boolean {
         return false;

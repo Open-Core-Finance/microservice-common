@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RoleComponent } from './role.component';
+import { RoleComponent } from './commonRole.component';
 
 describe('RoleComponent', () => {
   let component: RoleComponent;
@@ -11,7 +11,7 @@ describe('RoleComponent', () => {
       imports: [RoleComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(RoleComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

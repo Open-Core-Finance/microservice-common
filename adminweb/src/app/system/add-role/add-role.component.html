@@ -1,19 +1,19 @@
 <div class="add-item-page">
     <mat-card>
         <mat-card-title>
-            {{languageService.formatLanguage('role.addTitle', [])}}
+            {{languageService.formatLanguage('commonRole.addTitle', [])}}
         </mat-card-title>
         <mat-card-content>
             <form [formGroup]="addForm">
                 <mat-form-field class="full-width" appearance="fill" color="primary">
-                    <input type="text" matInput placeholder="{{languageService.formatLanguage('role.id', [])}}" formControlName="id" required>
+                    <input type="text" matInput placeholder="{{languageService.formatLanguage('commonRole.id', [])}}" formControlName="id" required>
                 </mat-form-field>
                 <mat-form-field class="full-width" appearance="fill" color="primary">
-                    <input type="text" matInput placeholder="{{languageService.formatLanguage('role.name', [])}}" formControlName="name" required>
+                    <input type="text" matInput placeholder="{{languageService.formatLanguage('commonRole.name', [])}}" formControlName="name" required>
                 </mat-form-field>
 
-                <app-general-error-panel [message]="message" errorPrefix="role.error."></app-general-error-panel>
-                
+                <app-general-error-panel [message]="message" errorPrefix="commonRole.error."></app-general-error-panel>
+
             </form>
         </mat-card-content>
 

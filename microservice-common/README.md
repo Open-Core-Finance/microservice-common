@@ -9,7 +9,7 @@ For more information please refer [About Open Core Finance](https://core-finance
 
 ## Features
 - Common AOP logging for repository, services, controllers
-- Common resource role base security config
+- Common resource commonRole base security config
 - Jasypt properties encoding
 - API trace ID
 - Exception controllers

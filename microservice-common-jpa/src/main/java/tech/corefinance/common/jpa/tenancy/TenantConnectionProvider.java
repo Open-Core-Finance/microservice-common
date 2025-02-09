@@ -11,7 +11,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 @Slf4j
-public abstract class TenantConnectionProvider implements MultiTenantConnectionProvider {
+public abstract class TenantConnectionProvider implements MultiTenantConnectionProvider<String> {
 
     @Autowired
     protected DataSource datasource;

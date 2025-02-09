@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import tech.corefinance.common.repository.ResourceActionRepository;
 import tech.corefinance.common.test.support.app.TestCommonApplication;
 
@@ -36,7 +36,7 @@ public class CoreFinanceUtilIntegrationTest {
     @Autowired
     private CoreFinanceUtil coreFinanceUtil;
 
-    @MockBean
+    @MockitoBean
     private ResourceActionRepository resourceActionRepository;
 
     @BeforeEach

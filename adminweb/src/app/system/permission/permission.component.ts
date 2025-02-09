@@ -64,16 +64,16 @@ export class PermissionComponent implements OnInit, OnDestroy, AfterContentCheck
   ngOnInit(): void {
   }
 
-  @Input() set selectedRole(role: Role) {
+  @Input() set selectedRole(commonRole: Role) {
     let needReloadPermissions = false;
-    if (role != null) {
+    if (commonRole != null) {
       if (this._selectedRole == null) {
         needReloadPermissions = true;
-      } else if (this._selectedRole.id != role.id) {
+      } else if (this._selectedRole.id != commonRole.id) {
         needReloadPermissions = true;
       }
     }
-    this._selectedRole = role;
+    this._selectedRole = commonRole;
     if (needReloadPermissions) {
       this.permissionConfigsReloaded(this.permissionConfigs);
     }
@@ -126,7 +126,7 @@ export class PermissionComponent implements OnInit, OnDestroy, AfterContentCheck
       this.cancel.emit(error);
     }
   }
-  
+
   buildPermissonItemLabel(action: ResourceActionConfig) {
     return this.languageService.formatLanguage(
       "permission.actionItem." + action.action + "_" + action.resourceType + "_" + action.requestMethod,

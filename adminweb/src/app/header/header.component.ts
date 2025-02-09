@@ -12,14 +12,14 @@ import { LoginSession } from '../classes/LoginSession';
 export class HeaderComponent {
 
   languageData: Record<string, any> = {};
-  loginSession: LoginSession | null = null;
+  commonLoginSession: LoginSession | null = null;
   @Output() menuIconClicked = new EventEmitter();
 
   constructor(public languageService: LanguageService, private router: Router, public authenticationService: AuthenticationService) {
     const that = this;
     languageService.languageDataSubject.subscribe(languageData => that.refreshLanguage(languageData));
-    authenticationService.currentSessionSubject.subscribe(session => this.loginSession = session);
-    that.loginSession = authenticationService.currentSessionValue;
+    authenticationService.currentSessionSubject.subscribe(session => this.commonLoginSession = session);
+    that.commonLoginSession = authenticationService.currentSessionValue;
   }
 
   refreshLanguage(languageData: Record<string, any>) {

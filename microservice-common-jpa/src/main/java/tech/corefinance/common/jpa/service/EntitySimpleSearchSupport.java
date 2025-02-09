@@ -45,6 +45,7 @@ public class EntitySimpleSearchSupport implements SimpleSearchSupport<GenericMod
      *
      * @param entityManager JPA EntityManager object.
      */
+    @SuppressWarnings("unchecked")
     public EntitySimpleSearchSupport(@Autowired EntityManager entityManager) {
         supportedAttributes = new HashMap<>();
         var entitiesTypes = entityManager.getMetamodel().getEntities();
@@ -71,11 +72,12 @@ public class EntitySimpleSearchSupport implements SimpleSearchSupport<GenericMod
 
     @Override
     public boolean isSupported(Class<?> clzz) {
-        return supportedAttributes.entrySet().stream().filter(e -> e.getKey().getJavaType()
-                .isAssignableFrom(clzz)).findFirst().isPresent();
+        return supportedAttributes.entrySet().stream().anyMatch(e -> e.getKey().getJavaType()
+                .isAssignableFrom(clzz));
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Page<GenericModel<?>> searchByTextAndPage(Class<? extends GenericModel<?>> clzz, String searchText,
                                                      Pageable pageable) {
         Map<String, Object> paramMap = buildMapParam(searchText);
@@ -97,6 +99,7 @@ public class EntitySimpleSearchSupport implements SimpleSearchSupport<GenericMod
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<GenericModel<?>> searchByTextAndSort(Class<? extends GenericModel<?>> clzz, String searchText,
                                                      Sort sort) {
         Map<String, Object> paramMap = buildMapParam(searchText);

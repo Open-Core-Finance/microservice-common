@@ -7,4 +7,6 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: "${powerMockitoVersion}"
     testImplementation group: 'de.flapdoodle.embed', name: 'de.flapdoodle.embed.mongo', version: "${embededMongoVersion}"
+    testImplementation "org.junit.jupiter:junit-jupiter:${junitVersion}"
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
