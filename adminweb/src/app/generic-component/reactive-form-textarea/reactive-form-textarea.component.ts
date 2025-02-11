@@ -5,16 +5,17 @@ import { MatFormFieldAppearance } from '@angular/material/form-field';
 import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
-  selector: 'app-reactive-form-textarea',
-  templateUrl: './reactive-form-textarea.component.html',
-  styleUrl: './reactive-form-textarea.component.sass',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ReactiveFormTextareaComponent),
-      multi: true
-    }
-  ]
+    selector: 'app-reactive-form-textarea',
+    templateUrl: './reactive-form-textarea.component.html',
+    styleUrl: './reactive-form-textarea.component.sass',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => ReactiveFormTextareaComponent),
+            multi: true
+        }
+    ],
+    standalone: false
 })
 export class ReactiveFormTextareaComponent implements OnInit, ControlValueAccessor, OnDestroy {
 

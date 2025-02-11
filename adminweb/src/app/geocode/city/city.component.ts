@@ -22,11 +22,10 @@ import { CountryService, StateService } from 'src/app/services/geocode.service';
 import { State } from 'src/app/classes/geocode/State';
 
 @Component({
-  selector: 'app-city',
-  standalone: true,
-  imports: [CommonModule, SharedModule, AddCityComponent],
-  templateUrl: './city.component.html',
-  styleUrl: './city.component.sass'
+    selector: 'app-city',
+    imports: [CommonModule, SharedModule, AddCityComponent],
+    templateUrl: './city.component.html',
+    styleUrl: './city.component.sass'
 })
 export class CityComponent extends TableComponent<City> {
 

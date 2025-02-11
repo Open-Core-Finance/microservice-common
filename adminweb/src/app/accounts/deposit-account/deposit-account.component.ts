@@ -9,11 +9,10 @@ import { AddDepositAccountComponent } from '../add-deposit-account/add-deposit-a
 import { DepositAccount } from 'src/app/classes/accounts/DepositAccount';
 
 @Component({
-  selector: 'app-deposit-account',
-  standalone: true,
-  imports: [CommonModule, SharedModule, AddDepositAccountComponent],
-  templateUrl: './deposit-account.component.html',
-  styleUrl: './deposit-account.component.sass'
+    selector: 'app-deposit-account',
+    imports: [CommonModule, SharedModule, AddDepositAccountComponent],
+    templateUrl: './deposit-account.component.html',
+    styleUrl: './deposit-account.component.sass'
 })
 export class DepositAccountComponent extends TableComponent<DepositAccount> {
 

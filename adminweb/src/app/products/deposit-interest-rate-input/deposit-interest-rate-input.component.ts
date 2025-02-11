@@ -9,16 +9,17 @@ import { ValueConstraint } from 'src/app/classes/products/ValueConstraint';
 import { TieredInterestItem } from 'src/app/classes/products/TieredInterestItem';
 
 @Component({
-  selector: 'app-deposit-interest-rate-input',
-  templateUrl: './deposit-interest-rate-input.component.html',
-  styleUrl: './deposit-interest-rate-input.component.sass',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => DepositInterestRateInputComponent),
-      multi: true
-    }
-  ]
+    selector: 'app-deposit-interest-rate-input',
+    templateUrl: './deposit-interest-rate-input.component.html',
+    styleUrl: './deposit-interest-rate-input.component.sass',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => DepositInterestRateInputComponent),
+            multi: true
+        }
+    ],
+    standalone: false
 })
 export class DepositInterestRateInputComponent implements OnInit, ControlValueAccessor, OnDestroy {
   isDisabled: boolean = false;

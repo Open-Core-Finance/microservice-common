@@ -19,11 +19,10 @@ import { Subscription } from 'rxjs';
 import { RegionService } from 'src/app/services/geocode.service';
 
 @Component({
-  selector: 'app-add-sub-region',
-  standalone: true,
-  imports: [CommonModule, SharedModule],
-  templateUrl: './add-sub-region.component.html',
-  styleUrl: './add-sub-region.component.sass'
+    selector: 'app-add-sub-region',
+    imports: [CommonModule, SharedModule],
+    templateUrl: './add-sub-region.component.html',
+    styleUrl: './add-sub-region.component.sass'
 })
 export class AddSubRegionComponent extends GeneralEntityAddComponent<SubRegion> implements OnDestroy, OnInit {
 

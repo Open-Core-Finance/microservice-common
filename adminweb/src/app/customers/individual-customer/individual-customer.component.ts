@@ -9,11 +9,10 @@ import { environment } from 'src/environments/environment';
 import { AddIndividualCustomerComponent } from '../add-individual-customer/add-individual-customer.component';
 
 @Component({
-  selector: 'app-individual-customer',
-  standalone: true,
-  imports: [CommonModule, SharedModule, AddIndividualCustomerComponent],
-  templateUrl: './individual-customer.component.html',
-  styleUrl: './individual-customer.component.sass'
+    selector: 'app-individual-customer',
+    imports: [CommonModule, SharedModule, AddIndividualCustomerComponent],
+    templateUrl: './individual-customer.component.html',
+    styleUrl: './individual-customer.component.sass'
 })
 export class IndividualCustomerComponent extends TableComponent<IndividualCustomer> {
 

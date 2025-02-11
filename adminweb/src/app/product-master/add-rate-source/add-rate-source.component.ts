@@ -5,9 +5,10 @@ import { GeneralEntityAddComponent } from 'src/app/generic-component/GeneralEnti
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-add-rate-source',
-  templateUrl: './add-rate-source.component.html',
-  styleUrl: './add-rate-source.component.sass'
+    selector: 'app-add-rate-source',
+    templateUrl: './add-rate-source.component.html',
+    styleUrl: './add-rate-source.component.sass',
+    standalone: false
 })
 export class AddRateSourceComponent extends GeneralEntityAddComponent<RateSource> {
 

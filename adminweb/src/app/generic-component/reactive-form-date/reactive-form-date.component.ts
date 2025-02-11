@@ -5,16 +5,17 @@ import { MatFormFieldAppearance } from '@angular/material/form-field';
 import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
-  selector: 'app-reactive-form-date',
-  templateUrl: './reactive-form-date.component.html',
-  styleUrl: './reactive-form-date.component.sass',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ReactiveFormDateComponent),
-      multi: true
-    }
-  ]
+    selector: 'app-reactive-form-date',
+    templateUrl: './reactive-form-date.component.html',
+    styleUrl: './reactive-form-date.component.sass',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => ReactiveFormDateComponent),
+            multi: true
+        }
+    ],
+    standalone: false
 })
 export class ReactiveFormDateComponent implements OnInit, ControlValueAccessor, OnDestroy {
 

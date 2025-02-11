@@ -6,9 +6,10 @@ import { formatDate } from '@angular/common';
 import { TableColumnUi } from 'src/app/classes/ui/UiTableDisplay';
 
 @Component({
-  selector: 'app-holiday',
-  templateUrl: './holiday.component.html',
-  styleUrl: './holiday.component.sass'
+    selector: 'app-holiday',
+    templateUrl: './holiday.component.html',
+    styleUrl: './holiday.component.sass',
+    standalone: false
 })
 export class HolidayComponent extends TableComponent<Holiday> {
 

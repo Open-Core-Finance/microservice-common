@@ -3,9 +3,10 @@ import { LanguageService } from 'src/app/services/language.service';
 import { MessageItem, UserMessage } from 'src/app/classes/UserMessage';
 
 @Component({
-  selector: 'app-general-error-panel',
-  templateUrl: './general-error-panel.component.html',
-  styleUrl: './general-error-panel.component.sass'
+    selector: 'app-general-error-panel',
+    templateUrl: './general-error-panel.component.html',
+    styleUrl: './general-error-panel.component.sass',
+    standalone: false
 })
 export class GeneralErrorPanelComponent implements AfterViewInit {
 

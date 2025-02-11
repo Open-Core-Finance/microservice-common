@@ -19,11 +19,10 @@ import { Country } from 'src/app/classes/geocode/Country';
 import { State } from 'src/app/classes/geocode/State';
 
 @Component({
-  selector: 'app-add-state',
-  standalone: true,
-  imports: [CommonModule, SharedModule],
-  templateUrl: './add-state.component.html',
-  styleUrl: './add-state.component.sass'
+    selector: 'app-add-state',
+    imports: [CommonModule, SharedModule],
+    templateUrl: './add-state.component.html',
+    styleUrl: './add-state.component.sass'
 })
 export class AddStateComponent extends GeneralEntityAddComponent<State> implements OnDestroy, OnInit {
 

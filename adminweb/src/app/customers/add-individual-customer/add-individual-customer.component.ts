@@ -16,12 +16,11 @@ import { DepositAccountComponent } from 'src/app/accounts/deposit-account/deposi
 import { LoanAccountComponent } from 'src/app/accounts/loan-account/loan-account.component';
 
 @Component({
-  selector: 'app-add-individual-customer',
-  standalone: true,
-  imports: [CommonModule, SharedModule, MatExpansionModule, CryptoAccountComponent, 
-    DepositAccountComponent, LoanAccountComponent],
-  templateUrl: './add-individual-customer.component.html',
-  styleUrl: './add-individual-customer.component.sass'
+    selector: 'app-add-individual-customer',
+    imports: [CommonModule, SharedModule, MatExpansionModule, CryptoAccountComponent,
+        DepositAccountComponent, LoanAccountComponent],
+    templateUrl: './add-individual-customer.component.html',
+    styleUrl: './add-individual-customer.component.sass'
 })
 export class AddIndividualCustomerComponent extends GeneralAddCustomerComponent<IndividualCustomer> {
 

@@ -6,16 +6,17 @@ import { CurrencyService } from 'src/app/services/currency.service';
 import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
-  selector: 'app-currency-value-input',
-  templateUrl: './currency-value-input.component.html',
-  styleUrl: './currency-value-input.component.sass',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => CurrencyValueInputComponent),
-      multi: true
-    }
-  ]
+    selector: 'app-currency-value-input',
+    templateUrl: './currency-value-input.component.html',
+    styleUrl: './currency-value-input.component.sass',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => CurrencyValueInputComponent),
+            multi: true
+        }
+    ],
+    standalone: false
 })
 export class CurrencyValueInputComponent implements OnInit, ControlValueAccessor, OnDestroy {
   isDisabled: boolean = false;

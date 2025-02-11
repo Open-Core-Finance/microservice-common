@@ -5,9 +5,10 @@ import { LoanProduct } from 'src/app/classes/products/LoanProduct';
 import { TableColumnUi } from 'src/app/classes/ui/UiTableDisplay';
 
 @Component({
-  selector: 'app-loan-product',
-  templateUrl: './loan-product.component.html',
-  styleUrl: './loan-product.component.sass'
+    selector: 'app-loan-product',
+    templateUrl: './loan-product.component.html',
+    styleUrl: './loan-product.component.sass',
+    standalone: false
 })
 export class LoanProductComponent extends TableComponent<LoanProduct> {
 

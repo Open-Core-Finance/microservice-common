@@ -19,9 +19,8 @@ import { Customer } from '../classes/customers/Customer';
 import { UiSelectItem } from '../classes/ui/UiFormInput';
 
 @Component({
-  standalone: true,
-  imports: [CommonModule, SharedModule],
-  template: ''
+    imports: [CommonModule, SharedModule],
+    template: ''
 })
 export abstract class GeneralAddCustomerComponent<T extends Customer> extends GeneralEntityAddComponent<T> implements OnDestroy, OnInit {
 

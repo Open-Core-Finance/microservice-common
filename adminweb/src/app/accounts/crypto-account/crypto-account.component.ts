@@ -9,11 +9,10 @@ import { CryptoAccount } from 'src/app/classes/accounts/DepositAccount';
 import { AddCryptoAccountComponent } from '../add-crypto-account/add-crypto-account.component';
 
 @Component({
-  selector: 'app-crypto-account',
-  standalone: true,
-  imports: [CommonModule, SharedModule, AddCryptoAccountComponent],
-  templateUrl: './crypto-account.component.html',
-  styleUrl: './crypto-account.component.sass'
+    selector: 'app-crypto-account',
+    imports: [CommonModule, SharedModule, AddCryptoAccountComponent],
+    templateUrl: './crypto-account.component.html',
+    styleUrl: './crypto-account.component.sass'
 })
 export class CryptoAccountComponent extends TableComponent<CryptoAccount> {
 

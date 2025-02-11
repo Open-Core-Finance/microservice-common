@@ -4,9 +4,10 @@ import { environment } from 'src/environments/environment';
 import { GeneralEntityAddComponent } from 'src/app/generic-component/GeneralEntityAddComponent';
 
 @Component({
-  selector: 'app-add-product-category',
-  templateUrl: './add-product-category.component.html',
-  styleUrl: './add-product-category.component.sass'
+    selector: 'app-add-product-category',
+    templateUrl: './add-product-category.component.html',
+    styleUrl: './add-product-category.component.sass',
+    standalone: false
 })
 export class AddProductCategoryComponent extends GeneralEntityAddComponent<ProductCategory>{
 

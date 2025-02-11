@@ -5,9 +5,10 @@ import {ProductType} from "../../classes/products/ProductType";
 import { TableColumnUi } from 'src/app/classes/ui/UiTableDisplay';
 
 @Component({
-  selector: 'app-product-type',
-  templateUrl: './product-type.component.html',
-  styleUrl: './product-type.component.sass'
+    selector: 'app-product-type',
+    templateUrl: './product-type.component.html',
+    styleUrl: './product-type.component.sass',
+    standalone: false
 })
 export class ProductTypeComponent extends TableComponent<ProductType> {
 

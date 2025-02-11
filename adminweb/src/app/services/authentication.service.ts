@@ -39,7 +39,7 @@ export class AuthenticationService implements OnDestroy, OnInit {
         } else {
           this.currentSessionSubject = new BehaviorSubject<LoginSession | null>(null);
         }
-        // Selected commonRole
+        // Selected role
         this.selectedRoleSubject = new BehaviorSubject<Role | null>(this.selectedRoleValue);
     }
 
@@ -119,7 +119,7 @@ export class AuthenticationService implements OnDestroy, OnInit {
         // Save session
         sessionStorage.setItem(AppSettings.LOCAL_KEY_SAVED_CREDENTIAL, JSON.stringify(session));
         this.currentSessionSubject.next(session);
-        // Load selected commonRole
+        // Load selected role
         var roleCount = session.userRoles.length;
         if (roleCount <= 0) {
             this.permissionDeniedError(userMessage);
@@ -127,15 +127,15 @@ export class AuthenticationService implements OnDestroy, OnInit {
         this.roleList = [];
         var errCount = 0;
         var successCount = 0;
-        session.userRoles.forEach(commonRole => {
-            if (commonRole.resourceId != null && commonRole.resourceId.trim().length > 0) {
+        session.userRoles.forEach(role => {
+            if (role.resourceId != null && role.resourceId.trim().length > 0) {
                 let headers = this.restService.initRequestHeaders();
-                const serviceUrl = environment.apiUrl.organization + "/" + commonRole.resourceId;
+                const serviceUrl = environment.apiUrl.organization + "/" + role.resourceId;
                 this.http.get<GeneralApiResponse>(serviceUrl, { headers }).subscribe({
                     next: (data: GeneralApiResponse) => {
                         if (data.status === 0) {
                             var org = data.result as Organization;
-                            var r = new Role(commonRole.roleId, commonRole.roleName, commonRole.resourceId, org);
+                            var r = new Role(role.roleId, role.roleName, role.resourceId, org);
                             this.roleList.push(r);
                             if (++successCount + errCount >= roleCount) {
                                 this.roleListSubject.next(this.roleList);
@@ -150,7 +150,7 @@ export class AuthenticationService implements OnDestroy, OnInit {
                     }
                 });
             } else {
-                var r = new Role(commonRole.roleId, commonRole.roleName, commonRole.resourceId, null);
+                var r = new Role(role.roleId, role.roleName, role.resourceId, null);
                 this.roleList.push(r);
                 if (++successCount + errCount >= roleCount) {
                     this.roleListSubject.next(this.roleList);
@@ -159,9 +159,9 @@ export class AuthenticationService implements OnDestroy, OnInit {
         });
     }
 
-    public saveSelectedRole(commonRole: Role) {
-        sessionStorage.setItem(AppSettings.LOCAL_KEY_SAVED_SELECTED_ROLE, JSON.stringify(commonRole));
-        this.selectedRoleSubject.next(commonRole);
+    public saveSelectedRole(role: Role) {
+        sessionStorage.setItem(AppSettings.LOCAL_KEY_SAVED_SELECTED_ROLE, JSON.stringify(role));
+        this.selectedRoleSubject.next(role);
     }
 
     public get selectedRoleValue(): Role | null {

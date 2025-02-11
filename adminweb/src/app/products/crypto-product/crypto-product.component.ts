@@ -6,9 +6,10 @@ import { CryptoProduct } from 'src/app/classes/products/CryptoProduct';
 import { TableColumnUi, TableUi } from 'src/app/classes/ui/UiTableDisplay';
 
 @Component({
-  selector: 'app-crypto-product',
-  templateUrl: './crypto-product.component.html',
-  styleUrl: './crypto-product.component.sass'
+    selector: 'app-crypto-product',
+    templateUrl: './crypto-product.component.html',
+    styleUrl: './crypto-product.component.sass',
+    standalone: false
 })
 export class CryptoProductComponent extends TableComponent<CryptoProduct> {
 

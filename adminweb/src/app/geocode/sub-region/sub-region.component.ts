@@ -21,11 +21,10 @@ import { Subscription } from 'rxjs';
 import { AddSubRegionComponent } from '../add-sub-region/add-sub-region.component';
 
 @Component({
-  selector: 'app-sub-region',
-  standalone: true,
-  imports: [CommonModule, SharedModule, AddSubRegionComponent],
-  templateUrl: './sub-region.component.html',
-  styleUrl: './sub-region.component.sass'
+    selector: 'app-sub-region',
+    imports: [CommonModule, SharedModule, AddSubRegionComponent],
+    templateUrl: './sub-region.component.html',
+    styleUrl: './sub-region.component.sass'
 })
 export class SubRegionComponent extends TableComponent<SubRegion> {
 

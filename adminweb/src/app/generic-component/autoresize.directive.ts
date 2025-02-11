@@ -1,7 +1,8 @@
 import { Directive, HostListener, ElementRef, Renderer2, AfterViewInit } from '@angular/core';
 
 @Directive({
-  selector: 'textarea[autoresize]'
+    selector: 'textarea[autoresize]',
+    standalone: false
 })
 export class AutoResizeDirective implements AfterViewInit {
 

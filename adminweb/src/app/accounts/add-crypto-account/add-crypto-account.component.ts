@@ -26,11 +26,10 @@ import { CryptoProduct } from 'src/app/classes/products/CryptoProduct';
 
 
 @Component({
-  selector: 'app-add-crypto-account',
-  standalone: true,
-  imports: [CommonModule, SharedModule, CurrencyModule],
-  templateUrl: './add-crypto-account.component.html',
-  styleUrl: './add-crypto-account.component.sass'
+    selector: 'app-add-crypto-account',
+    imports: [CommonModule, SharedModule, CurrencyModule],
+    templateUrl: './add-crypto-account.component.html',
+    styleUrl: './add-crypto-account.component.sass'
 })
 export class AddCryptoAccountComponent extends GeneralEntityAddComponent<CreateCryptoAccountRequest> implements OnDestroy, OnInit {
 

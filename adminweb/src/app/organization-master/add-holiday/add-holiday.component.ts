@@ -18,9 +18,10 @@ import { UiFormDate } from 'src/app/classes/ui/UiFormInput';
 import { UiFormCheckbox } from 'src/app/classes/ui/UiFormInput';
 
 @Component({
-  selector: 'app-add-holiday',
-  templateUrl: './add-holiday.component.html',
-  styleUrl: './add-holiday.component.sass'
+    selector: 'app-add-holiday',
+    templateUrl: './add-holiday.component.html',
+    styleUrl: './add-holiday.component.sass',
+    standalone: false
 })
 export class AddHolidayComponent extends GeneralEntityAddComponent<Holiday> implements OnInit, OnDestroy, AfterViewInit {
 

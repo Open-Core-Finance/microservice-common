@@ -7,25 +7,20 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.ApplicationPidFileWriter;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.util.StringUtils;
 import tech.corefinance.common.enums.CommonConstants;
-import org.springframework.cloud.openfeign.EnableFeignClients;
+
 import java.io.File;
 
-@SpringBootApplication(scanBasePackages = {
-        "tech.corefinance.userprofile", "tech.corefinance.common", "tech.corefinance.geocode",
-        "tech.corefinance.feign.client"
-})
-@EnableJpaRepositories(basePackages = {
-        "tech.corefinance.userprofile.repository", "tech.corefinance.common.jpa.repository",
-        "tech.corefinance.common.repository", "tech.corefinance.geocode.repository"
-})
-@EntityScan(basePackages = {
-        "tech.corefinance.geocode.entity", "tech.corefinance.common.jpa.model", "tech.corefinance.common.model",
-        "tech.corefinance.userprofile.entity"
-})
-@ConditionalOnProperty(prefix = "tech.app.enabled", name = "combined-nontenancy", havingValue = "true",matchIfMissing = true)
+@SpringBootApplication(
+        scanBasePackages = {"tech.corefinance.userprofile", "tech.corefinance.common", "tech.corefinance.geocode", "tech.corefinance.feign.client"})
+@EnableJpaRepositories(
+        basePackages = {"tech.corefinance.userprofile.repository", "tech.corefinance.common.jpa.repository", "tech.corefinance.common.repository", "tech.corefinance.geocode.repository", "tech.corefinance.userprofile.common.repository"})
+@EntityScan(
+        basePackages = {"tech.corefinance.geocode.entity", "tech.corefinance.common.jpa.model", "tech.corefinance.common.model", "tech.corefinance.userprofile.entity", "tech.corefinance.userprofile.common.entity"})
+@ConditionalOnProperty(prefix = "tech.app.enabled", name = "combined-nontenancy", havingValue = "true", matchIfMissing = true)
 @EnableFeignClients(basePackages = {"tech.corefinance.feign.client"})
 public class CombinedNontenancyApplication {
 

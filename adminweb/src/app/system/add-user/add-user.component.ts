@@ -14,12 +14,11 @@ import { SharedModule } from 'src/app/generic-component/SharedModule';
 import { GeneralEntityAddComponent } from 'src/app/generic-component/GeneralEntityAddComponent';
 
 @Component({
-  selector: 'app-add-user',
-  standalone: true,
-  imports: [CommonModule, MatCardModule, FormsModule, ReactiveFormsModule, MatInputModule, MatSelectModule, SharedModule,
-    MatButtonModule, MatFormFieldModule],
-  templateUrl: './add-user.component.html',
-  styleUrl: './add-user.component.sass'
+    selector: 'app-add-user',
+    imports: [CommonModule, MatCardModule, FormsModule, ReactiveFormsModule, MatInputModule, MatSelectModule, SharedModule,
+        MatButtonModule, MatFormFieldModule],
+    templateUrl: './add-user.component.html',
+    styleUrl: './add-user.component.sass'
 })
 export class AddUserComponent extends GeneralEntityAddComponent<User> implements OnDestroy {
 

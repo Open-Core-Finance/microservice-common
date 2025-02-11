@@ -3,9 +3,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { LanguageService } from '../../services/language.service';
 
 @Component({
-  selector: 'app-confirm-dialog',
-  templateUrl: './confirm-dialog.component.html',
-  styleUrls: ['./confirm-dialog.component.sass']
+    selector: 'app-confirm-dialog',
+    templateUrl: './confirm-dialog.component.html',
+    styleUrls: ['./confirm-dialog.component.sass'],
+    standalone: false
 })
 export class ConfirmDialogComponent {
   title: string;

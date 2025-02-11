@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import {AsyncPipe} from '@angular/common';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -77,8 +77,7 @@ import { LoanProductFeeInputComponent } from './product-master/loan-product-fee-
 import { CurrencyModule } from './generic-currency/CurrencyModule';
 import { NewAccountSettingComponent } from "./products/new-account-setting/new-account-setting.component";
 
-@NgModule({
-    declarations: [
+@NgModule({ declarations: [
         AppComponent,
         LoginComponent,
         HeaderComponent,
@@ -100,22 +99,18 @@ import { NewAccountSettingComponent } from "./products/new-account-setting/new-a
         DepositInterestRateInputComponent, DepositLimitInputComponent, WithdrawalLimitInputComponent,
         LoanInterestRateInputComponent, LoanRepaymentSchedulingInputComponent, ValueConstraintsInputComponent, LoanProductFeeInputComponent
     ],
-    providers: [
-        { provide: MAT_DATE_FORMATS, useClass: CustomDateFormat },
-    ],
     bootstrap: [AppComponent],
     exports: [
         MatButtonModule, MatInputModule, CurrencyModule, MatIconModule
-    ],
-    imports: [
-        BrowserModule, FormsModule, ReactiveFormsModule, SharedModule,
-        AppRoutingModule, HttpClientModule,
+    ], imports: [BrowserModule, FormsModule, ReactiveFormsModule, SharedModule,
+        AppRoutingModule,
         BrowserAnimationsModule, MatTooltipModule,
         MatButtonModule, MatInputModule, MatMenuModule, MatIconModule, MatCardModule, MatSelectModule,
         MatExpansionModule, MatPaginatorModule, MatTableModule, MatSortModule, MatProgressSpinnerModule,
         MatDialogModule, MatAutocompleteModule, MatDatepickerModule, MatNativeDateModule, MatDividerModule,
         MatListModule, MatToolbarModule, MatSidenavModule, AsyncPipe, MatCheckboxModule,
-        CdkDropList, CdkDrag, CurrencyModule, NewAccountSettingComponent
-    ]
-})
+        CdkDropList, CdkDrag, CurrencyModule, NewAccountSettingComponent], providers: [
+        { provide: MAT_DATE_FORMATS, useClass: CustomDateFormat },
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule { }

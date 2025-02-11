@@ -5,9 +5,10 @@ import { GlProduct } from 'src/app/classes/products/GlProduct';
 import { GeneralProductAddComponent } from '../GeneralProductAddComponent';
 
 @Component({
-  selector: 'app-add-gl-product',
-  templateUrl: './add-gl-product.component.html',
-  styleUrl: './add-gl-product.component.sass'
+    selector: 'app-add-gl-product',
+    templateUrl: './add-gl-product.component.html',
+    styleUrl: './add-gl-product.component.sass',
+    standalone: false
 })
 export class AddGlProductComponent extends GeneralProductAddComponent<GlProduct> implements AfterViewInit, OnInit {
 

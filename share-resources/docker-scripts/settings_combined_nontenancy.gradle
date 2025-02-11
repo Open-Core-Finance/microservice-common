@@ -1,4 +1,4 @@
 rootProject.name = 'corefinance'
 include "microservice-common", "microservice-common-jpa", "microservice-common-mongodb"
 include "userprofile", "geocode", "common-feign-client", "common-account", "common-product"
-include "combined-nontenancy"
+include "combined-nontenancy", "common-kafka", "common-userprofile"

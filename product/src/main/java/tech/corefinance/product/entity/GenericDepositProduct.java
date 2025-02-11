@@ -1,13 +1,20 @@
 package tech.corefinance.product.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.MappedSuperclass;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import tech.corefinance.product.common.enums.CreditArrangementManaged;
 import tech.corefinance.product.common.enums.FrequencyOptionYearly;
-import tech.corefinance.product.common.model.*;
+import tech.corefinance.product.common.model.CurrencyValue;
+import tech.corefinance.product.common.model.DepositLimit;
+import tech.corefinance.product.common.model.DepositProductFee;
+import tech.corefinance.product.common.model.DepositProductInterestRate;
+import tech.corefinance.product.common.model.WithdrawalLimit;
 
 import java.util.List;
 
@@ -38,7 +45,6 @@ import java.util.List;
 @Data
 @MappedSuperclass
 @EqualsAndHashCode(callSuper = true)
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class GenericDepositProduct extends Product {
 
     @JdbcTypeCode(SqlTypes.JSON)

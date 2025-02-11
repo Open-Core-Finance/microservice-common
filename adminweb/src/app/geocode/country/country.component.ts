@@ -9,11 +9,10 @@ import { AddCountryComponent } from '../add-country/add-country.component';
 import { Country } from 'src/app/classes/geocode/Country';
 
 @Component({
-  selector: 'app-country',
-  standalone: true,
-  imports: [CommonModule, SharedModule, AddCountryComponent],
-  templateUrl: './country.component.html',
-  styleUrl: './country.component.sass'
+    selector: 'app-country',
+    imports: [CommonModule, SharedModule, AddCountryComponent],
+    templateUrl: './country.component.html',
+    styleUrl: './country.component.sass'
 })
 export class CountryComponent extends TableComponent<Country> {
 

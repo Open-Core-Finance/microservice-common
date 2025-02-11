@@ -13,19 +13,18 @@ import { CourseScheduleDto } from 'src/app/classes/registration/Course';
 import { DayOfWeek } from 'src/app/classes/DayOfWeek';
 
 @Component({
-  selector: 'app-weekly-schedule',
-  templateUrl: './weekly-schedule.component.html',
-  styleUrl: './weekly-schedule.component.sass',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => WeeklyScheduleComponent),
-      multi: true
-    }
-  ],
-  standalone: true,
-  imports: [CommonModule, SharedModule, MatFormFieldModule, MatAutocompleteModule, FormsModule, ReactiveFormsModule,
-    MatIconModule, MatInputModule]
+    selector: 'app-weekly-schedule',
+    templateUrl: './weekly-schedule.component.html',
+    styleUrl: './weekly-schedule.component.sass',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => WeeklyScheduleComponent),
+            multi: true
+        }
+    ],
+    imports: [CommonModule, SharedModule, MatFormFieldModule, MatAutocompleteModule, FormsModule, ReactiveFormsModule,
+        MatIconModule, MatInputModule]
 })
 export class WeeklyScheduleComponent implements OnInit, ControlValueAccessor, OnDestroy {
 

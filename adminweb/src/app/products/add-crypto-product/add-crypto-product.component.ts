@@ -13,9 +13,10 @@ import { CryptoProduct } from 'src/app/classes/products/CryptoProduct';
 import { ExpansionPanelInputGroup, UiFormCheckbox, UiFormComplexInput, UiFormInput, UiFormItem } from 'src/app/classes/ui/UiFormInput';
 
 @Component({
-  selector: 'app-add-crypto-product',
-  templateUrl: './add-crypto-product.component.html',
-  styleUrl: './add-crypto-product.component.sass'
+    selector: 'app-add-crypto-product',
+    templateUrl: './add-crypto-product.component.html',
+    styleUrl: './add-crypto-product.component.sass',
+    standalone: false
 })
 export class AddCryptoProductComponent extends GeneralProductAddComponent<CryptoProduct> implements AfterViewInit, OnInit {
 

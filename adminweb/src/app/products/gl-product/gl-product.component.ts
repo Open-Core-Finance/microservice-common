@@ -5,9 +5,10 @@ import { GlProduct } from 'src/app/classes/products/GlProduct';
 import { TableColumnUi, TableUi } from 'src/app/classes/ui/UiTableDisplay';
 
 @Component({
-  selector: 'app-gl-product',
-  templateUrl: './gl-product.component.html',
-  styleUrl: './gl-product.component.sass'
+    selector: 'app-gl-product',
+    templateUrl: './gl-product.component.html',
+    styleUrl: './gl-product.component.sass',
+    standalone: false
 })
 export class GlProductComponent extends TableComponent<GlProduct> {
   

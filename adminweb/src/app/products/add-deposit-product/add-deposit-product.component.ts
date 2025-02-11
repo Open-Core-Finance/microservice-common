@@ -12,9 +12,10 @@ import { FrequencyOptionYearly } from 'src/app/classes/products/FrequencyOption'
 import { ExpansionPanelInputGroup, UiFormCheckbox, UiFormComplexInput, UiFormInput, UiFormItem } from 'src/app/classes/ui/UiFormInput';
 
 @Component({
-  selector: 'app-add-deposit-product',
-  templateUrl: './add-deposit-product.component.html',
-  styleUrl: './add-deposit-product.component.sass'
+    selector: 'app-add-deposit-product',
+    templateUrl: './add-deposit-product.component.html',
+    styleUrl: './add-deposit-product.component.sass',
+    standalone: false
 })
 export class AddDepositProductComponent extends GeneralProductAddComponent<DepositProduct> implements AfterViewInit, OnInit {
   creditArrangementManagedEnum = CreditArrangementManaged;

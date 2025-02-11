@@ -18,11 +18,10 @@ import { Subscription } from 'rxjs';
 import { CurrencyModule } from 'src/app/generic-currency/CurrencyModule';
 
 @Component({
-  selector: 'app-add-gl-account',
-  standalone: true,
-  imports: [CommonModule, SharedModule, CurrencyModule],
-  templateUrl: './add-gl-account.component.html',
-  styleUrl: './add-gl-account.component.sass'
+    selector: 'app-add-gl-account',
+    imports: [CommonModule, SharedModule, CurrencyModule],
+    templateUrl: './add-gl-account.component.html',
+    styleUrl: './add-gl-account.component.sass'
 })
 export class AddGlAccountComponent extends GeneralEntityAddComponent<CreateGlAccountRequest> implements OnDestroy, OnInit {
 

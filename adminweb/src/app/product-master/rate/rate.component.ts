@@ -6,9 +6,10 @@ import { TableComponent } from 'src/app/generic-component/TableComponent';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-rate',
-  templateUrl: './rate.component.html',
-  styleUrl: './rate.component.sass'
+    selector: 'app-rate',
+    templateUrl: './rate.component.html',
+    styleUrl: './rate.component.sass',
+    standalone: false
 })
 export class RateComponent extends TableComponent<Rate> {
 

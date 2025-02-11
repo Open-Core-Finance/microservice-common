@@ -14,9 +14,10 @@ import {RouterOutlet} from "@angular/router";
 import { Organization } from './classes/Organization';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.sass']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.sass'],
+    standalone: false
 })
 export class AppComponent implements OnDestroy, OnInit, AfterViewInit {
   title = 'corefinance-adminweb';
@@ -162,7 +163,7 @@ export class AppComponent implements OnDestroy, OnInit, AfterViewInit {
     const languageService = this.languageService;
     const userManagementItem = new MenuItem(environment.frontEndUrl.userManagement, new LanguageKeyLabelProvider(languageService, "menu.user", []), "", "person", null);
     const roleManagementItem = new MenuItem(environment.frontEndUrl.roleManagement,
-        new LanguageKeyLabelProvider(languageService, "menu.commonRole", []), "", "user_attributes", null);
+        new LanguageKeyLabelProvider(languageService, "menu.role", []), "", "user_attributes", null);
     return new MenuGroup("", new LanguageKeyLabelProvider(languageService, "menu.groupUam", []),
       [userManagementItem, roleManagementItem], null);
   }

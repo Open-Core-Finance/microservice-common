@@ -4,7 +4,7 @@ import {Order, OrderDirection, Paging} from '../classes/Paging';
 import {RestService} from '../services/rest.service';
 import {GeneralApiResponse} from '../classes/GeneralApiResponse';
 import {AuthenticationService} from "../services/authentication.service";
-import {HttpClient} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import {Router} from "@angular/router";
 import {UserMessage} from '../classes/UserMessage';
 import {BehaviorSubject, Subscription} from "rxjs";
@@ -22,7 +22,8 @@ import { TableColumnUi, TableUi } from '../classes/ui/UiTableDisplay';
 import { OrganizationService } from '../services/organization.service';
 
 @Component({
-    template: ''
+    template: '',
+    standalone: false
 })
 export abstract class TableComponent<T extends any> implements AfterViewInit, OnInit {
 

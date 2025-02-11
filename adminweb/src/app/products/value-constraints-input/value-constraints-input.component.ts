@@ -5,16 +5,17 @@ import { ValueConstraint } from 'src/app/classes/products/ValueConstraint';
 import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
-  selector: 'app-value-constraints-input',
-  templateUrl: './value-constraints-input.component.html',
-  styleUrl: './value-constraints-input.component.sass',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ValueConstraintsInputComponent),
-      multi: true
-    }
-  ]
+    selector: 'app-value-constraints-input',
+    templateUrl: './value-constraints-input.component.html',
+    styleUrl: './value-constraints-input.component.sass',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => ValueConstraintsInputComponent),
+            multi: true
+        }
+    ],
+    standalone: false
 })
 export class ValueConstraintsInputComponent implements OnInit, ControlValueAccessor, OnDestroy {
   isDisabled: boolean = false;

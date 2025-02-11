@@ -8,19 +8,19 @@ import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {MatDialogModule} from '@angular/material/dialog';
 import { Role } from '../../classes/Role';
-import { AddRoleComponent } from '../add-commonRole/add-commonRole.component';
+import { AddRoleComponent } from '../add-role/add-role.component';
 import { PermissionComponent } from '../permission/permission.component';
 import { TableComponent } from 'src/app/generic-component/TableComponent';
 import { SharedModule } from 'src/app/generic-component/SharedModule';
 import { TableColumnUi, TableUi } from 'src/app/classes/ui/UiTableDisplay';
 
 @Component({
-  selector: 'app-commonRole',
+  selector: 'app-role',
   standalone: true,
   imports: [MatProgressSpinnerModule, MatTableModule, MatIconModule, CommonModule, SharedModule,
     MatPaginatorModule, MatFormFieldModule, MatDialogModule, AddRoleComponent, PermissionComponent],
-  templateUrl: './commonRole.component.html',
-  styleUrl: './commonRole.component.sass'
+  templateUrl: './role.component.html',
+  styleUrl: './role.component.sass'
 })
 export class RoleComponent extends TableComponent<Role> {
 
@@ -35,7 +35,7 @@ export class RoleComponent extends TableComponent<Role> {
   }
 
   getServiceUrl() {
-    return environment.apiUrl.commonRole;
+    return environment.apiUrl.role;
   }
 
   override createNewItem(): Role {
@@ -55,6 +55,6 @@ export class RoleComponent extends TableComponent<Role> {
   }
 
   override permissionResourceName(): string {
-    return "commonRole";
+    return "role";
   }
 }

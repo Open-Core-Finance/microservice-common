@@ -1,7 +1,11 @@
 package tech.corefinance.product.filter;
 
 import jakarta.annotation.PostConstruct;
-import jakarta.servlet.*;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
@@ -20,13 +24,13 @@ import java.util.List;
 @Slf4j
 public class TenantIgnoreFilter implements Filter, Ordered {
 
-    private static List<Class<?>> controllerToIgnoreTenant = List.of(OrganizationController.class, CurrencyController.class,
-            ResourceActionController.class);
-    private List<String> listApplyUrls = new LinkedList<>();
-    
+    private static final List<Class<?>> controllerToIgnoreTenant =
+            List.of(OrganizationController.class, CurrencyController.class, ResourceActionController.class);
+    private final List<String> listApplyUrls = new LinkedList<>();
+
     @PostConstruct
     public void postConstruct() {
-        controllerToIgnoreTenant.forEach( c -> {
+        controllerToIgnoreTenant.forEach(c -> {
             var values = c.getAnnotation(RequestMapping.class).value();
             listApplyUrls.addAll(List.of(values));
         });
@@ -38,8 +42,7 @@ public class TenantIgnoreFilter implements Filter, Ordered {
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         var requestUri = ((HttpServletRequest) request).getRequestURI();
         var tenantContext = TenantContext.getInstance();
         var currentTenant = tenantContext.getTenantId();

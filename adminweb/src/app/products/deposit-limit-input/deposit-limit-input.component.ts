@@ -6,16 +6,17 @@ import { LanguageService } from 'src/app/services/language.service';
 import { CurrencyService } from 'src/app/services/currency.service';
 
 @Component({
-  selector: 'app-deposit-limit-input',
-  templateUrl: './deposit-limit-input.component.html',
-  styleUrl: './deposit-limit-input.component.sass',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => DepositLimitInputComponent),
-      multi: true
-    }
-  ]
+    selector: 'app-deposit-limit-input',
+    templateUrl: './deposit-limit-input.component.html',
+    styleUrl: './deposit-limit-input.component.sass',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => DepositLimitInputComponent),
+            multi: true
+        }
+    ],
+    standalone: false
 })
 export class DepositLimitInputComponent implements OnInit, ControlValueAccessor, OnDestroy {
   isDisabled: boolean = false;

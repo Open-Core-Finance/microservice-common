@@ -7,9 +7,10 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { GeneralEntityAddComponent } from 'src/app/generic-component/GeneralEntityAddComponent';
 
 @Component({
-  selector: 'app-add-branch',
-  templateUrl: './add-branch.component.html',
-  styleUrl: './add-branch.component.sass'
+    selector: 'app-add-branch',
+    templateUrl: './add-branch.component.html',
+    styleUrl: './add-branch.component.sass',
+    standalone: false
 })
 export class AddBranchComponent extends GeneralEntityAddComponent<Branch> {
 

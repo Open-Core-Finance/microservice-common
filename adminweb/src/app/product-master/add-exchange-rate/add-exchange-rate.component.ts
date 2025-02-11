@@ -15,9 +15,10 @@ import { Currency } from 'src/app/classes/Currency';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-add-exchange-rate',
-  templateUrl: './add-exchange-rate.component.html',
-  styleUrl: './add-exchange-rate.component.sass'
+    selector: 'app-add-exchange-rate',
+    templateUrl: './add-exchange-rate.component.html',
+    styleUrl: './add-exchange-rate.component.sass',
+    standalone: false
 })
 export class AddExchangeRateComponent extends GeneralEntityAddComponent<ExchangeRate>{
 

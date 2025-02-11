@@ -7,16 +7,17 @@ import { TieredInterestItem } from 'src/app/classes/products/TieredInterestItem'
 import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
-  selector: 'app-tiered-interest-input',
-  templateUrl: './tiered-interest-input.component.html',
-  styleUrl: './tiered-interest-input.component.sass',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => TieredInterestInputComponent),
-      multi: true
-    }
-  ]
+    selector: 'app-tiered-interest-input',
+    templateUrl: './tiered-interest-input.component.html',
+    styleUrl: './tiered-interest-input.component.sass',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => TieredInterestInputComponent),
+            multi: true
+        }
+    ],
+    standalone: false
 })
 export class TieredInterestInputComponent implements OnInit, ControlValueAccessor, OnDestroy {
   _value: TieredInterestItem[] = [];

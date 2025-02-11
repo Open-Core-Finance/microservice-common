@@ -18,9 +18,10 @@ import { OrganizationService } from 'src/app/services/organization.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
-  selector: 'app-add-organization',
-  templateUrl: './add-organization.component.html',
-  styleUrls: ['./add-organization.component.sass']
+    selector: 'app-add-organization',
+    templateUrl: './add-organization.component.html',
+    styleUrls: ['./add-organization.component.sass'],
+    standalone: false
 })
 export class AddOrganizationComponent extends GeneralEntityAddComponent<Organization> implements OnDestroy, OnInit {
 
