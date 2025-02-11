@@ -1,6 +1,9 @@
 package tech.corefinance.account.deposit.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.MappedSuperclass;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -20,7 +23,6 @@ import java.util.List;
 @MappedSuperclass
 @Data
 @EqualsAndHashCode(callSuper = true)
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class GenericDepositAccount extends Account {
 
     @Column(name = "allow_deposit_after_maturity_date")

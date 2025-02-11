@@ -11,13 +11,12 @@ import { DepositAccountComponent } from 'src/app/accounts/deposit-account/deposi
 import { LoanAccountComponent } from 'src/app/accounts/loan-account/loan-account.component';
 
 @Component({
-  selector: 'app-add-corporate-customer',
-  standalone: true,
-  imports: [CommonModule, SharedModule, MatExpansionModule, CryptoAccountComponent,
-    DepositAccountComponent, LoanAccountComponent
-  ],
-  templateUrl: './add-corporate-customer.component.html',
-  styleUrl: './add-corporate-customer.component.sass'
+    selector: 'app-add-corporate-customer',
+    imports: [CommonModule, SharedModule, MatExpansionModule, CryptoAccountComponent,
+        DepositAccountComponent, LoanAccountComponent
+    ],
+    templateUrl: './add-corporate-customer.component.html',
+    styleUrl: './add-corporate-customer.component.sass'
 })
 export class AddCorporateCustomerComponent extends GeneralAddCustomerComponent<CorporateCustomer> {
 

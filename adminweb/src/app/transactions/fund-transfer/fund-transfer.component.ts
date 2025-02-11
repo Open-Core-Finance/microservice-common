@@ -21,11 +21,10 @@ import { Account } from 'src/app/classes/accounts/Account';
 
 
 @Component({
-  selector: 'app-fund-transfer',
-  standalone: true,
-  imports: [CommonModule, SharedModule],
-  templateUrl: './fund-transfer.component.html',
-  styleUrl: './fund-transfer.component.sass'
+    selector: 'app-fund-transfer',
+    imports: [CommonModule, SharedModule],
+    templateUrl: './fund-transfer.component.html',
+    styleUrl: './fund-transfer.component.sass'
 })
 export class FundTransferComponent extends GeneralEntityAddComponent<InternalFundTransfer> implements OnDestroy {
 

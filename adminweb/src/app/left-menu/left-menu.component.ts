@@ -8,9 +8,10 @@ import { Subscription } from 'rxjs';
 import { Organization } from '../classes/Organization';
 
 @Component({
-  selector: 'app-left-menu',
-  templateUrl: './left-menu.component.html',
-  styleUrls: ['./left-menu.component.sass']
+    selector: 'app-left-menu',
+    templateUrl: './left-menu.component.html',
+    styleUrls: ['./left-menu.component.sass'],
+    standalone: false
 })
 export class LeftMenuComponent implements OnInit, OnDestroy {
 
@@ -29,7 +30,7 @@ export class LeftMenuComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.selectedRoleSubscription?.unsubscribe();
-    this.selectedRoleSubscription = this.auth.selectedRoleSubject.subscribe( commonRole => this.selectedRole = commonRole);
+    this.selectedRoleSubscription = this.auth.selectedRoleSubject.subscribe( role => this.selectedRole = role);
     this.organizationSubscription?.unsubscribe();
     this.organizationSubscription = this.organizationService.organizationSubject.subscribe(org => this.organization = org);
   }

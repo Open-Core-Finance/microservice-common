@@ -4,7 +4,7 @@ export const environment = {
     production: true,
     apiUrlRoot: '',
     apiUrl: {
-        userprofile: '', organization: '', commonRole: '', common: '', authentication: '', productService: '',
+        userprofile: '', organization: '', role: '', common: '', authentication: '', productService: '',
         currency: '', holiday: '', branch: '', productCategory: '', exchangeRate: '', rateSource: '', rate: '',
         depositProduct: '', productType: '', glProduct: '', cryptoProduct: '', loanProduct: '', withdrawalChannel: '',
         user: '', glAccountService: '', glAccount: '', customerService: '', individualCustomer: '', corporateCustomer: '',
@@ -17,8 +17,8 @@ export const environment = {
         refreshToken: '/refresh-token',
         resourceActions: '/resource-actions',
         permissions: "/permissions",
-        permissionByRoles: "/permissions/load-by-commonRoles",
-        permissionOverrdieByRoles: "/permissions/override-by-commonRoles/"
+        permissionByRoles: "/permissions/load-by-roles",
+        permissionOverrdieByRoles: "/permissions/override-by-roles/"
     },
     frontEndUrl: {
         login: "login",
@@ -38,7 +38,7 @@ export const environment = {
         rates: "rates",
         rateSources: "rate-sources",
         userManagement: "user-management",
-        roleManagement: "commonRole-management",
+        roleManagement: "role-management",
         depositAccounts: "deposit-accounts",
         loanAccounts: "loan-accounts",
         glAccounts: "gl-accounts",
@@ -64,7 +64,7 @@ export function rebuildEnvironment() {
     // Userprofile
     environment.apiUrl.authentication = environment.apiUrl.userprofile + "/authentication";
     environment.apiUrl.user = environment.apiUrl.userprofile + "/userprofiles";
-    environment.apiUrl.commonRole = environment.apiUrl.userprofile + "/commonRoles";
+    environment.apiUrl.role = environment.apiUrl.userprofile + "/roles";
     // Product
     environment.apiUrl.organization = environment.apiUrl.productService + "/organizations";
     environment.apiUrl.currency = environment.apiUrl.productService + "/currencies";

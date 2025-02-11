@@ -7,16 +7,17 @@ import { UiSelectItem } from 'src/app/classes/ui/UiFormInput';
 import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
-  selector: 'app-reactive-form-input',
-  templateUrl: './reactive-form-input.component.html',
-  styleUrl: './reactive-form-input.component.sass',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ReactiveFormInputComponent),
-      multi: true
-    }
-  ]
+    selector: 'app-reactive-form-input',
+    templateUrl: './reactive-form-input.component.html',
+    styleUrl: './reactive-form-input.component.sass',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => ReactiveFormInputComponent),
+            multi: true
+        }
+    ],
+    standalone: false
 })
 export class ReactiveFormInputComponent implements OnInit, ControlValueAccessor, OnDestroy {
 

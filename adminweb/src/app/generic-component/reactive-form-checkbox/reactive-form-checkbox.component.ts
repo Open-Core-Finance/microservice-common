@@ -5,16 +5,17 @@ import { MatFormFieldAppearance } from '@angular/material/form-field';
 import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
-  selector: 'app-reactive-form-checkbox',
-  templateUrl: './reactive-form-checkbox.component.html',
-  styleUrl: './reactive-form-checkbox.component.sass',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ReactiveFormCheckboxComponent),
-      multi: true
-    }
-  ]
+    selector: 'app-reactive-form-checkbox',
+    templateUrl: './reactive-form-checkbox.component.html',
+    styleUrl: './reactive-form-checkbox.component.sass',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => ReactiveFormCheckboxComponent),
+            multi: true
+        }
+    ],
+    standalone: false
 })
 export class ReactiveFormCheckboxComponent implements OnInit, ControlValueAccessor, OnDestroy {
 

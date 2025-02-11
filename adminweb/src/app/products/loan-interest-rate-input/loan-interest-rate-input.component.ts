@@ -10,16 +10,17 @@ import { InterestDayInYear } from 'src/app/classes/products/InterestDayInYear';
 import { InterestCalculationMethod } from 'src/app/classes/products/InterestCalculationMethod';
 
 @Component({
-  selector: 'app-loan-interest-rate-input',
-  templateUrl: './loan-interest-rate-input.component.html',
-  styleUrl: './loan-interest-rate-input.component.sass',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => LoanInterestRateInputComponent),
-      multi: true
-    }
-  ]
+    selector: 'app-loan-interest-rate-input',
+    templateUrl: './loan-interest-rate-input.component.html',
+    styleUrl: './loan-interest-rate-input.component.sass',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => LoanInterestRateInputComponent),
+            multi: true
+        }
+    ],
+    standalone: false
 })
 export class LoanInterestRateInputComponent implements OnInit, ControlValueAccessor, OnDestroy {
   isDisabled: boolean = false;

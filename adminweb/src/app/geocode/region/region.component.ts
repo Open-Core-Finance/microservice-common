@@ -9,11 +9,10 @@ import { environment } from 'src/environments/environment';
 import { AddRegionComponent } from '../add-region/add-region.component';
 
 @Component({
-  selector: 'app-region',
-  standalone: true,
-  imports: [CommonModule, SharedModule, AddRegionComponent],
-  templateUrl: './region.component.html',
-  styleUrl: './region.component.sass'
+    selector: 'app-region',
+    imports: [CommonModule, SharedModule, AddRegionComponent],
+    templateUrl: './region.component.html',
+    styleUrl: './region.component.sass'
 })
 export class RegionComponent extends TableComponent<Region> {
 

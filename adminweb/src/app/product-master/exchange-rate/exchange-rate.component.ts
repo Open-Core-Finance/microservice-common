@@ -5,9 +5,10 @@ import { TableComponent } from 'src/app/generic-component/TableComponent';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-exchange-rate',
-  templateUrl: './exchange-rate.component.html',
-  styleUrl: './exchange-rate.component.sass'
+    selector: 'app-exchange-rate',
+    templateUrl: './exchange-rate.component.html',
+    styleUrl: './exchange-rate.component.sass',
+    standalone: false
 })
 export class ExchangeRateComponent extends TableComponent<ExchangeRate> {
 

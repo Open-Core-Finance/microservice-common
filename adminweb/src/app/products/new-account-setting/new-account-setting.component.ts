@@ -11,19 +11,18 @@ import { SharedModule } from 'src/app/generic-component/SharedModule';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 
 @Component({
-  selector: 'app-new-account-setting',
-  standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatSelectModule, MatInputModule, SharedModule,
-    MatCheckboxModule],
-  templateUrl: './new-account-setting.component.html',
-  styleUrl: './new-account-setting.component.sass',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => NewAccountSettingComponent),
-      multi: true
-    }
-  ]
+    selector: 'app-new-account-setting',
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatSelectModule, MatInputModule, SharedModule,
+        MatCheckboxModule],
+    templateUrl: './new-account-setting.component.html',
+    styleUrl: './new-account-setting.component.sass',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => NewAccountSettingComponent),
+            multi: true
+        }
+    ]
 })
 export class NewAccountSettingComponent implements OnInit, ControlValueAccessor, OnDestroy {
   disabled: boolean = false;

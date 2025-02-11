@@ -7,16 +7,17 @@ import { ValueConstraint } from 'src/app/classes/products/ValueConstraint';
 import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
-  selector: 'app-loan-repayment-scheduling-input',
-  templateUrl: './loan-repayment-scheduling-input.component.html',
-  styleUrl: './loan-repayment-scheduling-input.component.sass',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => LoanRepaymentSchedulingInputComponent),
-      multi: true
-    }
-  ]
+    selector: 'app-loan-repayment-scheduling-input',
+    templateUrl: './loan-repayment-scheduling-input.component.html',
+    styleUrl: './loan-repayment-scheduling-input.component.sass',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => LoanRepaymentSchedulingInputComponent),
+            multi: true
+        }
+    ],
+    standalone: false
 })
 export class LoanRepaymentSchedulingInputComponent implements OnInit, ControlValueAccessor, OnDestroy {
   isDisabled: boolean = false;

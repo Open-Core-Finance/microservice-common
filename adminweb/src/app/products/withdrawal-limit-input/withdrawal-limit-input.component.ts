@@ -12,16 +12,17 @@ import { RestService } from 'src/app/services/rest.service';
 import { CommonService } from 'src/app/services/common.service';
 
 @Component({
-  selector: 'app-withdrawal-limit-input',
-  templateUrl: './withdrawal-limit-input.component.html',
-  styleUrl: './withdrawal-limit-input.component.sass',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => WithdrawalLimitInputComponent),
-      multi: true
-    }
-  ]
+    selector: 'app-withdrawal-limit-input',
+    templateUrl: './withdrawal-limit-input.component.html',
+    styleUrl: './withdrawal-limit-input.component.sass',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => WithdrawalLimitInputComponent),
+            multi: true
+        }
+    ],
+    standalone: false
 })
 export class WithdrawalLimitInputComponent implements OnInit, ControlValueAccessor, OnDestroy {
   isDisabled: boolean = false;

@@ -10,11 +10,10 @@ import { UiFormCheckbox } from 'src/app/classes/ui/UiFormInput';
 import { SharedModule } from 'src/app/generic-component/SharedModule';
 
 @Component({
-  selector: 'app-add-region',
-  standalone: true,
-  imports: [CommonModule, SharedModule],
-  templateUrl: './add-region.component.html',
-  styleUrl: './add-region.component.sass'
+    selector: 'app-add-region',
+    imports: [CommonModule, SharedModule],
+    templateUrl: './add-region.component.html',
+    styleUrl: './add-region.component.sass'
 })
 export class AddRegionComponent extends GeneralEntityAddComponent<Region> implements OnDestroy, OnInit {
 

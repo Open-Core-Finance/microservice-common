@@ -8,16 +8,17 @@ import { CurrencyService } from 'src/app/services/currency.service';
 import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
-  selector: 'app-deposit-product-fee-input',
-  templateUrl: './deposit-product-fee-input.component.html',
-  styleUrl: './deposit-product-fee-input.component.sass',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => DepositProductFeeInputComponent),
-      multi: true
-    }
-  ]
+    selector: 'app-deposit-product-fee-input',
+    templateUrl: './deposit-product-fee-input.component.html',
+    styleUrl: './deposit-product-fee-input.component.sass',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => DepositProductFeeInputComponent),
+            multi: true
+        }
+    ],
+    standalone: false
 })
 export class DepositProductFeeInputComponent implements OnInit, ControlValueAccessor, OnDestroy {
   isDisabled: boolean = false;

@@ -21,7 +21,8 @@ import { AuthenticationService } from "../services/authentication.service";
 import { ExpansionPanelInputGroup, UiFormCheckbox, UiFormComplexInput, UiFormInput, UiFormItem, UiFormSelect, UiFormTextarea, UiSelectItem } from "../classes/ui/UiFormInput";
 
 @Component({
-    template: ''
+    template: '',
+    standalone: false
 })
 export abstract class GeneralProductAddComponent<T extends Product> extends GeneralEntityAddComponent<T> implements OnInit, AfterViewInit, OnDestroy {
 

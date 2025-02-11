@@ -6,9 +6,10 @@ import {DepositProduct} from "../../classes/products/DepositProduct";
 import { TableColumnUi, TableUi } from 'src/app/classes/ui/UiTableDisplay';
 
 @Component({
-  selector: 'app-deposit-product',
-  templateUrl: './deposit-product.component.html',
-  styleUrl: './deposit-product.component.sass'
+    selector: 'app-deposit-product',
+    templateUrl: './deposit-product.component.html',
+    styleUrl: './deposit-product.component.sass',
+    standalone: false
 })
 export class DepositProductComponent extends TableComponent<DepositProduct> {
 

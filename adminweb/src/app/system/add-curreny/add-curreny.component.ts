@@ -14,9 +14,10 @@ import { UiFormInput, UiFormItem, UiFormSelect } from 'src/app/classes/ui/UiForm
 import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
-  selector: 'app-add-curreny',
-  templateUrl: './add-curreny.component.html',
-  styleUrl: './add-curreny.component.sass'
+    selector: 'app-add-curreny',
+    templateUrl: './add-curreny.component.html',
+    styleUrl: './add-curreny.component.sass',
+    standalone: false
 })
 export class AddCurrenyComponent extends GeneralEntityAddComponent<Currency> implements OnDestroy {
 

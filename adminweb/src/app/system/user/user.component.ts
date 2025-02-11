@@ -14,12 +14,11 @@ import { TableComponent } from 'src/app/generic-component/TableComponent';
 import {  TableColumnUi } from 'src/app/classes/ui/UiTableDisplay';
 
 @Component({
-  selector: 'app-user',
-  standalone: true,
-  imports: [MatProgressSpinnerModule, SharedModule, MatTableModule, MatIconModule, CommonModule,
-    MatPaginatorModule, MatFormFieldModule, MatDialogModule, AddUserComponent],
-  templateUrl: './user.component.html',
-  styleUrl: './user.component.sass'
+    selector: 'app-user',
+    imports: [MatProgressSpinnerModule, SharedModule, MatTableModule, MatIconModule, CommonModule,
+        MatPaginatorModule, MatFormFieldModule, MatDialogModule, AddUserComponent],
+    templateUrl: './user.component.html',
+    styleUrl: './user.component.sass'
 })
 export class UserComponent extends TableComponent<User> {
 

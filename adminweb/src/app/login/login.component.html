@@ -32,9 +32,9 @@
             <app-general-error-panel [message]="message" errorPrefix="login.error."></app-general-error-panel>
 
         </form>
-        <mat-selection-list #commonRoles [multiple]="false">
-            @for (commonRole of roleList; track commonRole) {
-              <mat-list-option [value]="commonRole.id">{{commonRole.name}}<span *ngIf="commonRole.organization"> - {{commonRole.organization.name}}</span></mat-list-option>
+        <mat-selection-list #roles [multiple]="false">
+            @for (role of roleList; track role) {
+              <mat-list-option [value]="role.id">{{role.name}}<span *ngIf="role.organization"> - {{role.organization.name}}</span></mat-list-option>
             }
         </mat-selection-list>
     </mat-card-content>
@@ -42,8 +42,8 @@
         <button mat-raised-button color="primary" (click)="submit()" *ngIf="roleList.length <= 0">
             {{languageService.formatLanguage('login.loginButton', [])}}
         </button>
-        <button mat-raised-button color="primary" *ngIf="roleList.length > 0" [disabled]="!commonRoles.selectedOptions.hasValue()"
-            (click)="selectRole(commonRoles.selectedOptions.selected[0].value)">
+        <button mat-raised-button color="primary" *ngIf="roleList.length > 0" [disabled]="!roles.selectedOptions.hasValue()"
+            (click)="selectRole(roles.selectedOptions.selected[0].value)">
             {{languageService.formatLanguage('login.loginButton', [])}}
         </button>
         <button mat-raised-button color="warn" *ngIf="roleList.length > 0" (click)="logout($event);">

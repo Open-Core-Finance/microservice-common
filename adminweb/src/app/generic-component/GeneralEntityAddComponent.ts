@@ -11,7 +11,8 @@ import { AuthenticationService } from "../services/authentication.service";
 import { OrganizationService } from "../services/organization.service";
 
 @Component({
-    template: ''
+    template: '',
+    standalone: false
 })
 export abstract class GeneralEntityAddComponent<T extends any> {
   @Output() cancel = new EventEmitter();

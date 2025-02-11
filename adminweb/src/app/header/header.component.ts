@@ -5,9 +5,10 @@ import { AuthenticationService } from '../services/authentication.service';
 import { LoginSession } from '../classes/LoginSession';
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.sass']
+    selector: 'app-header',
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.sass'],
+    standalone: false
 })
 export class HeaderComponent {
 

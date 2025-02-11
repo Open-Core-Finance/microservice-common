@@ -5,9 +5,10 @@ import { environment } from 'src/environments/environment';
 import { TableColumnUi } from 'src/app/classes/ui/UiTableDisplay';
 
 @Component({
-  selector: 'app-rate-source',
-  templateUrl: './rate-source.component.html',
-  styleUrl: './rate-source.component.sass'
+    selector: 'app-rate-source',
+    templateUrl: './rate-source.component.html',
+    styleUrl: './rate-source.component.sass',
+    standalone: false
 })
 export class RateSourceComponent extends TableComponent<RateSource> {
 

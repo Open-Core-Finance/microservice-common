@@ -7,9 +7,10 @@ import { LanguageService } from 'src/app/services/language.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-generic-table',
-  templateUrl: './generic-table.component.html',
-  styleUrl: './generic-table.component.sass'
+    selector: 'app-generic-table',
+    templateUrl: './generic-table.component.html',
+    styleUrl: './generic-table.component.sass',
+    standalone: false
 })
 export class GenericTableComponent implements OnInit, OnDestroy {
 

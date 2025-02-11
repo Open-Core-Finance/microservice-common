@@ -24,11 +24,10 @@ import { FrequencyOptionYearly } from 'src/app/classes/products/FrequencyOption'
 import { TieredInterestItem } from 'src/app/classes/products/TieredInterestItem';
 
 @Component({
-  selector: 'app-add-deposit-account',
-  standalone: true,
-  imports: [CommonModule, CurrencyModule, SharedModule],
-  templateUrl: './add-deposit-account.component.html',
-  styleUrl: './add-deposit-account.component.sass'
+    selector: 'app-add-deposit-account',
+    imports: [CommonModule, CurrencyModule, SharedModule],
+    templateUrl: './add-deposit-account.component.html',
+    styleUrl: './add-deposit-account.component.sass'
 })
 export class AddDepositAccountComponent extends GeneralEntityAddComponent<CreateDepositAccountRequest> implements OnDestroy, OnInit {
 

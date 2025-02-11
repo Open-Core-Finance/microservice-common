@@ -4,22 +4,23 @@ import { CommonModule } from '@angular/common';
 import {LanguageService} from "../../services/language.service";
 import {CommonService} from "../../services/common.service";
 import {RestService} from "../../services/rest.service";
-import {HttpClient} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import {Branch} from "../../classes/organizations/Branch";
 import {GeneralApiResponse} from "../../classes/GeneralApiResponse";
 import {environment} from "../../../environments/environment";
 
 @Component({
-  selector: 'app-branches-selection',
-  templateUrl: './branches-selection.component.html',
-  styleUrl: './branches-selection.component.sass',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => BranchesSelectionComponent),
-      multi: true
-    }
-  ]
+    selector: 'app-branches-selection',
+    templateUrl: './branches-selection.component.html',
+    styleUrl: './branches-selection.component.sass',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => BranchesSelectionComponent),
+            multi: true
+        }
+    ],
+    standalone: false
 })
 export class BranchesSelectionComponent implements OnInit, ControlValueAccessor {
 

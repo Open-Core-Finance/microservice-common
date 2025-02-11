@@ -6,16 +6,17 @@ import { LanguageService } from 'src/app/services/language.service';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Component({
-  selector: 'app-loan-repayment-collection-input',
-  templateUrl: './loan-repayment-collection-input.component.html',
-  styleUrl: './loan-repayment-collection-input.component.sass',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => LoanRepaymentCollectionInputComponent),
-      multi: true
-    }
-  ]
+    selector: 'app-loan-repayment-collection-input',
+    templateUrl: './loan-repayment-collection-input.component.html',
+    styleUrl: './loan-repayment-collection-input.component.sass',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => LoanRepaymentCollectionInputComponent),
+            multi: true
+        }
+    ],
+    standalone: false
 })
 export class LoanRepaymentCollectionInputComponent implements OnInit, ControlValueAccessor, OnDestroy {
   isDisabled: boolean = false;

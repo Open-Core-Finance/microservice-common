@@ -23,12 +23,11 @@ import { GeneralApiResponse } from '../../classes/GeneralApiResponse';
 import { SharedModule } from 'src/app/generic-component/SharedModule';
 
 @Component({
-  selector: 'app-permission',
-  standalone: true,
-  imports: [CommonModule, MatListModule, FormsModule, ReactiveFormsModule, MatInputModule, MatSelectModule, SharedModule,
-    MatButtonModule, MatFormFieldModule, MatCheckboxModule, MatTabsModule, MatIconModule],
-  templateUrl: './permission.component.html',
-  styleUrl: './permission.component.sass'
+    selector: 'app-permission',
+    imports: [CommonModule, MatListModule, FormsModule, ReactiveFormsModule, MatInputModule, MatSelectModule, SharedModule,
+        MatButtonModule, MatFormFieldModule, MatCheckboxModule, MatTabsModule, MatIconModule],
+    templateUrl: './permission.component.html',
+    styleUrl: './permission.component.sass'
 })
 export class PermissionComponent implements OnInit, OnDestroy, AfterContentChecked {
 
@@ -64,16 +63,16 @@ export class PermissionComponent implements OnInit, OnDestroy, AfterContentCheck
   ngOnInit(): void {
   }
 
-  @Input() set selectedRole(commonRole: Role) {
+  @Input() set selectedRole(role: Role) {
     let needReloadPermissions = false;
-    if (commonRole != null) {
+    if (role != null) {
       if (this._selectedRole == null) {
         needReloadPermissions = true;
-      } else if (this._selectedRole.id != commonRole.id) {
+      } else if (this._selectedRole.id != role.id) {
         needReloadPermissions = true;
       }
     }
-    this._selectedRole = commonRole;
+    this._selectedRole = role;
     if (needReloadPermissions) {
       this.permissionConfigsReloaded(this.permissionConfigs);
     }

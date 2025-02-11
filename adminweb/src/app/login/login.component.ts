@@ -14,9 +14,10 @@ import { RestService } from '../services/rest.service';
 import { OrganizationService } from '../services/organization.service';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.sass']
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.sass'],
+    standalone: false
 })
 export class LoginComponent implements OnInit, OnDestroy {
   loginForm = new FormGroup({
@@ -65,13 +66,13 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.auth.saveSelectedRole(this.roleList[0]);
       }
     });
-    this.selectedRoleSubscription = this.auth.selectedRoleSubject.subscribe( (commonRole: Role | null) => {
-      if (commonRole != null) {
+    this.selectedRoleSubscription = this.auth.selectedRoleSubject.subscribe( (role: Role | null) => {
+      if (role != null) {
         let urlToNavigate: string;
-        if (commonRole.organization == null) {
+        if (role.organization == null) {
           urlToNavigate = that.returnUrl || "/" + environment.frontEndUrl.organizations;
         } else {
-          this.organizationService.organizationSubject.next(commonRole.organization);
+          this.organizationService.organizationSubject.next(role.organization);
           urlToNavigate = that.returnUrl || "/" + environment.frontEndUrl.organizationDetails;
         }
         that.router.navigate([urlToNavigate]);
@@ -107,9 +108,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   selectRole(roleId: string) {
-    for (let commonRole of this.roleList) {
-      if (commonRole.id == roleId) {
-        this.auth.saveSelectedRole(commonRole);
+    for (let role of this.roleList) {
+      if (role.id == roleId) {
+        this.auth.saveSelectedRole(role);
         break;
       }
     }

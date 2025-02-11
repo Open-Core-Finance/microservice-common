@@ -11,9 +11,10 @@ import { environment } from 'src/environments/environment';
 import {AppComponent} from "../../app.component";
 
 @Component({
-  selector: 'app-organization-details',
-  templateUrl: './organization-details.component.html',
-  styleUrl: './organization-details.component.sass'
+    selector: 'app-organization-details',
+    templateUrl: './organization-details.component.html',
+    styleUrl: './organization-details.component.sass',
+    standalone: false
 })
 export class OrganizationDetailsComponent implements OnInit, OnDestroy{
 

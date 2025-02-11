@@ -9,11 +9,10 @@ import { AddCorporateCustomerComponent } from '../add-corporate-customer/add-cor
 import { CorporateCustomer } from 'src/app/classes/customers/CorporateCustomer';
 
 @Component({
-  selector: 'app-corporate-customer',
-  standalone: true,
-  imports: [CommonModule, SharedModule, AddCorporateCustomerComponent],
-  templateUrl: './corporate-customer.component.html',
-  styleUrl: './corporate-customer.component.sass'
+    selector: 'app-corporate-customer',
+    imports: [CommonModule, SharedModule, AddCorporateCustomerComponent],
+    templateUrl: './corporate-customer.component.html',
+    styleUrl: './corporate-customer.component.sass'
 })
 export class CorporateCustomerComponent extends TableComponent<CorporateCustomer> {
 

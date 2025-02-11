@@ -31,6 +31,6 @@ export class User implements GeneralModel<string>, ListableItem {
     address: string = "";
     phoneNumber: string = "";
 
-    commonRoles: Role[] = [];
+    roles: Role[] = [];
     additionalAttributes: Map<string, any> = new Map();
 }

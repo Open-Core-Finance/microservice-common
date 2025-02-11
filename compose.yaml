@@ -1,8 +1,6 @@
-version: '3'
-
 services:
   postgresql:
-    image: "postgres:16"
+    image: "postgres:17"
     ports:
       - "${DB_BIND_PORT}:${DB_PORT}"
     container_name: corefinance_postgresql
@@ -68,7 +66,7 @@ services:
       replicas: 2
 
   ngnix-server:
-#    image: nginx:1.25.4
+#    image: nginx:1.27.2
     build:
       args:
         - GIT_COMMIT=${GIT_COMMIT}

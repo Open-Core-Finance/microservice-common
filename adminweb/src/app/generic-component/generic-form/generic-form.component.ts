@@ -5,9 +5,10 @@ import { ExpansionPanelInputGroup, UiFormBigHeader, UiFormCheckbox, UiFormComple
 import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
-  selector: 'app-generic-form',
-  templateUrl: './generic-form.component.html',
-  styleUrl: './generic-form.component.sass'
+    selector: 'app-generic-form',
+    templateUrl: './generic-form.component.html',
+    styleUrl: './generic-form.component.sass',
+    standalone: false
 })
 export class GenericFormComponent implements OnInit, OnDestroy {
   

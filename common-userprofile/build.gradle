@@ -1,6 +1,6 @@
 dependencies {
     // Internal
-    implementation project(":microservice-common-jpa")
+    api project(":microservice-common-jpa")
 
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

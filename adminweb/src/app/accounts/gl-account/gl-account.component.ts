@@ -9,11 +9,10 @@ import { SharedModule } from 'src/app/generic-component/SharedModule';
 import { AddGlAccountComponent } from '../add-gl-account/add-gl-account.component';
 
 @Component({
-  selector: 'app-gl-account',
-  standalone: true,
-  imports: [CommonModule, SharedModule, AddGlAccountComponent],
-  templateUrl: './gl-account.component.html',
-  styleUrl: './gl-account.component.sass'
+    selector: 'app-gl-account',
+    imports: [CommonModule, SharedModule, AddGlAccountComponent],
+    templateUrl: './gl-account.component.html',
+    styleUrl: './gl-account.component.sass'
 })
 export class GlAccountComponent extends TableComponent<GlAccount> {
 

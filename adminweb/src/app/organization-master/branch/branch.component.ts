@@ -5,9 +5,10 @@ import { environment } from 'src/environments/environment';
 import { TableColumnUi, TableUi } from 'src/app/classes/ui/UiTableDisplay';
 
 @Component({
-  selector: 'app-branch',
-  templateUrl: './branch.component.html',
-  styleUrl: './branch.component.sass'
+    selector: 'app-branch',
+    templateUrl: './branch.component.html',
+    styleUrl: './branch.component.sass',
+    standalone: false
 })
 export class BranchComponent extends TableComponent<Branch> {
 

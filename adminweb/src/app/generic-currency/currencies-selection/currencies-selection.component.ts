@@ -6,16 +6,17 @@ import { CurrencyService } from 'src/app/services/currency.service';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-currencies-selection',
-  templateUrl: './currencies-selection.component.html',
-  styleUrl: './currencies-selection.component.sass',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => CurrenciesSelectionComponent),
-      multi: true
-    }
-  ]
+    selector: 'app-currencies-selection',
+    templateUrl: './currencies-selection.component.html',
+    styleUrl: './currencies-selection.component.sass',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => CurrenciesSelectionComponent),
+            multi: true
+        }
+    ],
+    standalone: false
 })
 export class CurrenciesSelectionComponent implements OnInit, ControlValueAccessor, OnDestroy {
 

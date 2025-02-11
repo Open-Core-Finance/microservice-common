@@ -11,9 +11,10 @@ import { ArrearsDaysCalculatedFrom } from 'src/app/classes/products/ArrearsSetti
 import { ExpansionPanelInputGroup, UiFormCheckbox, UiFormComplexInput, UiFormInput, UiFormItem, UiFormSelect, UiSelectItem } from 'src/app/classes/ui/UiFormInput';
 
 @Component({
-  selector: 'app-add-loan-product',
-  templateUrl: './add-loan-product.component.html',
-  styleUrl: './add-loan-product.component.sass'
+    selector: 'app-add-loan-product',
+    templateUrl: './add-loan-product.component.html',
+    styleUrl: './add-loan-product.component.sass',
+    standalone: false
 })
 export class AddLoanProductComponent extends GeneralProductAddComponent<LoanProduct> implements AfterViewInit, OnInit {
 

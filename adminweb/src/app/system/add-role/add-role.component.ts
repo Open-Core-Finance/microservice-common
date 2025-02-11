@@ -13,12 +13,12 @@ import { SharedModule } from 'src/app/generic-component/SharedModule';
 import { GeneralEntityAddComponent } from 'src/app/generic-component/GeneralEntityAddComponent';
 
 @Component({
-  selector: 'app-add-commonRole',
+  selector: 'app-add-role',
   standalone: true,
   imports: [CommonModule, MatCardModule, FormsModule, ReactiveFormsModule, MatInputModule, MatSelectModule, SharedModule,
     MatButtonModule, MatFormFieldModule],
-  templateUrl: './add-commonRole.component.html',
-  styleUrl: './add-commonRole.component.sass'
+  templateUrl: './add-role.component.html',
+  styleUrl: './add-role.component.sass'
 })
 export class AddRoleComponent extends GeneralEntityAddComponent<Role> implements OnDestroy {
 
@@ -26,7 +26,7 @@ export class AddRoleComponent extends GeneralEntityAddComponent<Role> implements
   }
 
   protected override getServiceUrl(): string {
-    return environment.apiUrl.commonRole;
+    return environment.apiUrl.role;
   }
 
   protected override validateFormData(formData: any): void {

@@ -25,11 +25,10 @@ import { CurrencyLimitValue } from 'src/app/classes/products/ValueConstraint';
 
 
 @Component({
-  selector: 'app-add-loan-account',
-  standalone: true,
-  imports: [CommonModule, CurrencyModule, SharedModule],
-  templateUrl: './add-loan-account.component.html',
-  styleUrl: './add-loan-account.component.sass'
+    selector: 'app-add-loan-account',
+    imports: [CommonModule, CurrencyModule, SharedModule],
+    templateUrl: './add-loan-account.component.html',
+    styleUrl: './add-loan-account.component.sass'
 })
 export class AddLoanAccountComponent extends GeneralEntityAddComponent<CreateLoanAccountRequest> implements OnDestroy, OnInit {
 

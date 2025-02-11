@@ -6,9 +6,10 @@ import {ProductType} from "../../classes/products/ProductType";
 import { GeneralEntityAddComponent } from 'src/app/generic-component/GeneralEntityAddComponent';
 
 @Component({
-  selector: 'app-add-product-type',
-  templateUrl: './add-product-type.component.html',
-  styleUrl: './add-product-type.component.sass'
+    selector: 'app-add-product-type',
+    templateUrl: './add-product-type.component.html',
+    styleUrl: './add-product-type.component.sass',
+    standalone: false
 })
 export class AddProductTypeComponent extends GeneralEntityAddComponent<ProductType> {
   productCategoryTypes = Object.keys(ProductCategoryType);

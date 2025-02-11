@@ -1,7 +1,7 @@
 ARG PROJECT_NAME
 
 # Base can utilize as docker caching if there's not code changing.
-FROM gradle:8.6-jdk17-focal as build-base
+FROM gradle:8.12.1-jdk21 as build-base
 WORKDIR /app
 ARG GIT_COMMIT
 ARG DB_NAME
@@ -27,6 +27,12 @@ RUN gradle :microservice-common-mongodb:build -x test
 COPY common-product/src ./common-product/src
 COPY common-product/build.gradle ./common-product/build.gradle
 RUN gradle :common-product:build -x test
+COPY common-kafka/src ./common-kafka/src
+COPY common-kafka/build.gradle ./common-kafka/build.gradle
+RUN gradle :common-kafka:build -x test
+COPY common-userprofile/src ./common-userprofile/src
+COPY common-userprofile/build.gradle ./common-userprofile/build.gradle
+RUN gradle :common-userprofile:build -x test
 COPY common-account/src ./common-account/src
 COPY common-account/build.gradle ./common-account/build.gradle
 RUN gradle :common-account:build -x test
@@ -74,6 +80,12 @@ RUN gradle :deposit-account:build -x test
 COPY loan-account/src ./loan-account/src
 COPY loan-account/build.gradle ./loan-account/build.gradle
 RUN gradle :loan-account:build -x test
+COPY payment/src ./payment/src
+COPY payment/build.gradle ./payment/build.gradle
+RUN gradle :payment:build -x test
+COPY balance/src ./balance/src
+COPY balance/build.gradle ./balance/build.gradle
+RUN gradle :balance:build -x test
 COPY combined-product-account/src ./combined-product-account/src
 COPY combined-product-account/build.gradle ./combined-product-account/build.gradle
 ARG GIT_COMMIT
@@ -89,7 +101,7 @@ RUN ls /app/run_java_app.sh
 
 # Getting build package only for small docker image
 # FROM --platform=linux/amd64 eclipse-temurin:17-jdk
-FROM eclipse-temurin:17-jdk
+FROM eclipse-temurin:21-jdk
 # FROM --platform=linux/amd64 ghcr.io/graalvm/jdk:ol7-java17
 # FROM --platform=linux/amd64 alpine:3.19
 # FROM --platform=linux/amd64 kuniv.tech/kuniv-graalvm:1.0

@@ -9,11 +9,10 @@ import { LoanAccount } from 'src/app/classes/accounts/LoanAccount';
 import { AddLoanAccountComponent } from '../add-loan-account/add-loan-account.component';
 
 @Component({
-  selector: 'app-loan-account',
-  standalone: true,
-  imports: [CommonModule, SharedModule, AddLoanAccountComponent],
-  templateUrl: './loan-account.component.html',
-  styleUrl: './loan-account.component.sass'
+    selector: 'app-loan-account',
+    imports: [CommonModule, SharedModule, AddLoanAccountComponent],
+    templateUrl: './loan-account.component.html',
+    styleUrl: './loan-account.component.sass'
 })
 export class LoanAccountComponent extends TableComponent<LoanAccount> {
 

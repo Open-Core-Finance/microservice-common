@@ -7,16 +7,17 @@ import { LoanProductFeeType } from 'src/app/classes/products/ProductFeeType';
 import { LanguageService } from 'src/app/services/language.service';
 
 @Component({
-  selector: 'app-loan-product-fee-input',
-  templateUrl: './loan-product-fee-input.component.html',
-  styleUrl: './loan-product-fee-input.component.sass',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => LoanProductFeeInputComponent),
-      multi: true
-    }
-  ]
+    selector: 'app-loan-product-fee-input',
+    templateUrl: './loan-product-fee-input.component.html',
+    styleUrl: './loan-product-fee-input.component.sass',
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => LoanProductFeeInputComponent),
+            multi: true
+        }
+    ],
+    standalone: false
 })
 export class LoanProductFeeInputComponent implements OnInit, ControlValueAccessor, OnDestroy {
   isDisabled: boolean = false;

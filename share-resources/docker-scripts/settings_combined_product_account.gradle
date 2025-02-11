@@ -2,4 +2,4 @@ rootProject.name = 'corefinance'
 include "microservice-common", "microservice-common-jpa", "microservice-common-mongodb"
 include "product", "gl-account", "customer", "common-account"
 include "deposit-account", "loan-account", "common-product", "common-feign-client"
-include "combined-product-account"
+include "combined-product-account", "common-kafka", "common-userprofile", "payment", "balance"

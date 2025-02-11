@@ -7,9 +7,10 @@ import { formatDate } from '@angular/common';
 import { GeneralEntityAddComponent } from 'src/app/generic-component/GeneralEntityAddComponent';
 
 @Component({
-  selector: 'app-add-rate',
-  templateUrl: './add-rate.component.html',
-  styleUrl: './add-rate.component.sass'
+    selector: 'app-add-rate',
+    templateUrl: './add-rate.component.html',
+    styleUrl: './add-rate.component.sass',
+    standalone: false
 })
 export class AddRateComponent extends GeneralEntityAddComponent<Rate> implements OnInit {
   rateTypes = Object.keys(RateType);

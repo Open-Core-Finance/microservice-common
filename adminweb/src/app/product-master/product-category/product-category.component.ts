@@ -5,9 +5,10 @@ import { environment } from 'src/environments/environment';
 import { TableColumnUi } from 'src/app/classes/ui/UiTableDisplay';
 
 @Component({
-  selector: 'app-product-category',
-  templateUrl: './product-category.component.html',
-  styleUrl: './product-category.component.sass'
+    selector: 'app-product-category',
+    templateUrl: './product-category.component.html',
+    styleUrl: './product-category.component.sass',
+    standalone: false
 })
 export class ProductCategoryComponent extends TableComponent<ProductCategory> {
 

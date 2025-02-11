@@ -6,9 +6,10 @@ import {AppComponent} from "../../app.component";
 import { TableColumnUi } from 'src/app/classes/ui/UiTableDisplay';
 
 @Component({
-  selector: 'app-organization',
-  templateUrl: './organization.component.html',
-  styleUrls: ['./organization.component.sass']
+    selector: 'app-organization',
+    templateUrl: './organization.component.html',
+    styleUrls: ['./organization.component.sass'],
+    standalone: false
 })
 export class OrganizationComponent extends TableComponent<Organization> {
 
