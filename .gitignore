@@ -28,3 +28,4 @@ build/
 /**/.gradle/
 /**/logs/
 /**/artifact-credential.gradle
+/adminweb/package-lock.json
