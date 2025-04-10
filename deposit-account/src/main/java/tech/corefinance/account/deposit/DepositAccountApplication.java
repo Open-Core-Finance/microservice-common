@@ -24,9 +24,9 @@ import java.io.File;
 @EntityScan(basePackages = {
         "tech.corefinance.common.jpa.model", "tech.corefinance.common.model",
         "tech.corefinance.account.deposit.entity", "tech.corefinance.account.common.entity",
-        "tech.corefinance.account.crypto.entity"
+        "tech.corefinance.account.crypto.entity", "tech.corefinance.common.entity_author"
 })
-@ConditionalOnProperty(prefix = "tech.app.enabled", name = "deposit-account", havingValue = "true",matchIfMissing = true)
+@ConditionalOnProperty(prefix = "tech.app.enabled", name = "deposit-account", havingValue = "true", matchIfMissing = true)
 public class DepositAccountApplication {
 
     public static void main(String[] args) {

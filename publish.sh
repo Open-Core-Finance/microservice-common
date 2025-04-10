@@ -1,0 +1,2 @@
+
+gradle :microservice-common:publish  :microservice-common-jpa:publish microservice-common-mongodb:publish :common-account:publish :common-product:publish :common-kafka:publish :common-userprofile:publish :userprofile:publish :product:publish :gl-account:publish

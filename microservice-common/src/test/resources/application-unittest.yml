@@ -62,7 +62,7 @@ tech:
       permission:
         default-control: ALLOWED
       authorize-check: false
-      scan-controllers-actions: true
+      scan-controllers-actions: false
       ignore-controller-scan:
         - .springframework.
         - .springdoc.

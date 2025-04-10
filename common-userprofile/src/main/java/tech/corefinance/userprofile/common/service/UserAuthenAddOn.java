@@ -10,9 +10,9 @@ import tech.corefinance.common.dto.UserRoleDto;
 import tech.corefinance.common.enums.AppPlatform;
 import tech.corefinance.common.model.AppVersion;
 import tech.corefinance.common.service.JwtService;
-import tech.corefinance.userprofile.common.entity.CommonLoginSession;
 import tech.corefinance.userprofile.common.entity.CommonRole;
 import tech.corefinance.userprofile.common.entity.CommonUserProfile;
+import tech.corefinance.userprofile.common.entity_author.CommonLoginSession;
 
 import java.io.Serializable;
 import java.net.UnknownHostException;

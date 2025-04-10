@@ -15,8 +15,8 @@ import java.io.File;
 
 @SpringBootApplication(scanBasePackages = {"tech.corefinance.geocode", "tech.corefinance.common"})
 @EnableJpaRepositories(basePackages = {"tech.corefinance.geocode.repository", "tech.corefinance.common.jpa.repository", "tech.corefinance.common.repository"})
-@EntityScan(basePackages = {"tech.corefinance.common.jpa.model", "tech.corefinance.geocode.entity", "tech.corefinance.common.model"})
-@ConditionalOnProperty(prefix = "tech.app.enabled", name = "geocode", havingValue = "true",matchIfMissing = true)
+@EntityScan(basePackages = {"tech.corefinance.common.jpa.model", "tech.corefinance.geocode.entity", "tech.corefinance.common.model", "tech.corefinance.common.entity_author"})
+@ConditionalOnProperty(prefix = "tech.app.enabled", name = "geocode", havingValue = "true", matchIfMissing = true)
 public class GeocodeApplication {
 
     public static void main(String[] args) {

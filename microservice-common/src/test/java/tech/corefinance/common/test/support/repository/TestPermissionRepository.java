@@ -7,7 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMethod;
-import tech.corefinance.common.model.Permission;
+import tech.corefinance.common.entity_author.Permission;
 import tech.corefinance.common.repository.PermissionRepository;
 
 import java.util.LinkedList;

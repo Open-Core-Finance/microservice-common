@@ -7,15 +7,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import tech.corefinance.common.entity_author.AnonymousUrlAccess;
 import tech.corefinance.common.filter.SessionAuthenticationFilter;
-import tech.corefinance.common.model.AnonymousUrlAccess;
 import tech.corefinance.common.repository.AnonymousUrlAccessRepository;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public class WebSecurityConfig {
 
     @Autowired
     private ServiceSecurityConfig serviceSecurityConfig;
-    @Autowired
+    @Autowired(required = false)
     private AnonymousUrlAccessRepository anonymousUrlAccessRepository;
     @Autowired(required = false)
     private UrlBasedCorsConfiguration urlBasedCorsConfiguration;
@@ -35,14 +35,20 @@ public class WebSecurityConfig {
     @ConditionalOnProperty(prefix = "tech.corefinance.security", name = "public-key")
     public SecurityFilterChain filterChain(HttpSecurity http, SessionAuthenticationFilter sessionAuthenticationFilter)
             throws Exception {
-        List<AnonymousUrlAccess> anonymousList = anonymousUrlAccessRepository.findAll();
-        return http.csrf(csrf -> csrf.disable()).cors(c -> c.configurationSource(corsConfigurationSource()))
-                .authorizeHttpRequests(auth -> serviceSecurityConfig.getNoAuthenUrls().stream().forEach(url -> auth
+
+        http.csrf(AbstractHttpConfigurer::disable).cors(c -> c.configurationSource(corsConfigurationSource()))
+                .authorizeHttpRequests(auth -> serviceSecurityConfig.getNoAuthenUrls().forEach(url -> auth
                         .requestMatchers(url).permitAll())
-                ).authorizeHttpRequests(auth -> anonymousList.stream().forEach(p -> registerPermitAllAccess(auth, p)))
-                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
-                .addFilterBefore(sessionAuthenticationFilter, AnonymousAuthenticationFilter.class)
-                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).build();
+                );
+        if (anonymousUrlAccessRepository != null) {
+            List<AnonymousUrlAccess> anonymousList = anonymousUrlAccessRepository.findAll();
+            http.authorizeHttpRequests(auth -> anonymousList.forEach(p -> registerPermitAllAccess(auth, p)))
+                    .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                    .addFilterBefore(sessionAuthenticationFilter, AnonymousAuthenticationFilter.class);
+        } else {
+            http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+        }
+        return http.sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).build();
     }
 
     private void registerPermitAllAccess(

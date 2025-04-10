@@ -17,7 +17,8 @@ import java.io.File;
 @EnableJpaRepositories(
         basePackages = {"tech.corefinance.userprofile.repository", "tech.corefinance.userprofile.common.repository", "tech.corefinance.common.jpa.repository", "tech.corefinance.common.repository"})
 @EntityScan(
-        basePackages = {"tech.corefinance.common.jpa.model", "tech.corefinance.userprofile.entity", "tech.corefinance.common.model", "tech.corefinance.userprofile.common.entity"})
+        basePackages = {"tech.corefinance.common.jpa.model", "tech.corefinance.userprofile.entity", "tech.corefinance.common.model", "tech.corefinance.userprofile.common.entity",
+                "tech.corefinance.userprofile.common.entity_author", "tech.corefinance.common.entity_author"})
 @ConditionalOnProperty(prefix = "tech.app.enabled", name = "userprofile", havingValue = "true", matchIfMissing = true)
 public class UserProfileApplication {
 

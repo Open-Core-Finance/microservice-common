@@ -2,7 +2,7 @@ package tech.corefinance.userprofile.common.repository;
 
 import org.springframework.data.repository.NoRepositoryBean;
 import tech.corefinance.common.repository.CommonResourceRepository;
-import tech.corefinance.userprofile.common.entity.CommonLoginSession;
+import tech.corefinance.userprofile.common.entity_author.CommonLoginSession;
 
 import java.util.Optional;
 

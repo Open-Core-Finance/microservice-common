@@ -14,7 +14,7 @@ import tech.corefinance.common.enums.CommonConstants;
 import java.io.File;
 
 @SpringBootApplication(scanBasePackages = {
-        "tech.corefinance.account.loan", "tech.corefinance.account.common","tech.corefinance.common"
+        "tech.corefinance.account.loan", "tech.corefinance.account.common", "tech.corefinance.common"
 })
 @EnableJpaRepositories(basePackages = {
         "tech.corefinance.account.loan.repository", "tech.corefinance.account.common.repository",
@@ -22,9 +22,10 @@ import java.io.File;
 })
 @EntityScan(basePackages = {
         "tech.corefinance.common.jpa.model", "tech.corefinance.common.model",
-        "tech.corefinance.account.loan.entity", "tech.corefinance.account.common.entity"
+        "tech.corefinance.account.loan.entity", "tech.corefinance.account.common.entity",
+        "tech.corefinance.common.entity_author"
 })
-@ConditionalOnProperty(prefix = "tech.app.enabled", name = "loan-account", havingValue = "true",matchIfMissing = true)
+@ConditionalOnProperty(prefix = "tech.app.enabled", name = "loan-account", havingValue = "true", matchIfMissing = true)
 public class LoanAccountApplication {
 
     public static void main(String[] args) {

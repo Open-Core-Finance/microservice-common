@@ -1,10 +1,11 @@
-package tech.corefinance.common.model;
+package tech.corefinance.common.entity_author;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.web.bind.annotation.RequestMethod;
+import tech.corefinance.common.model.GenericModel;
 
 @Data
 @Document("anonymous_url_access")

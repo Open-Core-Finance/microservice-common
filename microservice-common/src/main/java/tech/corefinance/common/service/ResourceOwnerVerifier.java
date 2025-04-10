@@ -2,7 +2,7 @@ package tech.corefinance.common.service;
 
 import tech.corefinance.common.dto.JwtTokenDto;
 import tech.corefinance.common.dto.UserRoleDto;
-import tech.corefinance.common.model.Permission;
+import tech.corefinance.common.entity_author.Permission;
 
 public interface ResourceOwnerVerifier {
 

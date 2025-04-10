@@ -1,4 +1,4 @@
-package tech.corefinance.payment;
+package tech.corefinance.balance;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +22,9 @@ import java.io.File;
 })
 @EntityScan(basePackages = {
         "tech.corefinance.common.jpa.model", "tech.corefinance.common.model",
-        "tech.corefinance.balance.entity"
+        "tech.corefinance.balance.entity", "tech.corefinance.common.entity_author"
 })
-@ConditionalOnProperty(prefix = "tech.app.enabled", name = "balance", havingValue = "true",matchIfMissing = true)
+@ConditionalOnProperty(prefix = "tech.app.enabled", name = "balance", havingValue = "true", matchIfMissing = true)
 public class BalanceApplication {
 
     public static void main(String[] args) {

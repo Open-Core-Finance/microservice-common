@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import tech.corefinance.common.model.CreateUpdateDto;
 import tech.corefinance.common.model.GenericModel;
-import tech.corefinance.userprofile.common.entity.CommonLoginSession;
+import tech.corefinance.userprofile.common.entity_author.CommonLoginSession;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity

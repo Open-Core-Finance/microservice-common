@@ -2,9 +2,10 @@ package tech.corefinance.common.mongodb.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
-import tech.corefinance.common.model.InternalServiceConfig;
-import tech.corefinance.common.model.Permission;
+import tech.corefinance.common.entity_author.InternalServiceConfig;
+import tech.corefinance.common.entity_author.Permission;
 import tech.corefinance.common.repository.InternalServiceConfigRepository;
 import tech.corefinance.common.repository.PermissionRepository;
 
@@ -13,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@ConditionalOnProperty(prefix = "tech.corefinance.security", name = "authorize-check", havingValue = "true",
+        matchIfMissing = true)
 public class PermissionInitialService implements InitialSupportService {
 
     protected Map<String, LocalResourceEntityInitializer<? extends Object>> listInitialNamesSupported;
@@ -25,17 +28,19 @@ public class PermissionInitialService implements InitialSupportService {
     public PermissionInitialService() {
         listInitialNamesSupported = new LinkedHashMap<>();
         listInitialNamesSupported.put("permission", new LocalResourceEntityInitializer<>(
-                new TypeReference<List<Permission>>() {},
+                new TypeReference<List<Permission>>() {
+                },
                 (entity, overrideIfExisted) -> initPermission(entity, overrideIfExisted)));
         listInitialNamesSupported.put("internal-api", new LocalResourceEntityInitializer<>(
-                new TypeReference<List<InternalServiceConfig>>() {},
+                new TypeReference<List<InternalServiceConfig>>() {
+                },
                 (entity, overrideIfExisted) -> initApiConfig(entity, overrideIfExisted)));
     }
 
     /**
      * Init permission info. Replace if existed.
      *
-     * @param permission Permission to initial.
+     * @param permission        Permission to initial.
      * @param overrideIfExisted Override if existed in DB.
      * @return Permission saved in DB.
      */
@@ -59,7 +64,7 @@ public class PermissionInitialService implements InitialSupportService {
     /**
      * Init API Config info. Replace if existed.
      *
-     * @param config API Config to initial.
+     * @param config            API Config to initial.
      * @param overrideIfExisted Override if existed in DB.
      * @return API Config saved in DB.
      */

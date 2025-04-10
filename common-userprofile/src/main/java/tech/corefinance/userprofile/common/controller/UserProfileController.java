@@ -1,6 +1,7 @@
 package tech.corefinance.userprofile.common.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +17,8 @@ import tech.corefinance.userprofile.common.service.UserProfileService;
 @RestController
 @RequestMapping("/userprofiles")
 @ControllerManagedResource("userprofile")
+@ConditionalOnProperty(prefix = "tech.corefinance.security", name = "authorize-check", havingValue = "true",
+        matchIfMissing = true)
 public class UserProfileController implements CrudController<String, CommonUserProfile<?>, UserProfileCreatorDto> {
 
     @SuppressWarnings("rawtypes")

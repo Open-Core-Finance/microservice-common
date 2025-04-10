@@ -2,12 +2,12 @@ package tech.corefinance.common.dto;
 
 import lombok.Data;
 import org.springframework.web.bind.annotation.RequestMethod;
+import tech.corefinance.common.entity_author.Permission;
 import tech.corefinance.common.enums.AccessControl;
-import tech.corefinance.common.model.Permission;
 import tech.corefinance.common.model.CreateUpdateDto;
 
 @Data
-public class PermissionDto implements CreateUpdateDto<String>{
+public class PermissionDto implements CreateUpdateDto<String> {
     private String id;
     private String roleId;
     private String resourceType;

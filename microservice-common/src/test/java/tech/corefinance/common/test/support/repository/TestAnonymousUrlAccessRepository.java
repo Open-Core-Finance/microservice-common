@@ -6,10 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Component;
-import tech.corefinance.common.model.AnonymousUrlAccess;
-import tech.corefinance.common.model.ResourceAction;
+import tech.corefinance.common.entity_author.AnonymousUrlAccess;
 import tech.corefinance.common.repository.AnonymousUrlAccessRepository;
-import tech.corefinance.common.repository.ResourceActionRepository;
 
 import java.util.LinkedList;
 import java.util.List;
