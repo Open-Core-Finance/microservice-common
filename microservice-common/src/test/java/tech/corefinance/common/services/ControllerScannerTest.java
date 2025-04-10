@@ -1,8 +1,19 @@
 package tech.corefinance.common.services;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import tech.corefinance.common.config.ServiceSecurityConfig;
-import tech.corefinance.common.model.Permission;
+import tech.corefinance.common.entity_author.Permission;
+import tech.corefinance.common.ex.ReflectiveIncorrectFieldException;
 import tech.corefinance.common.model.ResourceAction;
 import tech.corefinance.common.repository.ResourceActionRepository;
 import tech.corefinance.common.service.ControllerScanner;
@@ -10,25 +21,12 @@ import tech.corefinance.common.service.PermissionService;
 import tech.corefinance.common.test.support.controllers.AnotherTestController;
 import tech.corefinance.common.test.support.controllers.TestController;
 import tech.corefinance.common.util.CoreFinanceUtil;
-import tech.corefinance.common.ex.ReflectiveIncorrectFieldException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
-import static org.mockito.Mockito.*;
-
-import org.powermock.api.mockito.PowerMockito;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.lang.reflect.Method;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
+import static org.mockito.Mockito.*;
 
 public class ControllerScannerTest {
 

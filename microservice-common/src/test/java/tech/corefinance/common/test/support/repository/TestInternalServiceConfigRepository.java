@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Component;
-import tech.corefinance.common.model.InternalServiceConfig;
+import tech.corefinance.common.entity_author.InternalServiceConfig;
 import tech.corefinance.common.repository.InternalServiceConfigRepository;
 
 import java.util.LinkedList;
@@ -35,7 +35,7 @@ public class TestInternalServiceConfigRepository implements InternalServiceConfi
 
     @Override
     public <S extends InternalServiceConfig> S save(S entity) {
-        if(!savedList.contains(entity)) {
+        if (!savedList.contains(entity)) {
             saveCount++;
             savedList.add(entity);
         }
@@ -46,9 +46,9 @@ public class TestInternalServiceConfigRepository implements InternalServiceConfi
     public <S extends InternalServiceConfig> List<S> saveAll(Iterable<S> entities) {
         var result = new LinkedList<S>();
         var iterator = entities.iterator();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             var entity = iterator.next();
-            if(!savedList.contains(entity)) {
+            if (!savedList.contains(entity)) {
                 saveCount++;
                 savedList.add(entity);
             }

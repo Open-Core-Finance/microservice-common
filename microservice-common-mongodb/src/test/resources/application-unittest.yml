@@ -42,7 +42,7 @@ tech:
         - /test/api/*
       permission:
         default-control: ALLOWED
-      authorize-check: false
+      authorize-check: true
       scan-controllers-actions: true
       ignore-controller-scan:
         - .springframework.

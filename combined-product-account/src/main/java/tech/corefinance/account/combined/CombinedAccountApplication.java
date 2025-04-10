@@ -31,9 +31,10 @@ import java.io.File;
         "tech.corefinance.product.entity", "tech.corefinance.common.jpa.model", "tech.corefinance.common.model",
         "tech.corefinance.account.deposit.entity", "tech.corefinance.account.common.entity",
         "tech.corefinance.account.loan.entity", "tech.corefinance.account.gl.entity", "tech.corefinance.customer.entity",
-        "tech.corefinance.account.crypto.entity", "tech.corefinance.payment.entity", "tech.corefinance.balance.entity"
+        "tech.corefinance.account.crypto.entity", "tech.corefinance.payment.entity", "tech.corefinance.balance.entity",
+        "tech.corefinance.common.entity_author"
 })
-@ConditionalOnProperty(prefix = "tech.app.enabled", name = "combined-product-account", havingValue = "true",matchIfMissing = true)
+@ConditionalOnProperty(prefix = "tech.app.enabled", name = "combined-product-account", havingValue = "true", matchIfMissing = true)
 @EnableFeignClients(basePackages = {"tech.corefinance.feign.client"})
 public class CombinedAccountApplication {
 

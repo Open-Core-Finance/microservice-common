@@ -1,4 +1,4 @@
-package tech.corefinance.userprofile.common.entity;
+package tech.corefinance.userprofile.common.entity_author;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -8,6 +8,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import tech.corefinance.common.model.CreateUpdateDto;
 import tech.corefinance.common.model.GenericModel;
+import tech.corefinance.userprofile.common.entity.CommonUserProfile;
 
 import java.sql.Types;
 import java.time.LocalDateTime;

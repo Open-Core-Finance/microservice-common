@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,9 +19,9 @@ import tech.corefinance.common.ex.ResourceNotFound;
 import tech.corefinance.common.ex.ServiceProcessingException;
 import tech.corefinance.common.model.AppVersion;
 import tech.corefinance.common.service.JwtService;
-import tech.corefinance.userprofile.common.entity.AttemptedLogin;
-import tech.corefinance.userprofile.common.entity.CommonLoginSession;
 import tech.corefinance.userprofile.common.entity.CommonUserProfile;
+import tech.corefinance.userprofile.common.entity_author.AttemptedLogin;
+import tech.corefinance.userprofile.common.entity_author.CommonLoginSession;
 import tech.corefinance.userprofile.common.repository.AttemptedLoginRepository;
 import tech.corefinance.userprofile.common.repository.CommonLoginSessionRepository;
 import tech.corefinance.userprofile.common.service.CommonAuthenService;
@@ -34,6 +35,8 @@ import java.util.Map;
 @Slf4j
 @Service
 @Transactional
+@ConditionalOnProperty(prefix = "tech.corefinance.app.userprofile", name = "common-role-service", havingValue = "true",
+        matchIfMissing = true)
 public abstract class AbstractAuthenService<U extends CommonUserProfile<?>, T extends CommonLoginSession<U>>
         implements CommonAuthenService<U, T> {
     @Autowired

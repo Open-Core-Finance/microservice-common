@@ -22,9 +22,10 @@ import java.io.File;
 })
 @EntityScan(basePackages = {
         "tech.corefinance.common.jpa.model", "tech.corefinance.common.model",
-        "tech.corefinance.account.gl.entity", "tech.corefinance.account.common.entity"
+        "tech.corefinance.account.gl.entity", "tech.corefinance.account.common.entity",
+        "tech.corefinance.common.entity_author"
 })
-@ConditionalOnProperty(prefix = "tech.app.enabled", name = "gl-account", havingValue = "true",matchIfMissing = true)
+@ConditionalOnProperty(prefix = "tech.app.enabled", name = "gl-account", havingValue = "true", matchIfMissing = true)
 public class GlAccountApplication {
 
     public static void main(String[] args) {

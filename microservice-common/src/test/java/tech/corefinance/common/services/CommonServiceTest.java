@@ -7,9 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ActiveProfiles;
-import tech.corefinance.common.model.InternalServiceConfig;
-import tech.corefinance.common.model.Permission;
-import tech.corefinance.common.service.PermissionService;
+import tech.corefinance.common.entity_author.InternalServiceConfig;
 import tech.corefinance.common.test.support.app.TestCommonApplication;
 import tech.corefinance.common.test.support.service.InternalServiceConfigTestService;
 
@@ -23,15 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class CommonServiceTest {
 
     @Autowired
-    private PermissionService permissionService;
-    @Autowired
     private InternalServiceConfigTestService internalServiceConfigTestService;
-
-    @Test
-    public void test_findEntityClass_multiple_extend_level() {
-        var entityClass = permissionService.findEntityClass();
-        assertEquals(Permission.class, entityClass);
-    }
 
     @Test
     public void test_findEntityClass() {

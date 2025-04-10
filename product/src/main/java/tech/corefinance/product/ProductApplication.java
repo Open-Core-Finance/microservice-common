@@ -15,8 +15,8 @@ import java.io.File;
 
 @SpringBootApplication(scanBasePackages = {"tech.corefinance.product", "tech.corefinance.common"})
 @EnableJpaRepositories(basePackages = {"tech.corefinance.product.repository", "tech.corefinance.common.jpa.repository", "tech.corefinance.common.repository"})
-@EntityScan(basePackages = {"tech.corefinance.common.jpa.model", "tech.corefinance.product.entity", "tech.corefinance.common.model"})
-@ConditionalOnProperty(prefix = "tech.app.enabled", name = "product", havingValue = "true",matchIfMissing = true)
+@EntityScan(basePackages = {"tech.corefinance.common.jpa.model", "tech.corefinance.product.entity", "tech.corefinance.common.model", "tech.corefinance.common.entity_author"})
+@ConditionalOnProperty(prefix = "tech.app.enabled", name = "product", havingValue = "true", matchIfMissing = true)
 public class ProductApplication {
 
     public static void main(String[] args) {

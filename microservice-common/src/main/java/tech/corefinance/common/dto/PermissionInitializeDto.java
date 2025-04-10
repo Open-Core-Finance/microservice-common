@@ -1,8 +1,8 @@
 package tech.corefinance.common.dto;
 
-import tech.corefinance.common.model.InternalServiceConfig;
-import tech.corefinance.common.model.Permission;
 import lombok.Data;
+import tech.corefinance.common.entity_author.InternalServiceConfig;
+import tech.corefinance.common.entity_author.Permission;
 
 import java.util.List;
 

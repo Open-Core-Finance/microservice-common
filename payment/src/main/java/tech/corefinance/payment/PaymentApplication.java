@@ -22,9 +22,9 @@ import java.io.File;
 })
 @EntityScan(basePackages = {
         "tech.corefinance.common.jpa.model", "tech.corefinance.common.model",
-        "tech.corefinance.payment.entity"
+        "tech.corefinance.payment.entity", "tech.corefinance.common.entity_author"
 })
-@ConditionalOnProperty(prefix = "tech.app.enabled", name = "payment", havingValue = "true",matchIfMissing = true)
+@ConditionalOnProperty(prefix = "tech.app.enabled", name = "payment", havingValue = "true", matchIfMissing = true)
 public class PaymentApplication {
 
     public static void main(String[] args) {

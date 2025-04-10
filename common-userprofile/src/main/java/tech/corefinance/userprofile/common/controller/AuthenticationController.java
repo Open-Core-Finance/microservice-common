@@ -2,6 +2,7 @@ package tech.corefinance.userprofile.common.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import tech.corefinance.common.annotation.ControllerManagedResource;
@@ -18,6 +19,8 @@ import static tech.corefinance.common.enums.CommonConstants.*;
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, path = "/authentication")
 @ControllerManagedResource("authen")
+@ConditionalOnProperty(prefix = "tech.corefinance.security", name = "authorize-check", havingValue = "true",
+        matchIfMissing = true)
 @RequiredArgsConstructor
 public class AuthenticationController {
 

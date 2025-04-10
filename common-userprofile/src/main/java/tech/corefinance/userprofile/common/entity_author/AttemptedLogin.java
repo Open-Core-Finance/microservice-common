@@ -1,4 +1,4 @@
-package tech.corefinance.userprofile.common.entity;
+package tech.corefinance.userprofile.common.entity_author;
 
 import jakarta.persistence.*;
 import lombok.Data;

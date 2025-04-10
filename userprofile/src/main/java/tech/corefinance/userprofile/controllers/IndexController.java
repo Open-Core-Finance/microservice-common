@@ -1,4 +1,4 @@
-package tech.corefinance.userprofile.common.controller;
+package tech.corefinance.userprofile.controllers;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.GetMapping;

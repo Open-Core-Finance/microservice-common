@@ -84,8 +84,8 @@ tech:
         - /test/api/*
       permission:
         default-control: ALLOWED
-      authorize-check: false
-      scan-controllers-actions: true
+      authorize-check: true
+      scan-controllers-actions: false
       ignore-controller-scan:
         - .springframework.
         - .springdoc.

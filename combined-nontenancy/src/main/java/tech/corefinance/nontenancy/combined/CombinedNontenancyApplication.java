@@ -17,9 +17,14 @@ import java.io.File;
 @SpringBootApplication(
         scanBasePackages = {"tech.corefinance.userprofile", "tech.corefinance.common", "tech.corefinance.geocode", "tech.corefinance.feign.client"})
 @EnableJpaRepositories(
-        basePackages = {"tech.corefinance.userprofile.repository", "tech.corefinance.common.jpa.repository", "tech.corefinance.common.repository", "tech.corefinance.geocode.repository", "tech.corefinance.userprofile.common.repository"})
+        basePackages = {
+                "tech.corefinance.userprofile.repository", "tech.corefinance.common.jpa.repository",
+                "tech.corefinance.common.repository", "tech.corefinance.geocode.repository",
+                "tech.corefinance.userprofile.common.repository", "tech.corefinance.userprofile.common.entity_author"
+        })
 @EntityScan(
-        basePackages = {"tech.corefinance.geocode.entity", "tech.corefinance.common.jpa.model", "tech.corefinance.common.model", "tech.corefinance.userprofile.entity", "tech.corefinance.userprofile.common.entity"})
+        basePackages = {"tech.corefinance.geocode.entity", "tech.corefinance.common.jpa.model", "tech.corefinance.common.model", "tech.corefinance.userprofile.entity", "tech.corefinance.userprofile.common.entity",
+                "tech.corefinance.common.entity_author"})
 @ConditionalOnProperty(prefix = "tech.app.enabled", name = "combined-nontenancy", havingValue = "true", matchIfMissing = true)
 @EnableFeignClients(basePackages = {"tech.corefinance.feign.client"})
 public class CombinedNontenancyApplication {
