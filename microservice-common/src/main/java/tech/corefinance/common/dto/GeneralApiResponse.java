@@ -1,9 +1,10 @@
 package tech.corefinance.common.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 
 @Data
@@ -36,7 +37,7 @@ public class GeneralApiResponse<T> implements Serializable {
     }
 
     public static GeneralApiResponse<String> createErrorResponseWithCode(String errorCode) {
-        return new GeneralApiResponse<String>(errorCode, STATUS_UNKNOWN_ERROR, null);
+        return new GeneralApiResponse<>(errorCode, STATUS_UNKNOWN_ERROR, null);
     }
 
     public static GeneralApiResponse<String> createErrorResponseWithCode(Enum<?> errorCode) {
@@ -44,10 +45,10 @@ public class GeneralApiResponse<T> implements Serializable {
     }
 
     public static <T> GeneralApiResponse<T> createSuccessResponse(T result) {
-        return new GeneralApiResponse<T>("OK", STATUS_SUCCESS, result);
+        return new GeneralApiResponse<>("OK", STATUS_SUCCESS, result);
     }
 
     public static <T> GeneralApiResponse<T> createErrorResponseWithCode(String errorCode, T result) {
-        return new GeneralApiResponse<T>(errorCode, STATUS_UNKNOWN_ERROR, null);
+        return new GeneralApiResponse<T>(errorCode, STATUS_UNKNOWN_ERROR, result);
     }
 }

@@ -1,0 +1,3 @@
+"ID"|"Action"|"URL"|"No Authen required"
+"Resource search_test_search_id"|"search"|"URL: /search/{id}"|"YES"
+"Resource search2_test_search2_id"|"search2"|"URL: /search2/{id}"|"NO"

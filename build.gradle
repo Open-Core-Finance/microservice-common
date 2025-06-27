@@ -1,3 +1,7 @@
+import java.net.HttpURLConnection
+import java.nio.file.Files
+import groovy.json.JsonSlurper
+
 /**
  * Define build script dependencies.
  */
@@ -32,9 +36,11 @@ if (new File("artifact-credential.gradle").exists()) {
     apply from: 'artifact-credential-sample.gradle'
 }
 
+
+def publishOutputFolder="publish-output"
 def listJavaLibrariesProject = [
-    "microservice-common", "microservice-common-jpa", "microservice-common-mongodb",
-    "common-account", "common-product", "common-feign-client", "common-kafka", "common-userprofile"
+        "microservice-common", "microservice-common-jpa", "microservice-common-mongodb",
+        "common-account", "common-product", "common-feign-client", "common-kafka", "common-userprofile"
 ]
 
 configure(subprojects) {
@@ -200,13 +206,22 @@ configure(subprojects) {
 
     publishing {
         repositories {
+//            maven {
+//                name = 'ossrh-staging-api'
+//                if (version.endsWith("SNAPSHOT")) {
+//                    url = "https://s01.oss.sonatype.org/content/repositories/snapshots"
+//                } else {
+//                    url = "https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/"
+//                }
+//                credentials {
+//                    username = rootProject.ext.artifactUsername
+//                    password = rootProject.ext.artifactPassword
+//                }
+//            }
             maven {
-                url = version.endsWith('SNAPSHOT') ? "${artifactSnapshotUrl}" : "${artifactReleaseUrl}"
-                credentials {
-                    username = "${artifactUsername}"
-                    password = "${artifactPassword}"
-                }
                 allowInsecureProtocol = true
+                name = "maven-central"
+                url = uri("${layout.buildDirectory.asFile.get().absolutePath}/${publishOutputFolder}")
             }
         }
         publications {
@@ -288,5 +303,136 @@ configure(subprojects) {
                 testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
             }
         }
+    }
+
+    tasks.register('zipPublishFiles', Zip) {
+        dependsOn publish
+        mustRunAfter publish
+        from("${layout.buildDirectory.asFile.get().absolutePath}/${publishOutputFolder}")    // folder or files you want to zip
+        archiveFileName = "${project.name}.zip"  // name of the zip file
+        destinationDirectory = file("${layout.buildDirectory.asFile.get().absolutePath}") // output folder
+        doLast {
+            println("Published done!")
+        }
+    }
+
+    tasks.register('uploadZip') {
+        dependsOn zipPublishFiles
+        mustRunAfter zipPublishFiles
+
+        def zipFile = file("${layout.buildDirectory.asFile.get().absolutePath}/${project.name}.zip")
+        def uploadUrl = 'https://central.sonatype.com/api/v1/publisher/upload'
+        def publishingType = "PUBLISHING"
+        def projectName = project.name  // gets your Gradle project name
+        // Your login credentials
+        def username = rootProject.ext.artifactUsername;
+        def password = rootProject.ext.artifactPassword;
+
+        doLast {
+            if (!zipFile.exists()) {
+                throw new GradleException("Zip file not found: $zipFile")
+            }
+
+            // Encode username:password in Base64
+            def userPass = "$username:$password"
+            def encoded = Base64.encoder.encodeToString(userPass.bytes)
+            def bearerToken = encoded  // use this as Bearer token
+
+            println "Using Bearer token: $bearerToken"
+            // println "Username [$username] and password [$password]"
+
+            def boundary = "===" + System.currentTimeMillis() + "==="
+            def lineFeed = "\r\n"
+
+            def url = new URI(uploadUrl).toURL()
+            def connection = (HttpURLConnection) url.openConnection()
+            connection.setDoOutput(true)
+            connection.setRequestMethod("POST")
+            connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=$boundary")
+
+            // Add Authorization header with Base64 token
+            connection.setRequestProperty("Authorization", "Bearer $bearerToken")
+
+            def outputStream = connection.getOutputStream()
+            def writer = new OutputStreamWriter(outputStream, "UTF-8")
+
+            def writeFormField = { name, value ->
+                writer.write("--$boundary$lineFeed")
+                writer.write("Content-Disposition: form-data; name=\"$name\"$lineFeed")
+                writer.write("Content-Type: text/plain; charset=UTF-8$lineFeed")
+                writer.write(lineFeed)
+                writer.write(value + lineFeed)
+                writer.flush()
+            }
+
+            writeFormField("publishingType", publishingType)
+            writeFormField("name", projectName)
+
+            writer.write("--$boundary$lineFeed")
+            writer.write("Content-Disposition: form-data; name=\"bundle\"; filename=\"${zipFile.name}\"$lineFeed")
+            writer.write("Content-Type: application/zip$lineFeed")
+            writer.write(lineFeed)
+            writer.flush()
+
+            Files.copy(zipFile.toPath(), outputStream)
+            outputStream.flush()
+
+            writer.write(lineFeed)
+            writer.write("--$boundary--$lineFeed")
+            writer.flush()
+            writer.close()
+
+            def responseCode = connection.responseCode
+            println "Response Code: $responseCode"
+
+            def responseMessage
+            try {
+                responseMessage = connection.inputStream.text
+            } catch (IOException e) {
+                responseMessage = connection.errorStream?.text ?: "No error message"
+            }
+            println "Response ($responseCode): $responseMessage"
+
+            if (responseCode >= 400) {
+                throw new GradleException("Upload failed with response code $responseCode")
+            }
+        }
+    }
+}
+
+tasks.register('clean') {
+    group = 'build'
+    description = 'Cleans all subprojects'
+
+    dependsOn subprojects.collect { "${it.path}:clean" }
+}
+
+def selectedProjectsToDeploy = [":microservice-common", ":microservice-common-jpa", ":microservice-common-mongodb", "common-userprofile"]
+
+tasks.register('copyDeployFilesFromChild', Copy) {
+    dependsOn selectedProjectsToDeploy.collect { project(it).tasks.named('publish') }
+
+    selectedProjectsToDeploy.each { name ->
+        def child = project(name)
+        from new File(child.layout.buildDirectory.asFile.get().absolutePath, "${publishOutputFolder}")
+    }
+
+    into "${layout.buildDirectory.asFile.get().absolutePath}/${publishOutputFolder}"
+
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+
+    doLast {
+        println("copyDeployFilesFromChild done!")
+    }
+}
+
+tasks.register('zipPublishFilesFromChilds', Zip) {
+    dependsOn copyDeployFilesFromChild
+    mustRunAfter copyDeployFilesFromChild
+    from("${layout.buildDirectory.asFile.get().absolutePath}/${publishOutputFolder}")    // folder or files you want to zip
+    archiveFileName = "${project.name}.zip"  // name of the zip file
+    destinationDirectory = file("${layout.buildDirectory.asFile.get().absolutePath}") // output folder
+    doLast {
+        println("zipPublishFiles done!")
     }
 }

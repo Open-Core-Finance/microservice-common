@@ -16,4 +16,5 @@ public class ServiceSecurityConfig {
     private boolean authorizeCheck;
     private boolean scanControllersActions;
     private List<String> ignoreControllerScan;
+    private boolean requireControllerWithAnnotation = true;
 }

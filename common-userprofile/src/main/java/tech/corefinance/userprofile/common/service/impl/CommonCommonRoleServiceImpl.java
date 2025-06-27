@@ -17,8 +17,7 @@ import java.util.List;
 @Service
 @Transactional
 @AllArgsConstructor
-@ConditionalOnProperty(prefix = "tech.corefinance.app.userprofile", name = "common-role-service", havingValue = "true",
-        matchIfMissing = true)
+@ConditionalOnProperty(prefix = "tech.corefinance.app.userprofile", name = "common-role-service", havingValue = "true", matchIfMissing = true)
 public class CommonCommonRoleServiceImpl implements CommonRoleService<CommonRole<?>> {
 
     private final CommonRoleRepository commonRoleRepository;
@@ -30,7 +29,7 @@ public class CommonCommonRoleServiceImpl implements CommonRoleService<CommonRole
     }
 
     private UserAuthenAddOn getSuitableUserAuthenAddOn() {
-        return this.userAuthenAddOns.getFirst();
+        return this.userAuthenAddOns.iterator().next();
     }
 
     @Override

@@ -1,0 +1,10 @@
+{
+  "delimiter": "|",
+  "header": true,
+  "fields": [
+    {"label": "ID", "field": "id", "format": "Resource {}", "index": 0},
+    {"label": "Action", "field": "action", "index": 1},
+    {"label": "URL", "field": "originUrl", "format": "URL: {}", "index": 2},
+    {"label": "No Authen required", "field": "noAuthenRequired", "format": "YES|NO", "index": 3}
+  ]
+}

@@ -15,6 +15,8 @@ spring:
   kafka:
     producer:
       client-id: combined_service
+  liquibase:
+    duplicate-file-mode: WARN
 management:
   server:
     port: ${server.port}

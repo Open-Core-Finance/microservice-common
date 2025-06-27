@@ -1,6 +1,7 @@
 package tech.corefinance.common.service;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -24,14 +25,12 @@ import tech.corefinance.common.repository.ResourceActionRepository;
 import tech.corefinance.common.util.CoreFinanceUtil;
 
 import java.lang.reflect.Method;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 @Component
-@ConditionalOnProperty(prefix = "tech.corefinance.security", name = "scan-controllers-actions", havingValue = "true",
-        matchIfMissing = true)
+@ConditionalOnProperty(prefix = "tech.corefinance.security", name = "scan-controllers-actions", havingValue = "true", matchIfMissing = true)
 @Slf4j
 public class ControllerScanner {
 
@@ -39,7 +38,7 @@ public class ControllerScanner {
     private ResourceActionRepository resourceActionRepository;
     @Autowired
     private ServiceSecurityConfig serviceSecurityConfig;
-    @Autowired
+    @Autowired(required = false)
     private PermissionService permissionService;
     @Autowired
     private List<RequestMappingHandlerMapping> handlerMappings;
@@ -74,69 +73,99 @@ public class ControllerScanner {
                 }
             }
             log.debug("URLs {}", urls);
+            var controllerManagedResource = controllerClass.getAnnotation(ControllerManagedResource.class);
+            var perActAnn = method.getAnnotation(PermissionAction.class);
+            var manualPerCheckAnn = method.getAnnotation(ManualPermissionCheck.class);
+            String description = "";
+            main_for:
             for (var url : urls) {
+                boolean noAuthenRequired = false;
                 log.debug("Validating URL [{}]", url);
                 for (String noAuthenUrl : serviceSecurityConfig.getNoAuthenUrls()) {
                     Pattern pattern = Pattern.compile(noAuthenUrl.replace("*", ".*"));
                     var matched = pattern.matcher(url.getSecond()).matches();
                     log.debug("Checking result with pattern [{}] is [{}]", noAuthenUrl, matched);
                     if (matched) {
-                        continue main_loop;
+                        if (serviceSecurityConfig.isRequireControllerWithAnnotation()) {
+                            log.debug("Skipped!! Required annotation [true]!!");
+                            continue main_for;
+                        } else {
+                            log.debug("No skip!! Required annotation [false]!!");
+                            noAuthenRequired = true;
+                        }
+                    }
+                }
+                if (perActAnn == null) {
+                    if (controllerManagedResource == null) {
+                        log.error("{}={} have no annotation PermissionAction!", declaringClass.getName(), method.getName());
+                        if (serviceSecurityConfig.isRequireControllerWithAnnotation()) {
+                            throw new ReflectiveIncorrectFieldException("no_permission_defined");
+                        }
+                    }
+                } else {
+                    description = perActAnn.description();
+                }
+                if (description.isEmpty()) {
+                    description = coreFinanceUtil.resolveDefaultDescription(perActAnn, key);
+                }
+                var resourceType = coreFinanceUtil.resolveResourceType(perActAnn, controllerManagedResource, serviceSecurityConfig);
+                var action = coreFinanceUtil.resolveResourceAction(perActAnn, key);
+                var requestMethods = key.getMethodsCondition().getMethods();
+                if (manualPerCheckAnn != null) {
+                    saveManualCheckPermission(resourceType, action, url, requestMethods);
+                } else {
+                    ResourceAction item = buildAction(resourceType, action, url, requestMethods, description, noAuthenRequired);
+                    if (item != null) {
+                        resourceActionRepository.save(item);
                     }
                 }
             }
-            var controllerManagedResource = controllerClass.getAnnotation(ControllerManagedResource.class);
-            var perActAnn = method.getAnnotation(PermissionAction.class);
-            var manualPerCheckAnn = method.getAnnotation(ManualPermissionCheck.class);
-            if (perActAnn == null) {
-                if (controllerManagedResource == null) {
-                    log.error("{}={} have no annotation PermissionAction!", declaringClass.getName(),
-                            method.getName());
-                    throw new ReflectiveIncorrectFieldException("no_permission_defined");
-                }
-            }
-            var resourceType = coreFinanceUtil.resolveResourceType(perActAnn, controllerManagedResource);
-            var action = coreFinanceUtil.resolveResourceAction(perActAnn, key);
-            var requestMethods = key.getMethodsCondition().getMethods();
-            buildListActions(resourceType, action, urls, requestMethods);
-            if (manualPerCheckAnn != null) {
-                saveManualCheckPermissions(resourceType, action, urls, requestMethods);
-            }
         }
     }
 
-    private List<ResourceAction> buildListActions(String resourceType, String action, Iterable<Pair<String, String>> urls,
-                                                  Iterable<RequestMethod> requestMethods) {
-        var permissionActions = new LinkedList<ResourceAction>();
-        for (var url : urls) {
-            for (RequestMethod requestMethod : requestMethods) {
-                log.debug("Checking URL [{}] with method [{}]", url, requestMethod);
-                var resourceAction = permissionService.newResourceAction(resourceType, action, url.getSecond(), requestMethod);
-                if (!resourceActionRepository.existsByActionAndRequestMethodAndResourceTypeAndUrl(action, requestMethod,
-                        resourceType, url.getSecond())) {
-                    log.debug("Saving action [{}]", resourceAction);
-                    permissionActions.add(resourceActionRepository.save(resourceAction));
-                } else {
-                    log.debug("Skip existed action [{}]", resourceAction);
-                }
+    private ResourceAction buildAction(String resourceType, String action, Pair<String, String> url,
+                                       Iterable<RequestMethod> requestMethods, String description, boolean noAuthenRequired) {
+        for (RequestMethod requestMethod : requestMethods) {
+            log.debug("Checking URL [{}] with method [{}]", url, requestMethod);
+            var resourceAction = newResourceAction(resourceType, action, url.getSecond(), requestMethod, description, noAuthenRequired, url.getFirst());
+            if (!resourceActionRepository.existsByActionAndRequestMethodAndResourceTypeAndUrl(action, requestMethod, resourceType,
+                    url.getSecond())) {
+                log.debug("Saving action [{}]", resourceAction);
+                return resourceActionRepository.save(resourceAction);
+            } else {
+                log.debug("Skip existed action [{}]", resourceAction);
             }
         }
-        return permissionActions;
+        return null;
     }
 
-    private void saveManualCheckPermissions(String resourceType, String action, Iterable<Pair<String, String>> urls,
-                                            Iterable<RequestMethod> requestMethods) {
-        for (var url : urls) {
-            for (RequestMethod requestMethod : requestMethods) {
-                var permission = new PermissionDto();
-                permission.setControl(AccessControl.MANUAL_CHECK);
-                permission.setUrl(url.getSecond());
-                permission.setRoleId(Permission.ANY_ROLE_APPLIED_VALUE);
-                permission.setResourceType(resourceType);
-                permission.setAction(action);
-                permission.setRequestMethod(requestMethod);
+    private void saveManualCheckPermission(String resourceType, String action, Pair<String, String> url,
+                                           Iterable<RequestMethod> requestMethods) {
+        for (RequestMethod requestMethod : requestMethods) {
+            var permission = new PermissionDto();
+            permission.setControl(AccessControl.MANUAL_CHECK);
+            permission.setUrl(url.getSecond());
+            permission.setRoleId(Permission.ANY_ROLE_APPLIED_VALUE);
+            permission.setResourceType(resourceType);
+            permission.setAction(action);
+            permission.setRequestMethod(requestMethod);
+            if (permissionService != null) {
                 permissionService.createOrUpdateEntity(permission);
             }
         }
+    }
+
+    /**
+     * Create ResourceAction.
+     *
+     * @param resourceType  Resource type name.
+     * @param action        Action name.
+     * @param url           URL.
+     * @param requestMethod Request Method.
+     * @return New ResourceAction object.
+     */
+    public @NotNull ResourceAction newResourceAction(String resourceType, String action, String url, RequestMethod requestMethod,
+                                                     String description, boolean noAuthenRequired, String originUrl) {
+        return new ResourceAction(resourceType, action, url, requestMethod, description, noAuthenRequired, originUrl);
     }
 }

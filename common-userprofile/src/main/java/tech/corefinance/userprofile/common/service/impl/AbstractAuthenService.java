@@ -35,8 +35,7 @@ import java.util.Map;
 @Slf4j
 @Service
 @Transactional
-@ConditionalOnProperty(prefix = "tech.corefinance.app.userprofile", name = "common-role-service", havingValue = "true",
-        matchIfMissing = true)
+@ConditionalOnProperty(prefix = "tech.corefinance.app.userprofile", name = "common-role-service", havingValue = "true", matchIfMissing = true)
 public abstract class AbstractAuthenService<U extends CommonUserProfile<?>, T extends CommonLoginSession<U>>
         implements CommonAuthenService<U, T> {
     @Autowired
@@ -54,7 +53,7 @@ public abstract class AbstractAuthenService<U extends CommonUserProfile<?>, T ex
 
     @SuppressWarnings("unchecked")
     private UserAuthenAddOn<U> getSuitableUserAuthenAddOn() {
-        return this.userAuthenAddOns.getFirst();
+        return this.userAuthenAddOns.iterator().next();
     }
 
     public abstract T createEmptySession();
@@ -62,7 +61,7 @@ public abstract class AbstractAuthenService<U extends CommonUserProfile<?>, T ex
     protected abstract int invalidateOldLogins(String verifyKey);
 
     private LoginDto createToken(U userProfile, String deviceId, String clientAppId, AppPlatform appPlatform, AppVersion appVersion,
-                                 HttpServletRequest request, String account, String password, Map<String, Object> additionalInfo)
+            HttpServletRequest request, String account, String password, Map<String, Object> additionalInfo)
             throws JsonProcessingException, UnknownHostException {
         var userAuthenAddOn = getSuitableUserAuthenAddOn();
         T loginSession = loginSessionRepository.save(createEmptySession());
@@ -70,7 +69,7 @@ public abstract class AbstractAuthenService<U extends CommonUserProfile<?>, T ex
 
         JwtTokenDto jwtTokenDto =
                 userAuthenAddOn.buildJwtTokenDto(deviceId, clientAppId, appPlatform, appVersion, request, loginSession, userProfile,
-                        userRoles, account, password, additionalInfo);
+                                                 userRoles, account, password, additionalInfo);
 
         String jwtToken = jwtService.buildLoginToken(jwtTokenDto);
         String refreshToken = jwtService.buildRefreshToken(jwtTokenDto, jwtToken);
@@ -104,7 +103,7 @@ public abstract class AbstractAuthenService<U extends CommonUserProfile<?>, T ex
     @Override
     @Transactional(noRollbackFor = ServiceProcessingException.class)
     public LoginDto login(String account, String password, String deviceId, String clientAppId, AppPlatform appPlatform,
-                          AppVersion appVersion, HttpServletRequest request) throws Exception {
+            AppVersion appVersion, HttpServletRequest request) throws Exception {
         long loginCount = attemptedLoginRepository.countByAccountAndEnabled(account, true);
         if (loginCount >= jwtConfiguration.getMaxLoginFailAllowed()) {
             throw new ServiceProcessingException(GeneralApiResponse.createErrorResponseWithCode("user_locked"));
@@ -116,7 +115,7 @@ public abstract class AbstractAuthenService<U extends CommonUserProfile<?>, T ex
             // Store attempted login
             attemptedLoginRepository.save(
                     new AttemptedLogin(account, jwtService.extractIpAddress(request), request.getHeader("user-agent"), clientAppId,
-                            deviceId, appPlatform, appVersion, additionalInfo));
+                                       deviceId, appPlatform, appVersion, additionalInfo));
             throw new ServiceProcessingException(GeneralApiResponse.createErrorResponseWithCode("login_fail"));
         }
         // Clean attempted login
@@ -132,7 +131,7 @@ public abstract class AbstractAuthenService<U extends CommonUserProfile<?>, T ex
 
     @Override
     public LoginDto refreshToken(String loginId, String refreshToken, String deviceId, String clientAppId, AppPlatform appPlatform,
-                                 AppVersion appVersion, HttpServletRequest request) throws UnknownHostException, JsonProcessingException {
+            AppVersion appVersion, HttpServletRequest request) throws UnknownHostException, JsonProcessingException {
         T loginSession = loginSessionRepository.findByIdAndRefreshToken(loginId, refreshToken)
                 .orElseThrow(() -> new AccessDeniedException("ID or refresh token is wrong"));
 
@@ -142,7 +141,7 @@ public abstract class AbstractAuthenService<U extends CommonUserProfile<?>, T ex
         loginSessionRepository.save(loginSession);
 
         return createToken(loginSession.getUserProfile(), deviceId, clientAppId, appPlatform, appVersion, request,
-                loginSession.getInputAccount(), loginSession.getInputPassword(), loginSession.getAdditionalInfo());
+                           loginSession.getInputAccount(), loginSession.getInputPassword(), loginSession.getAdditionalInfo());
     }
 
     private void validateLoginSession(String deviceId, HttpServletRequest request, T loginSession) throws UnknownHostException {

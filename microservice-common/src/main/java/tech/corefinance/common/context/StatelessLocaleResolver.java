@@ -25,7 +25,7 @@ public class StatelessLocaleResolver extends AbstractLocaleContextResolver imple
         } else {
             log.debug("Resolved local in header [{}]", localeKey);
         }
-        Locale locale = Locale.of(localeKey);
+        Locale locale = Locale.forLanguageTag(localeKey);
         return new SimpleTimeZoneAwareLocaleContext(locale, getDefaultTimeZone());
     }
 
