@@ -1,0 +1,16 @@
+{
+  "exportSheetName": "exported_test",
+  "header": true,
+  "fields": [
+    {
+      "label": "ID", "field": "id", "format": "Resource {}", "index": 0,
+      "headerCellStyle": {"shinkToFit":  true, "foregroundColorHex":  "#FF00FF00"}
+    },
+    {"label": "Action", "field": "action", "index": 1},
+    {"label": "URL", "field": "originUrl", "format": "URL: {}", "index": 2},
+    {
+      "label": "No Authen required", "field": "noAuthenRequired", "format": "YES|NO", "index": 3,
+      "headerCellStyle": {"foregroundColorHex":  "#FF0000FF", "fontColor":  "#FFFFFFFF"}
+    }
+  ]
+}
