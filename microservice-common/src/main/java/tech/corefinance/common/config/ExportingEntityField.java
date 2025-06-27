@@ -19,4 +19,14 @@ public class ExportingEntityField {
      */
     private String format;
     private int index;
+
+    /**
+     * For Excel format only.
+     */
+    private ExportingExcelCellStyle headerCellStyle;
+
+    /**
+     * For Excel format only.
+     */
+    private ExportingExcelCellStyle contentCellStyle;
 }

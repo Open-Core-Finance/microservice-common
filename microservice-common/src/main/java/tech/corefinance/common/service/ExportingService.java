@@ -1,6 +1,7 @@
 package tech.corefinance.common.service;
 
 import tech.corefinance.common.config.ExportingCsvConfig;
+import tech.corefinance.common.config.ExportingExcelConfig;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -12,5 +13,9 @@ public interface ExportingService {
 
     <T> void exportToCsvWithEncoding(List<T> entities, ExportingCsvConfig config, OutputStream output, Charset encoding, String bomVal);
 
-    ExportingCsvConfig loadConfigFromPath(String path) throws IOException;
+    ExportingCsvConfig loadCsvConfigFromPath(String path) throws IOException;
+
+    ExportingExcelConfig loadExcelConfigFromPath(String path) throws IOException;
+
+    <T> void exportToExcel(List<T> entities, ExportingExcelConfig config, OutputStream output) throws IOException;
 }
