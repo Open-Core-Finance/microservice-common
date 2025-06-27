@@ -1,10 +1,5 @@
-package tech.corefinance.common.services;
+package tech.corefinance.common.service;
 
-import tech.corefinance.common.config.JwtConfiguration;
-import tech.corefinance.common.dto.JwtTokenDto;
-import tech.corefinance.common.enums.CommonConstants;
-import tech.corefinance.common.service.JwtService;
-import tech.corefinance.common.service.JwtServiceImpl;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +8,9 @@ import org.powermock.api.mockito.PowerMockito;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import tech.corefinance.common.config.JwtConfiguration;
+import tech.corefinance.common.dto.JwtTokenDto;
+import tech.corefinance.common.enums.CommonConstants;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

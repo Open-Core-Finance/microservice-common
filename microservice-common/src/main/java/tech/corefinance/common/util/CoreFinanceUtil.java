@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import tech.corefinance.common.annotation.ControllerManagedResource;
 import tech.corefinance.common.annotation.PermissionAction;
+import tech.corefinance.common.config.ServiceSecurityConfig;
 import tech.corefinance.common.context.ApplicationContextHolder;
 import tech.corefinance.common.converter.ExportTypeConverter;
 import tech.corefinance.common.dto.SimpleVersion;
@@ -41,17 +42,17 @@ import java.lang.reflect.*;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 @Slf4j
 public class CoreFinanceUtil {
 
     public static final String PARSING_JSON_FAILURE = "Parsing json failure";
-    private static final String PARSING_JSON_FAILURE_LOG = "Parsing json failure! object: {}, error: {}";
+    private static final String PARSING_JSON_FAILURE_LOG = "Parsing json failure! object: {}";
     private static final List<Class<?>> LIST_IGNORE_LOGGING =
-            List.of(ServletRequest.class, ServletResponse.class, HttpSession.class,
-                    Servlet.class, MultipartFile.class, byte[].class, File.class, InputStream.class,
-                    Class.class, Method.class, Field.class);
+            List.of(ServletRequest.class, ServletResponse.class, HttpSession.class, Servlet.class, MultipartFile.class, byte[].class,
+                    File.class, InputStream.class, Class.class, Method.class, Field.class);
 
     @Autowired
     private ResourcePatternResolver resourcePatternResolver;
@@ -66,8 +67,7 @@ public class CoreFinanceUtil {
             return null;
         }
         ApplicationContextHolder contextHolder = ApplicationContextHolder.getInstance();
-        Map<String, ExportTypeConverter> beans =
-                contextHolder.getApplicationContext().getBeansOfType(ExportTypeConverter.class);
+        Map<String, ExportTypeConverter> beans = contextHolder.getApplicationContext().getBeansOfType(ExportTypeConverter.class);
         for (Map.Entry<String, ExportTypeConverter> entry : beans.entrySet()) {
             ExportTypeConverter converter = entry.getValue();
             if (converter.isSupport(data.getClass())) {
@@ -78,8 +78,7 @@ public class CoreFinanceUtil {
         return data;
     }
 
-    public String buildMethodInputJsonLog(ProceedingJoinPoint joinPoint, String[] parametersNames,
-                                          ObjectMapper objectMapper) {
+    public String buildMethodInputJsonLog(ProceedingJoinPoint joinPoint, String[] parametersNames, ObjectMapper objectMapper) {
         // Create AopCustomParam
         Map<String, Object> logs = new LinkedHashMap<>();
         Object[] args = joinPoint.getArgs();
@@ -88,16 +87,14 @@ public class CoreFinanceUtil {
             for (int i = 0; i < parametersNames.length; i++) {
                 String name = parametersNames[i];
                 Object arg = args[i];
-                boolean shouldIgnore =
-                        LIST_IGNORE_LOGGING.stream()
-                                .anyMatch(clzz -> arg != null && clzz.isAssignableFrom(arg.getClass()));
+                boolean shouldIgnore = LIST_IGNORE_LOGGING.stream().anyMatch(clzz -> arg != null && clzz.isAssignableFrom(arg.getClass()));
                 if (!shouldIgnore && arg != null) {
                     shouldIgnore = arg.getClass().getSimpleName().contains("$");
                 }
                 if (!shouldIgnore) {
                     logs.put(name, writeValueToJson(objectMapper, arg));
                 } else {
-                    logs.put(name, arg == null ? "null" : "<" + arg.getClass().getName() + "/>");
+                    logs.put(name, "<" + arg.getClass().getName() + "/>");
                 }
             }
         }
@@ -116,6 +113,7 @@ public class CoreFinanceUtil {
     public List<Resource> getResources(String regex, String nameSeparator, String versionSeparator) throws IOException {
         Predicate<? super Resource> fileNameFilter = r -> {
             String fileName = r.getFilename();
+            assert fileName != null;
             if (fileName.contains(String.valueOf(nameSeparator))) {
                 try {
                     convertVersion(fileName, nameSeparator, versionSeparator);
@@ -132,12 +130,11 @@ public class CoreFinanceUtil {
             SimpleVersion version2 = convertVersion(r2.getFilename(), nameSeparator, versionSeparator);
             int result = simpleVersionComparator.compare(version1, version2);
             if (result == 0) {
-                result = r1.getFilename().compareTo(r2.getFilename());
+                result = r1.getFilename().compareTo(Objects.requireNonNull(r2.getFilename()));
             }
             return result;
         };
-        return List.of(resourcePatternResolver.getResources(regex)).stream().filter(fileNameFilter)
-                .sorted(fileNameComparator)
+        return Stream.of(resourcePatternResolver.getResources(regex)).filter(fileNameFilter).sorted(fileNameComparator)
                 .collect(Collectors.toList());
     }
 
@@ -170,15 +167,38 @@ public class CoreFinanceUtil {
         return resourceType;
     }
 
-    public String resolveResourceType(PermissionAction perActAnn, ControllerManagedResource managedResource) {
+    public String resolveDefaultDescription(PermissionAction perActAnn, RequestMappingInfo requestMappingInfo) {
+        var resourceType = perActAnn != null ? perActAnn.action() : null;
+        if (!StringUtils.hasText(resourceType)) {
+            var requestMethods = requestMappingInfo.getMethodsCondition().getMethods();
+            if (requestMethods.contains(RequestMethod.DELETE)) {
+                resourceType = ResourceAction.COMMON_DESCRIPTION_DELETE;
+            } else if (requestMethods.contains(RequestMethod.GET)) {
+                resourceType = ResourceAction.COMMON_DESCRIPTION_VIEW;
+            } else if (requestMethods.contains(RequestMethod.POST)) {
+                resourceType = ResourceAction.COMMON_DESCRIPTION_ADD;
+            } else if (requestMethods.contains(RequestMethod.PUT) || requestMethods.contains(RequestMethod.PATCH)) {
+                resourceType = ResourceAction.COMMON_DESCRIPTION_UPDATE;
+            } else {
+                resourceType = ResourceAction.COMMON_DESCRIPTION_LIST;
+            }
+        }
+        return resourceType;
+    }
+
+    public String resolveResourceType(PermissionAction perActAnn, ControllerManagedResource managedResource, ServiceSecurityConfig serviceSecurityConfig) {
         var resourceType = perActAnn != null ? perActAnn.resourceType() : null;
         if (!StringUtils.hasText(resourceType)) {
             if (managedResource == null) {
-                log.error("Must define resource type at PermissionAction in method level " +
-                        "or ControllerManagedResource in controller level.");
-                throw new ReflectiveIncorrectFieldException("no_permission_defined");
+                log.error(
+                        "Must define resource type at PermissionAction in method level " + "or ControllerManagedResource in controller level.");
+                if (serviceSecurityConfig.isRequireControllerWithAnnotation()) {
+                    throw new ReflectiveIncorrectFieldException("no_permission_defined");
+                }
+                resourceType = "no_configured_resource";
+            } else {
+                resourceType = managedResource.value();
             }
-            resourceType = managedResource.value();
         }
         return resourceType;
     }
@@ -187,15 +207,12 @@ public class CoreFinanceUtil {
         BeanWrapper beanWrapper = new BeanWrapperImpl(object);
         String[] attributeNames = deepAttributePath.split("\\.");
 
-        for (var i = 0; i < attributeNames.length; i++) {
-            var attributeName = attributeNames[i];
+        for (String attributeName : attributeNames) {
             object = beanWrapper.getPropertyValue(attributeName);
             if (object == null) {
                 return null;
             }
-            if (i < attributeNames.length) {
-                beanWrapper = new BeanWrapperImpl(object);
-            }
+            beanWrapper = new BeanWrapperImpl(object);
         }
 
         return object;
@@ -300,15 +317,13 @@ public class CoreFinanceUtil {
         return url;
     }
 
-    public AccessibleObject findAnnotatedField(Object obj, Class<?> objClass,
-                                               Class<? extends Annotation> annotationClass)
+    public AccessibleObject findAnnotatedField(Object obj, Class<?> objClass, Class<? extends Annotation> annotationClass)
             throws NoSuchFieldException {
         return findAnnotatedFieldOrName(obj, objClass, annotationClass, null);
     }
 
-    public AccessibleObject findAnnotatedFieldOrName(Object obj, Class<?> objClass,
-                                                     Class<? extends Annotation> annotationClass, String fieldName)
-            throws NoSuchFieldException {
+    public AccessibleObject findAnnotatedFieldOrName(Object obj, Class<?> objClass, Class<? extends Annotation> annotationClass,
+                                                     String fieldName) throws NoSuchFieldException {
         Method[] methods = ReflectionUtils.getAllDeclaredMethods(objClass);
         for (var method : methods) {
             var createdByAnn = method.getAnnotation(annotationClass);
@@ -326,8 +341,7 @@ public class CoreFinanceUtil {
         return accessField(obj, objClass, fieldName);
     }
 
-    public Method findGetterBySetter(Object obj, Class<?> objClass, Method setter)
-            throws NoSuchMethodException {
+    public Method findGetterBySetter(Object obj, Class<?> objClass, Method setter) throws NoSuchMethodException {
         var setterName = setter.getName();
         if (setterName.startsWith("set")) {
             var getterName = setterName.replace("set", "get");

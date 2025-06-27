@@ -17,14 +17,20 @@ public @interface PermissionAction {
 
     /**
      * Permission Action of this API.
+     *
      * @return Action name
      */
     String action() default "";
 
     /**
      * Resource type that need to check permission.
+     *
      * @return Resource type name.
      */
     String resourceType() default "";
 
+    /**
+     * @return Details description for the action.
+     */
+    String description() default "";
 }

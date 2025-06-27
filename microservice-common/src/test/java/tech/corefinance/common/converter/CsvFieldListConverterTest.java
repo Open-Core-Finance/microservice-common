@@ -4,8 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tech.corefinance.common.dto.CsvExportDefinition;
 
-import static org.junit.jupiter.api.Assertions.*;
-import java.util.Locale;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class CsvFieldListConverterTest {
 
@@ -20,7 +20,7 @@ public class CsvFieldListConverterTest {
     public void test_parse_normal() {
         var input = "[{\"title\": \"Product name\", \"fieldName\": \"name\"}]";
         var outputArr = csvFieldListConverter.parse(input, null);
-        assertTrue(outputArr.length == 1);
+        assertEquals(1, outputArr.length);
         var output = outputArr[0];
         assertEquals("name", output.getFieldName());
     }

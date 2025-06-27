@@ -1,5 +1,6 @@
 package tech.corefinance.common.repository;
 
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.*;
 import org.springframework.data.repository.query.FluentQuery;
 import tech.corefinance.common.ex.ServiceProcessingException;
@@ -7,7 +8,6 @@ import tech.corefinance.common.model.GenericModel;
 import tech.corefinance.common.util.CoreFinanceUtil;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.function.Function;
 
@@ -33,7 +33,7 @@ public class InMemoryRepository<T extends GenericModel<ID>, ID extends Serializa
     }
 
     @Override
-    public <S extends T> S save(S entity) {
+    public <S extends T> S save(@NotNull S entity) {
         if (!validateEntity(entity)) {
             throw new ServiceProcessingException(VALIDATION_FAIL_MESSAGE);
         }
@@ -62,8 +62,7 @@ public class InMemoryRepository<T extends GenericModel<ID>, ID extends Serializa
         if (generator != null) {
             return generator.generateId();
         }
-        if (idClass.equals(Long.class) || idClass.equals(long.class) ||
-                idClass.equals(int.class) || idClass.equals(Integer.class)) {
+        if (idClass.equals(Long.class) || idClass.equals(long.class) || idClass.equals(int.class) || idClass.equals(Integer.class)) {
             synchronized (lock) {
                 maxGeneratedId++;
             }
@@ -73,7 +72,7 @@ public class InMemoryRepository<T extends GenericModel<ID>, ID extends Serializa
     }
 
     @Override
-    public <S extends T> List<S> saveAll(Iterable<S> entities) {
+    public <S extends T> List<S> saveAll(@NotNull Iterable<S> entities) {
         List<S> result = new LinkedList<>();
         entities.forEach(e -> {
             result.add(save(e));
@@ -82,7 +81,7 @@ public class InMemoryRepository<T extends GenericModel<ID>, ID extends Serializa
     }
 
     @Override
-    public Optional<T> findById(ID id) {
+    public Optional<T> findById(@NotNull ID id) {
         var value = data.get(id);
         if (value != null) {
             return Optional.of(value);
@@ -103,7 +102,7 @@ public class InMemoryRepository<T extends GenericModel<ID>, ID extends Serializa
     @Override
     public List<T> findAllById(Iterable<ID> ids) {
         List<T> result = new LinkedList<>();
-        ids.forEach( id -> result.add(data.get(id)));
+        ids.forEach(id -> result.add(data.get(id)));
         return result;
     }
 

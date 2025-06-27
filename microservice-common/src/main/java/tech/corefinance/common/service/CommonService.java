@@ -34,8 +34,7 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
     default T createEntityObject() {
         try {
             return findEntityClass().getConstructor().newInstance();
-        } catch (NoSuchMethodException | InvocationTargetException
-                 | InstantiationException | IllegalAccessException e) {
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
             throw new ServiceProcessingException(e.getMessage(), e);
         }
     }
@@ -65,7 +64,8 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
 
     /**
      * This method will be called after persit entity to database.<br />
-     * @param entity   Entity object
+     *
+     * @param entity Entity object
      */
     default void afterEntitySaved(T entity) {
     }
@@ -223,6 +223,7 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
 
     default Class<T> findEntityClass() {
         var context = ApplicationContextHolder.getInstance().getApplicationContext();
+        //noinspection unchecked
         return (Class<T>) context.getBean(CoreFinanceUtil.class).findEntityTypeFromCommonService(getClass());
     }
 
@@ -230,5 +231,9 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
     }
 
     default void afterItemDeleted(T item) {
+    }
+
+    default List<T> loadEAllByIds(List<I> ids) {
+        return getRepository().findAllById(ids);
     }
 }

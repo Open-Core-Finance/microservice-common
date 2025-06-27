@@ -21,8 +21,7 @@ import java.util.List;
 @Service
 @Slf4j
 @AllArgsConstructor
-@ConditionalOnProperty(prefix = "tech.corefinance.app.userprofile", name = "common-user-service", havingValue = "true",
-        matchIfMissing = true)
+@ConditionalOnProperty(prefix = "tech.corefinance.app.userprofile", name = "common-user-service", havingValue = "true", matchIfMissing = true)
 public class CommonUserProfileServiceImpl implements UserProfileService<CommonUserProfile<?>> {
 
     private CommonUserProfileRepository commonUserProfileRepository;
@@ -35,12 +34,12 @@ public class CommonUserProfileServiceImpl implements UserProfileService<CommonUs
     }
 
     private UserAuthenAddOn getSuitableUserAuthenAddOn() {
-        return this.userAuthenAddOns.getFirst();
+        return this.userAuthenAddOns.iterator().next();
     }
 
     @Override
     public <D extends CreateUpdateDto<String>> CommonUserProfile<?> copyAdditionalPropertiesFromDtoToEntity(D source,
-                                                                                                            CommonUserProfile<?> dest) {
+            CommonUserProfile<?> dest) {
         dest = UserProfileService.super.copyAdditionalPropertiesFromDtoToEntity(source, dest);
         if (source instanceof UserProfileCreatorDto creatorDto) {
             dest.setAdditionalAttributes(creatorDto.getAdditionalAttributes());

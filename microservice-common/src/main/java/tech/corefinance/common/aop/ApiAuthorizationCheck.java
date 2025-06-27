@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import tech.corefinance.common.annotation.ControllerManagedResource;
 import tech.corefinance.common.annotation.PermissionAction;
 import tech.corefinance.common.annotation.PermissionResource;
+import tech.corefinance.common.config.ServiceSecurityConfig;
 import tech.corefinance.common.context.JwtContext;
 import tech.corefinance.common.dto.JwtTokenDto;
 import tech.corefinance.common.dto.UserRoleDto;
@@ -44,13 +45,11 @@ import java.util.Set;
  */
 @Aspect
 @Component
-@ConditionalOnProperty(prefix = "tech.corefinance.security", name = "authorize-check", havingValue = "true",
-        matchIfMissing = true)
+@ConditionalOnProperty(prefix = "tech.corefinance.security", name = "authorize-check", havingValue = "true", matchIfMissing = true)
 @Slf4j
 public class ApiAuthorizationCheck {
 
-    private static final String EXECUTION_EXCLUDED =
-            "!@annotation(tech.corefinance.common.annotation.ManualPermissionCheck)";
+    private static final String EXECUTION_EXCLUDED = "!@annotation(tech.corefinance.common.annotation.ManualPermissionCheck)";
 
     @Autowired
     private HttpServletRequest request;
@@ -65,6 +64,8 @@ public class ApiAuthorizationCheck {
     private List<ResourceOwnerVerifier> resourceOwnerVerifiers;
     @Autowired(required = false)
     private List<InternalApiVerify> internalApiVerifiers;
+    @Autowired
+    private ServiceSecurityConfig serviceSecurityConfig;
 
     @Value("${tech.corefinance.security.permission.default-control}")
     private AccessControl permissionDefaultControl;
@@ -185,7 +186,7 @@ public class ApiAuthorizationCheck {
             var perActAnn = method.getAnnotation(PermissionAction.class);
             var action = coreFinanceUtil.resolveResourceAction(perActAnn, handlerMethodEntry.getKey());
             var controllerManagedResource = controllerClass.getAnnotation(ControllerManagedResource.class);
-            var resourceType = coreFinanceUtil.resolveResourceType(perActAnn, controllerManagedResource);
+            var resourceType = coreFinanceUtil.resolveResourceType(perActAnn, controllerManagedResource, serviceSecurityConfig);
             Collection<UserRoleDto> userRoles = jwtTokenDto.getUserRoles();
             var foundMatched = false;
             var isAdmin = false;
@@ -247,18 +248,17 @@ public class ApiAuthorizationCheck {
         return result;
     }
 
-    private boolean verifyRole(JwtTokenDto jwtTokenDto, UserRoleDto userRole, String action, String url,
-                               RequestMethod requestMethod, String resourceType, ProceedingJoinPoint joinPoint) {
+    private boolean verifyRole(JwtTokenDto jwtTokenDto, UserRoleDto userRole, String action, String url, RequestMethod requestMethod,
+            String resourceType, ProceedingJoinPoint joinPoint) {
         var sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "action"), new Sort.Order(Sort.Direction.ASC, "url"));
         var permissions = permissionRepository.findAllByRoleIdAndResourceType(userRole.getRoleId(), resourceType, sort);
         var foundMatched = false;
         for (var permission : permissions) {
-            var matchedAction = Permission.ANY_ROLE_APPLIED_VALUE.equalsIgnoreCase(permission.getAction()) ||
-                    action.equalsIgnoreCase(permission.getAction());
-            var matchUrl = Permission.ANY_ROLE_APPLIED_VALUE.equalsIgnoreCase(permission.getUrl()) ||
-                    url.equalsIgnoreCase(permission.getUrl());
-            var matchedRequestMethod =
-                    permission.getRequestMethod() == null || permission.getRequestMethod() == requestMethod;
+            var matchedAction = Permission.ANY_ROLE_APPLIED_VALUE.equalsIgnoreCase(permission.getAction()) || action.equalsIgnoreCase(
+                    permission.getAction());
+            var matchUrl =
+                    Permission.ANY_ROLE_APPLIED_VALUE.equalsIgnoreCase(permission.getUrl()) || url.equalsIgnoreCase(permission.getUrl());
+            var matchedRequestMethod = permission.getRequestMethod() == null || permission.getRequestMethod() == requestMethod;
             if (matchedAction && matchUrl && matchedRequestMethod) {
                 foundMatched = true;
                 checkPermissionControl(jwtTokenDto, permission, joinPoint, userRole);
@@ -299,8 +299,8 @@ public class ApiAuthorizationCheck {
         }
     }
 
-    private boolean checkResourceOwnership(JwtTokenDto jwtTokenDto, String resourceType, Object resourceId,
-                                           Permission permission, UserRoleDto userRole) {
+    private boolean checkResourceOwnership(JwtTokenDto jwtTokenDto, String resourceType, Object resourceId, Permission permission,
+            UserRoleDto userRole) {
         var result = false;
         for (var verifier : resourceOwnerVerifiers) {
             if (verifier.isSupportedResource(resourceType)) {
@@ -312,22 +312,20 @@ public class ApiAuthorizationCheck {
     }
 
     private void checkPermissionControl(JwtTokenDto jwtTokenDto, Permission permission, ProceedingJoinPoint joinPoint,
-                                        UserRoleDto userRole) {
+            UserRoleDto userRole) {
         var control = permission.getControl();
         switch (control) {
             case DENIED -> throw new AccessDeniedException("access_denied_" + permission.getId());
             case ALLOWED_SPECIFIC_RESOURCES -> {
                 var resourceInfo = resolveResourceId(joinPoint);
-                var matched = checkResourceOwnership(jwtTokenDto, resourceInfo.resourceType, resourceInfo.resourceId,
-                        permission, userRole);
+                var matched = checkResourceOwnership(jwtTokenDto, resourceInfo.resourceType, resourceInfo.resourceId, permission, userRole);
                 if (!matched) {
                     throw new AccessDeniedException("access_denied_" + permission.getId());
                 }
             }
             case DENIED_SPECIFIC_RESOURCES -> {
                 var resourceInfo = resolveResourceId(joinPoint);
-                var matched = checkResourceOwnership(jwtTokenDto, resourceInfo.resourceType, resourceInfo.resourceId,
-                        permission, userRole);
+                var matched = checkResourceOwnership(jwtTokenDto, resourceInfo.resourceType, resourceInfo.resourceId, permission, userRole);
                 if (matched) {
                     throw new AccessDeniedException("access_denied_" + permission.getId());
                 }
@@ -335,6 +333,5 @@ public class ApiAuthorizationCheck {
         }
     }
 
-    record ResourceInfoPair(String resourceType, Object resourceId) {
-    }
+    record ResourceInfoPair(String resourceType, Object resourceId) {}
 }

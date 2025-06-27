@@ -1,4 +1,4 @@
-package tech.corefinance.common.services;
+package tech.corefinance.common.service;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.SignatureGenerationException;
@@ -28,9 +28,6 @@ import tech.corefinance.common.enums.CommonConstants;
 import tech.corefinance.common.ex.ServiceProcessingException;
 import tech.corefinance.common.model.AppVersion;
 import tech.corefinance.common.repository.ResourceActionRepository;
-import tech.corefinance.common.service.JwtService;
-import tech.corefinance.common.service.JwtServiceImpl;
-import tech.corefinance.common.service.JwtTokenParserImpl;
 import tech.corefinance.common.test.support.app.TestCommonApplication;
 import tech.corefinance.common.test.support.model.RoleTest;
 import tech.corefinance.common.test.support.model.UserTest;
@@ -100,8 +97,9 @@ public class JwtServiceTest {
         UserTest admin = new UserTest("admin@email.com", "admin", "", "", "");
         admin.addRoleInSchool(new UserRoleDto("school", "01", "admin"));
         admin.setId(UUID.randomUUID().toString());
-        JwtTokenDto loginInfo = new JwtTokenDto(UUID.randomUUID().toString(), admin.getId(), "ClientId",
-                AppPlatform.ANDROID, new AppVersion(), deviceId, "127.0.1.1");
+        JwtTokenDto loginInfo =
+                new JwtTokenDto(UUID.randomUUID().toString(), admin.getId(), "ClientId", AppPlatform.ANDROID, new AppVersion(), deviceId,
+                                "127.0.1.1");
         String token = jwtService.buildLoginToken(loginInfo);
         request.addHeader(HttpHeaders.AUTHORIZATION, CommonConstants.BEARER_PREFIX + token);
         request.addHeader(CommonConstants.HEADER_KEY_EXTERNAL_IP_ADDRESS, "127.0.1.1");
@@ -121,8 +119,9 @@ public class JwtServiceTest {
         UserTest admin = new UserTest("admin@email.com", "admin", "", "", "");
         admin.addRoleInSchool(new UserRoleDto("school", "01", "admin"));
         admin.setId(UUID.randomUUID().toString());
-        JwtTokenDto loginInfo = new JwtTokenDto(UUID.randomUUID().toString(), admin.getId(), "ClientId",
-                AppPlatform.ANDROID, new AppVersion(), deviceId, "127.0.1.1");
+        JwtTokenDto loginInfo =
+                new JwtTokenDto(UUID.randomUUID().toString(), admin.getId(), "ClientId", AppPlatform.ANDROID, new AppVersion(), deviceId,
+                                "127.0.1.1");
         String token = jwtService.buildLoginToken(loginInfo);
         request.addHeader(HttpHeaders.AUTHORIZATION, CommonConstants.BEARER_PREFIX + token);
         request.addHeader(CommonConstants.HEADER_KEY_EXTERNAL_IP_ADDRESS, "127.0.1.1");
@@ -136,8 +135,9 @@ public class JwtServiceTest {
         UserTest admin = new UserTest("admin@email.com", "admin", "", "", "");
         admin.addRoleInSchool(new UserRoleDto("school", "01", "admin"));
         admin.setId(UUID.randomUUID().toString());
-        JwtTokenDto loginInfo = new JwtTokenDto(UUID.randomUUID().toString(), admin.getId(), "ClientId",
-                AppPlatform.ANDROID, new AppVersion(), deviceId, "127.0.1.1");
+        JwtTokenDto loginInfo =
+                new JwtTokenDto(UUID.randomUUID().toString(), admin.getId(), "ClientId", AppPlatform.ANDROID, new AppVersion(), deviceId,
+                                "127.0.1.1");
         String token = jwtService.buildLoginToken(loginInfo);
         request.addHeader(HttpHeaders.AUTHORIZATION, CommonConstants.BEARER_PREFIX + token);
         request.addHeader(CommonConstants.DEVICE_ID, "anydevice");
@@ -150,8 +150,9 @@ public class JwtServiceTest {
         UserTest admin = new UserTest("admin@email.com", "admin", "", "", "");
         admin.addRoleInSchool(new UserRoleDto("school", "01", "admin"));
         admin.setId(UUID.randomUUID().toString());
-        JwtTokenDto loginInfo = new JwtTokenDto(UUID.randomUUID().toString(), admin.getId(), "ClientId",
-                AppPlatform.ANDROID, new AppVersion(), deviceId, "127.0.1.1");
+        JwtTokenDto loginInfo =
+                new JwtTokenDto(UUID.randomUUID().toString(), admin.getId(), "ClientId", AppPlatform.ANDROID, new AppVersion(), deviceId,
+                                "127.0.1.1");
         String token = jwtService.buildLoginToken(loginInfo);
         request.addHeader(HttpHeaders.AUTHORIZATION, CommonConstants.BEARER_PREFIX + token);
         request.addHeader(CommonConstants.HEADER_KEY_EXTERNAL_IP_ADDRESS, "127.0.1.1");
@@ -227,8 +228,9 @@ public class JwtServiceTest {
     public void test_buildRefreshToken() throws JsonProcessingException {
         String deviceId = "Test device";
         UserTest admin = new UserTest("admin@email.com", "admin", "", "", "");
-        JwtTokenDto loginInfo = new JwtTokenDto(UUID.randomUUID().toString(), admin.getId(), "ClientId",
-                AppPlatform.ANDROID, new AppVersion(), deviceId, "127.0.1.1");
+        JwtTokenDto loginInfo =
+                new JwtTokenDto(UUID.randomUUID().toString(), admin.getId(), "ClientId", AppPlatform.ANDROID, new AppVersion(), deviceId,
+                                "127.0.1.1");
         loginInfo.setUserEmail(admin.getEmail());
         loginInfo.setUsername(admin.getUsername());
         String token = jwtService.buildRefreshToken(loginInfo, jwtService.buildLoginToken(loginInfo));
@@ -242,8 +244,9 @@ public class JwtServiceTest {
     public void test_buildRefreshToken_noLoginToken() {
         String deviceId = "Test device";
         UserTest admin = new UserTest("admin@email.com", "admin", "", "", "");
-        JwtTokenDto loginInfo = new JwtTokenDto(UUID.randomUUID().toString(), admin.getId(), "ClientId",
-                AppPlatform.ANDROID, new AppVersion(), deviceId, "127.0.1.1");
+        JwtTokenDto loginInfo =
+                new JwtTokenDto(UUID.randomUUID().toString(), admin.getId(), "ClientId", AppPlatform.ANDROID, new AppVersion(), deviceId,
+                                "127.0.1.1");
         loginInfo.setUserEmail(admin.getEmail());
         loginInfo.setUsername(admin.getUsername());
         assertThrows(ServiceProcessingException.class, () -> jwtService.buildRefreshToken(loginInfo, ""));
@@ -260,8 +263,9 @@ public class JwtServiceTest {
         UserTest admin = new UserTest("admin@email.com", "admin", "", "", "");
         admin.addRoleInSchool(new UserRoleDto("school", "01", "admin"));
         admin.setId(UUID.randomUUID().toString());
-        JwtTokenDto loginInfo = new JwtTokenDto(UUID.randomUUID().toString(), admin.getId(), "ClientId",
-                AppPlatform.ANDROID, new AppVersion(), deviceId, "127.0.1.1");
+        JwtTokenDto loginInfo =
+                new JwtTokenDto(UUID.randomUUID().toString(), admin.getId(), "ClientId", AppPlatform.ANDROID, new AppVersion(), deviceId,
+                                "127.0.1.1");
         loginInfo.setUserRoles(admin.getRolesInSchools());
         loginInfo.setUserEmail(admin.getEmail());
         long expiredIn = System.currentTimeMillis() + loginExpiry * 1000;
