@@ -1,4 +1,4 @@
-package tech.corefinance.common.service;
+package tech.corefinance.common.export.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -12,10 +12,10 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import tech.corefinance.common.config.ExportingCsvConfig;
-import tech.corefinance.common.config.ExportingEntityField;
-import tech.corefinance.common.config.ExportingExcelCellStyle;
-import tech.corefinance.common.config.ExportingExcelConfig;
+import tech.corefinance.common.export.config.ExportingCsvConfig;
+import tech.corefinance.common.export.config.ExportingEntityField;
+import tech.corefinance.common.export.config.ExportingExcelCellStyle;
+import tech.corefinance.common.export.config.ExportingExcelConfig;
 import tech.corefinance.common.util.CoreFinanceUtil;
 
 import java.io.*;
@@ -57,27 +57,30 @@ public class ExportingServiceImpl implements ExportingService {
         };
     }
 
-    public <T> void exportToUtf8Csv(List<T> entities, ExportingCsvConfig config, OutputStream output) {
-        exportToCsvWithEncoding(entities, config, output, StandardCharsets.UTF_8, UTF8_BOM_UNICODE);
+    public <T> void exportToUtf8Csv(List<T> entities, ExportingCsvConfig config, OutputStream output,
+            List<CsvCellDataFormatter> customFormatters) {
+        exportToCsvWithEncoding(entities, config, output, StandardCharsets.UTF_8, UTF8_BOM_UNICODE, customFormatters);
     }
 
     @Override
     public <T> void exportToCsvWithEncoding(List<T> entities, ExportingCsvConfig config, OutputStream output, Charset encoding,
-            String bomVal) {
+            String bomVal, List<CsvCellDataFormatter> customFormatters) {
         var fields = config.getFields().stream().sorted(exportingFieldComparator).toList();
         OutputStreamWriter osw = new OutputStreamWriter(output, encoding);
         PrintWriter pw = new PrintWriter(new BufferedWriter(osw));
         if (StringUtils.hasText(bomVal)) {
             pw.print(bomVal);
         }
+        var rowIndex = -1;
         if (config.isHeader()) {
-            var index = 0;
+            rowIndex = 0;
+            var columnIndex = 0;
             for (ExportingEntityField entityField : fields) {
                 String val = "\"" + entityField.getLabel() + "\"";
-                if (index > 0) {
+                if (columnIndex > 0) {
                     pw.print(config.getDelimiter());
                 }
-                index++;
+                columnIndex++;
                 pw.print(val);
             }
             pw.println();
@@ -89,7 +92,8 @@ public class ExportingServiceImpl implements ExportingService {
                 pw.println();
             }
             index++;
-            printEntityToCsv(entity, pw, fields, config);
+            rowIndex++;
+            printEntityToCsv(entity, pw, fields, config, rowIndex, customFormatters);
         }
         // Flush data
         pw.flush();
@@ -107,7 +111,8 @@ public class ExportingServiceImpl implements ExportingService {
         return objectMapper.readValue(resource.getContentAsString(StandardCharsets.UTF_8), ExportingExcelConfig.class);
     }
 
-    private <T> void printEntityToCsv(T entity, PrintWriter pw, List<ExportingEntityField> fields, ExportingCsvConfig config) {
+    private <T> void printEntityToCsv(T entity, PrintWriter pw, List<ExportingEntityField> fields, ExportingCsvConfig config, int rowIndex,
+            List<CsvCellDataFormatter> customFormatters) {
         var index = 0;
         for (ExportingEntityField entityField : fields) {
             Object fieldVal = coreFinanceUtil.getDeepAttributeValue(entity, entityField.getField());
@@ -116,19 +121,24 @@ public class ExportingServiceImpl implements ExportingService {
             }
             index++;
             if (fieldVal == null) {
-                pw.print("NULL");
+                var printVal = customTransformCsvFieldValue(rowIndex, index, null, "NULL", entity, config, entityField, customFormatters);
+                pw.print(printVal);
                 continue;
             }
             String format = entityField.getFormat();
             if (StringUtils.hasText(format)) {
-                pw.print("\"" + getValueAsFormat(fieldVal, format) + "\"");
+                var printVal = "\"" + getValueAsFormat(fieldVal, format) + "\"";
+                printVal = customTransformCsvFieldValue(rowIndex, index, fieldVal, printVal, entity, config, entityField, customFormatters);
+                pw.print(printVal);
             } else {
-                pw.print("\"" + fieldVal + "\"");
+                var printVal = "\"" + fieldVal + "\"";
+                printVal = customTransformCsvFieldValue(rowIndex, index, fieldVal, printVal, entity, config, entityField, customFormatters);
+                pw.print(printVal);
             }
         }
     }
 
-    private String getValueAsFormat(@NonNull Object value, @NonNull String format) {
+    private <T> String getValueAsFormat(@NonNull Object value, @NonNull String format) {
         if (value instanceof String val) {
             return format.replace("{}", val);
         }
@@ -158,8 +168,17 @@ public class ExportingServiceImpl implements ExportingService {
         return value.toString();
     }
 
+    private <T> String customTransformCsvFieldValue(int rowIndex, int columnIndex, Object originalCellData, String printingValue,
+            T rowObject, ExportingCsvConfig config, ExportingEntityField fieldConfig, List<CsvCellDataFormatter> customFormatters) {
+        for (CsvCellDataFormatter formatter : customFormatters) {
+            printingValue = formatter.transformData(rowIndex, columnIndex, originalCellData, printingValue, rowObject, config, fieldConfig);
+        }
+        return printingValue;
+    }
+
     @Override
-    public <T> void exportToExcel(List<T> entities, ExportingExcelConfig config, OutputStream output) throws IOException {
+    public <T> void exportToExcel(List<T> entities, ExportingExcelConfig config, OutputStream output,
+            List<ExcelCellDataFormatter> customFormatters) throws IOException {
         var fields = config.getFields().stream().sorted(exportingFieldComparator).toList();
         // 1. Create a new workbook
         try (Workbook workbook = new SXSSFWorkbook()) {
@@ -198,6 +217,10 @@ public class ExportingServiceImpl implements ExportingService {
                         applyCellStyle(workbook, cell, cellStyle, contentCellStyleConfig);
                     }
                     cell.setCellStyle(cellStyle);
+                    // Apply custom formatter
+                    for (ExcelCellDataFormatter dataFormatter : customFormatters) {
+                        dataFormatter.transformData(workbook, dataRow, cell, rowIndex, columnIndex, fieldVal, entity, config, entityField);
+                    }
                 }
             }
 

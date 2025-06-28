@@ -1,4 +1,4 @@
-package tech.corefinance.common.config;
+package tech.corefinance.common.export.config;
 
 import jakarta.annotation.PostConstruct;
 import lombok.Data;
