@@ -40,7 +40,8 @@ if (new File("artifact-credential.gradle").exists()) {
 def publishOutputFolder="publish-output"
 def listJavaLibrariesProject = [
         "microservice-common", "microservice-common-jpa", "microservice-common-mongodb",
-        "common-account", "common-product", "common-feign-client", "common-kafka", "common-userprofile"
+        "common-account", "common-product", "common-feign-client", "common-kafka", "common-userprofile",
+        "microservice-common-export"
 ]
 
 configure(subprojects) {
@@ -407,7 +408,8 @@ tasks.register('clean') {
     dependsOn subprojects.collect { "${it.path}:clean" }
 }
 
-def selectedProjectsToDeploy = [":microservice-common", ":microservice-common-jpa", ":microservice-common-mongodb", "common-userprofile"]
+def selectedProjectsToDeploy = [":microservice-common", ":microservice-common-jpa", ":microservice-common-mongodb", "common-userprofile",
+    "microservice-common-export"]
 
 tasks.register('copyDeployFilesFromChild', Copy) {
     dependsOn selectedProjectsToDeploy.collect { project(it).tasks.named('publish') }

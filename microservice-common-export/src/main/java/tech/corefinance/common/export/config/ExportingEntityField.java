@@ -1,4 +1,4 @@
-package tech.corefinance.common.config;
+package tech.corefinance.common.export.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

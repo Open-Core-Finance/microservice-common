@@ -1,4 +1,4 @@
-package tech.corefinance.common.service;
+package tech.corefinance.common.export.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.bind.annotation.RequestMethod;
-import tech.corefinance.common.config.ExportingCsvConfig;
-import tech.corefinance.common.config.ExportingExcelConfig;
+import tech.corefinance.common.export.config.ExportingCsvConfig;
+import tech.corefinance.common.export.config.ExportingExcelConfig;
 import tech.corefinance.common.model.ResourceAction;
 import tech.corefinance.common.util.CoreFinanceUtil;
 
@@ -48,7 +48,7 @@ public class ExportingServiceTest {
                 new ResourceAction("test", "search2", "/search2/:id", RequestMethod.GET, "Descriptions 2", false, "/search2/{id}"));
         // Call test
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        exportingService.exportToUtf8Csv(resourceActions, config, baos);
+        exportingService.exportToUtf8Csv(resourceActions, config, baos, new LinkedList<>());
         String expected = ExportingServiceImpl.UTF8_BOM_UNICODE + new String(
                 Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("resource-action-export-test-full-result.csv"))
                         .readAllBytes(), StandardCharsets.UTF_8);
@@ -67,7 +67,7 @@ public class ExportingServiceTest {
                 new ResourceAction("test", "search2", "/search2/:id", RequestMethod.GET, "Descriptions 2", false, "/search2/{id}"));
         // Call test
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        exportingService.exportToExcel(resourceActions, config, baos);
+        exportingService.exportToExcel(resourceActions, config, baos, new LinkedList<>());
         //        try (FileOutputStream fos = new FileOutputStream("out.xlsx")) {
         //            fos.write(baos.toByteArray());
         //        }
