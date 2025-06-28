@@ -9,15 +9,16 @@ import java.nio.charset.Charset;
 import java.util.List;
 
 public interface ExportingService {
-    <T> void exportToUtf8Csv(List<T> entities, ExportingCsvConfig config, OutputStream output, List<CsvCellDataFormatter> customFormatters);
+    <T> void exportToUtf8Csv(List<T> entities, ExportingCsvConfig config, OutputStream output,
+            List<CsvCellDataFormatter<T>> customFormatters);
 
     <T> void exportToCsvWithEncoding(List<T> entities, ExportingCsvConfig config, OutputStream output, Charset encoding, String bomVal,
-            List<CsvCellDataFormatter> customFormatters);
+            List<CsvCellDataFormatter<T>> customFormatters);
 
     ExportingCsvConfig loadCsvConfigFromPath(String path) throws IOException;
 
     ExportingExcelConfig loadExcelConfigFromPath(String path) throws IOException;
 
     <T> void exportToExcel(List<T> entities, ExportingExcelConfig config, OutputStream output,
-            List<ExcelCellDataFormatter> customFormatters) throws IOException;
+            List<ExcelCellDataFormatter<T>> customFormatters) throws IOException;
 }

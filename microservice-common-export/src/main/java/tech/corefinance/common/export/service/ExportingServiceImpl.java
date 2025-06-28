@@ -58,13 +58,13 @@ public class ExportingServiceImpl implements ExportingService {
     }
 
     public <T> void exportToUtf8Csv(List<T> entities, ExportingCsvConfig config, OutputStream output,
-            List<CsvCellDataFormatter> customFormatters) {
+            List<CsvCellDataFormatter<T>> customFormatters) {
         exportToCsvWithEncoding(entities, config, output, StandardCharsets.UTF_8, UTF8_BOM_UNICODE, customFormatters);
     }
 
     @Override
     public <T> void exportToCsvWithEncoding(List<T> entities, ExportingCsvConfig config, OutputStream output, Charset encoding,
-            String bomVal, List<CsvCellDataFormatter> customFormatters) {
+            String bomVal, List<CsvCellDataFormatter<T>> customFormatters) {
         var fields = config.getFields().stream().sorted(exportingFieldComparator).toList();
         OutputStreamWriter osw = new OutputStreamWriter(output, encoding);
         PrintWriter pw = new PrintWriter(new BufferedWriter(osw));
@@ -112,7 +112,7 @@ public class ExportingServiceImpl implements ExportingService {
     }
 
     private <T> void printEntityToCsv(T entity, PrintWriter pw, List<ExportingEntityField> fields, ExportingCsvConfig config, int rowIndex,
-            List<CsvCellDataFormatter> customFormatters) {
+            List<CsvCellDataFormatter<T>> customFormatters) {
         var index = 0;
         for (ExportingEntityField entityField : fields) {
             Object fieldVal = coreFinanceUtil.getDeepAttributeValue(entity, entityField.getField());
@@ -169,8 +169,8 @@ public class ExportingServiceImpl implements ExportingService {
     }
 
     private <T> String customTransformCsvFieldValue(int rowIndex, int columnIndex, Object originalCellData, String printingValue,
-            T rowObject, ExportingCsvConfig config, ExportingEntityField fieldConfig, List<CsvCellDataFormatter> customFormatters) {
-        for (CsvCellDataFormatter formatter : customFormatters) {
+            T rowObject, ExportingCsvConfig config, ExportingEntityField fieldConfig, List<CsvCellDataFormatter<T>> customFormatters) {
+        for (CsvCellDataFormatter<T> formatter : customFormatters) {
             printingValue = formatter.transformData(rowIndex, columnIndex, originalCellData, printingValue, rowObject, config, fieldConfig);
         }
         return printingValue;
@@ -178,7 +178,7 @@ public class ExportingServiceImpl implements ExportingService {
 
     @Override
     public <T> void exportToExcel(List<T> entities, ExportingExcelConfig config, OutputStream output,
-            List<ExcelCellDataFormatter> customFormatters) throws IOException {
+            List<ExcelCellDataFormatter<T>> customFormatters) throws IOException {
         var fields = config.getFields().stream().sorted(exportingFieldComparator).toList();
         // 1. Create a new workbook
         try (Workbook workbook = new SXSSFWorkbook()) {
@@ -218,7 +218,7 @@ public class ExportingServiceImpl implements ExportingService {
                     }
                     cell.setCellStyle(cellStyle);
                     // Apply custom formatter
-                    for (ExcelCellDataFormatter dataFormatter : customFormatters) {
+                    for (ExcelCellDataFormatter<T> dataFormatter : customFormatters) {
                         dataFormatter.transformData(workbook, dataRow, cell, rowIndex, columnIndex, fieldVal, entity, config, entityField);
                     }
                 }
