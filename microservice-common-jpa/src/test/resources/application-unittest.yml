@@ -1,6 +1,6 @@
 #Logging
 logging.config: classpath:logback-test.xml
-
+server.port: 7777
 spring:
   main:
     allow-bean-definition-overriding: false
@@ -13,26 +13,29 @@ spring:
       write-enums-using-to-string: false
       FAIL_ON_EMPTY_BEANS: false
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:${DB_PORT:5432}/kuniv_unit_test}
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
-    driver-class-name: org.postgresql.Driver
+    url: ${DB_URL:jdbc:h2:mem:testdb;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE}
+    username: ${DB_USERNAME:sa}
+    password: ${DB_PASSWORD:}
+    driver-class-name: ${JDBC_DRIVER_CLASS:org.h2.Driver}
     hikari:
       connection-test-query: SELECT 1
-      maximum-pool-size: 10 # Adjust as needed
-      minimum-idle: 2
+      maximum-pool-size: 2 # Adjust as needed
+      minimum-idle: 1
       idle-timeout: 30000
-      # pool-name: order_pool
-  jpa:
-    properties:
+      pool-name: test_pool
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+    jpa:
       hibernate:
-        hbm2ddl:
-          auto: none
+        ddl-auto: update
       show-sql: true
-      generate-ddl: false
-  # Liquibase settings
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.H2Dialect
   liquibase:
-    change-log: classpath:db/changelog/sql-changelog.xml
+    change-log: ${LIQUIBASE_TEST_CHANGELOG:classpath:db/changelog/sql-changelog.xml}
     drop-first: false
     enabled: true
     contexts: development
@@ -45,12 +48,15 @@ tech:
         zoned-date-time-to-string: true
         zoned-date-time-to-local-date-time: true
         zoned-date-time-to-date: true
+      userprofile:
+        common-user-service: true
+        common-role-service: true
     common:
       filter-ordered:
         authen-filter: 2
-        tenant-id-filter-order: 1
+        tenant-id-filter-order: 3
         trace-info-id-order: 0
-        encoding-response-order: 0
+        encoding-response-order: 100
       enabled:
         async: true
         simple-version: true
@@ -58,13 +64,13 @@ tech:
         auto-response-encoding: true
         trace-id-filter: true
         tenant: true
-        default-simple-search: true
       default-response-charset: utf-8
     log:
       enabled:
         services: true
         repositories: true
         api: true
+      exclude-classes: "feign.Target"
     security:
       internal-api-key: No-key
       # Json Web Token
@@ -85,14 +91,44 @@ tech:
       permission:
         default-control: ALLOWED
       authorize-check: true
-      scan-controllers-actions: false
+      scan-controllers-actions: true
       ignore-controller-scan:
         - .springframework.
         - .springdoc.
         - .test.
+      url-cors:
+        cors-configurations:
+          - url-pattern: /v3/api-docs/*
+            allowed-origins:
+              - http://localhost:4200
+            allowed-methods:
+              - GET
+            allowed-headers: '*'
+          - url-pattern: /**
+            allowed-origins:
+              - http://localhost:4200
+              - http://*.corefinance.tech
+            allowed-methods:
+              - GET
+              - PUT
+              - OPTIONS
+              - DELETE
+              - POST
+              - PATCH
+            allowed-headers: '*'
     encryption:
       plain: test
       encoded: ENC(O5MFWIMMOz+V3iItOVY60g==)
+    initial:
+      name-separator: _
+      version-separator: .
+      data-regex:
+        permission:
+          file-name-regex: classpath:initial/*permissions*.json
+          replace-if-existed: true
+        internal-api:
+          file-name-regex: classpath:initial/*internal_api*.json
+          replace-if-existed: true
 export:
   format:
     date: yyyy/MM/dd

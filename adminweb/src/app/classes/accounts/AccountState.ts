@@ -1,9 +1,0 @@
-export enum AccountState {
-    PENDING_APPROVAL = "PENDING_APPROVAL",
-    PARTIAL_APPLICATION = "PARTIAL_APPLICATION",
-    APPROVED = "APPROVED",
-    NEW = "NEW",
-    DORMANT = "DORMANT",
-    CLOSED = "CLOSED",
-    OPEN = "OPEN"
-}

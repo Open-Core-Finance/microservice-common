@@ -1,5 +1,0 @@
-
-dependencies {
-    // Internal
-    implementation project(":common-product")
-}
