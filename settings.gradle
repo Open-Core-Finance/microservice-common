@@ -4,10 +4,8 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'corefinance'
+rootProject.name = 'corefinance-common'
 include "microservice-common", "microservice-common-jpa", "microservice-common-mongodb"
-include "userprofile", "product", "gl-account", "customer", "common-account"
-include "deposit-account", "loan-account", "common-product", "jasypt-tool"
-include "combined-product-account", "geocode", "combined-nontenancy", "common-feign-client"
-include "payment", "balance", "common-kafka", "common-userprofile"
+include "jasypt-tool"
+include "common-kafka", "common-userprofile"
 include "microservice-common-export"
