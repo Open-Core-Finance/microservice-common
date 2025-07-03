@@ -4,7 +4,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'corefinance-common'
+rootProject.name = 'microservice-common'
 include "microservice-common", "microservice-common-jpa", "microservice-common-mongodb"
 include "jasypt-tool"
 include "common-kafka", "common-userprofile"
