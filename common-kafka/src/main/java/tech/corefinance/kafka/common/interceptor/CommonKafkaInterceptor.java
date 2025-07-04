@@ -36,8 +36,8 @@ public class CommonKafkaInterceptor implements ProducerInterceptor<String, Objec
         checkNullAndAddHeader(headers, HEADER_KEY_TRACE_ID, traceId);
         if (jwtTokenDto != null) {
             log.debug("Found JWT token in context!");
-            checkNullAndAddHeader(headers, HttpHeaders.AUTHORIZATION, BEARER_PREFIX + jwtTokenDto.getOriginalToken())
-                    .checkNullAndAddHeader(headers, DEVICE_ID, jwtTokenDto.getDeviceId())
+            checkNullAndAddHeader(headers, HttpHeaders.AUTHORIZATION, BEARER_PREFIX + jwtTokenDto.getOriginalToken()).checkNullAndAddHeader(
+                            headers, DEVICE_ID, jwtTokenDto.getDeviceId())
                     .checkNullAndAddHeader(headers, HEADER_KEY_EXTERNAL_IP_ADDRESS, jwtTokenDto.getLoginIpAddr());
         } else {
             log.debug("Didn't found JWT token in context!");
@@ -77,7 +77,7 @@ public class CommonKafkaInterceptor implements ProducerInterceptor<String, Objec
             var authenTokenVal = extractLastStringHeaderValue(headers, HttpHeaders.AUTHORIZATION);
             var ipAddressVal = extractLastStringHeaderValue(headers, HEADER_KEY_EXTERNAL_IP_ADDRESS);
             var deviceIdVal = extractLastStringHeaderValue(headers, DEVICE_ID);
-            log.debug("Toekn from message header [{}]", authenTokenVal);
+            log.debug("Token from message header [{}]", authenTokenVal);
             if (authenTokenVal != null) {
                 authenTokenVal = authenTokenVal.substring(BEARER_PREFIX.length()).trim();
                 try {

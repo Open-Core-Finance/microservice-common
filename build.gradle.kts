@@ -54,7 +54,7 @@ subprojects {
     apply(plugin = "application")
     apply(plugin = "io.freefair.lombok")
     apply(plugin = "org.sonarqube")
-    if (project.name != "common-kafka" && project.name != "jasypt-tool") {
+    if (project.name != "jasypt-tool") {
         apply(plugin = "maven-publish")
         apply(plugin = "signing")
     }
