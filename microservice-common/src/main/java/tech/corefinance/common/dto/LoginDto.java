@@ -1,6 +1,5 @@
 package tech.corefinance.common.dto;
 
-import tech.corefinance.common.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,7 +23,7 @@ public class LoginDto {
     private String lastName;
     private String displayName;
     private String address;
-    private Gender gender;
+    private String gender;
     private String email;
     private LocalDate birthday;
     private String phoneNumber;

@@ -1,15 +1,14 @@
 package tech.corefinance.common.test.support.model;
 
-import tech.corefinance.common.dto.UserRoleDto;
-import tech.corefinance.common.enums.AppPlatform;
-import tech.corefinance.common.enums.Gender;
-import tech.corefinance.common.model.GenericModel;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
+import tech.corefinance.common.dto.UserRoleDto;
+import tech.corefinance.common.enums.AppPlatform;
+import tech.corefinance.common.model.GenericModel;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -44,7 +43,7 @@ public class UserTest implements GenericModel<String> {
     private String phoneNumber;
 
     @NotNull(message = "gender_must_not_null")
-    private Gender gender;
+    private String gender;
     private LocalDate birthday;
     private String address;
     private List<UserRoleDto> rolesInSchools;

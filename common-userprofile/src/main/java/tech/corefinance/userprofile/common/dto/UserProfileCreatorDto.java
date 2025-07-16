@@ -1,7 +1,6 @@
 package tech.corefinance.userprofile.common.dto;
 
 import lombok.Data;
-import tech.corefinance.common.enums.Gender;
 import tech.corefinance.common.model.CreateUpdateDto;
 
 import java.time.LocalDate;
@@ -12,7 +11,7 @@ public class UserProfileCreatorDto implements CreateUpdateDto<String> {
     private String id;
     private String firstName;
     private String lastName;
-    private Gender gender;
+    private String gender;
     private LocalDate birthday;
     private boolean activated;
     private String address;

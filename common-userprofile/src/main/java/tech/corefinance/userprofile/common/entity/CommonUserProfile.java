@@ -7,7 +7,6 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-import tech.corefinance.common.enums.Gender;
 import tech.corefinance.common.model.GenericModel;
 
 import java.time.LocalDate;
@@ -27,8 +26,7 @@ public abstract class CommonUserProfile<R extends CommonRole<?>> implements Gene
     private String middleName;
     @Column(name = "last_name")
     private String lastName;
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
+    private String gender;
     private LocalDate birthday;
     @Column(name = "activated")
     private boolean activated;
@@ -43,8 +41,7 @@ public abstract class CommonUserProfile<R extends CommonRole<?>> implements Gene
     private String password;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "user_profile_role", joinColumns = @JoinColumn(name = "user_profile_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(name = "user_profile_role", joinColumns = @JoinColumn(name = "user_profile_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JsonIgnore

@@ -2,6 +2,6 @@ package tech.corefinance.common.enums;
 
 public enum Gender {
 
-	MALE, FEMALE, UNKNOWN;
-	
+    MALE, FEMALE, OTHER, UNKNOWN;
+
 }
