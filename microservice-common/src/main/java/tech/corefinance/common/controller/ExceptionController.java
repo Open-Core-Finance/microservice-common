@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import tech.corefinance.common.dto.GeneralApiResponse;
+import tech.corefinance.common.ex.CustomConstraintViolationException;
 import tech.corefinance.common.ex.ResourceNotFound;
 import tech.corefinance.common.ex.ServiceProcessingException;
 
@@ -27,9 +28,11 @@ import java.util.NoSuchElementException;
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
 @Slf4j
-@ConditionalOnProperty(prefix = "tech.corefinance.common", name = "generic-exception-handling", havingValue = "true",
-        matchIfMissing = true)
+@ConditionalOnProperty(prefix = "tech.corefinance.common", name = "generic-exception-handling", havingValue = "true", matchIfMissing = true)
 public class ExceptionController extends ResponseEntityExceptionHandler {
+
+    private static final String BAD_REQUEST_ERROR_CODE = "bad_request";
+    private static final String INTERNAL_ERROR_ERROR_CODE = "system_error";
 
     @ExceptionHandler(value = {ServiceProcessingException.class})
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
@@ -48,7 +51,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public GeneralApiResponse<String[]> accessDenied(AccessDeniedException e) {
         log.debug(e.getMessage(), e);
-        return new GeneralApiResponse<>("access_denied", 1, new String[] {e.getMessage()});
+        return new GeneralApiResponse<>("access_denied", 1, new String[]{e.getMessage()});
     }
 
     @ExceptionHandler({IllegalArgumentException.class, ConstraintViolationException.class})
@@ -56,7 +59,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     public GeneralApiResponse<String[]> badRequest(Exception e) {
         log.debug(e.getMessage(), e);
         if (e instanceof IllegalArgumentException) {
-            return new GeneralApiResponse<>("bad_request", 1, new String[] {e.getMessage()});
+            return new GeneralApiResponse<>(BAD_REQUEST_ERROR_CODE, 1, new String[]{e.getMessage()});
         }
         if (e instanceof ConstraintViolationException cve) {
             var violatedSet = cve.getConstraintViolations();
@@ -65,15 +68,26 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
                 var m = violatedItem.getMessage();
                 msgs.add(m);
             }
-            return new GeneralApiResponse<>("bad_request", 1, msgs.toArray(new String[]{}));
+            return new GeneralApiResponse<>(BAD_REQUEST_ERROR_CODE, 1, msgs.toArray(new String[]{}));
         }
-        return new GeneralApiResponse<>("system_error", 1, null);
+        return new GeneralApiResponse<>(INTERNAL_ERROR_ERROR_CODE, 1, null);
+    }
+
+    @ExceptionHandler({CustomConstraintViolationException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public GeneralApiResponse<String[]> customValidateException(CustomConstraintViolationException e) {
+        var msgs = new LinkedList<>();
+        for (var violatedItem : e.getConstraintViolations()) {
+            var m = violatedItem.getMessageKey();
+            msgs.add(m);
+        }
+        return new GeneralApiResponse<>(BAD_REQUEST_ERROR_CODE, 1, msgs.toArray(new String[]{}));
     }
 
     @ExceptionHandler(value = {Throwable.class})
     public GeneralApiResponse<String[]> internalServerError(Throwable e) {
         log.error("System Exception", e);
-        return new GeneralApiResponse<>("system_error", 1, new String[] {e.getMessage()});
+        return new GeneralApiResponse<>(INTERNAL_ERROR_ERROR_CODE, 1, new String[]{e.getMessage()});
     }
 
     @ExceptionHandler(value = {ResourceNotFound.class, NoSuchElementException.class})
@@ -93,7 +107,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
         }
         if (message != null && !message.trim().isEmpty()) {
             if (!message.contains("\"statusCode\"")) {
-                return new GeneralApiResponse<>(message, status, new String[] {message});
+                return new GeneralApiResponse<>(message, status, new String[]{message});
             } else {
                 return message;
             }
@@ -115,10 +129,10 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
      * @return the {@code ResponseEntity} instance to use
      * @since 6.0
      */
-    protected ResponseEntity<Object> createResponseEntity(
-            @Nullable Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
+    protected ResponseEntity<Object> createResponseEntity(@Nullable Object body, HttpHeaders headers, HttpStatusCode statusCode,
+            WebRequest request) {
         if (body instanceof String s) {
-            body = new String[] {s};
+            body = new String[]{s};
         }
         var errorResponse = new GeneralApiResponse<>(body);
         if (body instanceof ProblemDetail problemDetail) {
