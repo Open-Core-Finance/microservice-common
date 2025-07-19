@@ -66,8 +66,20 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
      * This method will be called after persit entity to database.<br />
      *
      * @param entity Entity object
+     * @param data   Object received from beforeEditEntityAttributes method call. This can be null.
      */
-    default void afterEntitySaved(T entity) {
+    default void afterEntitySaved(T entity, Object data) {
+    }
+
+    /**
+     * This method will be called when entify existing in database, and we're trying to update it in createOrUpdateEntity method.<br />
+     * It runs right before copying attributes. <br/>
+     *
+     * @param entity Entity object
+     * @return Object data that you want to keep to pass to afterEntitySaved.
+     */
+    default Object beforeEditEntityAttributes(T entity) {
+        return null;
     }
 
     /**
@@ -102,12 +114,14 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
         logger.info("Entering createOrUpdateEntity...");
         T entity;
         var repository = getRepository();
+        Object keptData = null;
         if (dto.getId() != null) {
             logger.info("Entity ID not empty! Checking if existed in DB or not...");
             Optional<T> optional = repository.findById(dto.getId());
             if (optional.isPresent()) {
                 logger.info("Entity found!");
                 entity = optional.get();
+                keptData = beforeEditEntityAttributes(entity);
             } else {
                 logger.info("Entity not found! Creating new entity...");
                 entity = createEntityObject();
@@ -127,7 +141,7 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
         logger.info("Save entity to DB...");
         entity = repository.save(entity);
         logger.info("Call afterEntitySaved and then response");
-        afterEntitySaved(entity);
+        afterEntitySaved(entity, keptData);
         // Response
         return entity;
     }
@@ -183,7 +197,9 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
         Class<?> entityType = findEntityClass();
         for (var entry : map.entrySet()) {
             var searchSupport = entry.getValue();
+            //noinspection unchecked
             if (searchSupport.isSupported(entityType)) {
+                //noinspection unchecked
                 return searchSupport.searchByTextAndPage(entityType, searchText, pageable);
             }
         }
@@ -204,7 +220,9 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
         Class<?> entityType = findEntityClass();
         for (var entry : map.entrySet()) {
             var searchSupport = entry.getValue();
+            //noinspection unchecked
             if (searchSupport.isSupported(entityType)) {
+                //noinspection unchecked
                 return searchSupport.searchByTextAndSort(entityType, searchText, sort);
             }
         }
