@@ -63,26 +63,6 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
     }
 
     /**
-     * This method will be called after persit entity to database.<br />
-     *
-     * @param entity Entity object
-     * @param data   Object received from beforeEditEntityAttributes method call. This can be null.
-     */
-    default void afterEntitySaved(T entity, Object data) {
-    }
-
-    /**
-     * This method will be called when entify existing in database, and we're trying to update it in createOrUpdateEntity method.<br />
-     * It runs right before copying attributes. <br/>
-     *
-     * @param entity Entity object
-     * @return Object data that you want to keep to pass to afterEntitySaved.
-     */
-    default Object beforeEditEntityAttributes(T entity) {
-        return null;
-    }
-
-    /**
      * Delete an entity from database.
      *
      * @param itemId Entity ID
@@ -93,9 +73,9 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
         Optional<T> optional = repository.findById(itemId);
         if (optional.isPresent()) {
             T item = optional.get();
-            beforeItemDeleted(item);
+            Object dataToKeep = beforeItemDeleted(item);
             repository.delete(item);
-            afterItemDeleted(item);
+            afterItemDeleted(item, dataToKeep);
             return true;
         } else {
             return false;
@@ -245,10 +225,43 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
         return (Class<T>) context.getBean(CoreFinanceUtil.class).findEntityTypeFromCommonService(getClass());
     }
 
-    default void beforeItemDeleted(T item) {
+    /**
+     * This method will be called after persist entity to database (both create and edit).<br />
+     *
+     * @param entity Entity object
+     * @param data   Object received from beforeEditEntityAttributes method call. This always null for create case. For edit case can be null or have custom data.
+     */
+    default void afterEntitySaved(T entity, Object data) {
     }
 
-    default void afterItemDeleted(T item) {
+    /**
+     * This method will be called when entify existing in database, and we're trying to update it in createOrUpdateEntity method.<br />
+     * It runs right before copying attributes. <br/>
+     *
+     * @param entity Entity object
+     * @return Object data that you want to keep to pass to afterEntitySaved.
+     */
+    default Object beforeEditEntityAttributes(T entity) {
+        return null;
+    }
+
+    /**
+     * This method will be called before delete entity in the database.<br />
+     *
+     * @param item Entity object
+     * @return Object data that you want to keep to pass to afterItemDeleted.
+     */
+    default Object beforeItemDeleted(T item) {
+        return null;
+    }
+
+    /**
+     * This method will be called after delete entity in the database.<br />
+     *
+     * @param item Entity object
+     * @param data Object received from beforeItemDeleted method call. This can be null or have custom data.
+     */
+    default void afterItemDeleted(T item, Object data) {
     }
 
     default List<T> loadEAllByIds(List<I> ids) {
