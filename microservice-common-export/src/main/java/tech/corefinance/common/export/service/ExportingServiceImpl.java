@@ -204,11 +204,15 @@ public class ExportingServiceImpl implements ExportingService {
 
             // Contents
             for (T entity : entities) {
+                log.debug("==================");
+                log.debug("Reading data of row [{}]", rowIndex);
                 Row dataRow = sheet.createRow(rowIndex++);
                 int columnIndex = 0;
                 for (ExportingEntityField entityField : fields) {
+                    log.debug("***Column [{}]", columnIndex);
                     Cell cell = dataRow.createCell(columnIndex++);
                     Object fieldVal = coreFinanceUtil.getDeepAttributeValue(entity, entityField.getField());
+                    log.debug("Column value [{}], Column label [{}]", fieldVal, entityField.getLabel());
                     var cellStyle = workbook.createCellStyle();
                     String format = entityField.getFormat();
                     writeValueToExcel(workbook, cell, fieldVal, format, cellStyle);

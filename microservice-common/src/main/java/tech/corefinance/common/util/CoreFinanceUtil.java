@@ -186,7 +186,8 @@ public class CoreFinanceUtil {
         return resourceType;
     }
 
-    public String resolveResourceType(PermissionAction perActAnn, ControllerManagedResource managedResource, ServiceSecurityConfig serviceSecurityConfig) {
+    public String resolveResourceType(PermissionAction perActAnn, ControllerManagedResource managedResource,
+            ServiceSecurityConfig serviceSecurityConfig) {
         var resourceType = perActAnn != null ? perActAnn.resourceType() : null;
         if (!StringUtils.hasText(resourceType)) {
             if (managedResource == null) {
@@ -207,14 +208,16 @@ public class CoreFinanceUtil {
         BeanWrapper beanWrapper = new BeanWrapperImpl(object);
         String[] attributeNames = deepAttributePath.split("\\.");
 
+        log.trace("Object [{}] and attribute \"{}\" as {}", object, deepAttributePath, Arrays.toString(attributeNames));
         for (String attributeName : attributeNames) {
             object = beanWrapper.getPropertyValue(attributeName);
+            log.trace("Got value [{}] for attribute [{}]", object, attributeName);
             if (object == null) {
                 return null;
             }
             beanWrapper = new BeanWrapperImpl(object);
         }
-
+        log.trace("Return attribute value... [{}]", object);
         return object;
     }
 
@@ -323,7 +326,7 @@ public class CoreFinanceUtil {
     }
 
     public AccessibleObject findAnnotatedFieldOrName(Object obj, Class<?> objClass, Class<? extends Annotation> annotationClass,
-                                                     String fieldName) throws NoSuchFieldException {
+            String fieldName) throws NoSuchFieldException {
         Method[] methods = ReflectionUtils.getAllDeclaredMethods(objClass);
         for (var method : methods) {
             var createdByAnn = method.getAnnotation(annotationClass);
