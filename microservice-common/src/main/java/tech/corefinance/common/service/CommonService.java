@@ -101,7 +101,7 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
             if (optional.isPresent()) {
                 logger.info("Entity found!");
                 entity = optional.get();
-                keptData = beforeEditEntityAttributes(entity);
+                keptData = beforeEditEntityAttributes(entity, dto);
             } else {
                 logger.info("Entity not found! Creating new entity...");
                 entity = createEntityObject();
@@ -239,9 +239,10 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
      * It runs right before copying attributes. <br/>
      *
      * @param entity Entity object
+     * @param dto    DTO Object that store new coming values
      * @return Object data that you want to keep to pass to afterEntitySaved.
      */
-    default Object beforeEditEntityAttributes(T entity) {
+    default <D extends CreateUpdateDto<I>> Object beforeEditEntityAttributes(T entity, D dto) {
         return null;
     }
 
