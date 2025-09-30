@@ -4,7 +4,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
 import tech.corefinance.common.export.config.ExportingEntityField;
-import tech.corefinance.common.export.config.ExportingExcelConfig;
+import tech.corefinance.common.export.config.ExportingExcelSheetConfig;
 
 /**
  * Customer data converter to support special field in Excel file.
@@ -13,5 +13,5 @@ import tech.corefinance.common.export.config.ExportingExcelConfig;
  */
 public interface ExcelCellDataFormatter<R> {
     void transformData(Workbook workbook, Row row, Cell cell, int rowIndex, int columnIndex, Object originalCellData, R rowObject,
-            ExportingExcelConfig config, ExportingEntityField fieldConfig);
+            ExportingExcelSheetConfig config, ExportingEntityField fieldConfig);
 }

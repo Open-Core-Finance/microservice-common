@@ -16,6 +16,7 @@ import tech.corefinance.common.export.config.ExportingCsvConfig;
 import tech.corefinance.common.export.config.ExportingEntityField;
 import tech.corefinance.common.export.config.ExportingExcelCellStyle;
 import tech.corefinance.common.export.config.ExportingExcelConfig;
+import tech.corefinance.common.export.dto.ExcelSheet;
 import tech.corefinance.common.util.CoreFinanceUtil;
 
 import java.io.*;
@@ -177,63 +178,74 @@ public class ExportingServiceImpl implements ExportingService {
     }
 
     @Override
-    public <T> void exportToExcel(List<T> entities, ExportingExcelConfig config, OutputStream output,
-            List<ExcelCellDataFormatter<T>> customFormatters) throws IOException {
-        var fields = config.getFields().stream().sorted(exportingFieldComparator).toList();
+    public <T> void exportToExcel(List<ExcelSheet<T>> sheets, OutputStream output, List<ExcelCellDataFormatter<T>> customFormatters)
+            throws IOException {
         // 1. Create a new workbook
         try (Workbook workbook = new SXSSFWorkbook()) {
-            // 2. Create a sheet
-            Sheet sheet = workbook.createSheet(StringUtils.hasText(config.getExportSheetName()) ? config.getExportSheetName() : "Data");
-
-            // Header
-            int rowIndex = 0;
-            if (config.isHeader()) {
-                Row header = sheet.createRow(rowIndex++);
-                int columnIndex = 0;
-                for (ExportingEntityField entityField : fields) {
-                    var headerCell = header.createCell(columnIndex++);
-                    headerCell.setCellValue(entityField.getLabel());
-                    var headerCellStyleConfig = entityField.getHeaderCellStyle();
-                    if (headerCellStyleConfig != null) {
-                        CellStyle cellStyle = workbook.createCellStyle();
-                        applyCellStyle(workbook, headerCell, cellStyle, headerCellStyleConfig);
-                        headerCell.setCellStyle(cellStyle);
-                    }
-                }
+            for (ExcelSheet<T> sheetData : sheets) {
+                exportSingleExcelSheet(workbook, sheetData, output, customFormatters);
             }
-
-            // Contents
-            for (T entity : entities) {
-                log.debug("==================");
-                log.debug("Reading data of row [{}]", rowIndex);
-                Row dataRow = sheet.createRow(rowIndex++);
-                int columnIndex = 0;
-                for (ExportingEntityField entityField : fields) {
-                    log.debug("***Column [{}]", columnIndex);
-                    Cell cell = dataRow.createCell(columnIndex++);
-                    Object fieldVal = coreFinanceUtil.getDeepAttributeValue(entity, entityField.getField());
-                    log.debug("Column value [{}], Column label [{}]", fieldVal, entityField.getLabel());
-                    var cellStyle = workbook.createCellStyle();
-                    String format = entityField.getFormat();
-                    writeValueToExcel(workbook, cell, fieldVal, format, cellStyle);
-                    var contentCellStyleConfig = entityField.getContentCellStyle();
-                    if (contentCellStyleConfig != null) {
-                        applyCellStyle(workbook, cell, cellStyle, contentCellStyleConfig);
-                    }
-                    cell.setCellStyle(cellStyle);
-                    // Apply custom formatter
-                    for (ExcelCellDataFormatter<T> dataFormatter : customFormatters) {
-                        dataFormatter.transformData(workbook, dataRow, cell, rowIndex, columnIndex, fieldVal, entity, config, entityField);
-                    }
-                }
-            }
-
-            // Write data
-            workbook.write(output);
-
-            // Flush to output stream
-            output.flush();
         }
+    }
+
+    public <T> void exportSingleExcelSheet(Workbook workbook, ExcelSheet<T> sheetData, OutputStream output,
+            List<ExcelCellDataFormatter<T>> customFormatters) throws IOException {
+        var config = sheetData.getConfig();
+        var entities = sheetData.getData();
+        var fields = config.getFields().stream().sorted(exportingFieldComparator).toList();
+
+        // 2. Create a sheet
+        Sheet sheet = workbook.createSheet(
+                StringUtils.hasText(config.getExportSheetName()) ? config.getExportSheetName() : ("Data_" + System.currentTimeMillis()));
+
+        // Header
+        int rowIndex = 0;
+        if (config.isHeader()) {
+            Row header = sheet.createRow(rowIndex++);
+            int columnIndex = 0;
+            for (ExportingEntityField entityField : fields) {
+                var headerCell = header.createCell(columnIndex++);
+                headerCell.setCellValue(entityField.getLabel());
+                var headerCellStyleConfig = entityField.getHeaderCellStyle();
+                if (headerCellStyleConfig != null) {
+                    CellStyle cellStyle = workbook.createCellStyle();
+                    applyCellStyle(workbook, headerCell, cellStyle, headerCellStyleConfig);
+                    headerCell.setCellStyle(cellStyle);
+                }
+            }
+        }
+
+        // Contents
+        for (T entity : entities) {
+            log.debug("==================");
+            log.debug("Reading data of row [{}]", rowIndex);
+            Row dataRow = sheet.createRow(rowIndex++);
+            int columnIndex = 0;
+            for (ExportingEntityField entityField : fields) {
+                log.debug("***Column [{}]", columnIndex);
+                Cell cell = dataRow.createCell(columnIndex++);
+                Object fieldVal = coreFinanceUtil.getDeepAttributeValue(entity, entityField.getField());
+                log.debug("Column value [{}], Column label [{}]", fieldVal, entityField.getLabel());
+                var cellStyle = workbook.createCellStyle();
+                String format = entityField.getFormat();
+                writeValueToExcel(workbook, cell, fieldVal, format, cellStyle);
+                var contentCellStyleConfig = entityField.getContentCellStyle();
+                if (contentCellStyleConfig != null) {
+                    applyCellStyle(workbook, cell, cellStyle, contentCellStyleConfig);
+                }
+                cell.setCellStyle(cellStyle);
+                // Apply custom formatter
+                for (ExcelCellDataFormatter<T> dataFormatter : customFormatters) {
+                    dataFormatter.transformData(workbook, dataRow, cell, rowIndex, columnIndex, fieldVal, entity, config, entityField);
+                }
+            }
+        }
+
+        // Write data
+        workbook.write(output);
+
+        // Flush to output stream
+        output.flush();
     }
 
     private void writeValueToExcel(Workbook workbook, Cell cell, @Nullable Object value, String format, CellStyle cellStyle) {
