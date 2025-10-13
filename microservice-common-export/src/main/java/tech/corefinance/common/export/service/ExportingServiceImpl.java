@@ -2,6 +2,7 @@ package tech.corefinance.common.export.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFColor;
@@ -178,18 +179,18 @@ public class ExportingServiceImpl implements ExportingService {
     }
 
     @Override
-    public <T> void exportToExcel(List<ExcelSheet<T>> sheets, OutputStream output, List<ExcelCellDataFormatter<T>> customFormatters)
-            throws IOException {
+    public void exportToExcel(List<? extends ExcelSheet<?>> sheets, OutputStream output,
+            List<? extends ExcelCellDataFormatter<?>> customFormatters) throws IOException {
         // 1. Create a new workbook
         try (Workbook workbook = new SXSSFWorkbook()) {
-            for (ExcelSheet<T> sheetData : sheets) {
+            for (ExcelSheet<?> sheetData : sheets) {
                 exportSingleExcelSheet(workbook, sheetData, output, customFormatters);
             }
         }
     }
 
-    public <T> void exportSingleExcelSheet(Workbook workbook, ExcelSheet<T> sheetData, OutputStream output,
-            List<ExcelCellDataFormatter<T>> customFormatters) throws IOException {
+    public void exportSingleExcelSheet(Workbook workbook, ExcelSheet<?> sheetData, OutputStream output,
+            List<? extends ExcelCellDataFormatter<?>> customFormatters) throws IOException {
         var config = sheetData.getConfig();
         var entities = sheetData.getData();
         var fields = config.getFields().stream().sorted(exportingFieldComparator).toList();
@@ -216,7 +217,7 @@ public class ExportingServiceImpl implements ExportingService {
         }
 
         // Contents
-        for (T entity : entities) {
+        for (val entity : entities) {
             log.debug("==================");
             log.debug("Reading data of row [{}]", rowIndex);
             Row dataRow = sheet.createRow(rowIndex++);
@@ -235,7 +236,9 @@ public class ExportingServiceImpl implements ExportingService {
                 }
                 cell.setCellStyle(cellStyle);
                 // Apply custom formatter
-                for (ExcelCellDataFormatter<T> dataFormatter : customFormatters) {
+                //noinspection rawtypes
+                for (ExcelCellDataFormatter dataFormatter : customFormatters) {
+                    //noinspection unchecked
                     dataFormatter.transformData(workbook, dataRow, cell, rowIndex, columnIndex, fieldVal, entity, config, entityField);
                 }
             }
