@@ -21,9 +21,9 @@ public interface ExportingService {
 
     ExportingExcelConfig loadExcelConfigFromPath(String path) throws IOException;
 
-    void exportToExcel(List<? extends ExcelSheet<?>> sheets, OutputStream output,
-            List<? extends ExcelCellDataFormatter<?>> customFormatters) throws IOException;
+    void exportToExcel(List<? extends ExcelSheet<?>> sheets, OutputStream output, List<? extends ExcelCellDataFormatter> customFormatters)
+            throws IOException;
 
     void exportSingleExcelSheet(Workbook workbook, ExcelSheet<?> sheetData, OutputStream output,
-            List<? extends ExcelCellDataFormatter<?>> customFormatters) throws IOException;
+            List<? extends ExcelCellDataFormatter> customFormatters) throws IOException;
 }

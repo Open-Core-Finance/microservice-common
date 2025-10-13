@@ -179,7 +179,7 @@ public class ExportingServiceImpl implements ExportingService {
 
     @Override
     public void exportToExcel(List<? extends ExcelSheet<?>> sheets, OutputStream output,
-            List<? extends ExcelCellDataFormatter<?>> customFormatters) throws IOException {
+            List<? extends ExcelCellDataFormatter> customFormatters) throws IOException {
         // 1. Create a new workbook
         try (Workbook workbook = new SXSSFWorkbook()) {
             sheets.sort(Comparator.comparingInt((ExcelSheet<?> a) -> a.getConfig().getSheetIndex()));
@@ -190,7 +190,7 @@ public class ExportingServiceImpl implements ExportingService {
     }
 
     public void exportSingleExcelSheet(Workbook workbook, ExcelSheet<?> sheetData, OutputStream output,
-            List<? extends ExcelCellDataFormatter<?>> customFormatters) throws IOException {
+            List<? extends ExcelCellDataFormatter> customFormatters) throws IOException {
         var config = sheetData.getConfig();
         var entities = sheetData.getData();
         var fields = config.getFields().stream().sorted(exportingFieldComparator).toList();
@@ -236,8 +236,9 @@ public class ExportingServiceImpl implements ExportingService {
                 }
                 cell.setCellStyle(cellStyle);
                 // Apply custom formatter
-                for (ExcelCellDataFormatter<?> dataFormatter : customFormatters) {
-                    if (fieldVal == null || dataFormatter.isSupportedType(fieldVal.getClass())) {
+                for (ExcelCellDataFormatter dataFormatter : customFormatters) {
+                    boolean supported = entity == null || dataFormatter.isSupportedEntity(entity.getClass());
+                    if (supported) {
                         dataFormatter.transformData(workbook, sheet, dataRow, cell, rowIndex, columnIndex, fieldVal, entity, config,
                                                     entityField);
                     }
