@@ -2,7 +2,6 @@ package tech.corefinance.common.export.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFColor;
@@ -183,6 +182,7 @@ public class ExportingServiceImpl implements ExportingService {
             List<? extends ExcelCellDataFormatter<?>> customFormatters) throws IOException {
         // 1. Create a new workbook
         try (Workbook workbook = new SXSSFWorkbook()) {
+            sheets.sort(Comparator.comparingInt((ExcelSheet<?> a) -> a.getConfig().getSheetIndex()));
             for (ExcelSheet<?> sheetData : sheets) {
                 exportSingleExcelSheet(workbook, sheetData, output, customFormatters);
             }
@@ -217,7 +217,7 @@ public class ExportingServiceImpl implements ExportingService {
         }
 
         // Contents
-        for (val entity : entities) {
+        for (var entity : entities) {
             log.debug("==================");
             log.debug("Reading data of row [{}]", rowIndex);
             Row dataRow = sheet.createRow(rowIndex++);
@@ -236,10 +236,11 @@ public class ExportingServiceImpl implements ExportingService {
                 }
                 cell.setCellStyle(cellStyle);
                 // Apply custom formatter
-                //noinspection rawtypes
-                for (ExcelCellDataFormatter dataFormatter : customFormatters) {
-                    //noinspection unchecked
-                    dataFormatter.transformData(workbook, dataRow, cell, rowIndex, columnIndex, fieldVal, entity, config, entityField);
+                for (ExcelCellDataFormatter<?> dataFormatter : customFormatters) {
+                    if (fieldVal == null || dataFormatter.isSupportedType(fieldVal.getClass())) {
+                        dataFormatter.transformData(workbook, sheet, dataRow, cell, rowIndex, columnIndex, fieldVal, entity, config,
+                                                    entityField);
+                    }
                 }
             }
         }

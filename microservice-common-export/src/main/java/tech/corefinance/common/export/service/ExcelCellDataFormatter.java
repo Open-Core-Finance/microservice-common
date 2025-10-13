@@ -2,6 +2,7 @@ package tech.corefinance.common.export.service;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import tech.corefinance.common.export.config.ExportingEntityField;
 import tech.corefinance.common.export.config.ExportingExcelSheetConfig;
@@ -11,7 +12,18 @@ import tech.corefinance.common.export.config.ExportingExcelSheetConfig;
  *
  * @param <R> Row data type
  */
+@FunctionalInterface
 public interface ExcelCellDataFormatter<R> {
-    void transformData(Workbook workbook, Row row, Cell cell, int rowIndex, int columnIndex, Object originalCellData, R rowObject,
-            ExportingExcelSheetConfig config, ExportingEntityField fieldConfig);
+    void transformData(Workbook workbook, Sheet sheet, Row row, Cell cell, int rowIndex, int columnIndex, Object originalCellData,
+            Object rowObject, ExportingExcelSheetConfig config, ExportingEntityField fieldConfig);
+
+    /**
+     * Check if this formatter support specific type of data or not.
+     *
+     * @param clzz Data type
+     * @return True if supported
+     */
+    default boolean isSupportedType(Class<?> clzz) {
+        return true;
+    }
 }
