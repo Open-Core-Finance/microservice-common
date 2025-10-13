@@ -184,13 +184,19 @@ public class ExportingServiceImpl implements ExportingService {
         try (Workbook workbook = new SXSSFWorkbook()) {
             sheets.sort(Comparator.comparingInt((ExcelSheet<?> a) -> a.getConfig().getSheetIndex()));
             for (ExcelSheet<?> sheetData : sheets) {
-                exportSingleExcelSheet(workbook, sheetData, output, customFormatters);
+                exportSingleExcelSheet(workbook, sheetData, customFormatters);
             }
+            // Write data
+            workbook.write(output);
         }
+
+        // Flush to output stream
+        output.flush();
     }
 
-    public void exportSingleExcelSheet(Workbook workbook, ExcelSheet<?> sheetData, OutputStream output,
-            List<? extends ExcelCellDataFormatter> customFormatters) throws IOException {
+    @Override
+    public void exportSingleExcelSheet(Workbook workbook, ExcelSheet<?> sheetData, List<? extends ExcelCellDataFormatter> customFormatters)
+            throws IOException {
         var config = sheetData.getConfig();
         var entities = sheetData.getData();
         var fields = config.getFields().stream().sorted(exportingFieldComparator).toList();
@@ -245,12 +251,6 @@ public class ExportingServiceImpl implements ExportingService {
                 }
             }
         }
-
-        // Write data
-        workbook.write(output);
-
-        // Flush to output stream
-        output.flush();
     }
 
     private void writeValueToExcel(Workbook workbook, Cell cell, @Nullable Object value, String format, CellStyle cellStyle) {
