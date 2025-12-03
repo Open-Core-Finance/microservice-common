@@ -24,10 +24,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.Calendar;
@@ -281,14 +278,8 @@ public class ExportingServiceImpl implements ExportingService {
             } else if (value instanceof LocalDate val) {
                 cell.setCellValue(val);
             } else if (value instanceof TemporalAccessor val) {
-                // Convert TemporalAccessor to Instant (via LocalDateTime + ZoneId)
-                Instant instant = LocalDateTime.from(val).atZone(ZoneId.systemDefault()).toInstant();
-
-                // Convert Instant to Date
-                Date date = Date.from(instant);
-
                 // Write to excel
-                cell.setCellValue(date);
+                toExcelDate(val,cell);
             } else if (value instanceof Date val) {
                 cell.setCellValue(val);
             } else if (value instanceof Calendar val) {
@@ -332,5 +323,18 @@ public class ExportingServiceImpl implements ExportingService {
                 (byte) Integer.parseInt(hex.substring(6, 8), 16)  // blue
         };
         return new XSSFColor(argb, null);
+    }
+
+    private void toExcelDate(TemporalAccessor val, Cell cell) {
+        // Noted: LocalDateTime and LocalDate already support so we don't handle them here.
+        if (val instanceof LocalTime time) {
+            cell.setCellValue(time.getHour() + ":" + time.getMinute() + ":"+ time.getSecond());
+        } else if (val instanceof ZonedDateTime zonedDateTime) {
+            cell.setCellValue(zonedDateTime.toLocalDateTime());
+        } else if (val instanceof OffsetDateTime offsetDateTime) {
+            cell.setCellValue(offsetDateTime.toLocalDateTime());
+        } else {
+            cell.setCellValue(val.toString());
+        }
     }
 }
