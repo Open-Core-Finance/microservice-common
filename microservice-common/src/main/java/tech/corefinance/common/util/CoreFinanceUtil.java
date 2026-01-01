@@ -33,6 +33,7 @@ import tech.corefinance.common.model.GenericModel;
 import tech.corefinance.common.model.ResourceAction;
 import tech.corefinance.common.service.CommonService;
 import tech.corefinance.common.service.ProxyUnbox;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,7 +79,7 @@ public class CoreFinanceUtil {
         return data;
     }
 
-    public String buildMethodInputJsonLog(ProceedingJoinPoint joinPoint, String[] parametersNames, ObjectMapper objectMapper) {
+    public String buildMethodInputJsonLog(ProceedingJoinPoint joinPoint, String[] parametersNames, JsonMapper jsonMapper) {
         // Create AopCustomParam
         Map<String, Object> logs = new LinkedHashMap<>();
         Object[] args = joinPoint.getArgs();
@@ -92,19 +93,19 @@ public class CoreFinanceUtil {
                     shouldIgnore = arg.getClass().getSimpleName().contains("$");
                 }
                 if (!shouldIgnore) {
-                    logs.put(name, writeValueToJson(objectMapper, arg));
+                    logs.put(name, writeValueToJson(jsonMapper, arg));
                 } else {
                     logs.put(name, "<" + arg.getClass().getName() + "/>");
                 }
             }
         }
-        return writeValueToJson(objectMapper, logs);
+        return writeValueToJson(jsonMapper, logs);
     }
 
-    public String writeValueToJson(ObjectMapper objectMapper, Object object) {
+    public String writeValueToJson(JsonMapper jsonMapper, Object object) {
         try {
-            return objectMapper.writeValueAsString(object);
-        } catch (StackOverflowError | JsonProcessingException e) {
+            return jsonMapper.writeValueAsString(object);
+        } catch (StackOverflowError e) {
             log.info(PARSING_JSON_FAILURE_LOG, object, e);
             return PARSING_JSON_FAILURE;
         }

@@ -5,22 +5,24 @@ val jasyptVersion: String by project
 val javaJwtVersion: String by project
 val powerMockitoVersion: String by project
 val junitVersion: String by project
+val springBootStartedAopVersion: String by project
 
 dependencies {
     // Spring
     api("org.springframework.boot:spring-boot-starter-tomcat")
     api("org.springframework.boot:spring-boot-starter-validation")
     api("org.springframework.boot:spring-boot-starter-web")
-    api("org.springframework.boot:spring-boot-starter-aop")
+    api("org.springframework.boot:spring-boot-starter-aop:$springBootStartedAopVersion")
     api("org.springframework.data:spring-data-commons")
     api("org.springframework.boot:spring-boot-starter-security")
+    api("org.springframework.boot:spring-boot-starter-json")
+    api("org.springframework.boot:spring-boot-starter-jackson")
 
     // Spring doc
     api("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springDocApiVersion")
 
     // Common
     api("commons-beanutils:commons-beanutils:$beanutilsVersion")
-    api("com.github.ulisesbocchio:jasypt-spring-boot-starter:$jasyptVersion")
 
     // Security
     api("com.auth0:java-jwt:$javaJwtVersion")

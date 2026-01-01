@@ -7,7 +7,6 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +25,7 @@ import tech.corefinance.common.dto.BasicUserDto;
 import tech.corefinance.common.dto.JwtTokenDto;
 import tech.corefinance.common.enums.CommonConstants;
 import tech.corefinance.common.ex.ServiceProcessingException;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -58,7 +58,7 @@ public class JwtServiceImpl implements JwtService {
     @Autowired
     private JwtConfiguration jwtConfiguration;
     @Autowired
-    private ObjectMapper objectMapper;
+    private JsonMapper jsonMapper;
     @Autowired(required = false)
     private List<JwtVerifyAddOn> jwtVerifyAddOns;
     @Autowired
@@ -250,15 +250,9 @@ public class JwtServiceImpl implements JwtService {
         jwtData.putAll(jwtTokenDto.getAdditionalInfo());
         log.info("Login token before add custom attributes [{}]", jwtData);
         jwtData.put("expiredIn", System.currentTimeMillis() + jwtConfiguration.getExpiration() * 1000);
-        jwtData.put(CommonConstants.ATTRIBUTE_NAME_APP_VERSION, objectMapper.writeValueAsString(jwtTokenDto.getAppVersion()));
+        jwtData.put(CommonConstants.ATTRIBUTE_NAME_APP_VERSION, jsonMapper.writeValueAsString(jwtTokenDto.getAppVersion()));
         log.debug("Original role in school {}", jwtTokenDto.getUserRoles());
-        LinkedList<String> userRoles = new LinkedList<>(jwtTokenDto.getUserRoles().stream().map(r -> {
-            try {
-                return objectMapper.writeValueAsString(r);
-            } catch (JsonProcessingException e) {
-                throw new ServiceProcessingException("error_sign_login_token", e);
-            }
-        }).toList());
+        LinkedList<String> userRoles = new LinkedList<>(jwtTokenDto.getUserRoles().stream().map(r -> jsonMapper.writeValueAsString(r)).toList());
         jwtData.put("userRoles", userRoles);
         jwtData.remove("additionalInfo");
         log.info("Login token before sign {}", jwtData);
@@ -307,7 +301,7 @@ public class JwtServiceImpl implements JwtService {
         refreshJwtData.put(CommonConstants.ATTRIBUTE_NAME_DEVICE_ID, jwtTokenDto.getDeviceId());
         refreshJwtData.put(CommonConstants.ATTRIBUTE_NAME_IP_ADDRESS, jwtTokenDto.getLoginIpAddr());
         refreshJwtData.put(CommonConstants.ATTRIBUTE_NAME_APP_PLATFORM, jwtTokenDto.getAppPlatform().name());
-        refreshJwtData.put(CommonConstants.ATTRIBUTE_NAME_APP_VERSION, objectMapper.writeValueAsString(jwtTokenDto.getAppVersion()));
+        refreshJwtData.put(CommonConstants.ATTRIBUTE_NAME_APP_VERSION, jsonMapper.writeValueAsString(jwtTokenDto.getAppVersion()));
         log.debug("Put addition data to refresh token");
         refreshJwtData.putAll(jwtTokenDto.getAdditionalInfo());
         return refreshJwtData;

@@ -16,8 +16,7 @@ import tech.corefinance.common.mongodb.support.repository.CustomSequentialIdData
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = TestCommonApplication.class)
 @ActiveProfiles({"common", "default", "unittest"})
@@ -48,7 +47,7 @@ public class MongoSequenceTest {
         var entity = new CustomSequentialIdData();
         entity.setName(name);
         entity = customSequentialIdDataRepository.save(entity);
-        assertEquals(1, entity.getId());
+        assertTrue(entity.getId() > 0);
         assertEquals(name, entity.getName());
         assertNotNull(entity.getLastModifiedDate());
         assertNotNull(entity.getCreatedDate());

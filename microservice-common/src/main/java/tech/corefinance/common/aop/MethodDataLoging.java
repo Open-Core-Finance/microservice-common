@@ -1,11 +1,11 @@
 package tech.corefinance.common.aop;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import tech.corefinance.common.util.CoreFinanceUtil;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.lang.reflect.Proxy;
 import java.util.List;
@@ -18,7 +18,7 @@ public abstract class MethodDataLoging {
     @Autowired
     protected CoreFinanceUtil coreFinanceUtil;
     @Autowired
-    protected ObjectMapper objectMapper;
+    protected JsonMapper jsonMapper;
     private List<String> excludeClasses;
 
     protected abstract Logger getLog();
@@ -73,9 +73,9 @@ public abstract class MethodDataLoging {
 
             // Input
             String[] parametersNames = signature.getParameterNames();
-            String input = coreFinanceUtil.buildMethodInputJsonLog(joinPoint, parametersNames, objectMapper);
+            String input = coreFinanceUtil.buildMethodInputJsonLog(joinPoint, parametersNames, jsonMapper);
             log.info("Input [{}]", input);
-            doAdditionalInputLog(joinPoint, objectMapper);
+            doAdditionalInputLog(joinPoint, jsonMapper);
 
             // Process the method.
             start = System.currentTimeMillis();
@@ -84,7 +84,7 @@ public abstract class MethodDataLoging {
             Object result = joinPoint.proceed();
             end = System.currentTimeMillis();
             if (!void.class.isAssignableFrom(returnType)) {
-                log.debug("Result: {}", coreFinanceUtil.writeValueToJson(objectMapper, result));
+                log.debug("Result: {}", coreFinanceUtil.writeValueToJson(jsonMapper, result));
             }
             // Return
             return result;
@@ -102,9 +102,9 @@ public abstract class MethodDataLoging {
     /**
      * Additional log for input if needed.
      * @param joinPoint Calling method.
-     * @param objectMapper System object mapper.
+     * @param jsonMapper System object mapper.
      */
-    protected void doAdditionalInputLog(ProceedingJoinPoint joinPoint, ObjectMapper objectMapper) {
+    protected void doAdditionalInputLog(ProceedingJoinPoint joinPoint, JsonMapper jsonMapper) {
     }
 
 }

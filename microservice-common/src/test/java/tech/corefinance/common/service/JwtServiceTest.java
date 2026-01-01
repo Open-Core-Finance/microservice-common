@@ -4,14 +4,12 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.SignatureGenerationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.io.ResourceLoader;
@@ -33,6 +31,7 @@ import tech.corefinance.common.test.support.model.RoleTest;
 import tech.corefinance.common.test.support.model.UserTest;
 import tech.corefinance.common.test.support.pojo.JwtTokenDtoWithNonSerializable;
 import tech.corefinance.common.test.support.pojo.JwtTokenDtoWithStaticFinal;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -42,7 +41,6 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = TestCommonApplication.class)
-@AutoConfigureMockMvc
 @ActiveProfiles({"common", "default", "unittest"})
 @ComponentScan(basePackages = {"tech.corefinance"})
 @Slf4j
@@ -57,7 +55,7 @@ public class JwtServiceTest {
     @Autowired
     private JwtConfiguration jwtConfiguration;
     @Autowired
-    private ObjectMapper objectMapper;
+    private JsonMapper jsonMapper;
     @MockitoBean
     private ResourceActionRepository resourceActionRepository;
 
@@ -99,7 +97,7 @@ public class JwtServiceTest {
         admin.setId(UUID.randomUUID().toString());
         JwtTokenDto loginInfo =
                 new JwtTokenDto(UUID.randomUUID().toString(), admin.getId(), "ClientId", AppPlatform.ANDROID, new AppVersion(), deviceId,
-                                "127.0.1.1");
+                        "127.0.1.1");
         String token = jwtService.buildLoginToken(loginInfo);
         request.addHeader(HttpHeaders.AUTHORIZATION, CommonConstants.BEARER_PREFIX + token);
         request.addHeader(CommonConstants.HEADER_KEY_EXTERNAL_IP_ADDRESS, "127.0.1.1");
@@ -121,7 +119,7 @@ public class JwtServiceTest {
         admin.setId(UUID.randomUUID().toString());
         JwtTokenDto loginInfo =
                 new JwtTokenDto(UUID.randomUUID().toString(), admin.getId(), "ClientId", AppPlatform.ANDROID, new AppVersion(), deviceId,
-                                "127.0.1.1");
+                        "127.0.1.1");
         String token = jwtService.buildLoginToken(loginInfo);
         request.addHeader(HttpHeaders.AUTHORIZATION, CommonConstants.BEARER_PREFIX + token);
         request.addHeader(CommonConstants.HEADER_KEY_EXTERNAL_IP_ADDRESS, "127.0.1.1");
@@ -137,7 +135,7 @@ public class JwtServiceTest {
         admin.setId(UUID.randomUUID().toString());
         JwtTokenDto loginInfo =
                 new JwtTokenDto(UUID.randomUUID().toString(), admin.getId(), "ClientId", AppPlatform.ANDROID, new AppVersion(), deviceId,
-                                "127.0.1.1");
+                        "127.0.1.1");
         String token = jwtService.buildLoginToken(loginInfo);
         request.addHeader(HttpHeaders.AUTHORIZATION, CommonConstants.BEARER_PREFIX + token);
         request.addHeader(CommonConstants.DEVICE_ID, "anydevice");
@@ -152,15 +150,15 @@ public class JwtServiceTest {
         admin.setId(UUID.randomUUID().toString());
         JwtTokenDto loginInfo =
                 new JwtTokenDto(UUID.randomUUID().toString(), admin.getId(), "ClientId", AppPlatform.ANDROID, new AppVersion(), deviceId,
-                                "127.0.1.1");
+                        "127.0.1.1");
         String token = jwtService.buildLoginToken(loginInfo);
         request.addHeader(HttpHeaders.AUTHORIZATION, CommonConstants.BEARER_PREFIX + token);
         request.addHeader(CommonConstants.HEADER_KEY_EXTERNAL_IP_ADDRESS, "127.0.1.1");
         request.addHeader(CommonConstants.DEVICE_ID, deviceId);
         JwtService jwtService2 = new JwtServiceImpl("classpath:public_key.der", "", resourceLoader);
-        PowerMockito.field(JwtServiceImpl.class, "objectMapper").set(jwtService2, objectMapper);
+        PowerMockito.field(JwtServiceImpl.class, "jsonMapper").set(jwtService2, jsonMapper);
         PowerMockito.field(JwtServiceImpl.class, "jwtConfiguration").set(jwtService2, jwtConfiguration);
-        var jwtTokenParser = new JwtTokenParserImpl(objectMapper);
+        var jwtTokenParser = new JwtTokenParserImpl(jsonMapper);
         PowerMockito.field(JwtServiceImpl.class, "jwtTokenParser").set(jwtService2, jwtTokenParser);
         assertNotNull(jwtService2.retrieveTokenFromRequest(request, response));
         assertThrows(SignatureGenerationException.class, () -> jwtService2.sign(new HashMap<>()));
@@ -230,7 +228,7 @@ public class JwtServiceTest {
         UserTest admin = new UserTest("admin@email.com", "admin", "", "", "");
         JwtTokenDto loginInfo =
                 new JwtTokenDto(UUID.randomUUID().toString(), admin.getId(), "ClientId", AppPlatform.ANDROID, new AppVersion(), deviceId,
-                                "127.0.1.1");
+                        "127.0.1.1");
         loginInfo.setUserEmail(admin.getEmail());
         loginInfo.setUsername(admin.getUsername());
         String token = jwtService.buildRefreshToken(loginInfo, jwtService.buildLoginToken(loginInfo));
@@ -246,7 +244,7 @@ public class JwtServiceTest {
         UserTest admin = new UserTest("admin@email.com", "admin", "", "", "");
         JwtTokenDto loginInfo =
                 new JwtTokenDto(UUID.randomUUID().toString(), admin.getId(), "ClientId", AppPlatform.ANDROID, new AppVersion(), deviceId,
-                                "127.0.1.1");
+                        "127.0.1.1");
         loginInfo.setUserEmail(admin.getEmail());
         loginInfo.setUsername(admin.getUsername());
         assertThrows(ServiceProcessingException.class, () -> jwtService.buildRefreshToken(loginInfo, ""));
@@ -265,7 +263,7 @@ public class JwtServiceTest {
         admin.setId(UUID.randomUUID().toString());
         JwtTokenDto loginInfo =
                 new JwtTokenDto(UUID.randomUUID().toString(), admin.getId(), "ClientId", AppPlatform.ANDROID, new AppVersion(), deviceId,
-                                "127.0.1.1");
+                        "127.0.1.1");
         loginInfo.setUserRoles(admin.getRolesInSchools());
         loginInfo.setUserEmail(admin.getEmail());
         long expiredIn = System.currentTimeMillis() + loginExpiry * 1000;
@@ -274,7 +272,7 @@ public class JwtServiceTest {
         DecodedJWT decodedJWT = jwtService.verify(token, deviceId, loginInfo.getLoginIpAddr());
         String json = new String(Base64.getDecoder().decode(decodedJWT.getPayload().getBytes()), StandardCharsets.UTF_8);
         log.info("Decoded json: [{}]", json);
-        JwtTokenDto jwtTokenDto = objectMapper.readValue(json, JwtTokenDto.class);
+        JwtTokenDto jwtTokenDto = jsonMapper.readValue(json, JwtTokenDto.class);
         log.info("Deserialized JwtTokenDto: [{}]", jwtTokenDto);
         assertNotNull(jwtTokenDto);
         assertEquals(admin.getEmail(), jwtTokenDto.getUserEmail());

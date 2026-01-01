@@ -33,12 +33,17 @@ public class TestCommonApplicationConfig {
     @Bean
     TransitionWalker.ReachedState<RunningMongodProcess> createMongod() {
         log.info("Starting mongodb with port [{}]", mongoPort);
-        return Mongod.builder().net(Start.to(Net.class)
-                .initializedWith(Net.defaults().withPort(mongoPort))).build().start(Version.V7_0_0);
+        try {
+            return Mongod.builder().net(Start.to(Net.class)
+                    .initializedWith(Net.defaults().withPort(mongoPort))).build().start(Version.V7_0_0);
+        } catch (Exception e) {
+            log.debug(e.getMessage(), e);
+            return null;
+        }
     }
 
     @Bean
-    MongoClient mongoClient(TransitionWalker.ReachedState<RunningMongodProcess> mongodReachedState) {
+    MongoClient mongoClient() {
         MongoClientSettings settings = MongoClientSettings.builder()
                 .applyToClusterSettings(builder ->
                         builder.hosts(List.of(new ServerAddress("localhost", mongoPort))))
@@ -50,11 +55,7 @@ public class TestCommonApplicationConfig {
     public void preDestroy() {
         var context = ApplicationContextHolder.getInstance().getApplicationContext();
         var mongodReachedState = context.getBean(TransitionWalker.ReachedState.class);
-        if (mongodReachedState != null) {
-            log.info("Closing memory MongoDB...");
-            mongodReachedState.close();
-        } else {
-            log.error("Memory MongoDB instance not found!!!");
-        }
+        log.info("Closing memory MongoDB...");
+        mongodReachedState.close();
     }
 }

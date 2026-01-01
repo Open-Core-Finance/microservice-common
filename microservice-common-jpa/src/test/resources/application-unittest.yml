@@ -7,11 +7,13 @@ spring:
   jackson:
     default-property-inclusion: NON_NULL
     serialization:
-      write-dates-as-timestamps: true
-      write-date-keys-as-timestamps: true
-      write-durations-as-timestamps: true
-      write-enums-using-to-string: false
+      # Check class tools.jackson.databind.cfg.ConfigFeature.SerializationFeature
       FAIL_ON_EMPTY_BEANS: false
+    generator:
+      WRITE_DATES_AS_TIMESTAMPS: true
+      WRITE_DATE_KEYS_AS_TIMESTAMPS: true
+      WRITE_DURATIONS_AS_TIMESTAMPS: true
+      WRITE_ENUMS_USING_TO_STRING: false
   datasource:
     url: ${DB_URL:jdbc:h2:mem:testdb;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE}
     username: ${DB_USERNAME:sa}
@@ -60,7 +62,6 @@ tech:
       enabled:
         async: true
         simple-version: true
-        property-encryption: true
         auto-response-encoding: true
         trace-id-filter: true
         tenant: true
@@ -116,9 +117,6 @@ tech:
               - POST
               - PATCH
             allowed-headers: '*'
-    encryption:
-      plain: test
-      encoded: ENC(O5MFWIMMOz+V3iItOVY60g==)
     initial:
       name-separator: _
       version-separator: .

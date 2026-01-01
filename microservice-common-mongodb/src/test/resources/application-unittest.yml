@@ -7,11 +7,13 @@ spring:
   jackson:
     default-property-inclusion: NON_NULL
     serialization:
-      write-dates-as-timestamps: true
-      write-date-keys-as-timestamps: true
-      write-durations-as-timestamps: true
-      write-enums-using-to-string: false
+      # Check class tools.jackson.databind.cfg.ConfigFeature.SerializationFeature
       FAIL_ON_EMPTY_BEANS: false
+    generator:
+      WRITE_DATES_AS_TIMESTAMPS: true
+      WRITE_DATE_KEYS_AS_TIMESTAMPS: true
+      WRITE_DURATIONS_AS_TIMESTAMPS: true
+      WRITE_ENUMS_USING_TO_STRING: false
   data:
     mongodb:
       database: core_finance
@@ -48,9 +50,6 @@ tech:
         - .springframework.
         - .springdoc.
         - .test.
-    encryption:
-      plain: test
-      encoded: ENC(O5MFWIMMOz+V3iItOVY60g==)
     initial:
       name-separator: _
       version-separator: .

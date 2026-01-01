@@ -6,6 +6,5 @@ pluginManagement {
 
 rootProject.name = 'microservice-common'
 include "microservice-common", "microservice-common-jpa", "microservice-common-mongodb"
-include "jasypt-tool"
 include "common-kafka", "common-userprofile"
 include "microservice-common-export"

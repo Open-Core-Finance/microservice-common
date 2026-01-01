@@ -10,7 +10,6 @@ import tech.corefinance.common.repository.InternalServiceConfigRepository;
 import tech.corefinance.common.repository.PermissionRepository;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -28,13 +27,13 @@ public class PermissionInitialService implements InitialSupportService {
     public PermissionInitialService() {
         listInitialNamesSupported = new LinkedHashMap<>();
         listInitialNamesSupported.put("permission", new LocalResourceEntityInitializer<>(
-                new TypeReference<List<Permission>>() {
+                new TypeReference<>() {
                 },
-                (entity, overrideIfExisted) -> initPermission(entity, overrideIfExisted)));
+                this::initPermission));
         listInitialNamesSupported.put("internal-api", new LocalResourceEntityInitializer<>(
-                new TypeReference<List<InternalServiceConfig>>() {
+                new TypeReference<>() {
                 },
-                (entity, overrideIfExisted) -> initApiConfig(entity, overrideIfExisted)));
+                this::initApiConfig));
     }
 
     /**
@@ -49,7 +48,7 @@ public class PermissionInitialService implements InitialSupportService {
                 permission.getRoleId(),
                 permission.getResourceType(), permission.getAction(), permission.getUrl(),
                 permission.getRequestMethod());
-        if (!optional.isPresent()) {
+        if (optional.isEmpty()) {
             return permissionRepository.save(permission);
         } else {
             var per = optional.get();
@@ -70,7 +69,7 @@ public class PermissionInitialService implements InitialSupportService {
      */
     protected InternalServiceConfig initApiConfig(InternalServiceConfig config, boolean overrideIfExisted) {
         var optional = internalServiceConfigRepository.findFirstByApiKey(config.getApiKey());
-        if (!optional.isPresent()) {
+        if (optional.isEmpty()) {
             return internalServiceConfigRepository.save(config);
         } else {
             var per = optional.get();

@@ -3,10 +3,10 @@ package tech.corefinance.common.service;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.web.WebAppConfiguration;
 import tech.corefinance.common.entity_author.InternalServiceConfig;
 import tech.corefinance.common.test.support.app.TestCommonApplication;
 import tech.corefinance.common.test.support.service.InternalServiceConfigTestService;
@@ -14,7 +14,7 @@ import tech.corefinance.common.test.support.service.InternalServiceConfigTestSer
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(classes = TestCommonApplication.class)
-@AutoConfigureMockMvc
+@WebAppConfiguration
 @ActiveProfiles({"common", "default", "unittest"})
 @ComponentScan(basePackages = {"tech.corefinance"})
 @Slf4j

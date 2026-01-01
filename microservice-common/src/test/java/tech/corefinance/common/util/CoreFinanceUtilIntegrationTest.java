@@ -7,11 +7,11 @@ import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.web.WebAppConfiguration;
 import tech.corefinance.common.repository.ResourceActionRepository;
 import tech.corefinance.common.test.support.app.TestCommonApplication;
 
@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.LinkedList;
 
 @SpringBootTest(classes = TestCommonApplication.class)
-@AutoConfigureMockMvc
+@WebAppConfiguration
 @ActiveProfiles({"common", "default", "unittest"})
 @ComponentScan(basePackages = {"tech.corefinance.common"})
 public class CoreFinanceUtilIntegrationTest {

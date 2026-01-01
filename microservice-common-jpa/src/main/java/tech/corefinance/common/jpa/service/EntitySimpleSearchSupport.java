@@ -1,8 +1,6 @@
 package tech.corefinance.common.jpa.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -20,6 +18,8 @@ import org.springframework.stereotype.Repository;
 import tech.corefinance.common.ex.ServiceProcessingException;
 import tech.corefinance.common.model.GenericModel;
 import tech.corefinance.common.service.SimpleSearchSupport;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -38,7 +38,7 @@ public class EntitySimpleSearchSupport implements SimpleSearchSupport<GenericMod
     @Autowired
     private EntityManager entityManager;
     @Autowired
-    private ObjectMapper objectMapper;
+    private JsonMapper jsonMapper;
 
     /**
      * Constructor will query all mapped entity and create list attribute that can we search by string.
@@ -203,12 +203,7 @@ public class EntitySimpleSearchSupport implements SimpleSearchSupport<GenericMod
         if (searchText.startsWith("{") && searchText.endsWith("}")) {
             var typeRef = new TypeReference<LinkedHashMap<String, Object>>() {
             };
-            try {
-                return objectMapper.readValue(searchText, typeRef);
-            } catch (JsonProcessingException e) {
-                log.error(e.getMessage(), e);
-                return new HashMap<>();
-            }
+            return jsonMapper.readValue(searchText, typeRef);
         } else {
             return new HashMap<>();
         }
