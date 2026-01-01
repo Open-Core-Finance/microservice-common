@@ -1,14 +1,13 @@
 package tech.corefinance.common.converter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.format.Formatter;
 import org.springframework.stereotype.Component;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.text.ParseException;
 import java.util.LinkedHashMap;
@@ -20,14 +19,13 @@ import java.util.Locale;
 @Slf4j
 public class OrderListConverter implements CommonCustomConverter<String, List<Order>>, Formatter<List<Order>> {
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private JsonMapper jsonMapper = new JsonMapper();
 
     @Override
-    @SneakyThrows(JsonProcessingException.class)
     public List<Order> convert(String value) {
         List<Order> orders = new LinkedList<>();
         List<LinkedHashMap<String, String>> orderMap =
-                objectMapper.readValue(value, new TypeReference<>() {});
+                jsonMapper.readValue(value, new TypeReference<>() {});
         log.debug("Order map {}", orderMap);
         orderMap.forEach(map -> {
             Order order = null;
@@ -43,10 +41,9 @@ public class OrderListConverter implements CommonCustomConverter<String, List<Or
     }
 
     @Override
-    @SneakyThrows(JsonProcessingException.class)
     public String print(List<Order> object, Locale locale) {
         log.info("Calling custom formatter for List<Order> {}! Locale ignored!", object);
-        return objectMapper.writeValueAsString(object);
+        return jsonMapper.writeValueAsString(object);
     }
 
     @Override

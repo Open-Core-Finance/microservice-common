@@ -14,6 +14,7 @@ public interface InitialSupportService {
 
     /**
      * List initialize data name configured in class InitDataConfigurations#dataRegex.
+     *
      * @return List name supported.
      */
     Map<String, LocalResourceEntityInitializer<? extends Object>> getListInitialNamesSupported();

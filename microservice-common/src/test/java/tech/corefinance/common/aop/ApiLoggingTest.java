@@ -6,13 +6,15 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 import tech.corefinance.common.repository.ResourceActionRepository;
 import tech.corefinance.common.test.support.aop.AopTestController;
 import tech.corefinance.common.test.support.app.TestCommonApplication;
@@ -25,7 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest(classes = TestCommonApplication.class)
-@AutoConfigureMockMvc
+@WebAppConfiguration
 @ActiveProfiles({"common", "default", "unittest"})
 public class ApiLoggingTest {
 
@@ -33,6 +35,7 @@ public class ApiLoggingTest {
     private AopTestController aopTestController;
 
     @Autowired
+    private WebApplicationContext wac;
     private MockMvc mockMvc;
 
     @MockitoBean
@@ -40,6 +43,7 @@ public class ApiLoggingTest {
 
     @BeforeEach
     public void setUp() {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
         PowerMockito.when(resourceActionRepository.saveAll(Mockito.any())).thenReturn(new LinkedList<>());
     }
 

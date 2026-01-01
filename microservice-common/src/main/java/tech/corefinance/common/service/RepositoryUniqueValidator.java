@@ -32,7 +32,7 @@ public class RepositoryUniqueValidator implements ConstraintValidator<UniqueFiel
         try {
             Boolean result;
             // Field value
-            Field field = ReflectionUtils.findRequiredField(value.getClass(), uniqueField.fieldName());
+            Field field = ReflectionUtils.findField(value.getClass(), (Field f) -> f.getName().equalsIgnoreCase(uniqueField.fieldName()));
             field.setAccessible(true);
             Object fieldValue = field.get(value);
             // Method

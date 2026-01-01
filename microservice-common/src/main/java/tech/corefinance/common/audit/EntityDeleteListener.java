@@ -10,6 +10,7 @@ import tech.corefinance.common.context.JwtContext;
 import tech.corefinance.common.model.DeleteTracking;
 import tech.corefinance.common.repository.DeleteTrackingRepository;
 import tech.corefinance.common.util.CoreFinanceUtil;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.time.ZonedDateTime;
 
@@ -25,7 +26,7 @@ public class EntityDeleteListener {
         var deleteTrackingRepository = context.getBean(DeleteTrackingRepository.class);
         var auditorAware = context.getBean(BasicUserAuditorAware.class);
         var util = context.getBean(CoreFinanceUtil.class);
-        var objectMapper = context.getBean(ObjectMapper.class);
+        var jsonMapper = context.getBean(JsonMapper.class);
         log.debug("Creating delete tracking...");
         var deleteTracking = new DeleteTracking();
         auditorAware.getCurrentAuditor().ifPresent( a -> {
@@ -36,7 +37,7 @@ public class EntityDeleteListener {
         deleteTracking.setLastModifiedDate(now);
         deleteTracking.setCreatedDate(now);
         deleteTracking.setEntityClassName(obj.getClass().getName());
-        var json = util.writeValueToJson(objectMapper, obj);
+        var json = util.writeValueToJson(jsonMapper, obj);
         if (CoreFinanceUtil.PARSING_JSON_FAILURE.equals(json)) {
             json = obj.toString();
         }

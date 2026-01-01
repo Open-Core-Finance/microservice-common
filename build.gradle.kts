@@ -13,7 +13,7 @@ val applicationGroup: String by project
  * Define build script dependencies.
  */
 buildscript {
-    val springBootPluginVersion = "3.4.1"
+    val springBootPluginVersion = "4.0.1"
     val springDependenciesManagementVersion = "1.1.7"
 
     repositories {
@@ -29,11 +29,11 @@ buildscript {
 }
 
 plugins {
-    val springBootPluginVersion = "3.4.1"
+    val springBootPluginVersion = "4.0.1"
     val springDependenciesManagementVersion = "1.1.7"
-    val lombokPluginVersion = "8.11"
-    val sonarqubePluginVersion = "6.0.0.5145"
-    val hibernatePluginVersion = "6.6.6.Final"
+    val lombokPluginVersion = "9.1.0"
+    val sonarqubePluginVersion = "7.2.2.6593"
+    val hibernatePluginVersion = "7.2.0.Final"
 
     id("org.springframework.boot") version springBootPluginVersion apply false
     id("io.spring.dependency-management") version springDependenciesManagementVersion apply false
@@ -83,8 +83,8 @@ subprojects {
     }
 
     the<io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension>().apply {
-        val springBootPluginVersion = "3.4.1"
-        val springCloudDependenciesVersion = "2024.0.0"
+        val springBootPluginVersion = "4.0.1"
+        val springCloudDependenciesVersion = "2025.1.0"
         imports {
             mavenBom("org.springframework.boot:spring-boot-dependencies:$springBootPluginVersion")
             mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)

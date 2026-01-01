@@ -1,18 +1,17 @@
 package tech.corefinance.common.aop;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import jakarta.servlet.http.HttpServletRequest;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.Collections;
 import java.util.List;
@@ -104,10 +103,10 @@ public class ApiLogging extends MethodDataLoging {
     /**
      * Additional log for input if needed.
      * @param joinPoint Calling method.
-     * @param objectMapper System object mapper.
+     * @param jsonMapper System object mapper.
      */
     @Override
-    protected void doAdditionalInputLog(ProceedingJoinPoint joinPoint, ObjectMapper objectMapper) {
+    protected void doAdditionalInputLog(ProceedingJoinPoint joinPoint, JsonMapper jsonMapper) {
         log.debug("== Request header <= START");
         log.debug("API: [{}] - [{}]", request.getMethod(), request.getServletPath());
         Collections.list(request.getHeaderNames()).forEach(h -> log.debug("Name: [{}] - Value: [{}]", h, request.getHeader(h)));
