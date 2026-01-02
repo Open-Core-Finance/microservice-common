@@ -1,6 +1,5 @@
 package tech.corefinance.common.util;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,10 +17,10 @@ class CoreFinanceUtilTest {
     }
 
     @Test
-    void test_writeValueToJson_StackOverflowError() throws JsonProcessingException {
-        var objectMapper = PowerMockito.mock(JsonMapper.class);
-        PowerMockito.when(objectMapper.writeValueAsString(Mockito.anyString())).thenThrow(new StackOverflowError());
+    void test_writeValueToJson_StackOverflowError() {
+        var jsonMapper = PowerMockito.mock(JsonMapper.class);
+        PowerMockito.when(jsonMapper.writeValueAsString(Mockito.anyString())).thenThrow(new StackOverflowError());
         Assertions.assertEquals("Parsing json failure",
-                coreFinanceUtil.writeValueToJson(objectMapper, "{\"a\": \"b\"}"));
+                coreFinanceUtil.writeValueToJson(jsonMapper, "{\"a\": \"b\"}"));
     }
 }

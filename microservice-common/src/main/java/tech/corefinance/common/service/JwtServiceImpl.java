@@ -6,7 +6,6 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -177,7 +176,7 @@ public class JwtServiceImpl implements JwtService {
             }
         }
         if (!jwtConfiguration.isSkipCompareIpAddress() &&
-            !ipaddress.equalsIgnoreCase(decodedJWT.getClaim(CommonConstants.ATTRIBUTE_NAME_IP_ADDRESS).asString())) {
+                !ipaddress.equalsIgnoreCase(decodedJWT.getClaim(CommonConstants.ATTRIBUTE_NAME_IP_ADDRESS).asString())) {
             throw new JWTVerificationException("IP Address [" + ipaddress + "] miss matched in token and request ["
                     + decodedJWT.getClaim(CommonConstants.ATTRIBUTE_NAME_IP_ADDRESS) + "]!!");
         }
@@ -193,7 +192,7 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public String extractIpAddress(HttpServletRequest httpServletRequest) throws UnknownHostException {
-        var listHeaders = new String[] {
+        var listHeaders = new String[]{
                 CommonConstants.HEADER_KEY_EXTERNAL_IP_ADDRESS, CommonConstants.HEADER_KEY_REAL_IP_ADDRESS,
                 CommonConstants.HEADER_KEY_FORWARDED_FOR
         };
@@ -239,7 +238,7 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public Map<String, Serializable> buildLoginDataMap(JwtTokenDto jwtTokenDto) throws JsonProcessingException {
+    public Map<String, Serializable> buildLoginDataMap(JwtTokenDto jwtTokenDto) {
         log.debug("Building login map data...");
         Map<String, Serializable> jwtData = new HashMap<>();
         Class<?> clzz = jwtTokenDto.getClass();
@@ -289,8 +288,7 @@ public class JwtServiceImpl implements JwtService {
         }
     }
 
-    public Map<String, Serializable> buildRefreshTokenDataMap(JwtTokenDto jwtTokenDto, String token)
-            throws JsonProcessingException {
+    public Map<String, Serializable> buildRefreshTokenDataMap(JwtTokenDto jwtTokenDto, String token) {
         Map<String, Serializable> refreshJwtData = new HashMap<>();
         refreshJwtData.put("loginId", jwtTokenDto.getLoginId());
         refreshJwtData.put("userId", jwtTokenDto.getUserId());
@@ -323,7 +321,7 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public BasicUserDto retrieveUserAsAttribute(JwtTokenDto jwtTokenDto) {
-        if(jwtTokenDto == null){
+        if (jwtTokenDto == null) {
             return null;
         }
         BasicUserDto user = new BasicUserDto();
@@ -335,7 +333,7 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public JwtTokenDto decodeToken(String token, String deviceId, String ipAddress) throws JsonProcessingException {
+    public JwtTokenDto decodeToken(String token, String deviceId, String ipAddress) {
         DecodedJWT decodedJWT = verify(token, deviceId, ipAddress);
         String json = new String(Base64.getDecoder().decode(decodedJWT.getPayload().getBytes()), StandardCharsets.UTF_8);
         JwtTokenDto jwtTokenDto = jwtTokenParser.parse(json);

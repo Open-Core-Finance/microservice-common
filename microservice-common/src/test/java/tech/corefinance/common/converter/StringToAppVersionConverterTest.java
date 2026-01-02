@@ -1,11 +1,11 @@
 package tech.corefinance.common.converter;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import tech.corefinance.common.enums.CommonConstants;
-import tech.corefinance.common.model.AppVersion;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tech.corefinance.common.enums.CommonConstants;
+import tech.corefinance.common.model.AppVersion;
+import tools.jackson.core.exc.StreamReadException;
 
 class StringToAppVersionConverterTest {
 
@@ -27,7 +27,7 @@ class StringToAppVersionConverterTest {
 
     @Test
     void test_convert_invalidVersion() {
-        Assertions.assertThrows(JsonParseException.class, () -> converter.convert("this is invalid"));
+        Assertions.assertThrows(StreamReadException.class, () -> converter.convert("this is invalid"));
     }
 
     @Test

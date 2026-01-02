@@ -3,7 +3,6 @@ package tech.corefinance.common.service;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.SignatureGenerationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -112,7 +111,7 @@ public class JwtServiceTest {
     }
 
     @Test
-    public void test_retrieveTokenFromRequest_withExternalIpHeader_IpNotMatched() throws JsonProcessingException {
+    public void test_retrieveTokenFromRequest_withExternalIpHeader_IpNotMatched() {
         String deviceId = "Test-Device";
         UserTest admin = new UserTest("admin@email.com", "admin", "", "", "");
         admin.addRoleInSchool(new UserRoleDto("school", "01", "admin"));
@@ -128,7 +127,7 @@ public class JwtServiceTest {
     }
 
     @Test
-    public void test_retrieveTokenFromRequest_deviceIdNotMatched() throws JsonProcessingException {
+    public void test_retrieveTokenFromRequest_deviceIdNotMatched() {
         String deviceId = "Test-Device";
         UserTest admin = new UserTest("admin@email.com", "admin", "", "", "");
         admin.addRoleInSchool(new UserRoleDto("school", "01", "admin"));
@@ -223,7 +222,7 @@ public class JwtServiceTest {
     }
 
     @Test
-    public void test_buildRefreshToken() throws JsonProcessingException {
+    public void test_buildRefreshToken() {
         String deviceId = "Test device";
         UserTest admin = new UserTest("admin@email.com", "admin", "", "", "");
         JwtTokenDto loginInfo =
@@ -281,20 +280,20 @@ public class JwtServiceTest {
     }
 
     @Test
-    void test_buildLoginDataMap_objectWithStatic() throws JsonProcessingException {
+    void test_buildLoginDataMap_objectWithStatic() {
         var jwtData = jwtService.buildLoginDataMap(new JwtTokenDtoWithStaticFinal());
         assertNull(jwtData.get("ABC"));
         assertNotNull(jwtData.get("loginId"));
     }
 
     @Test
-    void test_buildLoginDataMap_objectWithNonSerialize() throws JsonProcessingException {
+    void test_buildLoginDataMap_objectWithNonSerialize() {
         var jwtData = jwtService.buildLoginDataMap(new JwtTokenDtoWithNonSerializable());
         assertNotNull(jwtData.get("loginId"));
     }
 
     @Test
-    void test_buildLoginVerifyKey_objectWithNonSerialize() throws JsonProcessingException {
+    void test_buildLoginVerifyKey_objectWithNonSerialize() {
         var jwtData = jwtService.buildLoginDataMap(new JwtTokenDtoWithNonSerializable());
         assertNotNull(jwtData.get("loginId"));
     }

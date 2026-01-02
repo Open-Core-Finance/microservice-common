@@ -1,6 +1,5 @@
 package tech.corefinance.common.export.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -18,6 +17,7 @@ import tech.corefinance.common.export.config.ExportingExcelCellStyle;
 import tech.corefinance.common.export.config.ExportingExcelConfig;
 import tech.corefinance.common.export.dto.ExcelSheet;
 import tech.corefinance.common.util.CoreFinanceUtil;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -40,12 +40,12 @@ public class ExportingServiceImpl implements ExportingService {
     private final Comparator<ExportingEntityField> exportingFieldComparator;
     private final CoreFinanceUtil coreFinanceUtil;
     private final ResourceLoader resourceLoader;
-    private final ObjectMapper objectMapper;
+    private final JsonMapper jsonMapper;
 
-    public ExportingServiceImpl(CoreFinanceUtil coreFinanceUtil, ResourceLoader resourceLoader, ObjectMapper objectMapper) {
+    public ExportingServiceImpl(CoreFinanceUtil coreFinanceUtil, ResourceLoader resourceLoader, JsonMapper jsonMapper) {
         this.coreFinanceUtil = coreFinanceUtil;
         this.resourceLoader = resourceLoader;
-        this.objectMapper = objectMapper;
+        this.jsonMapper = jsonMapper;
         exportingFieldComparator = (o1, o2) -> {
             if (o1 == null) {
                 return o2 == null ? 0 : -o2.getIndex();
@@ -56,13 +56,13 @@ public class ExportingServiceImpl implements ExportingService {
     }
 
     public <T> void exportToUtf8Csv(List<T> entities, ExportingCsvConfig config, OutputStream output,
-            List<CsvCellDataFormatter<T>> customFormatters) {
+                                    List<CsvCellDataFormatter<T>> customFormatters) {
         exportToCsvWithEncoding(entities, config, output, StandardCharsets.UTF_8, UTF8_BOM_UNICODE, customFormatters);
     }
 
     @Override
     public <T> void exportToCsvWithEncoding(List<T> entities, ExportingCsvConfig config, OutputStream output, Charset encoding,
-            String bomVal, List<CsvCellDataFormatter<T>> customFormatters) {
+                                            String bomVal, List<CsvCellDataFormatter<T>> customFormatters) {
         var fields = config.getFields().stream().sorted(exportingFieldComparator).toList();
         OutputStreamWriter osw = new OutputStreamWriter(output, encoding);
         PrintWriter pw = new PrintWriter(new BufferedWriter(osw));
@@ -100,17 +100,17 @@ public class ExportingServiceImpl implements ExportingService {
     @Override
     public ExportingCsvConfig loadCsvConfigFromPath(String path) throws IOException {
         Resource resource = resourceLoader.getResource(path);
-        return objectMapper.readValue(resource.getContentAsString(StandardCharsets.UTF_8), ExportingCsvConfig.class);
+        return jsonMapper.readValue(resource.getContentAsString(StandardCharsets.UTF_8), ExportingCsvConfig.class);
     }
 
     @Override
     public ExportingExcelConfig loadExcelConfigFromPath(String path) throws IOException {
         Resource resource = resourceLoader.getResource(path);
-        return objectMapper.readValue(resource.getContentAsString(StandardCharsets.UTF_8), ExportingExcelConfig.class);
+        return jsonMapper.readValue(resource.getContentAsString(StandardCharsets.UTF_8), ExportingExcelConfig.class);
     }
 
     private <T> void printEntityToCsv(T entity, PrintWriter pw, List<ExportingEntityField> fields, ExportingCsvConfig config, int rowIndex,
-            List<CsvCellDataFormatter<T>> customFormatters) {
+                                      List<CsvCellDataFormatter<T>> customFormatters) {
         var index = 0;
         for (ExportingEntityField entityField : fields) {
             Object fieldVal = coreFinanceUtil.getDeepAttributeValue(entity, entityField.getField());
@@ -167,7 +167,7 @@ public class ExportingServiceImpl implements ExportingService {
     }
 
     private <T> String customTransformCsvFieldValue(int rowIndex, int columnIndex, Object originalCellData, String printingValue,
-            T rowObject, ExportingCsvConfig config, ExportingEntityField fieldConfig, List<CsvCellDataFormatter<T>> customFormatters) {
+                                                    T rowObject, ExportingCsvConfig config, ExportingEntityField fieldConfig, List<CsvCellDataFormatter<T>> customFormatters) {
         for (CsvCellDataFormatter<T> formatter : customFormatters) {
             printingValue = formatter.transformData(rowIndex, columnIndex, originalCellData, printingValue, rowObject, config, fieldConfig);
         }
@@ -176,7 +176,7 @@ public class ExportingServiceImpl implements ExportingService {
 
     @Override
     public void exportToExcel(List<? extends ExcelSheet<?>> sheets, OutputStream output,
-            List<? extends ExcelCellDataFormatter> customFormatters) throws IOException {
+                              List<? extends ExcelCellDataFormatter> customFormatters) throws IOException {
         // 1. Create a new workbook
         try (Workbook workbook = new SXSSFWorkbook()) {
             sheets.sort(Comparator.comparingInt((ExcelSheet<?> a) -> a.getConfig().getSheetIndex()));
@@ -243,7 +243,7 @@ public class ExportingServiceImpl implements ExportingService {
                     boolean supported = entity == null || dataFormatter.isSupportedEntity(entity.getClass());
                     if (supported) {
                         dataFormatter.transformData(workbook, sheet, dataRow, cell, rowIndex, columnIndex, fieldVal, entity, config,
-                                                    entityField);
+                                entityField);
                     }
                 }
             }
@@ -279,7 +279,7 @@ public class ExportingServiceImpl implements ExportingService {
                 cell.setCellValue(val);
             } else if (value instanceof TemporalAccessor val) {
                 // Write to excel
-                toExcelDate(val,cell);
+                toExcelDate(val, cell);
             } else if (value instanceof Date val) {
                 cell.setCellValue(val);
             } else if (value instanceof Calendar val) {
@@ -328,7 +328,7 @@ public class ExportingServiceImpl implements ExportingService {
     private void toExcelDate(TemporalAccessor val, Cell cell) {
         // Noted: LocalDateTime and LocalDate already support so we don't handle them here.
         if (val instanceof LocalTime time) {
-            cell.setCellValue(time.getHour() + ":" + time.getMinute() + ":"+ time.getSecond());
+            cell.setCellValue(time.getHour() + ":" + time.getMinute() + ":" + time.getSecond());
         } else if (val instanceof ZonedDateTime zonedDateTime) {
             cell.setCellValue(zonedDateTime.toLocalDateTime());
         } else if (val instanceof OffsetDateTime offsetDateTime) {

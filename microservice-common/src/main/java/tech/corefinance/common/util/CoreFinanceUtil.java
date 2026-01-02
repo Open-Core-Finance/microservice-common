@@ -1,7 +1,5 @@
 package tech.corefinance.common.util;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.Servlet;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
@@ -188,7 +186,7 @@ public class CoreFinanceUtil {
     }
 
     public String resolveResourceType(PermissionAction perActAnn, ControllerManagedResource managedResource,
-            ServiceSecurityConfig serviceSecurityConfig) {
+                                      ServiceSecurityConfig serviceSecurityConfig) {
         var resourceType = perActAnn != null ? perActAnn.resourceType() : null;
         if (!StringUtils.hasText(resourceType)) {
             if (managedResource == null) {
@@ -327,7 +325,7 @@ public class CoreFinanceUtil {
     }
 
     public AccessibleObject findAnnotatedFieldOrName(Object obj, Class<?> objClass, Class<? extends Annotation> annotationClass,
-            String fieldName) throws NoSuchFieldException {
+                                                     String fieldName) throws NoSuchFieldException {
         Method[] methods = ReflectionUtils.getAllDeclaredMethods(objClass);
         for (var method : methods) {
             var createdByAnn = method.getAnnotation(annotationClass);

@@ -1,6 +1,6 @@
 package tech.corefinance.common.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.JacksonException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +40,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
         return handleGeneralException(request, e, 1);
     }
 
-    @ExceptionHandler(value = {ParserConfigurationException.class, JsonProcessingException.class})
+    @ExceptionHandler(value = {ParserConfigurationException.class, JacksonException.class})
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     public String handleJsonException(Exception e) {
         log.error("Parse exception", e);
@@ -130,7 +130,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
      * @since 6.0
      */
     protected ResponseEntity<Object> createResponseEntity(@Nullable Object body, HttpHeaders headers, HttpStatusCode statusCode,
-            WebRequest request) {
+                                                          WebRequest request) {
         if (body instanceof String s) {
             body = new String[]{s};
         }

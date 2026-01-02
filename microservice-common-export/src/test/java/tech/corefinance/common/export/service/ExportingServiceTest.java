@@ -1,6 +1,5 @@
 package tech.corefinance.common.export.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -15,6 +14,7 @@ import tech.corefinance.common.export.config.ExportingExcelConfig;
 import tech.corefinance.common.export.dto.ExcelSheet;
 import tech.corefinance.common.model.ResourceAction;
 import tech.corefinance.common.util.CoreFinanceUtil;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -35,8 +35,8 @@ public class ExportingServiceTest {
     public void setUp() {
         ResourceLoader resourceLoader = new DefaultResourceLoader();
         CoreFinanceUtil coreFinanceUtil = new CoreFinanceUtil();
-        ObjectMapper objectMapper = new ObjectMapper();
-        exportingService = new ExportingServiceImpl(coreFinanceUtil, resourceLoader, objectMapper);
+        JsonMapper jsonMapper = new JsonMapper();
+        exportingService = new ExportingServiceImpl(coreFinanceUtil, resourceLoader, jsonMapper);
     }
 
     @Test

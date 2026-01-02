@@ -1,6 +1,5 @@
 package tech.corefinance.common.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -26,7 +25,7 @@ public class JwtTokenParserImpl implements JwtTokenParser {
     }
 
     @Override
-    public JwtTokenDto parse(String json) throws JsonProcessingException {
+    public JwtTokenDto parse(String json) {
         var mapTypeReference = new TypeReference<Map<String, Serializable>>() {
         };
         var map = jsonMapper.readValue(json, mapTypeReference);

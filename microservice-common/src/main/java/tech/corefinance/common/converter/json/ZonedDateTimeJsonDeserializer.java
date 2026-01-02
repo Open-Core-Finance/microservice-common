@@ -1,11 +1,8 @@
 package tech.corefinance.common.converter.json;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
@@ -22,20 +20,20 @@ import java.time.format.DateTimeParseException;
 @Data
 @Component
 @ConditionalOnProperty(prefix = "spring.jackson-custom.serialization", name = "zoned-date-time-format")
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @Slf4j
 public class ZonedDateTimeJsonDeserializer extends JsonDeserializer<ZonedDateTime> {
 
     private DateTimeFormatter dateTimeFormatter;
 
-    public ZonedDateTimeJsonDeserializer( @Value("${spring.jackson-custom.serialization.zoned-date-time-format}") String dateTimeFormat,
-                                          @Autowired ObjectMapper objectMapper) {
+    public ZonedDateTimeJsonDeserializer(@Value("${spring.jackson-custom.serialization.zoned-date-time-format}") String dateTimeFormat,
+                                         @Autowired JsonMapper jsonMapper) {
         log.debug("Applied {} format: {}", ZonedDateTime.class.getSimpleName(), dateTimeFormat);
         dateTimeFormatter = DateTimeFormatter.ofPattern(dateTimeFormat);
-        SimpleModule simpleModule = new SimpleModule(ZonedDateTime.class.getSimpleName() + "DeserializerModule",
-                new Version(1, 0, 0, null, "", ""));
-        simpleModule.addDeserializer(ZonedDateTime.class, this);
-        objectMapper.registerModule(simpleModule);
+//        SimpleModule simpleModule = new SimpleModule(ZonedDateTime.class.getSimpleName() + "DeserializerModule",
+//                new Version(1, 0, 0, null, "", ""));
+//        simpleModule.addDeserializer(ZonedDateTime.class, this);
+//        jsonMapper.registerModule(simpleModule);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package tech.corefinance.kafka.common.interceptor;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerInterceptor;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -80,12 +79,8 @@ public class CommonKafkaInterceptor implements ProducerInterceptor<String, Objec
             log.debug("Token from message header [{}]", authenTokenVal);
             if (authenTokenVal != null) {
                 authenTokenVal = authenTokenVal.substring(BEARER_PREFIX.length()).trim();
-                try {
-                    var jwtToken = jwtService.decodeToken(authenTokenVal, deviceIdVal, ipAddressVal);
-                    JwtContext.getInstance().setJwt(jwtToken);
-                } catch (JsonProcessingException e) {
-                    log.error("Error when extract JWT from kafka message. {}", e.getMessage(), e);
-                }
+                var jwtToken = jwtService.decodeToken(authenTokenVal, deviceIdVal, ipAddressVal);
+                JwtContext.getInstance().setJwt(jwtToken);
             }
         });
         return consumerRecords;

@@ -34,6 +34,6 @@ public class CsvFieldListConverterTest {
     public void test_print() {
         var input = new CsvExportDefinition("Description", "description");
         var output = csvFieldListConverter.print(new CsvExportDefinition[]{input}, null);
-        assertEquals("[{\"title\":\"Description\",\"fieldName\":\"description\"}]", output);
+        assertEquals("[{\"fieldName\":\"description\",\"title\":\"Description\"}]", output);
     }
 }

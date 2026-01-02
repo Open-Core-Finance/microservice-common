@@ -1,16 +1,14 @@
 package tech.corefinance.common.service;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tech.corefinance.common.config.JwtConfiguration;
 import tech.corefinance.common.dto.BasicUserDto;
 import tech.corefinance.common.dto.JwtTokenDto;
 import tech.corefinance.common.enums.CommonConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -58,10 +56,11 @@ public interface JwtService {
 
     /**
      * Build JWT token for login info
+     *
      * @param jwtTokenDto Token DTO
      * @return JWT token string
      */
-    default String buildLoginToken(JwtTokenDto jwtTokenDto) throws JsonProcessingException {
+    default String buildLoginToken(JwtTokenDto jwtTokenDto) {
         Logger logger = LoggerFactory.getLogger(getClass());
         jwtTokenDto.setVerifyKey(buildLoginVerifyKey(jwtTokenDto));
         logger.debug("Built verify key [{}]", jwtTokenDto.getVerifyKey());
@@ -84,29 +83,28 @@ public interface JwtService {
         };
     }
 
-    Map<String, Serializable> buildLoginDataMap(JwtTokenDto jwtTokenDto) throws JsonProcessingException;
+    Map<String, Serializable> buildLoginDataMap(JwtTokenDto jwtTokenDto);
 
     /**
      * Build JWT refresh token for login info
+     *
      * @param jwtTokenDto Token DTO
-     * @param token JWT token string
+     * @param token       JWT token string
      * @return JWT refresh token string
      */
-    default String buildRefreshToken(JwtTokenDto jwtTokenDto, String token) throws JsonProcessingException {
+    default String buildRefreshToken(JwtTokenDto jwtTokenDto, String token) {
         return sign(buildRefreshTokenDataMap(jwtTokenDto, token));
     }
 
-    Map<String, Serializable> buildRefreshTokenDataMap(JwtTokenDto jwtTokenDto, String token)
-            throws JsonProcessingException;
+    Map<String, Serializable> buildRefreshTokenDataMap(JwtTokenDto jwtTokenDto, String token);
 
     /**
      * Retrieve user info from login token.
      *
      * @param jwtTokenDto Login token.
-     *
      * @return User from token
      */
     BasicUserDto retrieveUserAsAttribute(JwtTokenDto jwtTokenDto);
 
-    JwtTokenDto decodeToken(String token, String deviceId, String ipAddress) throws JsonProcessingException;
+    JwtTokenDto decodeToken(String token, String deviceId, String ipAddress);
 }

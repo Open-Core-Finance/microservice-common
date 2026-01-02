@@ -1,6 +1,5 @@
 package tech.corefinance.userprofile.common.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
 import tech.corefinance.common.dto.LoginDto;
 import tech.corefinance.common.enums.AppPlatform;
@@ -18,7 +17,7 @@ public interface CommonAuthenService<U extends CommonUserProfile<?>, T extends C
     void unlockUser(String email);
 
     LoginDto refreshToken(String loginId, String refreshToken, String deviceId, String clientAppId, AppPlatform appPlatform,
-                          AppVersion appVersion, HttpServletRequest request) throws UnknownHostException, JsonProcessingException;
+                          AppVersion appVersion, HttpServletRequest request) throws UnknownHostException;
 
     boolean isValidToken(String loginId);
 

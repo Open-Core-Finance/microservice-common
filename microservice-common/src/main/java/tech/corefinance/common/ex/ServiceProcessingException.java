@@ -1,8 +1,7 @@
 package tech.corefinance.common.ex;
 
 import tech.corefinance.common.dto.GeneralApiResponse;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 public class ServiceProcessingException extends RuntimeException {
 
@@ -15,7 +14,7 @@ public class ServiceProcessingException extends RuntimeException {
      * Should not use this constructor as general cases. Just use for special case only.
      *
      * @param message Error message
-     * @param origin Origin exception
+     * @param origin  Origin exception
      */
     public ServiceProcessingException(String message, Throwable origin) {
         super(message, origin);
@@ -34,19 +33,17 @@ public class ServiceProcessingException extends RuntimeException {
      * Create exception with error message
      *
      * @param apiResponse Error message
-     * @throws JsonProcessingException 
      */
-    public ServiceProcessingException(GeneralApiResponse<?> apiResponse) throws JsonProcessingException {
-        this(new ObjectMapper().writeValueAsString(apiResponse));
+    public ServiceProcessingException(GeneralApiResponse<?> apiResponse) {
+        this(new JsonMapper().writeValueAsString(apiResponse));
     }
-    
+
     /**
      * Create exception with error message
      *
      * @param apiResponse Error message
-     * @throws JsonProcessingException 
      */
-    public ServiceProcessingException(GeneralApiResponse<?> apiResponse, Throwable origin) throws JsonProcessingException {
-        this(new ObjectMapper().writeValueAsString(apiResponse), origin);
+    public ServiceProcessingException(GeneralApiResponse<?> apiResponse, Throwable origin) {
+        this(new JsonMapper().writeValueAsString(apiResponse), origin);
     }
 }

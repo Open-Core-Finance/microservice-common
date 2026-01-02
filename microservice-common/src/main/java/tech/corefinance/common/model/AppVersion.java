@@ -1,13 +1,10 @@
 package tech.corefinance.common.model;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
-import tech.corefinance.common.enums.CommonConstants;
-import tech.corefinance.common.ex.ServiceProcessingException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.util.StringUtils;
+import tech.corefinance.common.enums.CommonConstants;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * Client/Server application version. <br/>
@@ -38,7 +35,6 @@ public class AppVersion {
         this(CommonConstants.DEFAULT_VERSION_STRING);
     }
 
-    @SneakyThrows(JsonProcessingException.class)
     public AppVersion(String jsonString) {
         if (jsonString.contains(CommonConstants.DEFAULT_VERSION_NUMBER_SEPARATOR)) {
             var versionText = jsonString;
@@ -52,7 +48,7 @@ public class AppVersion {
             minor = Short.parseShort(arr[1]);
             maintenance = Short.parseShort(arr[2]);
         } else {
-            AppVersion appVersion = new ObjectMapper().readValue(jsonString, getClass());
+            AppVersion appVersion = new JsonMapper().readValue(jsonString, getClass());
             this.major = appVersion.major;
             this.minor = appVersion.getMinor();
             this.maintenance = appVersion.getMaintenance();

@@ -1,7 +1,5 @@
 package tech.corefinance.common.converter;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.format.Formatter;
@@ -19,13 +17,14 @@ import java.util.Locale;
 @Slf4j
 public class OrderListConverter implements CommonCustomConverter<String, List<Order>>, Formatter<List<Order>> {
 
-    private JsonMapper jsonMapper = new JsonMapper();
+    private final JsonMapper jsonMapper = new JsonMapper();
 
     @Override
     public List<Order> convert(String value) {
         List<Order> orders = new LinkedList<>();
         List<LinkedHashMap<String, String>> orderMap =
-                jsonMapper.readValue(value, new TypeReference<>() {});
+                jsonMapper.readValue(value, new TypeReference<>() {
+                });
         log.debug("Order map {}", orderMap);
         orderMap.forEach(map -> {
             Order order = null;
