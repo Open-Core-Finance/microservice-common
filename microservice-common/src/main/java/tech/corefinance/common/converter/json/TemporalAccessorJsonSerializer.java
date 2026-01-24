@@ -52,7 +52,7 @@ public abstract class TemporalAccessorJsonSerializer<T extends TemporalAccessor>
         Version version = new Version(1, 0, 0, null, "", "");
         SimpleModule simpleModule = new SimpleModule(handleClassName + "Module", version);
         simpleModule.addSerializer(this);
-        jsonMapper.registeredModules().add(simpleModule);
+        // jsonMapper.registeredModules().add(simpleModule);
 
         var tmp = new com.fasterxml.jackson.databind.module.SimpleModule(simpleModule.getModuleName(),
                 new com.fasterxml.jackson.core.Version(version.getMajorVersion(), version.getMinorVersion(),
