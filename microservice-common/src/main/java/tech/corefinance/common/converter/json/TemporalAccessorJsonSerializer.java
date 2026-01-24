@@ -1,9 +1,6 @@
 package tech.corefinance.common.converter.json;
 
-import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import io.swagger.v3.core.converter.AnnotatedType;
 import io.swagger.v3.core.converter.ModelConverter;
 import io.swagger.v3.core.converter.ModelConverterContext;
@@ -16,9 +13,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.providers.SpringDocProviders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.core.Version;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueSerializer;
 import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.module.SimpleModule;
 
-import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.Iterator;
@@ -27,42 +29,43 @@ import java.util.Iterator;
 @Order
 @EqualsAndHashCode(callSuper = false)
 @Slf4j
-public abstract class TemporalAccessorJsonSerializer<T extends TemporalAccessor> extends JsonSerializer<T> implements ModelConverter {
+public abstract class TemporalAccessorJsonSerializer<T extends TemporalAccessor> extends ValueSerializer<T> implements ModelConverter {
 
-    private String dateTimeFormat;
-    @Autowired
-    private JsonMapper jsonMapper;
-    private DateTimeFormatter dateTimeFormatter;
-    @Autowired
-    private SpringDocProviders springDocProviders;
+    private final String dateTimeFormat;
+    private final JsonMapper jsonMapper;
+    private final DateTimeFormatter dateTimeFormatter;
+    private final SpringDocProviders springDocProviders;
 
-    public TemporalAccessorJsonSerializer(@NotNull String dateTimeFormat) {
+    public TemporalAccessorJsonSerializer(@NotNull String dateTimeFormat, @Autowired JsonMapper jsonMapper,
+                                          @Autowired SpringDocProviders springDocProviders) {
+        this.jsonMapper = jsonMapper;
         this.dateTimeFormat = dateTimeFormat;
+        this.springDocProviders = springDocProviders;
+        this.dateTimeFormatter = DateTimeFormatter.ofPattern(dateTimeFormat);
     }
 
     @PostConstruct
     protected void postConstruct() {
         assert dateTimeFormat != null : "DateTimeFormat cannot be null";
+        var handleClassName = handledType().getSimpleName();
+        log.debug("Applied {} format: {}", handleClassName, dateTimeFormat);
+        Version version = new Version(1, 0, 0, null, "", "");
+        SimpleModule simpleModule = new SimpleModule(handleClassName + "Module", version);
+        simpleModule.addSerializer(this);
+        jsonMapper.registeredModules().add(simpleModule);
+
+        var tmp = new com.fasterxml.jackson.databind.module.SimpleModule(simpleModule.getModuleName(),
+                new com.fasterxml.jackson.core.Version(version.getMajorVersion(), version.getMinorVersion(),
+                        version.getPatchLevel(), null, version.getGroupId(), version.getGroupId()));
+        springDocProviders.jsonMapper().registerModule(tmp);
     }
 
     @Override
-    public void serialize(T value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+    public void serialize(T value, JsonGenerator gen, SerializationContext ctxt) throws JacksonException {
         log.debug("Converting value [{}]", value);
         gen.writeString(dateTimeFormatter.format(value));
     }
 
-//    @Override
-//    public void afterPropertiesSet() throws Exception {
-//        var handleClassName = handledType().getSimpleName();
-//        log.debug("Applied {} format: {}", handleClassName, dateTimeFormat);
-//        dateTimeFormatter = DateTimeFormatter.ofPattern(dateTimeFormat);
-//        SimpleModule simpleModule = new SimpleModule(handleClassName + "Module",
-//                new Version(1, 0, 0, null, "", ""));
-//        simpleModule.addSerializer(this);
-//        jsonMapper.registerModule(simpleModule);
-
-    /// /        springDocProviders.jsonMapper().registerModule(simpleModule);
-//    }
     @Override
     public Schema<?> resolve(AnnotatedType type, ModelConverterContext context, Iterator<ModelConverter> chain) {
         var handledType = handledType();
@@ -76,4 +79,7 @@ public abstract class TemporalAccessorJsonSerializer<T extends TemporalAccessor>
         }
         return (chain.hasNext()) ? chain.next().resolve(type, context, chain) : null;
     }
+
+    @Override
+    public abstract Class<T> handledType();
 }

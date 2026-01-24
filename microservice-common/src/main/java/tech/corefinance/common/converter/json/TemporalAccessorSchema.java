@@ -10,16 +10,15 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.List;
 
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @ToString
 @Slf4j
 public class TemporalAccessorSchema<T extends TemporalAccessor> extends Schema<T> {
 
-    private DateTimeFormatter dateTimeFormatter;
-    private Class<T> handleClass;
+    private final DateTimeFormatter dateTimeFormatter;
+    private final Class<T> handleClass;
 
-    public TemporalAccessorSchema(DateTimeFormatter dateTimeFormatter, Class<T> handleClass,
-                                  String dateTimeFormat) {
+    public TemporalAccessorSchema(DateTimeFormatter dateTimeFormatter, Class<T> handleClass, String dateTimeFormat) {
         super("string", "object");
         this.dateTimeFormatter = dateTimeFormatter;
         this.handleClass = handleClass;

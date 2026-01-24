@@ -1,9 +1,12 @@
 package tech.corefinance.common.converter.json;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.providers.SpringDocProviders;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.time.ZonedDateTime;
 
@@ -13,8 +16,10 @@ import java.time.ZonedDateTime;
 public class ZonedDateTimeSerializer extends TemporalAccessorJsonSerializer<ZonedDateTime> {
 
     public ZonedDateTimeSerializer(
-            @Value("${spring.jackson-custom.serialization.zoned-date-time-format}") String zonedDateTimeFormat) {
-        super(zonedDateTimeFormat);
+            @Value("${spring.jackson-custom.serialization.zoned-date-time-format}") String zonedDateTimeFormat,
+            @Autowired JsonMapper jsonMapper,
+            @Autowired SpringDocProviders springDocProviders) {
+        super(zonedDateTimeFormat, jsonMapper, springDocProviders);
         log.debug("Initialized JSON serializer for {}", handledType().getName());
     }
 
