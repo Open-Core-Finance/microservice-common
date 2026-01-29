@@ -58,10 +58,12 @@ subprojects {
     apply(plugin = libAlias.plugins.spring.dep.mgmt.get().pluginId)
 
     the<DependencyManagementExtension>().apply {
+        val springBootVersion = "4.0.2"
+        val springCloudDependenciesVersion = "2025.1.0"
         imports {
-            mavenBom("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
+            mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
             mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
-            mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudDependenciesVersion")
+            mavenBom("org.springframework.cloud:spring-cloud-dependencies:${springCloudDependenciesVersion}")
         }
     }
 
