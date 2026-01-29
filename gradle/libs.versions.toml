@@ -1,0 +1,75 @@
+[versions]
+
+# === Plugin === #
+spring-boot = "4.0.2"
+spring-dep-mgmt = "1.1.7"
+sonarqube = "6.0.0.5145"
+lombok = "9.1.0"
+hibernate = "7.2.0.Final"
+spring-cloud = "2025.1.0"
+spring-boot-aop = "4.0.0-M2"
+spring-doc-api = "3.0.1"
+
+# === Util === #
+beanutils = "1.11.0"
+java-jwt = "4.5.0"
+
+# === Kafka === #
+kafka-avro-serializer = "8.1.1"
+
+# === Database ===
+hibernate-validator = "9.0.1.Final"
+liquibase = "5.0.1"
+persistence-api = "3.2.0"
+
+# === Exporting === #
+apache-poi = "5.5.1"
+
+# === Testing ===
+junit = "6.0.1"
+h2 = "2.4.240"
+avro = "1.12.1"
+powertest = "2.0.9"
+embeded-mongo = "4.22.0"
+
+[plugins]
+
+spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
+spring-dep-mgmt = { id = "io.spring.dependency-management", version.ref = "spring-dep-mgmt" }
+sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
+lombok = { id = "io.freefair.lombok", version.ref = "lombok" }
+hibernate = { id = "org.hibernate.orm", version.ref = "hibernate" }
+
+[libraries]
+hibernate-validator = { group = "org.hibernate.validator", name = "hibernate-validator", version.ref = "hibernate-validator" }
+hibernate-hikaricp = { group = "org.hibernate.orm", name = "hibernate-hikaricp", version.ref = "hibernate" }
+avro = { group = "org.apache.avro", name = "avro", version.ref = "avro" }
+kafka-avro-serializer = { group = "io.confluent", name = "kafka-avro-serializer", version.ref = "kafka-avro-serializer" }
+liquibase-core = { group = "org.liquibase", name = "liquibase-core", version.ref = "liquibase" }
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit" }
+h2 = { group = "com.h2database", name = "h2", version.ref = "h2" }
+powertest = { group = "org.powermock", name = "powermock-api-mockito2", version.ref = "powertest" }
+
+spring-boot-aop = { group = "org.springframework.boot", name = "spring-boot-starter-aop", version.ref = "spring-boot-aop" }
+spring-boot-kafka = { group = "org.springframework.boot", name = "spring-boot-starter-kafka", version.ref = "spring-boot" }
+spring-boot-mongodb = { group = "org.springframework.boot", name = "spring-boot-starter-data-mongodb", version.ref = "spring-boot" }
+spring-boot-jpa = { group = "org.springframework.boot", name = "spring-boot-starter-data-jpa", version.ref = "spring-boot" }
+spring-boot-tomcat = { group = "org.springframework.boot", name = "spring-boot-starter-tomcat", version.ref = "spring-boot" }
+spring-boot-validation = { group = "org.springframework.boot", name = "spring-boot-starter-validation", version.ref = "spring-boot" }
+spring-boot-web = { group = "org.springframework.boot", name = "spring-boot-starter-web", version.ref = "spring-boot" }
+spring-boot-security = { group = "org.springframework.boot", name = "spring-boot-starter-security", version.ref = "spring-boot" }
+spring-boot-json = { group = "org.springframework.boot", name = "spring-boot-starter-json", version.ref = "spring-boot" }
+spring-boot-jackson = { group = "org.springframework.boot", name = "spring-boot-starter-jackson", version.ref = "spring-boot" }
+spring-data-commons = { group = "org.springframework.data", name = "spring-data-commons", version.ref = "spring-boot" }
+
+spring-doc-api = { group = "org.springdoc", name = "springdoc-openapi-starter-webmvc-ui", version.ref = "spring-doc-api" }
+beanutils = { group = "commons-beanutils", name = "commons-beanutils", version.ref = "beanutils" }
+java-jwt = { group = "com.auth0", name = "java-jwt", version.ref = "java-jwt" }
+apache-poi = { group = "org.apache.poi", name = "poi-ooxml", version.ref = "apache-poi" }
+embeded-mongo = { group = "de.flapdoodle.embed", name = "de.flapdoodle.embed.mongo", version.ref = "embeded-mongo" }
+
+persistence-api = { group = "jakarta.persistence", name = "jakarta.persistence-api", version.ref = "persistence-api" }
+hibernate-core = { group = "org.hibernate.orm", name = "hibernate-core", version.ref = "hibernate" }
+
+[bundles]
+spring-boot-starter = ["spring-boot-tomcat", "spring-boot-validation", "spring-boot-web", "spring-boot-json", "spring-boot-jackson"]

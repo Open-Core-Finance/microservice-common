@@ -1,10 +1,25 @@
 pluginManagement {
     repositories {
         gradlePluginPortal()
+        mavenCentral()
+        mavenLocal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven {
+            url = uri("https://packages.confluent.io/maven/")
+        }
+        maven {
+            url = uri("https://s01.oss.sonatype.org/content/groups/public/")
+        }
     }
 }
 
 rootProject.name = 'microservice-common'
-include "microservice-common", "microservice-common-jpa", "microservice-common-mongodb"
-include "common-kafka", "common-userprofile"
-include "microservice-common-export"
+include("microservice-common", "microservice-common-jpa", "microservice-common-mongodb")
+include("common-kafka", "common-userprofile")
+include ("microservice-common-export")
