@@ -1,3 +1,4 @@
+import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URI
@@ -5,23 +6,24 @@ import java.nio.file.Files
 import java.util.*
 
 val javaSourceCompatibility: String by project
-
 val applicationVersion: String by project
 val applicationGroup: String by project
+val springBootVersion = libs.versions.spring.boot.toString()
+val springCloudDependenciesVersion = libs.versions.spring.cloud.get().toString()
+val springDependenciesManagementVersion = libs.versions.spring.dep.mgmt.get().toString()
 
 /**
  * Define build script dependencies.
  */
 buildscript {
-    val springBootPluginVersion = "4.0.1"
-    val springDependenciesManagementVersion = "1.1.7"
-
     repositories {
         mavenLocal()
         mavenCentral()
     }
+    val springBootVersion = "4.0.2"
+    val springDependenciesManagementVersion = "1.1.7"
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootPluginVersion")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
         classpath("io.spring.gradle:dependency-management-plugin:$springDependenciesManagementVersion")
         classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:latest.release")
         classpath("io.freefair.gradle:lombok-plugin:latest.release")
@@ -29,17 +31,11 @@ buildscript {
 }
 
 plugins {
-    val springBootPluginVersion = "4.0.1"
-    val springDependenciesManagementVersion = "1.1.7"
-    val lombokPluginVersion = "9.1.0"
-    val sonarqubePluginVersion = "7.2.2.6593"
-    val hibernatePluginVersion = "7.2.0.Final"
-
-    id("org.springframework.boot") version springBootPluginVersion apply false
-    id("io.spring.dependency-management") version springDependenciesManagementVersion apply false
-    id("io.freefair.lombok") version lombokPluginVersion apply false
-    id("org.sonarqube") version sonarqubePluginVersion apply false
-    id("org.hibernate.orm") version hibernatePluginVersion apply false
+    alias(libs.plugins.spring.boot) apply false
+    alias(libs.plugins.spring.dep.mgmt) apply false
+    alias(libs.plugins.sonarqube) apply false
+    alias(libs.plugins.lombok) apply false
+    alias(libs.plugins.hibernate) apply false
 }
 
 val publishOutputFolder = "publish-output"
@@ -48,18 +44,26 @@ extra["publishOutputFolder"] = publishOutputFolder
 // Apply credentials
 apply(from = if (file("artifact-credential.gradle.kts").exists()) "artifact-credential.gradle.kts" else "artifact-credential-sample.gradle.kts")
 
+var libAlias = libs
+
 subprojects {
     apply(plugin = "java-library")
     apply(plugin = "jacoco")
     apply(plugin = "application")
-    apply(plugin = "io.freefair.lombok")
-    apply(plugin = "org.sonarqube")
-    if (project.name != "jasypt-tool") {
-        apply(plugin = "maven-publish")
-        apply(plugin = "signing")
+    apply(plugin = libAlias.plugins.lombok.get().pluginId)
+    apply(plugin = libAlias.plugins.sonarqube.get().pluginId)
+    apply(plugin = "maven-publish")
+    apply(plugin = "signing")
+    apply(plugin = libAlias.plugins.hibernate.get().pluginId)
+    apply(plugin = libAlias.plugins.spring.dep.mgmt.get().pluginId)
+
+    the<DependencyManagementExtension>().apply {
+        imports {
+            mavenBom("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
+            mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+            mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudDependenciesVersion")
+        }
     }
-    apply(plugin = "org.hibernate.orm")
-    apply(plugin = "io.spring.dependency-management")
 
     tasks.withType<JavaCompile>().configureEach {
         options.encoding = "UTF-8"
@@ -74,22 +78,11 @@ subprojects {
         }
     }
 
-    if (project.name != "common-kafka") {
-        repositories {
-            mavenLocal()
-            mavenCentral()
-            maven("https://s01.oss.sonatype.org/content/groups/public/")
-        }
-    }
-
-    the<io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension>().apply {
-        val springBootPluginVersion = "4.0.1"
-        val springCloudDependenciesVersion = "2025.1.0"
-        imports {
-            mavenBom("org.springframework.boot:spring-boot-dependencies:$springBootPluginVersion")
-            mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
-            mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudDependenciesVersion")
-        }
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven("https://s01.oss.sonatype.org/content/groups/public/")
+        maven("https://packages.confluent.io/maven/")
     }
 
     tasks.withType<Jar> {
@@ -116,18 +109,6 @@ subprojects {
             xml.outputLocation.set(layout.buildDirectory.file("jacoco/jacoco-report.xml"))
             csv.outputLocation.set(layout.buildDirectory.file("jacoco/jacoco-report.csv"))
         }
-
-        // Delay setting classDirectories until after project evaluation
-//        project.afterEvaluate {
-//            val excludedPatterns = listOf("**/ex/**", "**/pojo/**", "**/model/**", "**/dto/**", "**/config/**")
-//            classDirectories.setFrom(
-//                classDirectories.files.map { dir ->
-//                    fileTree(dir) {
-//                        exclude(excludedPatterns)
-//                    }
-//                }
-//            )
-//        }
     }
 
     tasks.named<ProcessResources>("processTestResources") {

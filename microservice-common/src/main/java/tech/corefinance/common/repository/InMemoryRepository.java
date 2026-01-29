@@ -1,6 +1,5 @@
 package tech.corefinance.common.repository;
 
-import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.*;
 import org.springframework.data.repository.query.FluentQuery;
 import tech.corefinance.common.ex.ServiceProcessingException;
@@ -33,7 +32,7 @@ public class InMemoryRepository<T extends GenericModel<ID>, ID extends Serializa
     }
 
     @Override
-    public <S extends T> S save(@NotNull S entity) {
+    public <S extends T> S save(S entity) {
         if (!validateEntity(entity)) {
             throw new ServiceProcessingException(VALIDATION_FAIL_MESSAGE);
         }
@@ -72,7 +71,7 @@ public class InMemoryRepository<T extends GenericModel<ID>, ID extends Serializa
     }
 
     @Override
-    public <S extends T> List<S> saveAll(@NotNull Iterable<S> entities) {
+    public <S extends T> List<S> saveAll(Iterable<S> entities) {
         List<S> result = new LinkedList<>();
         entities.forEach(e -> {
             result.add(save(e));
@@ -81,7 +80,7 @@ public class InMemoryRepository<T extends GenericModel<ID>, ID extends Serializa
     }
 
     @Override
-    public Optional<T> findById(@NotNull ID id) {
+    public Optional<T> findById(ID id) {
         var value = data.get(id);
         if (value != null) {
             return Optional.of(value);
