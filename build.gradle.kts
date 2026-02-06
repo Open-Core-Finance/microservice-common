@@ -5,7 +5,6 @@ import java.net.URI
 import java.nio.file.Files
 import java.util.*
 
-val javaSourceCompatibility: String by project
 val applicationVersion: String by project
 val applicationGroup: String by project
 val springBootVersion = libs.versions.spring.boot.toString()
@@ -75,8 +74,9 @@ subprojects {
     version = applicationVersion
 
     extensions.configure<JavaPluginExtension> {
-        toolchain {
-            languageVersion.set(JavaLanguageVersion.of(javaSourceCompatibility))
+        extensions.configure<JavaPluginExtension> {
+            sourceCompatibility = JavaVersion.VERSION_17
+            targetCompatibility = JavaVersion.VERSION_21
         }
     }
 

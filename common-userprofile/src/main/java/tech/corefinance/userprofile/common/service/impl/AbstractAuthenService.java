@@ -131,14 +131,19 @@ public abstract class AbstractAuthenService<U extends CommonUserProfile<?>, T ex
     @Override
     public LoginDto refreshToken(String loginId, String refreshToken, String deviceId, String clientAppId, AppPlatform appPlatform,
                                  AppVersion appVersion, HttpServletRequest request) throws UnknownHostException {
+        log.debug("Attempting to refresh login token for login ID {}", loginId);
+        log.trace("Refresh token {}", refreshToken);
         T loginSession = loginSessionRepository.findByIdAndRefreshToken(loginId, refreshToken)
                 .orElseThrow(() -> new AccessDeniedException("ID or refresh token is wrong"));
 
+        log.trace("Validating session...");
         validateLoginSession(deviceId, request, loginSession);
 
+        log.trace("Invalid old login session");
         loginSession.setValidToken(false);
         loginSessionRepository.save(loginSession);
 
+        log.trace("Creating new login session...");
         return createToken(loginSession.getUserProfile(), deviceId, clientAppId, appPlatform, appVersion, request,
                 loginSession.getInputAccount(), loginSession.getInputPassword(), loginSession.getAdditionalInfo());
     }

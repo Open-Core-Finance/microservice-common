@@ -52,7 +52,7 @@ public class AuthenticationController {
             @RequestHeader(name = HEADER_KEY_APP_PLATFORM, defaultValue = DEFAULT_APP_PLATFORM_STRING) AppPlatform appPlatform,
             @RequestHeader(name = HEADER_KEY_APP_VERSION, defaultValue = DEFAULT_VERSION_JSON) AppVersion appVersion,
             @RequestHeader(name = DEVICE_ID, required = false) String deviceId, HttpServletRequest request,
-            RefreshTokenRequestDto refreshTokenRequestDto) throws Exception {
+            @RequestBody RefreshTokenRequestDto refreshTokenRequestDto) throws Exception {
         LoginDto dto =
                 commonAuthenService.refreshToken(refreshTokenRequestDto.getLoginId(), refreshTokenRequestDto.getRefreshToken(), deviceId,
                         clientAppId, appPlatform, appVersion, request);
