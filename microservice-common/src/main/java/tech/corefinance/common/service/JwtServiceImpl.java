@@ -248,8 +248,11 @@ public class JwtServiceImpl implements JwtService {
         log.debug("Put addition data to login token");
         jwtData.putAll(jwtTokenDto.getAdditionalInfo());
         log.info("Login token before add custom attributes [{}]", jwtData);
-        long expiredIn = System.currentTimeMillis() + jwtConfiguration.getExpiration() * 1000;
+        int expiredIn = jwtConfiguration.getExpiration() * 1000;
+        long expiredAt = System.currentTimeMillis() + expiredIn;
+        jwtData.put("expiredAt", expiredAt);
         jwtData.put("expiredIn", expiredIn);
+        jwtTokenDto.setExpiredAt(expiredAt);
         jwtTokenDto.setExpiredIn(expiredIn);
         jwtData.put(CommonConstants.ATTRIBUTE_NAME_APP_VERSION, jsonMapper.writeValueAsString(jwtTokenDto.getAppVersion()));
         log.debug("Original role in school {}", jwtTokenDto.getUserRoles());

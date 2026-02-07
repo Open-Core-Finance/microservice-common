@@ -1,9 +1,9 @@
 package tech.corefinance.common.dto;
 
-import tech.corefinance.common.enums.AppPlatform;
-import tech.corefinance.common.model.AppVersion;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import tech.corefinance.common.enums.AppPlatform;
+import tech.corefinance.common.model.AppVersion;
 
 import java.io.Serializable;
 import java.util.*;
@@ -23,7 +23,8 @@ public class JwtTokenDto {
 
     private String userEmail;
 
-    private long expiredIn;
+    private long expiredAt;
+    private int expiredIn;
 
     private String deviceId;
 

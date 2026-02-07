@@ -1,16 +1,16 @@
 package tech.corefinance.common.config;
 
-import tech.corefinance.common.enums.CommonConstants;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import tech.corefinance.common.enums.CommonConstants;
 
 @Configuration
 @ConfigurationProperties(prefix = "tech.corefinance.security.jwt")
 @Data
 public class JwtConfiguration {
 
-    private long expiration = 3600;
+    private int expiration = 3600;
     private int maxLoginFailAllowed;
     /**
      * See {@link CommonConstants#JWT_VERIFY_MODE_SINGLE_LOGIN}

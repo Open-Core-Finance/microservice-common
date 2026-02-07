@@ -73,6 +73,7 @@ public interface UserAuthenAddOn<U extends CommonUserProfile<?>, T extends Commo
         loginDto.setLastName(userProfile.getLastName());
         loginDto.setAdditionalInfo(additionalInfo);
         loginDto.setExpiredIn(jwtTokenDto.getExpiredIn());
+        loginDto.setExpiredAt(jwtTokenDto.getExpiredAt());
         return loginDto;
     }
 
