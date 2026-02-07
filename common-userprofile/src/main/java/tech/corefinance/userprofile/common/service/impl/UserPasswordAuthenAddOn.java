@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import tech.corefinance.common.service.JwtService;
 import tech.corefinance.userprofile.common.entity.CommonUserProfile;
+import tech.corefinance.userprofile.common.entity_author.CommonLoginSession;
 import tech.corefinance.userprofile.common.repository.CommonUserProfileRepository;
 import tech.corefinance.userprofile.common.service.UserAuthenAddOn;
 
@@ -18,7 +19,7 @@ import java.util.Optional;
 @ConditionalOnProperty(prefix = "tech.corefinance.app.userprofile", name = "default-password-authen", havingValue = "true",
         matchIfMissing = true)
 @Slf4j
-public class UserPasswordAuthenAddOn implements UserAuthenAddOn<CommonUserProfile<?>> {
+public class UserPasswordAuthenAddOn implements UserAuthenAddOn<CommonUserProfile<?>, CommonLoginSession<?>> {
 
     @SuppressWarnings("rawtypes")
     @Autowired

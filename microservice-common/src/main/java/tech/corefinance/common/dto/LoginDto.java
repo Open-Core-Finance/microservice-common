@@ -27,5 +27,6 @@ public class LoginDto {
     private String email;
     private LocalDate birthday;
     private String phoneNumber;
+    private long expiredIn;
     private Map<String, Object> additionalInfo;
 }

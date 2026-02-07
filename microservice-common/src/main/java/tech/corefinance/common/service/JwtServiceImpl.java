@@ -248,10 +248,13 @@ public class JwtServiceImpl implements JwtService {
         log.debug("Put addition data to login token");
         jwtData.putAll(jwtTokenDto.getAdditionalInfo());
         log.info("Login token before add custom attributes [{}]", jwtData);
-        jwtData.put("expiredIn", System.currentTimeMillis() + jwtConfiguration.getExpiration() * 1000);
+        long expiredIn = System.currentTimeMillis() + jwtConfiguration.getExpiration() * 1000;
+        jwtData.put("expiredIn", expiredIn);
+        jwtTokenDto.setExpiredIn(expiredIn);
         jwtData.put(CommonConstants.ATTRIBUTE_NAME_APP_VERSION, jsonMapper.writeValueAsString(jwtTokenDto.getAppVersion()));
         log.debug("Original role in school {}", jwtTokenDto.getUserRoles());
-        LinkedList<String> userRoles = new LinkedList<>(jwtTokenDto.getUserRoles().stream().map(r -> jsonMapper.writeValueAsString(r)).toList());
+        LinkedList<String> userRoles =
+                new LinkedList<>(jwtTokenDto.getUserRoles().stream().map(r -> jsonMapper.writeValueAsString(r)).toList());
         jwtData.put("userRoles", userRoles);
         jwtData.remove("additionalInfo");
         log.info("Login token before sign {}", jwtData);

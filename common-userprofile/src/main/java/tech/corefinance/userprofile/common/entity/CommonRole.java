@@ -14,7 +14,7 @@ import java.util.Map;
 
 @MappedSuperclass
 @Data
-public abstract class CommonRole<U extends CommonUserProfile> implements GenericModel<String> {
+public abstract class CommonRole<U extends CommonUserProfile<?>> implements GenericModel<String> {
 
     @Id
     private String id;
@@ -22,7 +22,7 @@ public abstract class CommonRole<U extends CommonUserProfile> implements Generic
     @Column(name = "tenant_id")
     private String tenantId;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "user_profile_role", joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "user_profile_id"))
     @JsonIgnore

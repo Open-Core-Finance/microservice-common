@@ -18,6 +18,7 @@ import tech.corefinance.common.ex.ResourceNotFound;
 import tech.corefinance.common.ex.ServiceProcessingException;
 import tech.corefinance.common.model.AppVersion;
 import tech.corefinance.common.service.JwtService;
+import tech.corefinance.userprofile.common.entity.CommonRole;
 import tech.corefinance.userprofile.common.entity.CommonUserProfile;
 import tech.corefinance.userprofile.common.entity_author.AttemptedLogin;
 import tech.corefinance.userprofile.common.entity_author.CommonLoginSession;
@@ -35,8 +36,8 @@ import java.util.Map;
 @Service
 @Transactional
 @ConditionalOnProperty(prefix = "tech.corefinance.app.userprofile", name = "common-role-service", havingValue = "true", matchIfMissing = true)
-public abstract class AbstractAuthenService<U extends CommonUserProfile<?>, T extends CommonLoginSession<U>>
-        implements CommonAuthenService<U, T> {
+public abstract class AbstractAuthenService<R extends CommonRole<?>, U extends CommonUserProfile<?>, T extends CommonLoginSession<U>>
+        implements CommonAuthenService {
     @Autowired
     private CommonLoginSessionRepository<T> loginSessionRepository;
     @Autowired
@@ -51,7 +52,7 @@ public abstract class AbstractAuthenService<U extends CommonUserProfile<?>, T ex
     private List<UserAuthenAddOn> userAuthenAddOns;
 
     @SuppressWarnings("unchecked")
-    private UserAuthenAddOn<U> getSuitableUserAuthenAddOn() {
+    private UserAuthenAddOn<U, T> getSuitableUserAuthenAddOn() {
         return this.userAuthenAddOns.iterator().next();
     }
 
@@ -96,7 +97,7 @@ public abstract class AbstractAuthenService<U extends CommonUserProfile<?>, T ex
         loginSession = loginSessionRepository.save(loginSession);
 
         // Login DTO
-        return userAuthenAddOn.buildLoginDto(userProfile, loginSession, userRoles, jwtToken, refreshToken, additionalInfo);
+        return userAuthenAddOn.buildLoginDto(userProfile, loginSession, userRoles, jwtToken, refreshToken, additionalInfo, jwtTokenDto);
     }
 
     @Override

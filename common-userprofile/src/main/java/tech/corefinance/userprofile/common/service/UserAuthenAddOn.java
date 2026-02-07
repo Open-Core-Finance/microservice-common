@@ -19,12 +19,12 @@ import java.net.UnknownHostException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public interface UserAuthenAddOn<U extends CommonUserProfile<?>> extends Ordered {
+public interface UserAuthenAddOn<U extends CommonUserProfile<?>, T extends CommonLoginSession<?>> extends Ordered {
 
     JwtService getJwtService();
 
     default JwtTokenDto buildJwtTokenDto(String deviceId, String clientAppId, AppPlatform appPlatform, AppVersion appVersion,
-                                         HttpServletRequest request, CommonLoginSession commonLoginSession, CommonUserProfile userProfile,
+                                         HttpServletRequest request, T commonLoginSession, U userProfile,
                                          List<UserRoleDto> userRoles, String account, String password, Map<String, Object> additionalInfo)
             throws UnknownHostException {
         JwtTokenDto jwtTokenDto =
@@ -54,8 +54,8 @@ public interface UserAuthenAddOn<U extends CommonUserProfile<?>> extends Ordered
         return jwtTokenDto;
     }
 
-    default LoginDto buildLoginDto(CommonUserProfile userProfile, CommonLoginSession commonLoginSession, List<UserRoleDto> userRoles,
-                                   String jwtToken, String refreshToken, Map<String, Object> additionalInfo) {
+    default LoginDto buildLoginDto(U userProfile, T commonLoginSession, List<UserRoleDto> userRoles,
+                                   String jwtToken, String refreshToken, Map<String, Object> additionalInfo, JwtTokenDto jwtTokenDto) {
         LoginDto loginDto = new LoginDto();
         loginDto.setLoginId(commonLoginSession.getId());
         loginDto.setToken(jwtToken);
@@ -72,12 +72,13 @@ public interface UserAuthenAddOn<U extends CommonUserProfile<?>> extends Ordered
         loginDto.setFirstName(userProfile.getFirstName());
         loginDto.setLastName(userProfile.getLastName());
         loginDto.setAdditionalInfo(additionalInfo);
+        loginDto.setExpiredIn(jwtTokenDto.getExpiredIn());
         return loginDto;
     }
 
-    default List<UserRoleDto> buildUserRoleDtoList(CommonUserProfile userProfile, Map<String, Object> additionalInfo) {
+    default List<UserRoleDto> buildUserRoleDtoList(U userProfile, Map<String, Object> additionalInfo) {
         var log = LoggerFactory.getLogger(getClass());
-        List<CommonRole<?>> commonRoles = userProfile.getCommonRoles();
+        List<? extends CommonRole<?>> commonRoles = userProfile.getCommonRoles();
 
         if (CollectionUtils.isEmpty(commonRoles)) {
             log.warn("User id {} don't have any roles", userProfile.getId());
