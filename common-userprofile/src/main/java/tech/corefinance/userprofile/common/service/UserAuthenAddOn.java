@@ -9,27 +9,23 @@ import tech.corefinance.common.dto.LoginDto;
 import tech.corefinance.common.dto.UserRoleDto;
 import tech.corefinance.common.enums.AppPlatform;
 import tech.corefinance.common.model.AppVersion;
-import tech.corefinance.common.service.JwtService;
 import tech.corefinance.userprofile.common.entity.CommonRole;
 import tech.corefinance.userprofile.common.entity.CommonUserProfile;
 import tech.corefinance.userprofile.common.entity_author.CommonLoginSession;
 
 import java.io.Serializable;
-import java.net.UnknownHostException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public interface UserAuthenAddOn<U extends CommonUserProfile<?>, T extends CommonLoginSession<?>> extends Ordered {
 
-    JwtService getJwtService();
+    default int getOrder() {
+        return 0;
+    }
 
-    default JwtTokenDto buildJwtTokenDto(String deviceId, String clientAppId, AppPlatform appPlatform, AppVersion appVersion,
-                                         HttpServletRequest request, T commonLoginSession, U userProfile,
-                                         List<UserRoleDto> userRoles, String account, String password, Map<String, Object> additionalInfo)
-            throws UnknownHostException {
-        JwtTokenDto jwtTokenDto =
-                new JwtTokenDto(commonLoginSession.getId(), userProfile.getId(), clientAppId, appPlatform, appVersion, deviceId,
-                        getJwtService().extractIpAddress(request));
+    default JwtTokenDto updateTokenDto(JwtTokenDto jwtTokenDto, String deviceId, String clientAppId, AppPlatform appPlatform,
+                                       AppVersion appVersion, HttpServletRequest request, T commonLoginSession, U userProfile,
+                                       List<UserRoleDto> userRoles, String account, String password, Map<String, Object> additionalInfo) {
         jwtTokenDto.setUserDisplayName(userProfile.getDisplayName());
         jwtTokenDto.setUsername(userProfile.getUsername());
         jwtTokenDto.setUserEmail(userProfile.getEmail());
@@ -54,9 +50,8 @@ public interface UserAuthenAddOn<U extends CommonUserProfile<?>, T extends Commo
         return jwtTokenDto;
     }
 
-    default LoginDto buildLoginDto(U userProfile, T commonLoginSession, List<UserRoleDto> userRoles,
-                                   String jwtToken, String refreshToken, Map<String, Object> additionalInfo, JwtTokenDto jwtTokenDto) {
-        LoginDto loginDto = new LoginDto();
+    default LoginDto updateLoginDto(LoginDto loginDto, U userProfile, T commonLoginSession, List<UserRoleDto> userRoles,
+                                    String jwtToken, String refreshToken, Map<String, Object> additionalInfo, JwtTokenDto jwtTokenDto) {
         loginDto.setLoginId(commonLoginSession.getId());
         loginDto.setToken(jwtToken);
         loginDto.setRefreshToken(refreshToken);
@@ -98,9 +93,17 @@ public interface UserAuthenAddOn<U extends CommonUserProfile<?>, T extends Commo
         return result;
     }
 
-    U authenticate(String account, String password, Map<String, Object> additionalInfo);
+    /**
+     * Check authentication for provided userprofile, username, password
+     *
+     * @param account        Username or email
+     * @param password       Password
+     * @param additionalInfo Additional login info
+     * @return Modified Userprofile
+     */
+    U authenticate(U userProfile, String account, String password, Map<String, Object> additionalInfo);
 
-    default Map<String, Object> retrieveAdditionalLoginInfo(HttpServletRequest request) {
+    default Map<String, Object> retrieveAdditionalLoginInfo(Map<String, Object> additionalLoginInfo, HttpServletRequest request) {
         return new HashMap<>();
     }
 }

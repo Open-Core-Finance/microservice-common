@@ -1,6 +1,7 @@
 package tech.corefinance.userprofile.common.service.impl;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +25,12 @@ import tech.corefinance.userprofile.common.entity_author.AttemptedLogin;
 import tech.corefinance.userprofile.common.entity_author.CommonLoginSession;
 import tech.corefinance.userprofile.common.repository.AttemptedLoginRepository;
 import tech.corefinance.userprofile.common.repository.CommonLoginSessionRepository;
+import tech.corefinance.userprofile.common.repository.CommonUserProfileRepository;
 import tech.corefinance.userprofile.common.service.CommonAuthenService;
 import tech.corefinance.userprofile.common.service.UserAuthenAddOn;
 
 import java.net.UnknownHostException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -46,30 +46,46 @@ public abstract class AbstractAuthenService<R extends CommonRole<?>, U extends C
     private JwtService jwtService;
     @Autowired
     private JwtConfiguration jwtConfiguration;
+    @SuppressWarnings("rawtypes")
+    @Autowired
+    private CommonUserProfileRepository commonUserProfileRepository;
 
     @SuppressWarnings({"rawtypes", "MismatchedQueryAndUpdateOfCollection"})
     @Autowired
     private List<UserAuthenAddOn> userAuthenAddOns;
 
-    @SuppressWarnings("unchecked")
-    private UserAuthenAddOn<U, T> getSuitableUserAuthenAddOn() {
-        return this.userAuthenAddOns.iterator().next();
+    @PostConstruct
+    public void postConstruct() {
+        this.userAuthenAddOns.sort(Comparator.comparingInt(UserAuthenAddOn::getOrder));
     }
+
+//    @SuppressWarnings("unchecked")
+//    private UserAuthenAddOn<U, T> getSuitableUserAuthenAddOn() {
+//        return this.userAuthenAddOns.iterator().next();
+//    }
 
     public abstract T createEmptySession();
 
     protected abstract int invalidateOldLogins(String verifyKey);
 
+    @SuppressWarnings("unchecked")
     private LoginDto createToken(U userProfile, String deviceId, String clientAppId, AppPlatform appPlatform, AppVersion appVersion,
                                  HttpServletRequest request, String account, String password, Map<String, Object> additionalInfo)
             throws UnknownHostException {
-        var userAuthenAddOn = getSuitableUserAuthenAddOn();
         T loginSession = loginSessionRepository.save(createEmptySession());
-        List<UserRoleDto> userRoles = userAuthenAddOn.buildUserRoleDtoList(userProfile, additionalInfo);
+        List<UserRoleDto> userRoles = new LinkedList<>();
+        for (UserAuthenAddOn<?, ?> userAuthenAddOn : userAuthenAddOns) {
+            var tmp = ((UserAuthenAddOn<U, T>) userAuthenAddOn);
+            userRoles.addAll(tmp.buildUserRoleDtoList(userProfile, additionalInfo));
+        }
 
-        JwtTokenDto jwtTokenDto =
-                userAuthenAddOn.buildJwtTokenDto(deviceId, clientAppId, appPlatform, appVersion, request, loginSession, userProfile,
-                        userRoles, account, password, additionalInfo);
+        JwtTokenDto jwtTokenDto = new JwtTokenDto(loginSession.getId(), userProfile.getId(), clientAppId, appPlatform, appVersion, deviceId,
+                jwtService.extractIpAddress(request));
+        for (UserAuthenAddOn<?, ?> userAuthenAddOn : userAuthenAddOns) {
+            var tmp = ((UserAuthenAddOn<U, T>) userAuthenAddOn);
+            jwtTokenDto = tmp.updateTokenDto(jwtTokenDto, deviceId, clientAppId, appPlatform, appVersion,
+                    request, loginSession, userProfile, userRoles, account, password, additionalInfo);
+        }
 
         String jwtToken = jwtService.buildLoginToken(jwtTokenDto);
         String refreshToken = jwtService.buildRefreshToken(jwtTokenDto, jwtToken);
@@ -97,26 +113,50 @@ public abstract class AbstractAuthenService<R extends CommonRole<?>, U extends C
         loginSession = loginSessionRepository.save(loginSession);
 
         // Login DTO
-        return userAuthenAddOn.buildLoginDto(userProfile, loginSession, userRoles, jwtToken, refreshToken, additionalInfo, jwtTokenDto);
+        LoginDto loginDto = new LoginDto();
+        for (UserAuthenAddOn<?, ?> userAuthenAddOn : userAuthenAddOns) {
+            var tmp = ((UserAuthenAddOn<U, T>) userAuthenAddOn);
+            loginDto =
+                    tmp.updateLoginDto(loginDto, userProfile, loginSession, userRoles, jwtToken, refreshToken, additionalInfo, jwtTokenDto);
+        }
+        return loginDto;
     }
 
     @Override
     @Transactional(noRollbackFor = ServiceProcessingException.class)
+    @SuppressWarnings("unchecked")
     public LoginDto login(String account, String password, String deviceId, String clientAppId, AppPlatform appPlatform,
                           AppVersion appVersion, HttpServletRequest request) throws Exception {
+        // Check if login
         long loginCount = attemptedLoginRepository.countByAccountAndEnabled(account, true);
         if (loginCount >= jwtConfiguration.getMaxLoginFailAllowed()) {
             throw new ServiceProcessingException(GeneralApiResponse.createErrorResponseWithCode("user_locked"));
         }
-        var userAuthenAddOn = getSuitableUserAuthenAddOn();
-        var additionalInfo = userAuthenAddOn.retrieveAdditionalLoginInfo(request);
-        U userProfile = userAuthenAddOn.authenticate(account, password, additionalInfo);
-        if (userProfile == null) {
+
+        // Additional login data
+        Map<String, Object> additionalInfo = new HashMap<>();
+        for (UserAuthenAddOn<?, ?> userAuthenAddOn : userAuthenAddOns) {
+            var tmp = ((UserAuthenAddOn<U, T>) userAuthenAddOn);
+            additionalInfo = tmp.retrieveAdditionalLoginInfo(additionalInfo, request);
+        }
+
+        //Lookup user from database
+        Optional<?> optional = commonUserProfileRepository.findFirstByEmailIgnoreCaseOrUsernameIgnoreCase(account, account);
+        if (optional.isEmpty()) {
             // Store attempted login
             attemptedLoginRepository.save(
                     new AttemptedLogin(account, jwtService.extractIpAddress(request), request.getHeader("user-agent"), clientAppId,
                             deviceId, appPlatform, appVersion, additionalInfo));
             throw new ServiceProcessingException(GeneralApiResponse.createErrorResponseWithCode("login_fail"));
+        }
+
+        U userProfile = (U) optional.get();
+        for (UserAuthenAddOn<?, ?> userAuthenAddOn : userAuthenAddOns) {
+            var tmp = ((UserAuthenAddOn<U, T>) userAuthenAddOn);
+            userProfile = tmp.authenticate(userProfile, account, password, additionalInfo);
+            if (userProfile == null) {
+                throw new ServiceProcessingException(GeneralApiResponse.createErrorResponseWithCode("login_fail"));
+            }
         }
         // Clean attempted login
         attemptedLoginRepository.updateEnabledByAccount(false, userProfile.getUsername(), userProfile.getEmail());
