@@ -20,8 +20,8 @@ import tech.corefinance.userprofile.common.service.UserProfileService;
 @AllArgsConstructor
 public abstract class AbstractUserProfileService<T extends CommonUserProfile<?>> implements UserProfileService<T> {
 
-    private PasswordEncoder passwordEncoder;
-    private JwtService jwtService;
+    protected PasswordEncoder passwordEncoder;
+    protected JwtService jwtService;
 
     @Override
     public <D extends CreateUpdateDto<String>> T copyAdditionalPropertiesFromDtoToEntity(D source, T dest) {
@@ -36,7 +36,7 @@ public abstract class AbstractUserProfileService<T extends CommonUserProfile<?>>
     public byte changePassword(String userId, String currentPassword, String newPassword, String repeatNewPassword) {
         var userProfile = getEntityDetails(userId);
         var userPass = userProfile.getPassword();
-        if (userPass == null || !passwordEncoder.matches(currentPassword, userPass)) {
+        if (userPass != null && !passwordEncoder.matches(currentPassword, userPass)) {
             log.debug("Current password is incorrect");
             return -1;
         }

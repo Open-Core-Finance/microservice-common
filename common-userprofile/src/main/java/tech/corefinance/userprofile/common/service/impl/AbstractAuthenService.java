@@ -39,30 +39,25 @@ import java.util.*;
 public abstract class AbstractAuthenService<R extends CommonRole<?>, U extends CommonUserProfile<?>, T extends CommonLoginSession<U>>
         implements CommonAuthenService {
     @Autowired
-    private CommonLoginSessionRepository<T> loginSessionRepository;
+    protected CommonLoginSessionRepository<T> loginSessionRepository;
     @Autowired
-    private AttemptedLoginRepository attemptedLoginRepository;
+    protected AttemptedLoginRepository attemptedLoginRepository;
     @Autowired
-    private JwtService jwtService;
+    protected JwtService jwtService;
     @Autowired
-    private JwtConfiguration jwtConfiguration;
+    protected JwtConfiguration jwtConfiguration;
     @SuppressWarnings("rawtypes")
     @Autowired
-    private CommonUserProfileRepository commonUserProfileRepository;
+    protected CommonUserProfileRepository commonUserProfileRepository;
 
     @SuppressWarnings({"rawtypes", "MismatchedQueryAndUpdateOfCollection"})
     @Autowired
-    private List<UserAuthenAddOn> userAuthenAddOns;
+    protected List<UserAuthenAddOn> userAuthenAddOns;
 
     @PostConstruct
     public void postConstruct() {
         this.userAuthenAddOns.sort(Comparator.comparingInt(UserAuthenAddOn::getOrder));
     }
-
-//    @SuppressWarnings("unchecked")
-//    private UserAuthenAddOn<U, T> getSuitableUserAuthenAddOn() {
-//        return this.userAuthenAddOns.iterator().next();
-//    }
 
     public abstract T createEmptySession();
 
