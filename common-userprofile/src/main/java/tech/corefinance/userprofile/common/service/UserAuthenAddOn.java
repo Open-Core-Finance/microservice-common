@@ -103,6 +103,19 @@ public interface UserAuthenAddOn<U extends CommonUserProfile<?>, T extends Commo
      */
     U authenticate(U userProfile, String account, String password, Map<String, Object> additionalInfo);
 
+    /**
+     * Refresh login token
+     *
+     * @param userProfile    User
+     * @param additionalInfo Additional authen data
+     * @return Modified Userprofile
+     */
+    default U refreshAuthen(U userProfile, Map<String, Object> additionalInfo, CommonLoginSession<?> loginSession) {
+        userProfile.getAdditionalAttributes().put("token-type", "refresh");
+        LoggerFactory.getLogger(getClass()).debug("Additional info [{}] for login session [{}]", additionalInfo, loginSession.getId());
+        return userProfile;
+    }
+
     default Map<String, Object> retrieveAdditionalLoginInfo(Map<String, Object> additionalLoginInfo, HttpServletRequest request) {
         return new HashMap<>();
     }

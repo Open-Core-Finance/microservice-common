@@ -177,6 +177,17 @@ public abstract class AbstractAuthenService<R extends CommonRole<?>, U extends C
         loginSession.setValidToken(false);
         loginSessionRepository.save(loginSession);
 
+        U userProfile = loginSession.getUserProfile();
+        for (UserAuthenAddOn<?, ?> userAuthenAddOn : userAuthenAddOns) {
+            @SuppressWarnings("unchecked") var tmp = ((UserAuthenAddOn<U, T>) userAuthenAddOn);
+            userProfile = tmp.refreshAuthen(userProfile, loginSession.getAdditionalInfo(), loginSession);
+            if (userProfile == null) {
+                throw new ServiceProcessingException(GeneralApiResponse.createErrorResponseWithCode("login_fail"));
+            }
+        }
+        // Clean attempted login
+        attemptedLoginRepository.updateEnabledByAccount(false, userProfile.getUsername(), userProfile.getEmail());
+
         log.trace("Creating new login session...");
         return createToken(loginSession.getUserProfile(), deviceId, clientAppId, appPlatform, appVersion, request,
                 loginSession.getInputAccount(), loginSession.getInputPassword(), loginSession.getAdditionalInfo());
