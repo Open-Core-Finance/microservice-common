@@ -40,4 +40,13 @@ public class UserProfileController implements CrudController<String, CommonUserP
         return GeneralApiResponse.createSuccessResponse(
                 userProfileService.changePassword(userId, currentPassword, newPassword, confirmPassword));
     }
+
+    @PostMapping("/self-update-password")
+    @PermissionAction(action = "self-update-password")
+    public GeneralApiResponse<Byte> selfUpdatePassword(@RequestParam("currentPassword") String currentPassword,
+                                                       @RequestParam("newPassword") String newPassword,
+                                                       @RequestParam("confirmPassword") String confirmPassword) {
+        return GeneralApiResponse.createSuccessResponse(
+                userProfileService.selfUpdatePassword(currentPassword, newPassword, confirmPassword));
+    }
 }
