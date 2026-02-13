@@ -5,7 +5,6 @@ import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +34,6 @@ import java.util.*;
 @Slf4j
 @Service
 @Transactional
-@ConditionalOnProperty(prefix = "tech.corefinance.app.userprofile", name = "common-role-service", havingValue = "true", matchIfMissing = true)
 public abstract class AbstractAuthenService<R extends CommonRole<?>, U extends CommonUserProfile<?>, T extends CommonLoginSession<U>>
         implements CommonAuthenService {
     @Autowired
