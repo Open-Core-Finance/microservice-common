@@ -9,6 +9,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamSource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.data.annotation.CreatedBy;
@@ -51,7 +52,7 @@ public class CoreFinanceUtil {
     private static final String PARSING_JSON_FAILURE_LOG = "Parsing json failure! object: {}";
     private static final List<Class<?>> LIST_IGNORE_LOGGING =
             List.of(ServletRequest.class, ServletResponse.class, HttpSession.class, Servlet.class, MultipartFile.class, byte[].class,
-                    File.class, InputStream.class, Class.class, Method.class, Field.class);
+                    File.class, InputStream.class, Class.class, Method.class, Field.class, InputStreamSource.class, InputStream.class);
 
     @Autowired
     private ResourcePatternResolver resourcePatternResolver;
@@ -90,6 +91,7 @@ public class CoreFinanceUtil {
                 if (!shouldIgnore && arg != null) {
                     shouldIgnore = arg.getClass().getSimpleName().contains("$");
                 }
+                shouldIgnore = shouldIgnore || (arg != null && arg.getClass().isArray());
                 if (!shouldIgnore) {
                     logs.put(name, writeValueToJson(jsonMapper, arg));
                 } else {
@@ -191,7 +193,8 @@ public class CoreFinanceUtil {
         if (!StringUtils.hasText(resourceType)) {
             if (managedResource == null) {
                 log.error(
-                        "Must define resource type at PermissionAction in method level " + "or ControllerManagedResource in controller level.");
+                        "Must define resource type at PermissionAction in method level " +
+                                "or ControllerManagedResource in controller level.");
                 if (serviceSecurityConfig.isRequireControllerWithAnnotation()) {
                     throw new ReflectiveIncorrectFieldException("no_permission_defined");
                 }
@@ -274,11 +277,15 @@ public class CoreFinanceUtil {
      */
     public boolean isMatchedInstanceType(Object target, List<String> excludeClasses) {
         var result = false;
+        var targetClass = target.getClass();
+        if (InputStreamSource.class.isAssignableFrom(targetClass) || InputStream.class.isAssignableFrom(targetClass)) {
+            log.debug("Target class [{}] is InputStreamSource. Ignore all input stream.", targetClass);
+            return true;
+        }
         log.debug("Checking if [{}] is included in list {}", target, excludeClasses);
         for (String className : excludeClasses) {
             try {
                 var clzz = Class.forName(className);
-                var targetClass = target.getClass();
                 if (clzz.isAssignableFrom(targetClass)) {
                     log.debug("[{}] can assign from [{}]", clzz, targetClass);
                     return true;
