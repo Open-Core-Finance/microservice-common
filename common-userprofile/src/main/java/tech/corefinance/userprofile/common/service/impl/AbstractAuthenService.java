@@ -66,9 +66,15 @@ public abstract class AbstractAuthenService<R extends CommonRole<?>, U extends C
                                  HttpServletRequest request, String account, String password, Map<String, Object> additionalInfo)
             throws UnknownHostException {
         T loginSession = loginSessionRepository.save(createEmptySession());
+        if (log.isDebugEnabled()) {
+            log.debug("Created new login session!");
+        }
         List<UserRoleDto> userRoles = new LinkedList<>();
         for (UserAuthenAddOn<?, ?> userAuthenAddOn : userAuthenAddOns) {
             var tmp = ((UserAuthenAddOn<U, T>) userAuthenAddOn);
+            if (log.isDebugEnabled()) {
+                log.debug("Loading role by [{}]...", tmp.getClass().getName());
+            }
             userRoles.addAll(tmp.buildUserRoleDtoList(userProfile, additionalInfo));
         }
 
@@ -76,11 +82,20 @@ public abstract class AbstractAuthenService<R extends CommonRole<?>, U extends C
                 jwtService.extractIpAddress(request));
         for (UserAuthenAddOn<?, ?> userAuthenAddOn : userAuthenAddOns) {
             var tmp = ((UserAuthenAddOn<U, T>) userAuthenAddOn);
+            if (log.isDebugEnabled()) {
+                log.debug("Updating login info to login token by [{}]...", tmp.getClass().getName());
+            }
             jwtTokenDto = tmp.updateTokenDto(jwtTokenDto, deviceId, clientAppId, appPlatform, appVersion,
                     request, loginSession, userProfile, userRoles, account, password, additionalInfo);
         }
 
+        if (log.isDebugEnabled()) {
+            log.debug("Generation JWT Token...");
+        }
         String jwtToken = jwtService.buildLoginToken(jwtTokenDto);
+        if (log.isDebugEnabled()) {
+            log.debug("Generation JWT refresh Token...");
+        }
         String refreshToken = jwtService.buildRefreshToken(jwtTokenDto, jwtToken);
 
         // Update login session
@@ -101,16 +116,31 @@ public abstract class AbstractAuthenService<R extends CommonRole<?>, U extends C
                 dataMap.putAll(jwtTokenDto.getAdditionalInfo());
             }
         }
+        if (log.isDebugEnabled()) {
+            log.debug("Invalidating old login session...");
+        }
         var invalidatedCount = invalidateOldLogins(loginSession.getVerifyKey());
-        log.debug("Invalidated {} sessions", invalidatedCount);
+        if (log.isDebugEnabled()) {
+            log.debug("Invalidated {} sessions", invalidatedCount);
+            log.debug("Saving new session into database...");
+        }
         loginSession = loginSessionRepository.save(loginSession);
 
         // Login DTO
         LoginDto loginDto = new LoginDto();
+        if (log.isDebugEnabled()) {
+            log.debug("Building login response DTO....");
+        }
         for (UserAuthenAddOn<?, ?> userAuthenAddOn : userAuthenAddOns) {
             var tmp = ((UserAuthenAddOn<U, T>) userAuthenAddOn);
+            if (log.isDebugEnabled()) {
+                log.debug("[{}] Update login response DTO....", tmp.getClass().getName());
+            }
             loginDto =
                     tmp.updateLoginDto(loginDto, userProfile, loginSession, userRoles, jwtToken, refreshToken, additionalInfo, jwtTokenDto);
+        }
+        if (log.isDebugEnabled()) {
+            log.debug("Login finished!");
         }
         return loginDto;
     }
@@ -123,6 +153,11 @@ public abstract class AbstractAuthenService<R extends CommonRole<?>, U extends C
         // Check if login
         long loginCount = attemptedLoginRepository.countByAccountAndEnabled(account, true);
         if (loginCount >= jwtConfiguration.getMaxLoginFailAllowed()) {
+            if (log.isErrorEnabled()) {
+                log.error(
+                        "Number of login fail [{}] over max login allowed [{}]! Account temporary locked! Please contact admin to unlock!",
+                        loginCount, jwtConfiguration.getMaxLoginFailAllowed());
+            }
             throw new ServiceProcessingException(GeneralApiResponse.createErrorResponseWithCode("user_locked"));
         }
 
@@ -130,12 +165,21 @@ public abstract class AbstractAuthenService<R extends CommonRole<?>, U extends C
         Map<String, Object> additionalInfo = new HashMap<>();
         for (UserAuthenAddOn<?, ?> userAuthenAddOn : userAuthenAddOns) {
             var tmp = ((UserAuthenAddOn<U, T>) userAuthenAddOn);
-            additionalInfo = tmp.retrieveAdditionalLoginInfo(additionalInfo, request);
+            if (log.isDebugEnabled()) {
+                log.debug("Retrieving additional info from request [{}]", tmp.getClass().getName());
+            }
+            additionalInfo.putAll(tmp.retrieveAdditionalLoginInfo(additionalInfo, request));
         }
 
         //Lookup user from database
         Optional<?> optional = commonUserProfileRepository.findFirstByEmailIgnoreCaseOrUsernameIgnoreCase(account, account);
+        if (log.isDebugEnabled()) {
+            log.debug("Retrieving userprofile from database for account [{}]...", account);
+        }
         if (optional.isEmpty()) {
+            if (log.isErrorEnabled()) {
+                log.error("Cannot find userprofile in database! Recorded as login fail!");
+            }
             // Store attempted login
             attemptedLoginRepository.save(
                     new AttemptedLogin(account, jwtService.extractIpAddress(request), request.getHeader("user-agent"), clientAppId,
@@ -146,49 +190,86 @@ public abstract class AbstractAuthenService<R extends CommonRole<?>, U extends C
         U userProfile = (U) optional.get();
         for (UserAuthenAddOn<?, ?> userAuthenAddOn : userAuthenAddOns) {
             var tmp = ((UserAuthenAddOn<U, T>) userAuthenAddOn);
+            if (log.isDebugEnabled()) {
+                log.debug("Authenticating with [{}]...", tmp.getClass().getName());
+            }
             userProfile = tmp.authenticate(userProfile, account, password, additionalInfo);
             if (userProfile == null) {
+                if (log.isErrorEnabled()) {
+                    log.debug("Authenticating with [{}] fail!", tmp.getClass().getName());
+                }
                 throw new ServiceProcessingException(GeneralApiResponse.createErrorResponseWithCode("login_fail"));
+            }
+            if (log.isDebugEnabled()) {
+                log.debug("Authenticating with [{}] successfully!", tmp.getClass().getName());
             }
         }
         // Clean attempted login
+        if (log.isDebugEnabled()) {
+            log.debug("Trying to clear old fail attempted login...");
+        }
         attemptedLoginRepository.updateEnabledByAccount(false, userProfile.getUsername(), userProfile.getEmail());
         // Response token
+        if (log.isDebugEnabled()) {
+            log.debug("Creating login token...");
+        }
         return createToken(userProfile, deviceId, clientAppId, appPlatform, appVersion, request, account, password, additionalInfo);
     }
 
     @Override
     public void unlockUser(String account) {
+        if (log.isDebugEnabled()) {
+            log.debug("Unlocking user [{}]...", account);
+        }
         attemptedLoginRepository.updateEnabledByAccount(false, account, account);
     }
 
     @Override
     public LoginDto refreshToken(String loginId, String refreshToken, String deviceId, String clientAppId, AppPlatform appPlatform,
                                  AppVersion appVersion, HttpServletRequest request) throws UnknownHostException {
-        log.debug("Attempting to refresh login token for login ID {}", loginId);
-        log.trace("Refresh token {}", refreshToken);
+        if (log.isDebugEnabled()) {
+            log.debug("Attempting to refresh login token for login ID {}", loginId);
+        }
+        if (log.isTraceEnabled()) {
+            log.trace("Refresh token {}", refreshToken);
+        }
         T loginSession = loginSessionRepository.findByIdAndRefreshToken(loginId, refreshToken)
                 .orElseThrow(() -> new AccessDeniedException("ID or refresh token is wrong"));
-
-        log.trace("Validating session...");
+        if (log.isTraceEnabled()) {
+            log.trace("Validating session...");
+        }
         validateLoginSession(deviceId, request, loginSession);
 
-        log.trace("Invalid old login session");
+        if (log.isTraceEnabled()) {
+            log.trace("Invalid old login session");
+        }
         loginSession.setValidToken(false);
         loginSessionRepository.save(loginSession);
+        if (log.isDebugEnabled()) {
+            log.debug("Saved new login session [{}]!", loginSession.getId());
+        }
 
         U userProfile = loginSession.getUserProfile();
         for (UserAuthenAddOn<?, ?> userAuthenAddOn : userAuthenAddOns) {
             @SuppressWarnings("unchecked") var tmp = ((UserAuthenAddOn<U, T>) userAuthenAddOn);
+            if (log.isDebugEnabled()) {
+                log.debug("Refreshing authen by [{}]...!", tmp.getClass().getName());
+            }
             userProfile = tmp.refreshAuthen(userProfile, loginSession.getAdditionalInfo(), loginSession);
             if (userProfile == null) {
+                if (log.isErrorEnabled()) {
+                    log.error("Refreshing authen by [{}] fail!", tmp.getClass().getName());
+                }
                 throw new ServiceProcessingException(GeneralApiResponse.createErrorResponseWithCode("login_fail"));
             }
         }
-        // Clean attempted login
-        attemptedLoginRepository.updateEnabledByAccount(false, userProfile.getUsername(), userProfile.getEmail());
 
-        log.trace("Creating new login session...");
+        // Clean attempted login
+        if (log.isDebugEnabled()) {
+            log.debug("Clean up old fail attempted login...");
+        }
+        attemptedLoginRepository.updateEnabledByAccount(false, userProfile.getUsername(), userProfile.getEmail());
+        
         return createToken(loginSession.getUserProfile(), deviceId, clientAppId, appPlatform, appVersion, request,
                 loginSession.getInputAccount(), loginSession.getInputPassword(), loginSession.getAdditionalInfo());
     }

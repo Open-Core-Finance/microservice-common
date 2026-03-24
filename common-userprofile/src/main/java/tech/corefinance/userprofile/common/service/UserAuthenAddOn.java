@@ -116,7 +116,7 @@ public interface UserAuthenAddOn<U extends CommonUserProfile<?>, T extends Commo
         return userProfile;
     }
 
-    default Map<String, Object> retrieveAdditionalLoginInfo(Map<String, Object> additionalLoginInfo, HttpServletRequest request) {
+    default Map<String, Object> retrieveAdditionalLoginInfo(Map<String, Object> currentLoginInfo, HttpServletRequest request) {
         return new HashMap<>();
     }
 }
