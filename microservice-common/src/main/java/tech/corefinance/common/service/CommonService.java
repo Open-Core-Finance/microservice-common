@@ -119,11 +119,15 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
         logger.info("Calling customEntityValidation...");
         entity = customEntityValidation(dto, entity);
         logger.info("Save entity to DB...");
-        entity = repository.save(entity);
+        entity = internalSaveEntityToDatabase(entity);
         logger.info("Call afterEntitySaved and then response");
         afterEntitySaved(entity, keptData);
         // Response
         return entity;
+    }
+
+    default T internalSaveEntityToDatabase(T entity) {
+        return getRepository().save(entity);
     }
 
     /**
