@@ -36,6 +36,7 @@ import tech.corefinance.common.service.CommonService;
 import tech.corefinance.common.service.ProxyUnbox;
 import tools.jackson.databind.json.JsonMapper;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,7 +55,8 @@ public class CoreFinanceUtil {
     private static final String PARSING_JSON_FAILURE_LOG = "Parsing json failure! object: {}";
     private static final List<Class<?>> LIST_IGNORE_LOGGING =
             List.of(ServletRequest.class, ServletResponse.class, HttpSession.class, Servlet.class, MultipartFile.class, byte[].class,
-                    File.class, InputStream.class, Class.class, Method.class, Field.class, InputStreamSource.class, InputStream.class);
+                    File.class, InputStream.class, Class.class, Method.class, Field.class, InputStreamSource.class, InputStream.class,
+                    Closeable.class);
 
     @Autowired
     private ResourcePatternResolver resourcePatternResolver;
