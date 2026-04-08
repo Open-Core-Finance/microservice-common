@@ -1,5 +1,6 @@
 package tech.corefinance.common.aop;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -9,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
-
-import jakarta.servlet.http.HttpServletRequest;
 import tools.jackson.databind.json.JsonMapper;
 
 import java.util.Collections;
@@ -34,55 +33,60 @@ public class ApiLogging extends MethodDataLoging {
 
     /**
      * Generate logs for GET HTTP Methods.
+     *
      * @param joinPoint Method call
      * @return Method response
      * @throws Throwable Method exception or error.
      */
-    @Around("@annotation(org.springframework.web.bind.annotation.GetMapping)")
+    @Around("@annotation(org.springframework.web.bind.annotation.GetMapping) && !@annotation(tech.corefinance.common.annotation.SkipAopLog)")
     public Object logGetRequest(ProceedingJoinPoint joinPoint) throws Throwable {
         return doLogging(joinPoint);
     }
 
     /**
      * Generate logs for POST HTTP Methods.
+     *
      * @param joinPoint Method call
      * @return Method response
      * @throws Throwable Method exception or error.
      */
-    @Around("@annotation(org.springframework.web.bind.annotation.PostMapping)")
+    @Around("@annotation(org.springframework.web.bind.annotation.PostMapping) && !@annotation(tech.corefinance.common.annotation.SkipAopLog)")
     public Object logPostRequest(ProceedingJoinPoint joinPoint) throws Throwable {
         return doLogging(joinPoint);
     }
 
     /**
      * Generate logs for PUT HTTP Methods.
+     *
      * @param joinPoint Method call
      * @return Method response
      * @throws Throwable Method exception or error.
      */
-    @Around("@annotation(org.springframework.web.bind.annotation.PutMapping)")
+    @Around("@annotation(org.springframework.web.bind.annotation.PutMapping) && !@annotation(tech.corefinance.common.annotation.SkipAopLog)")
     public Object logPutRequest(ProceedingJoinPoint joinPoint) throws Throwable {
         return doLogging(joinPoint);
     }
 
     /**
      * Generate logs for PATCH HTTP Methods.
+     *
      * @param joinPoint Method call
      * @return Method response
      * @throws Throwable Method exception or error.
      */
-    @Around("@annotation(org.springframework.web.bind.annotation.PatchMapping)")
+    @Around("@annotation(org.springframework.web.bind.annotation.PatchMapping) && !@annotation(tech.corefinance.common.annotation.SkipAopLog)")
     public Object verifyPatchRequest(ProceedingJoinPoint joinPoint) throws Throwable {
         return doLogging(joinPoint);
     }
 
     /**
      * Generate logs for DELETE HTTP Methods.
+     *
      * @param joinPoint Method call
      * @return Method response
      * @throws Throwable Method exception or error.
      */
-    @Around("@annotation(org.springframework.web.bind.annotation.DeleteMapping)")
+    @Around("@annotation(org.springframework.web.bind.annotation.DeleteMapping) && !@annotation(tech.corefinance.common.annotation.SkipAopLog)")
     public Object verifyDeleteRequest(ProceedingJoinPoint joinPoint) throws Throwable {
         return doLogging(joinPoint);
     }
@@ -91,18 +95,18 @@ public class ApiLogging extends MethodDataLoging {
      * Logging.
      *
      * @param joinPoint This is param of AOP. Just ignore it
-     *
      * @return result of the wrapped services method
      * @throws Throwable when target method have exception
      */
-    @Around("@annotation(org.springframework.web.bind.annotation.RequestMapping)")
+    @Around("@annotation(org.springframework.web.bind.annotation.RequestMapping) && !@annotation(tech.corefinance.common.annotation.SkipAopLog)")
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
         return doLogging(joinPoint);
     }
 
     /**
      * Additional log for input if needed.
-     * @param joinPoint Calling method.
+     *
+     * @param joinPoint  Calling method.
      * @param jsonMapper System object mapper.
      */
     @Override

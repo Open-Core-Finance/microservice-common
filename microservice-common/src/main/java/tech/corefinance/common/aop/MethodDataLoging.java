@@ -29,6 +29,7 @@ public abstract class MethodDataLoging {
 
     /**
      * Mark in the log for reading purpose.
+     *
      * @return Mark in the log for reading purpose.
      */
     protected String getLogingStartMark() {
@@ -37,6 +38,7 @@ public abstract class MethodDataLoging {
 
     /**
      * Main logging method.
+     *
      * @param joinPoint Method call.
      * @return Method response.
      * @throws Throwable Method execption or error.
@@ -73,7 +75,7 @@ public abstract class MethodDataLoging {
 
             // Input
             String[] parametersNames = signature.getParameterNames();
-            String input = coreFinanceUtil.buildMethodInputJsonLog(joinPoint, parametersNames, jsonMapper);
+            String input = coreFinanceUtil.buildMethodInputJsonLog(joinPoint, parametersNames, jsonMapper, signature);
             log.info("Input [{}]", input);
             doAdditionalInputLog(joinPoint, jsonMapper);
 
@@ -101,7 +103,8 @@ public abstract class MethodDataLoging {
 
     /**
      * Additional log for input if needed.
-     * @param joinPoint Calling method.
+     *
+     * @param joinPoint  Calling method.
      * @param jsonMapper System object mapper.
      */
     protected void doAdditionalInputLog(ProceedingJoinPoint joinPoint, JsonMapper jsonMapper) {

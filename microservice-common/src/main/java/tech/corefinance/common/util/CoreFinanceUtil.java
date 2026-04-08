@@ -6,6 +6,7 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import tech.corefinance.common.annotation.ControllerManagedResource;
 import tech.corefinance.common.annotation.PermissionAction;
+import tech.corefinance.common.annotation.SkipAopLog;
 import tech.corefinance.common.config.ServiceSecurityConfig;
 import tech.corefinance.common.context.ApplicationContextHolder;
 import tech.corefinance.common.converter.ExportTypeConverter;
@@ -78,8 +80,11 @@ public class CoreFinanceUtil {
         return data;
     }
 
-    public String buildMethodInputJsonLog(ProceedingJoinPoint joinPoint, String[] parametersNames, JsonMapper jsonMapper) {
-        // Create AopCustomParam
+    public String buildMethodInputJsonLog(ProceedingJoinPoint joinPoint, String[] parametersNames, JsonMapper jsonMapper,
+                                          MethodSignature signature) {
+        Method method = signature.getMethod();
+        Annotation[][] parameterAnnotations = method.getParameterAnnotations();
+
         Map<String, Object> logs = new LinkedHashMap<>();
         Object[] args = joinPoint.getArgs();
 
@@ -92,14 +97,26 @@ public class CoreFinanceUtil {
                     shouldIgnore = arg.getClass().getSimpleName().contains("$");
                 }
                 shouldIgnore = shouldIgnore || (arg != null && arg.getClass().isArray());
+                shouldIgnore = shouldIgnore || (lookupAnnotation(SkipAopLog.class, parameterAnnotations, i) != null);
                 if (!shouldIgnore) {
                     logs.put(name, writeValueToJson(jsonMapper, arg));
                 } else {
-                    logs.put(name, "<" + arg.getClass().getName() + "/>");
+                    logs.put(name, arg != null ? "<" + arg.getClass().getName() + "/>" : "null");
                 }
             }
         }
         return writeValueToJson(jsonMapper, logs);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends Annotation> T lookupAnnotation(Class<T> annotationToFind, Annotation[][] parameterAnnotations,
+                                                     int parameterIndex) {
+        for (Annotation annotation : parameterAnnotations[parameterIndex]) {
+            if (annotation.annotationType().equals(annotationToFind)) {
+                return (T) annotation;
+            }
+        }
+        return null;
     }
 
     public String writeValueToJson(JsonMapper jsonMapper, Object object) {

@@ -5,12 +5,10 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Logging repository calls.
@@ -27,6 +25,7 @@ public class RepositoryLogging extends MethodDataLoging {
 
     /**
      * Mark in the log for reading purpose.
+     *
      * @return Mark in the log for reading purpose.
      */
     @Override
@@ -38,11 +37,10 @@ public class RepositoryLogging extends MethodDataLoging {
      * Advice that logs when a method is entered and exited.
      *
      * @param joinPoint join point for advice.
-     *
      * @return result.
      * @throws Throwable throws {@link IllegalArgumentException}.
      */
-    @Around("within(@org.springframework.data.repository.* *)")
+    @Around("within(@org.springframework.data.repository.* *) && !@annotation(tech.corefinance.common.annotation.SkipAopLog)")
     private Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
         return doLogging(joinPoint);
     }
