@@ -104,9 +104,19 @@ public class ExportingServiceImpl implements ExportingService {
     }
 
     @Override
+    public ExportingCsvConfig loadCsvConfigFromStream(InputStream ins) throws IOException {
+        return jsonMapper.readValue(ins, ExportingCsvConfig.class);
+    }
+
+    @Override
     public ExportingExcelConfig loadExcelConfigFromPath(String path) throws IOException {
         Resource resource = resourceLoader.getResource(path);
         return jsonMapper.readValue(resource.getContentAsString(StandardCharsets.UTF_8), ExportingExcelConfig.class);
+    }
+
+    @Override
+    public ExportingExcelConfig loadExcelConfigFromStream(InputStream ins) throws IOException {
+        return jsonMapper.readValue(ins, ExportingExcelConfig.class);
     }
 
     private <T> void printEntityToCsv(T entity, PrintWriter pw, List<ExportingEntityField> fields, ExportingCsvConfig config, int rowIndex,
@@ -167,7 +177,8 @@ public class ExportingServiceImpl implements ExportingService {
     }
 
     private <T> String customTransformCsvFieldValue(int rowIndex, int columnIndex, Object originalCellData, String printingValue,
-                                                    T rowObject, ExportingCsvConfig config, ExportingEntityField fieldConfig, List<CsvCellDataFormatter<T>> customFormatters) {
+                                                    T rowObject, ExportingCsvConfig config, ExportingEntityField fieldConfig,
+                                                    List<CsvCellDataFormatter<T>> customFormatters) {
         for (CsvCellDataFormatter<T> formatter : customFormatters) {
             printingValue = formatter.transformData(rowIndex, columnIndex, originalCellData, printingValue, rowObject, config, fieldConfig);
         }
