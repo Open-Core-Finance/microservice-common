@@ -7,8 +7,6 @@ import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import tech.corefinance.common.export.config.ExportingCsvConfig;
@@ -16,6 +14,7 @@ import tech.corefinance.common.export.config.ExportingEntityField;
 import tech.corefinance.common.export.config.ExportingExcelCellStyle;
 import tech.corefinance.common.export.config.ExportingExcelConfig;
 import tech.corefinance.common.export.dto.ExcelSheet;
+import tech.corefinance.common.export.dto.ExcelStyleCache;
 import tech.corefinance.common.util.CoreFinanceUtil;
 import tools.jackson.databind.json.JsonMapper;
 
@@ -146,7 +145,7 @@ public class ExportingServiceImpl implements ExportingService {
         }
     }
 
-    private <T> String getValueAsFormat(@NonNull Object value, @NonNull String format) {
+    private String getValueAsFormat(Object value, String format) {
         if (value instanceof String val) {
             return format.replace("{}", val);
         }
@@ -188,11 +187,13 @@ public class ExportingServiceImpl implements ExportingService {
     @Override
     public void exportToExcel(List<? extends ExcelSheet<?>> sheets, OutputStream output,
                               List<? extends ExcelCellDataFormatter> customFormatters) throws IOException {
+        // Cache
+        ExcelStyleCache cache = new ExcelStyleCache();
         // 1. Create a new workbook
         try (Workbook workbook = new SXSSFWorkbook()) {
             sheets.sort(Comparator.comparingInt((ExcelSheet<?> a) -> a.getConfig().getSheetIndex()));
             for (ExcelSheet<?> sheetData : sheets) {
-                exportSingleExcelSheet(workbook, sheetData, customFormatters);
+                exportSingleExcelSheet(workbook, sheetData, customFormatters, cache);
             }
             // Write data
             workbook.write(output);
@@ -203,7 +204,8 @@ public class ExportingServiceImpl implements ExportingService {
     }
 
     @Override
-    public void exportSingleExcelSheet(Workbook workbook, ExcelSheet<?> sheetData, List<? extends ExcelCellDataFormatter> customFormatters)
+    public void exportSingleExcelSheet(Workbook workbook, ExcelSheet<?> sheetData, List<? extends ExcelCellDataFormatter> customFormatters,
+                                       ExcelStyleCache cache)
             throws IOException {
         var config = sheetData.getConfig();
         var entities = sheetData.getData();
@@ -223,9 +225,11 @@ public class ExportingServiceImpl implements ExportingService {
                 headerCell.setCellValue(entityField.getLabel());
                 var headerCellStyleConfig = entityField.getHeaderCellStyle();
                 if (headerCellStyleConfig != null) {
-                    CellStyle cellStyle = workbook.createCellStyle();
-                    applyCellStyle(workbook, headerCell, cellStyle, headerCellStyleConfig);
-                    headerCell.setCellStyle(cellStyle);
+                    try {
+                        applyCellStyle(workbook, headerCell, headerCellStyleConfig, cache);
+                    } catch (Exception e) {
+                        log.error(e.getMessage(), e);
+                    }
                 }
             }
         }
@@ -241,14 +245,16 @@ public class ExportingServiceImpl implements ExportingService {
                 Cell cell = dataRow.createCell(columnIndex++);
                 Object fieldVal = coreFinanceUtil.getDeepAttributeValue(entity, entityField.getField());
                 log.debug("Column value [{}], Column label [{}]", fieldVal, entityField.getLabel());
-                var cellStyle = workbook.createCellStyle();
                 String format = entityField.getFormat();
-                writeValueToExcel(workbook, cell, fieldVal, format, cellStyle);
+                writeValueToExcel(workbook, cell, fieldVal, format, cache);
                 var contentCellStyleConfig = entityField.getContentCellStyle();
                 if (contentCellStyleConfig != null) {
-                    applyCellStyle(workbook, cell, cellStyle, contentCellStyleConfig);
+                    try {
+                        applyCellStyle(workbook, cell, contentCellStyleConfig, cache);
+                    } catch (Exception e) {
+                        log.error(e.getMessage(), e);
+                    }
                 }
-                cell.setCellStyle(cellStyle);
                 // Apply custom formatter
                 for (ExcelCellDataFormatter dataFormatter : customFormatters) {
                     boolean supported = entity == null || dataFormatter.isSupportedEntity(entity.getClass());
@@ -261,7 +267,7 @@ public class ExportingServiceImpl implements ExportingService {
         }
     }
 
-    private void writeValueToExcel(Workbook workbook, Cell cell, @Nullable Object value, String format, CellStyle cellStyle) {
+    private void writeValueToExcel(Workbook workbook, Cell cell, Object value, String format, ExcelStyleCache cache) {
         if (value instanceof String val) {
             if (StringUtils.hasText(format)) {
                 cell.setCellValue(format.replace("{}", val));
@@ -279,8 +285,18 @@ public class ExportingServiceImpl implements ExportingService {
             }
         } else {
             if (StringUtils.hasText(format)) {
-                DataFormat dataFormat = workbook.createDataFormat();
-                cellStyle.setDataFormat(dataFormat.getFormat(format));
+                try {
+                    DataFormat dataFormat = workbook.createDataFormat();
+                    CellStyle cellStyle = cache.getCellStyleByFormat(workbook, cell, format);
+                    if (cellStyle == null) {
+                        cellStyle = workbook.createCellStyle();
+                        cache.addItemByFormat(format, cellStyle);
+                    }
+                    cellStyle.setDataFormat(dataFormat.getFormat(format));
+                    cell.setCellStyle(cellStyle);
+                } catch (Exception e) {
+                    log.error(e.getMessage(), e);
+                }
             }
             if (value instanceof Number val) {
                 cell.setCellValue(val.doubleValue());
@@ -305,7 +321,12 @@ public class ExportingServiceImpl implements ExportingService {
         }
     }
 
-    private void applyCellStyle(Workbook workbook, Cell cell, CellStyle cellStyle, ExportingExcelCellStyle cellStyleConfig) {
+    private void applyCellStyle(Workbook workbook, Cell cell, ExportingExcelCellStyle cellStyleConfig, ExcelStyleCache cache) {
+        CellStyle cellStyle = cache.getCellStyleByConfig(workbook, cell, cellStyleConfig);
+        if (cellStyle == null) {
+            cellStyle = workbook.createCellStyle();
+            cache.addItemByConfig(cellStyleConfig, cellStyle);
+        }
         String fontName = cellStyleConfig.getFontName();
         String fontColor = cellStyleConfig.getFontColor();
         if (StringUtils.hasText(fontName) || StringUtils.hasText(fontColor)) {
@@ -324,6 +345,7 @@ public class ExportingServiceImpl implements ExportingService {
             cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         }
         cellStyle.setShrinkToFit(cellStyleConfig.isShinkToFit());
+        cell.setCellStyle(cellStyle);
     }
 
     private XSSFColor fromHex(String colorData) {

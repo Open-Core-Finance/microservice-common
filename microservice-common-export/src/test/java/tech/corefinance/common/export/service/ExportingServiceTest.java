@@ -12,12 +12,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import tech.corefinance.common.export.config.ExportingCsvConfig;
 import tech.corefinance.common.export.config.ExportingExcelConfig;
 import tech.corefinance.common.export.dto.ExcelSheet;
-import tech.corefinance.common.model.ResourceAction;
+import tech.corefinance.common.export.dto.ResourceActionTest;
 import tech.corefinance.common.util.CoreFinanceUtil;
 import tools.jackson.databind.json.JsonMapper;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
@@ -44,10 +45,11 @@ public class ExportingServiceTest {
         String resourceActionExportConfigFile = "classpath:resource-action-export-csv-config.json";
         ExportingCsvConfig config = exportingService.loadCsvConfigFromPath(resourceActionExportConfigFile);
         // Data
-        List<ResourceAction> resourceActions = new LinkedList<>();
-        resourceActions.add(new ResourceAction("test", "search", "/search/:id", RequestMethod.POST, "Descriptions", true, "/search/{id}"));
+        List<ResourceActionTest> resourceActions = new LinkedList<>();
         resourceActions.add(
-                new ResourceAction("test", "search2", "/search2/:id", RequestMethod.GET, "Descriptions 2", false, "/search2/{id}"));
+                new ResourceActionTest("test", "search", "/search/:id", RequestMethod.POST, "Descriptions", true, "/search/{id}"));
+        resourceActions.add(
+                new ResourceActionTest("test", "search2", "/search2/:id", RequestMethod.GET, "Descriptions 2", false, "/search2/{id}"));
         // Call test
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         exportingService.exportToUtf8Csv(resourceActions, config, baos, new LinkedList<>());
@@ -63,20 +65,18 @@ public class ExportingServiceTest {
         ExportingExcelConfig config = exportingService.loadExcelConfigFromPath(resourceActionExportConfigFile);
         log.error("Config {}", config);
         // Data
-        List<ResourceAction> resourceActions = new LinkedList<>();
-        resourceActions.add(new ResourceAction("test", "search", "/search/:id", RequestMethod.POST, "Descriptions", true, "/search/{id}"));
+        List<ResourceActionTest> resourceActions = new LinkedList<>();
         resourceActions.add(
-                new ResourceAction("test", "search2", "/search2/:id", RequestMethod.GET, "Descriptions 2", false, "/search2/{id}"));
+                new ResourceActionTest("test", "search", "/search/:id", RequestMethod.POST, "Descriptions", true, "/search/{id}"));
+        resourceActions.add(
+                new ResourceActionTest("test", "search2", "/search2/:id", RequestMethod.GET, "Descriptions 2", false, "/search2/{id}"));
         // Call test
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         var sheetConfig = config.getSheetConfigs().get(0);
-        ExcelSheet<ResourceAction> excelSheet = new ExcelSheet<>();
+        ExcelSheet<ResourceActionTest> excelSheet = new ExcelSheet<>();
         excelSheet.setConfig(sheetConfig);
         excelSheet.setData(resourceActions);
         exportingService.exportToExcel(Collections.singletonList(excelSheet), baos, new LinkedList<>());
-        //        try (FileOutputStream fos = new FileOutputStream("out.xlsx")) {
-        //            fos.write(baos.toByteArray());
-        //        }
         // Read file to verify content
         Workbook workbook = new XSSFWorkbook(new ByteArrayInputStream(baos.toByteArray()));
         // First sheet
@@ -87,5 +87,9 @@ public class ExportingServiceTest {
         // Row 2
         row = sheet.getRow(2);
         assertEquals("NO", row.getCell(3).getStringCellValue());
+        // Write to file
+        FileOutputStream fos = new FileOutputStream("unittest-excel-out.xlsx");
+        fos.write(baos.toByteArray());
+        fos.close();
     }
 }

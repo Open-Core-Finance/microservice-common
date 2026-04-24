@@ -4,6 +4,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import tech.corefinance.common.export.config.ExportingCsvConfig;
 import tech.corefinance.common.export.config.ExportingExcelConfig;
 import tech.corefinance.common.export.dto.ExcelSheet;
+import tech.corefinance.common.export.dto.ExcelStyleCache;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,6 +30,7 @@ public interface ExportingService {
     void exportToExcel(List<? extends ExcelSheet<?>> sheets, OutputStream output, List<? extends ExcelCellDataFormatter> customFormatters)
             throws IOException;
 
-    void exportSingleExcelSheet(Workbook workbook, ExcelSheet<?> sheetData, List<? extends ExcelCellDataFormatter> customFormatters)
+    void exportSingleExcelSheet(Workbook workbook, ExcelSheet<?> sheetData, List<? extends ExcelCellDataFormatter> customFormatters,
+                                ExcelStyleCache cache)
             throws IOException;
 }

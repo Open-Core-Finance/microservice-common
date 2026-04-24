@@ -34,6 +34,12 @@
             "foregroundColorHex": "#FF0000FF",
             "fontColor": "#FFFFFFFF"
           }
+        },
+        {
+          "label": "Date",
+          "field": "datetime",
+          "format": "dd-MM-yyyy",
+          "index": 4
         }
       ]
     }
