@@ -246,21 +246,30 @@ public class ExportingServiceImpl implements ExportingService {
                 Object fieldVal = coreFinanceUtil.getDeepAttributeValue(entity, entityField.getField());
                 log.debug("Column value [{}], Column label [{}]", fieldVal, entityField.getLabel());
                 String format = entityField.getFormat();
-                writeValueToExcel(workbook, cell, fieldVal, format, cache);
+                try {
+                    writeValueToExcel(workbook, cell, fieldVal, format, cache);
+                } catch (Exception e) {
+                    log.error(e.getMessage(), e);
+                    cell.setCellValue("!!Error writing value " + fieldVal + "!!");
+                }
                 var contentCellStyleConfig = entityField.getContentCellStyle();
                 if (contentCellStyleConfig != null) {
                     try {
                         applyCellStyle(workbook, cell, contentCellStyleConfig, cache);
                     } catch (Exception e) {
-                        log.error(e.getMessage(), e);
+                        log.error("Error when applying style [{}]", e.getMessage(), e);
                     }
                 }
                 // Apply custom formatter
                 for (ExcelCellDataFormatter dataFormatter : customFormatters) {
                     boolean supported = entity == null || dataFormatter.isSupportedEntity(entity.getClass());
                     if (supported) {
-                        dataFormatter.transformData(workbook, sheet, dataRow, cell, rowIndex, columnIndex, fieldVal, entity, config,
-                                entityField);
+                        try {
+                            dataFormatter.transformData(workbook, sheet, dataRow, cell, rowIndex, columnIndex, fieldVal, entity, config,
+                                    entityField);
+                        } catch (Exception e) {
+                            log.error("Error when transform data [{}]", e.getMessage(), e);
+                        }
                     }
                 }
             }
