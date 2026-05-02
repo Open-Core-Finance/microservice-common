@@ -196,6 +196,7 @@ public class ApiAuthorizationCheck {
                     break;
                 }
             }
+            log.debug("IsAdmin [{}]", isAdmin);
             if (!isAdmin) {
                 var internalCheckPass = true;
                 if (internalApiVerifiers != null) {
@@ -206,8 +207,10 @@ public class ApiAuthorizationCheck {
                         }
                     }
                 }
+                log.debug("InternalCheckPass [{}]", internalCheckPass);
                 if (internalCheckPass) {
                     for (var userRole : userRoles) {
+                        log.debug("Checking user role ID [{}]", userRole.getRoleId());
                         if (verifyRole(jwtTokenDto, userRole, action, url, requestMethod, resourceType, joinPoint)) {
                             foundMatched = true;
                         }
@@ -249,8 +252,9 @@ public class ApiAuthorizationCheck {
     }
 
     private boolean verifyRole(JwtTokenDto jwtTokenDto, UserRoleDto userRole, String action, String url, RequestMethod requestMethod,
-            String resourceType, ProceedingJoinPoint joinPoint) {
+                               String resourceType, ProceedingJoinPoint joinPoint) {
         var sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "action"), new Sort.Order(Sort.Direction.ASC, "url"));
+        log.debug("Finding permissions for role [{}]", userRole.getRoleId());
         var permissions = permissionRepository.findAllByRoleIdAndResourceType(userRole.getRoleId(), resourceType, sort);
         var foundMatched = false;
         for (var permission : permissions) {
@@ -261,6 +265,7 @@ public class ApiAuthorizationCheck {
             var matchedRequestMethod = permission.getRequestMethod() == null || permission.getRequestMethod() == requestMethod;
             if (matchedAction && matchUrl && matchedRequestMethod) {
                 foundMatched = true;
+                log.debug("Found matched permission [{}]", permission);
                 checkPermissionControl(jwtTokenDto, permission, joinPoint, userRole);
             }
         }
@@ -300,7 +305,7 @@ public class ApiAuthorizationCheck {
     }
 
     private boolean checkResourceOwnership(JwtTokenDto jwtTokenDto, String resourceType, Object resourceId, Permission permission,
-            UserRoleDto userRole) {
+                                           UserRoleDto userRole) {
         var result = false;
         for (var verifier : resourceOwnerVerifiers) {
             if (verifier.isSupportedResource(resourceType)) {
@@ -312,8 +317,9 @@ public class ApiAuthorizationCheck {
     }
 
     private void checkPermissionControl(JwtTokenDto jwtTokenDto, Permission permission, ProceedingJoinPoint joinPoint,
-            UserRoleDto userRole) {
+                                        UserRoleDto userRole) {
         var control = permission.getControl();
+        log.debug("Checking permission control [{}]", control);
         switch (control) {
             case DENIED -> throw new AccessDeniedException("access_denied_" + permission.getId());
             case ALLOWED_SPECIFIC_RESOURCES -> {
@@ -333,5 +339,6 @@ public class ApiAuthorizationCheck {
         }
     }
 
-    record ResourceInfoPair(String resourceType, Object resourceId) {}
+    record ResourceInfoPair(String resourceType, Object resourceId) {
+    }
 }
