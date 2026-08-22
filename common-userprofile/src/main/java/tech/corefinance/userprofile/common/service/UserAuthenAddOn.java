@@ -24,8 +24,8 @@ public interface UserAuthenAddOn<U extends CommonUserProfile<?>, T extends Commo
     }
 
     default JwtTokenDto updateTokenDto(JwtTokenDto jwtTokenDto, String deviceId, String clientAppId, AppPlatform appPlatform,
-                                       AppVersion appVersion, HttpServletRequest request, T commonLoginSession, U userProfile,
-                                       List<UserRoleDto> userRoles, String account, String password, Map<String, Object> additionalInfo) {
+            AppVersion appVersion, HttpServletRequest request, T commonLoginSession, U userProfile, List<UserRoleDto> userRoles,
+            String account, String password, Map<String, Object> additionalInfo) {
         jwtTokenDto.setUserDisplayName(userProfile.getDisplayName());
         jwtTokenDto.setUsername(userProfile.getUsername());
         jwtTokenDto.setUserEmail(userProfile.getEmail());
@@ -40,6 +40,12 @@ public interface UserAuthenAddOn<U extends CommonUserProfile<?>, T extends Commo
                 }
             }
         }
+        dataMap.putAll(jwtTokenDto.getAdditionalInfo());
+        additionalInfo.forEach((key, value) -> {
+            if (value instanceof Serializable) {
+                dataMap.put(key, (Serializable) value);
+            }
+        });
         jwtTokenDto.setAdditionalInfo(dataMap);
         Set<String> tenantIdSet = userRoles.stream().map(UserRoleDto::getResourceId).collect(Collectors.toSet());
         if (tenantIdSet.size() == 1) {
@@ -50,8 +56,8 @@ public interface UserAuthenAddOn<U extends CommonUserProfile<?>, T extends Commo
         return jwtTokenDto;
     }
 
-    default LoginDto updateLoginDto(LoginDto loginDto, U userProfile, T commonLoginSession, List<UserRoleDto> userRoles,
-                                    String jwtToken, String refreshToken, Map<String, Object> additionalInfo, JwtTokenDto jwtTokenDto) {
+    default LoginDto updateLoginDto(LoginDto loginDto, U userProfile, T commonLoginSession, List<UserRoleDto> userRoles, String jwtToken,
+            String refreshToken, Map<String, Object> additionalInfo, JwtTokenDto jwtTokenDto) {
         loginDto.setLoginId(commonLoginSession.getId());
         loginDto.setToken(jwtToken);
         loginDto.setRefreshToken(refreshToken);
