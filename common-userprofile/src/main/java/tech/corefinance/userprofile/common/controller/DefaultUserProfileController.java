@@ -18,7 +18,7 @@ import tech.corefinance.userprofile.common.service.UserProfileService;
 @RequestMapping("/userprofiles")
 @ControllerManagedResource("userprofile")
 @ConditionalOnProperty(prefix = "tech.corefinance.security", name = "default-userprofile-controller", havingValue = "true")
-public class UserProfileController implements CrudController<String, CommonUserProfile<?>, UserProfileCreatorDto> {
+public class DefaultUserProfileController implements CrudController<String, CommonUserProfile<?>, UserProfileCreatorDto> {
 
     @SuppressWarnings("rawtypes")
     @Autowired

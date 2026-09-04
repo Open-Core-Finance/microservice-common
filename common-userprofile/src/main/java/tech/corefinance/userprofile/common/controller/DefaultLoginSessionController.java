@@ -13,7 +13,7 @@ import tech.corefinance.userprofile.common.repository.CommonLoginSessionReposito
 @RequestMapping("/login-sessions")
 @ControllerManagedResource("loginsession")
 @ConditionalOnProperty(prefix = "tech.corefinance.security", name = "default-loginsession-controller", havingValue = "true")
-public class LoginSessionController implements
+public class DefaultLoginSessionController implements
         CrudServiceAndController<String, CommonLoginSession<?>, CommonLoginSession<?>, CommonLoginSessionRepository<CommonLoginSession<?>>> {
 
     @SuppressWarnings("rawtypes")

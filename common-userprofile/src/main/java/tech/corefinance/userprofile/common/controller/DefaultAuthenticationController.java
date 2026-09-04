@@ -21,7 +21,7 @@ import static tech.corefinance.common.enums.CommonConstants.*;
 @ControllerManagedResource("authen")
 @ConditionalOnProperty(prefix = "tech.corefinance.security", name = "default-authen-controller", havingValue = "true")
 @RequiredArgsConstructor
-public class AuthenticationController {
+public class DefaultAuthenticationController {
 
     private final CommonAuthenService commonAuthenService;
 

@@ -12,9 +12,8 @@ import tech.corefinance.userprofile.common.repository.AttemptedLoginRepository;
 @RestController
 @RequestMapping("/attempted-logins")
 @ControllerManagedResource("attemptedlogin")
-@ConditionalOnProperty(prefix = "tech.corefinance.security", name = "authorize-check", havingValue = "true",
-        matchIfMissing = true)
-public class AttemptedLoginController
+@ConditionalOnProperty(prefix = "tech.corefinance.security", name = "default-attemp-login-controller", havingValue = "true")
+public class DefaultAttemptedLoginController
         implements CrudServiceAndController<String, AttemptedLogin, AttemptedLogin, AttemptedLoginRepository> {
 
     @Autowired
