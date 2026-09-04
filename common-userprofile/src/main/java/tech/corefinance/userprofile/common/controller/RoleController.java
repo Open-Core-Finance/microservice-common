@@ -13,8 +13,7 @@ import tech.corefinance.userprofile.common.service.CommonRoleService;
 @RestController
 @RequestMapping("/roles")
 @ControllerManagedResource("role")
-@ConditionalOnProperty(prefix = "tech.corefinance.security", name = "authorize-check", havingValue = "true",
-        matchIfMissing = true)
+@ConditionalOnProperty(prefix = "tech.corefinance.security", name = "default-role-controller", havingValue = "true")
 public class RoleController implements CrudController<String, CommonRole<?>, RoleDto> {
 
     @SuppressWarnings("rawtypes")

@@ -19,8 +19,7 @@ import static tech.corefinance.common.enums.CommonConstants.*;
 @RestController
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, path = "/authentication")
 @ControllerManagedResource("authen")
-@ConditionalOnProperty(prefix = "tech.corefinance.security", name = "authorize-check", havingValue = "true",
-        matchIfMissing = true)
+@ConditionalOnProperty(prefix = "tech.corefinance.security", name = "default-authen-controller", havingValue = "true")
 @RequiredArgsConstructor
 public class AuthenticationController {
 
@@ -55,7 +54,7 @@ public class AuthenticationController {
             @RequestBody RefreshTokenRequestDto refreshTokenRequestDto) throws Exception {
         LoginDto dto =
                 commonAuthenService.refreshToken(refreshTokenRequestDto.getLoginId(), refreshTokenRequestDto.getRefreshToken(), deviceId,
-                        clientAppId, appPlatform, appVersion, request);
+                                                 clientAppId, appPlatform, appVersion, request);
         return GeneralApiResponse.createSuccessResponse(dto);
     }
 

@@ -17,8 +17,7 @@ import tech.corefinance.userprofile.common.service.UserProfileService;
 @RestController
 @RequestMapping("/userprofiles")
 @ControllerManagedResource("userprofile")
-@ConditionalOnProperty(prefix = "tech.corefinance.security", name = "authorize-check", havingValue = "true",
-        matchIfMissing = true)
+@ConditionalOnProperty(prefix = "tech.corefinance.security", name = "default-userprofile-controller", havingValue = "true")
 public class UserProfileController implements CrudController<String, CommonUserProfile<?>, UserProfileCreatorDto> {
 
     @SuppressWarnings("rawtypes")
@@ -34,9 +33,8 @@ public class UserProfileController implements CrudController<String, CommonUserP
     @PostMapping("/change-password")
     @PermissionAction(action = "change-password")
     public GeneralApiResponse<Byte> changePassword(@RequestParam("userId") String userId,
-                                                   @RequestParam("currentPassword") String currentPassword,
-                                                   @RequestParam("newPassword") String newPassword,
-                                                   @RequestParam("confirmPassword") String confirmPassword) {
+            @RequestParam("currentPassword") String currentPassword, @RequestParam("newPassword") String newPassword,
+            @RequestParam("confirmPassword") String confirmPassword) {
         return GeneralApiResponse.createSuccessResponse(
                 userProfileService.changePassword(userId, currentPassword, newPassword, confirmPassword));
     }
@@ -44,8 +42,7 @@ public class UserProfileController implements CrudController<String, CommonUserP
     @PostMapping("/self-update-password")
     @PermissionAction(action = "self-update-password")
     public GeneralApiResponse<Byte> selfUpdatePassword(@RequestParam("currentPassword") String currentPassword,
-                                                       @RequestParam("newPassword") String newPassword,
-                                                       @RequestParam("confirmPassword") String confirmPassword) {
+            @RequestParam("newPassword") String newPassword, @RequestParam("confirmPassword") String confirmPassword) {
         return GeneralApiResponse.createSuccessResponse(
                 userProfileService.selfUpdatePassword(currentPassword, newPassword, confirmPassword));
     }
