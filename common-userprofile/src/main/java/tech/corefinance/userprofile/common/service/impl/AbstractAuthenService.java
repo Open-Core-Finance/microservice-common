@@ -62,9 +62,9 @@ public abstract class AbstractAuthenService<R extends CommonRole<?>, U extends C
     protected abstract int invalidateOldLogins(String verifyKey);
 
     @SuppressWarnings("unchecked")
+    @Transactional
     private LoginDto createToken(U userProfile, String deviceId, String clientAppId, AppPlatform appPlatform, AppVersion appVersion,
-                                 HttpServletRequest request, String account, String password, Map<String, Object> additionalInfo)
-            throws UnknownHostException {
+            HttpServletRequest request, String account, String password, Map<String, Object> additionalInfo) throws UnknownHostException {
         T loginSession = loginSessionRepository.save(createEmptySession());
         if (log.isDebugEnabled()) {
             log.debug("Created new login session!");
@@ -79,14 +79,15 @@ public abstract class AbstractAuthenService<R extends CommonRole<?>, U extends C
         }
 
         JwtTokenDto jwtTokenDto = new JwtTokenDto(loginSession.getId(), userProfile.getId(), clientAppId, appPlatform, appVersion, deviceId,
-                jwtService.extractIpAddress(request));
+                                                  jwtService.extractIpAddress(request));
         for (UserAuthenAddOn<?, ?> userAuthenAddOn : userAuthenAddOns) {
             var tmp = ((UserAuthenAddOn<U, T>) userAuthenAddOn);
             if (log.isDebugEnabled()) {
                 log.debug("Updating login info to login token by [{}]...", tmp.getClass().getName());
             }
-            jwtTokenDto = tmp.updateTokenDto(jwtTokenDto, deviceId, clientAppId, appPlatform, appVersion,
-                    request, loginSession, userProfile, userRoles, account, password, additionalInfo);
+            jwtTokenDto =
+                    tmp.updateTokenDto(jwtTokenDto, deviceId, clientAppId, appPlatform, appVersion, request, loginSession, userProfile,
+                                       userRoles, account, password, additionalInfo);
         }
 
         if (log.isDebugEnabled()) {
@@ -149,7 +150,7 @@ public abstract class AbstractAuthenService<R extends CommonRole<?>, U extends C
     @Transactional(noRollbackFor = ServiceProcessingException.class)
     @SuppressWarnings("unchecked")
     public LoginDto login(String account, String password, String deviceId, String clientAppId, AppPlatform appPlatform,
-                          AppVersion appVersion, HttpServletRequest request) throws Exception {
+            AppVersion appVersion, HttpServletRequest request) throws Exception {
         // Check if login
         long loginCount = attemptedLoginRepository.countByAccountAndEnabled(account, true);
         if (loginCount >= jwtConfiguration.getMaxLoginFailAllowed()) {
@@ -183,7 +184,7 @@ public abstract class AbstractAuthenService<R extends CommonRole<?>, U extends C
             // Store attempted login
             attemptedLoginRepository.save(
                     new AttemptedLogin(account, jwtService.extractIpAddress(request), request.getHeader("user-agent"), clientAppId,
-                            deviceId, appPlatform, appVersion, additionalInfo));
+                                       deviceId, appPlatform, appVersion, additionalInfo));
             throw new ServiceProcessingException(GeneralApiResponse.createErrorResponseWithCode("login_fail"));
         }
 
@@ -217,6 +218,7 @@ public abstract class AbstractAuthenService<R extends CommonRole<?>, U extends C
     }
 
     @Override
+    @Transactional
     public void unlockUser(String account) {
         if (log.isDebugEnabled()) {
             log.debug("Unlocking user [{}]...", account);
@@ -225,8 +227,9 @@ public abstract class AbstractAuthenService<R extends CommonRole<?>, U extends C
     }
 
     @Override
+    @Transactional
     public LoginDto refreshToken(String loginId, String refreshToken, String deviceId, String clientAppId, AppPlatform appPlatform,
-                                 AppVersion appVersion, HttpServletRequest request) throws UnknownHostException {
+            AppVersion appVersion, HttpServletRequest request) throws UnknownHostException {
         if (log.isDebugEnabled()) {
             log.debug("Attempting to refresh login token for login ID {}", loginId);
         }
@@ -269,9 +272,9 @@ public abstract class AbstractAuthenService<R extends CommonRole<?>, U extends C
             log.debug("Clean up old fail attempted login...");
         }
         attemptedLoginRepository.updateEnabledByAccount(false, userProfile.getUsername(), userProfile.getEmail());
-        
+
         return createToken(loginSession.getUserProfile(), deviceId, clientAppId, appPlatform, appVersion, request,
-                loginSession.getInputAccount(), loginSession.getInputPassword(), loginSession.getAdditionalInfo());
+                           loginSession.getInputAccount(), loginSession.getInputPassword(), loginSession.getAdditionalInfo());
     }
 
     private void validateLoginSession(String deviceId, HttpServletRequest request, T loginSession) throws UnknownHostException {
@@ -289,6 +292,7 @@ public abstract class AbstractAuthenService<R extends CommonRole<?>, U extends C
     }
 
     @Override
+    @Transactional
     public void invalidateLogin(String loginId) {
         T loginSession = loginSessionRepository.findById(loginId).orElseThrow(() -> new ResourceNotFound("Login session not found"));
         loginSession.setValidToken(false);

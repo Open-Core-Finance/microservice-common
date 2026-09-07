@@ -1,6 +1,7 @@
 package tech.corefinance.userprofile.common.service;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.transaction.annotation.Transactional;
 import tech.corefinance.common.dto.LoginDto;
 import tech.corefinance.common.enums.AppPlatform;
 import tech.corefinance.common.model.AppVersion;
@@ -10,12 +11,13 @@ import java.net.UnknownHostException;
 public interface CommonAuthenService {
 
     LoginDto login(String username, String password, String deviceId, String clientAppId, AppPlatform appPlatform, AppVersion appVersion,
-                   HttpServletRequest request) throws Exception;
+            HttpServletRequest request) throws Exception;
 
+    @Transactional
     void unlockUser(String email);
 
     LoginDto refreshToken(String loginId, String refreshToken, String deviceId, String clientAppId, AppPlatform appPlatform,
-                          AppVersion appVersion, HttpServletRequest request) throws UnknownHostException;
+            AppVersion appVersion, HttpServletRequest request) throws UnknownHostException;
 
     boolean isValidToken(String loginId);
 

@@ -33,6 +33,7 @@ public abstract class AbstractUserProfileService<T extends CommonUserProfile<?>>
     }
 
     @Override
+    @Transactional
     public byte changePassword(String userId, String currentPassword, String newPassword, String repeatNewPassword) {
         var userProfile = getEntityDetails(userId);
         var userPass = userProfile.getPassword();
@@ -50,6 +51,7 @@ public abstract class AbstractUserProfileService<T extends CommonUserProfile<?>>
         return 0;
     }
 
+    @Transactional
     public byte selfUpdatePassword(String currentPassword, String newPassword, String repeatNewPassword) {
         JwtContext jwtContext = JwtContext.getInstance();
         BasicUserDto userDto = jwtService.retrieveUserAsAttribute(jwtContext.getJwt());

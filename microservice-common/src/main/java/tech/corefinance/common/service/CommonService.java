@@ -3,6 +3,7 @@ package tech.corefinance.common.service;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.*;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import tech.corefinance.common.context.ApplicationContextHolder;
 import tech.corefinance.common.ex.ResourceNotFound;
@@ -68,6 +69,7 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
      * @param itemId Entity ID
      * @return True only if delete successfully.
      */
+    @Transactional
     default boolean deleteEntity(I itemId) {
         R repository = getRepository();
         Optional<T> optional = repository.findById(itemId);
@@ -89,6 +91,7 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
      * @param <D> DTO type
      * @return Create entity.
      */
+    @Transactional
     default <D extends CreateUpdateDto<I>> T createOrUpdateEntity(D dto) {
         var logger = LoggerFactory.getLogger(getClass());
         logger.info("Entering createOrUpdateEntity...");
@@ -139,6 +142,7 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
      * @param orders     Sorting orders. Pass empty list if you don't want to sort.
      * @return Page of items.
      */
+    @Transactional(readOnly = true)
     default Page<T> searchData(String searchText, int pageSize, int pageIndex, List<Sort.Order> orders) {
         var logger = LoggerFactory.getLogger(getClass());
         logger.info("Search entities");
@@ -175,6 +179,7 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
      * @return Page of items.
      * @throws UnsupportedOperationException if the service does not support search by text (Mean subclasses does not override this method).
      */
+    @Transactional
     default Page<T> searchByTextAndPage(String searchText, Pageable pageable) {
         var context = ApplicationContextHolder.getInstance().getApplicationContext();
         var map = context.getBeansOfType(SimpleSearchSupport.class);
@@ -198,6 +203,7 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
      * @return List of items.
      * @throws UnsupportedOperationException if the service does not support search by text (Mean subclasses does not override this method).
      */
+    @Transactional
     default List<T> searchByTextAndSort(String searchText, Sort sort) {
         var context = ApplicationContextHolder.getInstance().getApplicationContext();
         var map = context.getBeansOfType(SimpleSearchSupport.class);
@@ -219,6 +225,7 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
      * @param entityId Entity ID.
      * @return Entity object.
      */
+    @Transactional(readOnly = true)
     default T getEntityDetails(I entityId) {
         return getRepository().findById(entityId).orElseThrow(() -> new ResourceNotFound("Cannot find entity for ID " + entityId));
     }
@@ -269,6 +276,7 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
     default void afterItemDeleted(T item, Object data) {
     }
 
+    @Transactional(readOnly = true)
     default List<T> loadEAllByIds(List<I> ids) {
         return getRepository().findAllById(ids);
     }
