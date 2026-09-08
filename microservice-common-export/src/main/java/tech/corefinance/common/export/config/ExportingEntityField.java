@@ -29,4 +29,9 @@ public class ExportingEntityField {
      * For Excel format only.
      */
     private ExportingExcelCellStyle contentCellStyle;
+
+    /**
+     * If false then auto trim text field, otherwise keep it as is.
+     */
+    private boolean doNotTrim = false;
 }

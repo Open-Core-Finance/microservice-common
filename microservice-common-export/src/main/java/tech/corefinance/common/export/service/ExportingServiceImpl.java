@@ -55,13 +55,13 @@ public class ExportingServiceImpl implements ExportingService {
     }
 
     public <T> void exportToUtf8Csv(List<T> entities, ExportingCsvConfig config, OutputStream output,
-                                    List<CsvCellDataFormatter<T>> customFormatters) {
+            List<CsvCellDataFormatter<T>> customFormatters) {
         exportToCsvWithEncoding(entities, config, output, StandardCharsets.UTF_8, UTF8_BOM_UNICODE, customFormatters);
     }
 
     @Override
     public <T> void exportToCsvWithEncoding(List<T> entities, ExportingCsvConfig config, OutputStream output, Charset encoding,
-                                            String bomVal, List<CsvCellDataFormatter<T>> customFormatters) {
+            String bomVal, List<CsvCellDataFormatter<T>> customFormatters) {
         var fields = config.getFields().stream().sorted(exportingFieldComparator).toList();
         OutputStreamWriter osw = new OutputStreamWriter(output, encoding);
         PrintWriter pw = new PrintWriter(new BufferedWriter(osw));
@@ -119,7 +119,7 @@ public class ExportingServiceImpl implements ExportingService {
     }
 
     private <T> void printEntityToCsv(T entity, PrintWriter pw, List<ExportingEntityField> fields, ExportingCsvConfig config, int rowIndex,
-                                      List<CsvCellDataFormatter<T>> customFormatters) {
+            List<CsvCellDataFormatter<T>> customFormatters) {
         var index = 0;
         for (ExportingEntityField entityField : fields) {
             Object fieldVal = coreFinanceUtil.getDeepAttributeValue(entity, entityField.getField());
@@ -131,6 +131,9 @@ public class ExportingServiceImpl implements ExportingService {
                 var printVal = customTransformCsvFieldValue(rowIndex, index, null, "NULL", entity, config, entityField, customFormatters);
                 pw.print(printVal);
                 continue;
+            }
+            if (fieldVal instanceof String val) {
+                fieldVal = trimValue(val, entityField);
             }
             String format = entityField.getFormat();
             if (StringUtils.hasText(format)) {
@@ -176,8 +179,7 @@ public class ExportingServiceImpl implements ExportingService {
     }
 
     private <T> String customTransformCsvFieldValue(int rowIndex, int columnIndex, Object originalCellData, String printingValue,
-                                                    T rowObject, ExportingCsvConfig config, ExportingEntityField fieldConfig,
-                                                    List<CsvCellDataFormatter<T>> customFormatters) {
+            T rowObject, ExportingCsvConfig config, ExportingEntityField fieldConfig, List<CsvCellDataFormatter<T>> customFormatters) {
         for (CsvCellDataFormatter<T> formatter : customFormatters) {
             printingValue = formatter.transformData(rowIndex, columnIndex, originalCellData, printingValue, rowObject, config, fieldConfig);
         }
@@ -186,7 +188,7 @@ public class ExportingServiceImpl implements ExportingService {
 
     @Override
     public void exportToExcel(List<? extends ExcelSheet<?>> sheets, OutputStream output,
-                              List<? extends ExcelCellDataFormatter> customFormatters) throws IOException {
+            List<? extends ExcelCellDataFormatter> customFormatters) throws IOException {
         // Cache
         ExcelStyleCache cache = new ExcelStyleCache();
         // 1. Create a new workbook
@@ -205,8 +207,7 @@ public class ExportingServiceImpl implements ExportingService {
 
     @Override
     public void exportSingleExcelSheet(Workbook workbook, ExcelSheet<?> sheetData, List<? extends ExcelCellDataFormatter> customFormatters,
-                                       ExcelStyleCache cache)
-            throws IOException {
+            ExcelStyleCache cache) throws IOException {
         var config = sheetData.getConfig();
         var entities = sheetData.getData();
         var fields = config.getFields().stream().sorted(exportingFieldComparator).toList();
@@ -222,7 +223,7 @@ public class ExportingServiceImpl implements ExportingService {
             int columnIndex = 0;
             for (ExportingEntityField entityField : fields) {
                 var headerCell = header.createCell(columnIndex++);
-                headerCell.setCellValue(entityField.getLabel());
+                headerCell.setCellValue(trimValue(entityField.getLabel(), entityField));
                 var headerCellStyleConfig = entityField.getHeaderCellStyle();
                 if (headerCellStyleConfig != null) {
                     try {
@@ -245,6 +246,9 @@ public class ExportingServiceImpl implements ExportingService {
                 Cell cell = dataRow.createCell(columnIndex++);
                 Object fieldVal = coreFinanceUtil.getDeepAttributeValue(entity, entityField.getField());
                 log.debug("Column value [{}], Column label [{}]", fieldVal, entityField.getLabel());
+                if (fieldVal instanceof String val) {
+                    fieldVal = trimValue(val, entityField);
+                }
                 String format = entityField.getFormat();
                 try {
                     writeValueToExcel(workbook, cell, fieldVal, format, cache);
@@ -266,7 +270,7 @@ public class ExportingServiceImpl implements ExportingService {
                     if (supported) {
                         try {
                             dataFormatter.transformData(workbook, sheet, dataRow, cell, rowIndex, columnIndex, fieldVal, entity, config,
-                                    entityField);
+                                                        entityField);
                         } catch (Exception e) {
                             log.error("Error when transform data [{}]", e.getMessage(), e);
                         }
@@ -378,5 +382,12 @@ public class ExportingServiceImpl implements ExportingService {
         } else {
             cell.setCellValue(val.toString());
         }
+    }
+
+    public String trimValue(String value, ExportingEntityField exportingEntityField) {
+        if (exportingEntityField != null && !exportingEntityField.isDoNotTrim()) {
+            return value.replace("\u200B", "").strip();
+        }
+        return value;
     }
 }
