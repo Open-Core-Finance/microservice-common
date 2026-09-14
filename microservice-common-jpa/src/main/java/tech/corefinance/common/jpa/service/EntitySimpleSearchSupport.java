@@ -29,15 +29,14 @@ import java.util.*;
  */
 @Repository
 @Slf4j
-@ConditionalOnProperty(prefix = "tech.corefinance.common.enabled", name = "default-simple-search", havingValue = "true",
-        matchIfMissing = true)
+@ConditionalOnProperty(prefix = "tech.corefinance.common.enabled", name = "default-simple-search", havingValue = "true", matchIfMissing = true)
 public class EntitySimpleSearchSupport implements SimpleSearchSupport<GenericModel<?>> {
 
-    private Map<EntityType<?>, Set<SingularAttribute<?, ?>>> supportedAttributes;
+    protected final Map<EntityType<?>, Set<SingularAttribute<?, ?>>> supportedAttributes;
     @Autowired
-    private EntityManager entityManager;
+    protected EntityManager entityManager;
     @Autowired
-    private JsonMapper jsonMapper;
+    protected JsonMapper jsonMapper;
 
     /**
      * Constructor will query all mapped entity and create list attribute that can we search by string.
@@ -71,20 +70,16 @@ public class EntitySimpleSearchSupport implements SimpleSearchSupport<GenericMod
 
     @Override
     public boolean isSupported(Class<?> clzz) {
-        return supportedAttributes.entrySet().stream().anyMatch(e -> e.getKey().getJavaType()
-                .isAssignableFrom(clzz));
+        return supportedAttributes.entrySet().stream().anyMatch(e -> e.getKey().getJavaType().isAssignableFrom(clzz));
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public Page<GenericModel<?>> searchByTextAndPage(Class<? extends GenericModel<?>> clzz, String searchText,
-                                                     Pageable pageable) {
+    public Page<GenericModel<?>> searchByTextAndPage(Class<? extends GenericModel<?>> clzz, String searchText, Pageable pageable) {
         Map<String, Object> paramMap = buildMapParam(searchText);
         var sql = buildSearchSql(clzz, paramMap);
-        var countSql = "SELECT count(o) " + sql;
-        log.debug("Count SQL [{}]", countSql);
+        var countSql = buildCountSql(clzz, paramMap);
         sql = appendSortToSql(sql, pageable.getSort());
-        log.debug("Search SQL [{}]", sql);
         var countQuery = entityManager.createQuery(countSql, Long.class);
         setQueryParams(countQuery, searchText, paramMap);
         long count = countQuery.getSingleResult();
@@ -99,33 +94,36 @@ public class EntitySimpleSearchSupport implements SimpleSearchSupport<GenericMod
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<GenericModel<?>> searchByTextAndSort(Class<? extends GenericModel<?>> clzz, String searchText,
-                                                     Sort sort) {
+    public List<GenericModel<?>> searchByTextAndSort(Class<? extends GenericModel<?>> clzz, String searchText, Sort sort) {
         Map<String, Object> paramMap = buildMapParam(searchText);
         var sql = buildSearchSql(clzz, paramMap);
         sql = appendSortToSql(sql, sort);
-        log.debug("Search SQL [{}]", sql);
         var query = entityManager.createQuery(sql, clzz);
         setQueryParams(query, searchText, paramMap);
         return (List<GenericModel<?>>) query.getResultList();
     }
 
-    private boolean isEnumSupportSearch(Class<?> entityClass, SingularAttribute<?, ?> attribute) {
+    protected String buildCountSql(Class<? extends GenericModel<?>> clzz, Map<String, Object> paramMap) {
+        var countSql = "SELECT count(o) " + buildSearchSql(clzz, paramMap);
+        log.debug("Count SQL [{}]", countSql);
+        return countSql;
+    }
+
+    protected boolean isEnumSupportSearch(Class<?> entityClass, SingularAttribute<?, ?> attribute) {
         var attributeName = attribute.getName();
         log.debug("Enum Property [{}]", attributeName);
 
         Field field;
         Method getterMethod;
         try {
-            getterMethod = entityClass.getMethod(
-                    "get" + attribute.getName().substring(0, 1).toUpperCase() + attribute.getName().substring(1));
+            getterMethod =
+                    entityClass.getMethod("get" + attribute.getName().substring(0, 1).toUpperCase() + attribute.getName().substring(1));
 
             if (getterMethod.isAnnotationPresent(Enumerated.class)) {
                 Enumerated enumeratedAnnotation = getterMethod.getAnnotation(Enumerated.class);
                 if (enumeratedAnnotation.value() == EnumType.STRING) {
-                    log.debug(
-                            "Method [{}] of class [{}] has annotation Enumerated with EnumType.STRING! This field support search!",
-                            getterMethod.getName(), entityClass.getName());
+                    log.debug("Method [{}] of class [{}] has annotation Enumerated with EnumType.STRING! This field support search!",
+                              getterMethod.getName(), entityClass.getName());
                     return true;
                 }
             }
@@ -135,9 +133,8 @@ public class EntitySimpleSearchSupport implements SimpleSearchSupport<GenericMod
                 if (field.isAnnotationPresent(Enumerated.class)) {
                     Enumerated enumeratedAnnotation = field.getAnnotation(Enumerated.class);
                     if (enumeratedAnnotation.value() == EnumType.STRING) {
-                        log.debug(
-                                "Field [{}] of class [{}] has annotation Enumerated with EnumType.STRING!" +
-                                        "This field support search!", field.getName(), entityClass.getName());
+                        log.debug("Field [{}] of class [{}] has annotation Enumerated with EnumType.STRING!" + "This field support search!",
+                                  field.getName(), entityClass.getName());
                         return true;
                     }
                 }
@@ -150,7 +147,7 @@ public class EntitySimpleSearchSupport implements SimpleSearchSupport<GenericMod
         return false;
     }
 
-    private String buildSearchSql(Class<?> clzz, Map<String, Object> paramMap) {
+    protected String buildSearchSql(Class<?> clzz, Map<String, Object> paramMap) {
         StringBuilder sqlBuilder = new StringBuilder("FROM ").append(clzz.getSimpleName()).append(" o where ");
         int index = 0;
         if (!paramMap.isEmpty()) {
@@ -177,10 +174,12 @@ public class EntitySimpleSearchSupport implements SimpleSearchSupport<GenericMod
                 index++;
             }
         }
-        return sqlBuilder.toString();
+        var sql = sqlBuilder.toString();
+        log.debug("Search SQL [{}]", sql);
+        return sql;
     }
 
-    private String appendSortToSql(String sql, Sort sort) {
+    protected String appendSortToSql(String sql, Sort sort) {
         StringBuilder sqlBuilder = new StringBuilder(sql);
         if (sort != null && sort.isSorted()) {
             sqlBuilder.append(" ORDER BY ");
@@ -198,17 +197,16 @@ public class EntitySimpleSearchSupport implements SimpleSearchSupport<GenericMod
         return sqlBuilder.toString();
     }
 
-    private Map<String, Object> buildMapParam(String searchText) {
+    protected Map<String, Object> buildMapParam(String searchText) {
         if (searchText.startsWith("{") && searchText.endsWith("}")) {
-            var typeRef = new TypeReference<LinkedHashMap<String, Object>>() {
-            };
+            var typeRef = new TypeReference<LinkedHashMap<String, Object>>() {};
             return jsonMapper.readValue(searchText, typeRef);
         } else {
             return new HashMap<>();
         }
     }
 
-    private void setQueryParams(TypedQuery<?> query, String searchText, Map<String, Object> paramMap) {
+    protected void setQueryParams(TypedQuery<?> query, String searchText, Map<String, Object> paramMap) {
         if (!paramMap.isEmpty()) {
             for (Map.Entry<String, Object> param : paramMap.entrySet()) {
                 var key = param.getKey();
@@ -224,10 +222,8 @@ public class EntitySimpleSearchSupport implements SimpleSearchSupport<GenericMod
         }
     }
 
-    private Set<SingularAttribute<?, ?>> getEntitySearchableAttr(Class<?> clzz) {
-        var optional =
-                supportedAttributes.entrySet().stream().filter(et -> et.getKey().getJavaType().isAssignableFrom(clzz))
-                        .findFirst();
+    protected Set<SingularAttribute<?, ?>> getEntitySearchableAttr(Class<?> clzz) {
+        var optional = supportedAttributes.entrySet().stream().filter(et -> et.getKey().getJavaType().isAssignableFrom(clzz)).findFirst();
         if (optional.isEmpty()) {
             throw new ServiceProcessingException("Cannot find entity class!");
         }
