@@ -77,8 +77,9 @@ public class EntitySimpleSearchSupport implements SimpleSearchSupport<GenericMod
     @SuppressWarnings("unchecked")
     public Page<GenericModel<?>> searchByTextAndPage(Class<? extends GenericModel<?>> clzz, String searchText, Pageable pageable) {
         Map<String, Object> paramMap = buildMapParam(searchText);
-        var sql = buildSearchSql(clzz, paramMap);
-        var countSql = buildCountSql(clzz, paramMap);
+        var criteriaSql = buildCriteriaClause(clzz, paramMap);
+        var sql = buildSelectPrefix(clzz, paramMap) + " " + criteriaSql;
+        var countSql = buildCountPrefix(clzz, paramMap) + " " + criteriaSql;
         sql = appendSortToSql(sql, pageable.getSort());
         var countQuery = entityManager.createQuery(countSql, Long.class);
         setQueryParams(countQuery, searchText, paramMap);
@@ -96,15 +97,15 @@ public class EntitySimpleSearchSupport implements SimpleSearchSupport<GenericMod
     @SuppressWarnings("unchecked")
     public List<GenericModel<?>> searchByTextAndSort(Class<? extends GenericModel<?>> clzz, String searchText, Sort sort) {
         Map<String, Object> paramMap = buildMapParam(searchText);
-        var sql = buildSearchSql(clzz, paramMap);
+        var sql = buildSelectPrefix(clzz, paramMap) + " " + buildCriteriaClause(clzz, paramMap);
         sql = appendSortToSql(sql, sort);
         var query = entityManager.createQuery(sql, clzz);
         setQueryParams(query, searchText, paramMap);
         return (List<GenericModel<?>>) query.getResultList();
     }
 
-    protected String buildCountSql(Class<? extends GenericModel<?>> clzz, Map<String, Object> paramMap) {
-        var countSql = "SELECT count(o) " + buildSearchSql(clzz, paramMap);
+    protected String buildCountPrefix(Class<? extends GenericModel<?>> clzz, Map<String, Object> paramMap) {
+        var countSql = "SELECT count(o) FROM " + clzz.getSimpleName() + " o";
         log.debug("Count SQL [{}]", countSql);
         return countSql;
     }
@@ -147,8 +148,12 @@ public class EntitySimpleSearchSupport implements SimpleSearchSupport<GenericMod
         return false;
     }
 
-    protected String buildSearchSql(Class<?> clzz, Map<String, Object> paramMap) {
-        StringBuilder sqlBuilder = new StringBuilder("FROM ").append(clzz.getSimpleName()).append(" o where ");
+    protected String buildSelectPrefix(Class<? extends GenericModel<?>> clzz, Map<String, Object> paramMap) {
+        return "FROM " + clzz.getSimpleName() + " o";
+    }
+
+    protected String buildCriteriaClause(Class<?> clzz, Map<String, Object> paramMap) {
+        StringBuilder sqlBuilder = new StringBuilder("WHERE ");
         int index = 0;
         if (!paramMap.isEmpty()) {
             for (Map.Entry<String, Object> param : paramMap.entrySet()) {
@@ -229,5 +234,10 @@ public class EntitySimpleSearchSupport implements SimpleSearchSupport<GenericMod
         }
         var et = optional.get();
         return et.getValue();
+    }
+
+    @Override
+    public int getOrder() {
+        return Integer.MAX_VALUE;
     }
 }

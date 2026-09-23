@@ -13,8 +13,7 @@ import tech.corefinance.common.service.SimpleSearchSupport;
 import java.util.List;
 
 @Service
-@ConditionalOnProperty(prefix = "tech.corefinance.security", name = "authorize-check", havingValue = "true",
-        matchIfMissing = true)
+@ConditionalOnProperty(prefix = "tech.corefinance.security", name = "authorize-check", havingValue = "true", matchIfMissing = true)
 public class PermissionSimpleSearchSupport implements SimpleSearchSupport<Permission> {
 
     @Autowired
@@ -28,5 +27,10 @@ public class PermissionSimpleSearchSupport implements SimpleSearchSupport<Permis
     @Override
     public List<Permission> searchByTextAndSort(Class<? extends Permission> clzz, String searchText, Sort sort) {
         return mongoPermissionRepository.searchBy(searchText, sort);
+    }
+
+    @Override
+    public int getOrder() {
+        return Integer.MAX_VALUE;
     }
 }

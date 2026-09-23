@@ -1,6 +1,7 @@
 package tech.corefinance.common.service;
 
 import org.slf4j.LoggerFactory;
+import org.springframework.core.Ordered;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -8,7 +9,7 @@ import org.springframework.data.domain.Sort;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
-public interface SimpleSearchSupport<T> {
+public interface SimpleSearchSupport<T> extends Ordered {
 
     default boolean isSupported(Class<?> clzz) {
         var log = LoggerFactory.getLogger(getClass());
@@ -26,8 +27,9 @@ public interface SimpleSearchSupport<T> {
 
     /**
      * Search by text and Pageable.
+     *
      * @param searchText Search text for internal use. Do not need to check empty for this case.
-     * @param pageable Page info for internal use. Do not need to check null for this case.
+     * @param pageable   Page info for internal use. Do not need to check null for this case.
      * @return Page of items.
      * @throws UnsupportedOperationException if the service does not support search by text (Mean subclasses does not override this method).
      */
@@ -35,8 +37,9 @@ public interface SimpleSearchSupport<T> {
 
     /**
      * Search by text and Pageable.
+     *
      * @param searchText Search text for internal use. Do not need to check empty for this case.
-     * @param sort Sort info for internal use. Do not need to check null for this case.
+     * @param sort       Sort info for internal use. Do not need to check null for this case.
      * @return List of items.
      * @throws UnsupportedOperationException if the service does not support search by text (Mean subclasses does not override this method).
      */

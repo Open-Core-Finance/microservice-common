@@ -2,6 +2,7 @@ package tech.corefinance.common.service;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.data.domain.*;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -15,6 +16,7 @@ import tech.corefinance.common.util.CoreFinanceUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -182,10 +184,10 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
     @Transactional
     default Page<T> searchByTextAndPage(String searchText, Pageable pageable) {
         var context = ApplicationContextHolder.getInstance().getApplicationContext();
-        var map = context.getBeansOfType(SimpleSearchSupport.class);
+        var list = new ArrayList<>(context.getBeansOfType(SimpleSearchSupport.class).values());
+        AnnotationAwareOrderComparator.sort(list);
         Class<?> entityType = findEntityClass();
-        for (var entry : map.entrySet()) {
-            var searchSupport = entry.getValue();
+        for (var searchSupport : list) {
             //noinspection unchecked
             if (searchSupport.isSupported(entityType)) {
                 //noinspection unchecked
