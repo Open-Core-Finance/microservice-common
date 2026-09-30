@@ -112,7 +112,7 @@ public interface CrudController<I extends Serializable, T extends GenericModel<I
      * @param entities Entity Object
      * @return Updated result.
      */
-    @PutMapping(value = "/bulk-update")
+    @PostMapping(value = "/bulk-update")
     @PermissionAction(action = ResourceAction.COMMON_ACTION_BULK_CHANGE)
     default GeneralApiResponse<?> bulkUpdateEntity(@RequestBody List<D> entities) {
         return GeneralApiResponse.createSuccessResponse(getHandlingService().createOrUpdateEntities(entities));
