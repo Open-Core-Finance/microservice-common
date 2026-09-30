@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 
+import java.io.Serial;
 import java.util.List;
 
 @Data
@@ -17,6 +17,7 @@ public class PageDto<T> extends GeneralApiResponse<List<T>> {
     /**
      * Generated!
      */
+    @Serial
     private static final long serialVersionUID = -9141677225193449525L;
 
     private List<OrderDto> orders;

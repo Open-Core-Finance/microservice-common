@@ -104,6 +104,23 @@ public class EntitySimpleSearchSupport implements SimpleSearchSupport<GenericMod
         return (List<GenericModel<?>>) query.getResultList();
     }
 
+    @Override
+    public List<GenericModel<?>> findAll(Class<? extends GenericModel<?>> clzz, Sort sort) {
+        Map<String, Object> paramMap = new HashMap<>();
+        var sql = buildSelectPrefix(clzz, paramMap);
+        // Add sort
+        sql = appendSortToSql(sql, sort);
+        // Create query
+        var query = entityManager.createQuery(sql, clzz);
+        //noinspection unchecked
+        return (List<GenericModel<?>>) query.getResultList();
+    }
+
+    @Override
+    public List<GenericModel<?>> findAll(Class<? extends GenericModel<?>> clzz) {
+        return findAll(clzz, Sort.unsorted());
+    }
+
     protected String buildCountPrefix(Class<? extends GenericModel<?>> clzz, Map<String, Object> paramMap) {
         var countSql = "SELECT count(o) FROM " + clzz.getSimpleName() + " o";
         log.debug("Count SQL [{}]", countSql);

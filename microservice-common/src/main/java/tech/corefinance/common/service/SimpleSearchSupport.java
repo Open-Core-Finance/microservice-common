@@ -5,6 +5,7 @@ import org.springframework.core.Ordered;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import tech.corefinance.common.model.GenericModel;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
@@ -44,4 +45,21 @@ public interface SimpleSearchSupport<T> extends Ordered {
      * @throws UnsupportedOperationException if the service does not support search by text (Mean subclasses does not override this method).
      */
     List<T> searchByTextAndSort(Class<? extends T> clzz, String searchText, Sort sort);
+
+    /**
+     * Load all data
+     *
+     * @param sort Sort info for internal use.
+     * @return List of items.
+     * @throws UnsupportedOperationException if the service does not support search by text (Mean subclasses does not override this method).
+     */
+    List<T> findAll(Class<? extends GenericModel<?>> clzz, Sort sort);
+
+    /**
+     * Load all data
+     *
+     * @return List of items.
+     * @throws UnsupportedOperationException if the service does not support search by text (Mean subclasses does not override this method).
+     */
+    List<T> findAll(Class<? extends GenericModel<?>> clzz);
 }

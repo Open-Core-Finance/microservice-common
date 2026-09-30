@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import tech.corefinance.common.entity_author.Permission;
+import tech.corefinance.common.model.GenericModel;
 import tech.corefinance.common.mongodb.repository.MongoPermissionRepository;
 import tech.corefinance.common.service.SimpleSearchSupport;
 
@@ -27,6 +28,16 @@ public class PermissionSimpleSearchSupport implements SimpleSearchSupport<Permis
     @Override
     public List<Permission> searchByTextAndSort(Class<? extends Permission> clzz, String searchText, Sort sort) {
         return mongoPermissionRepository.searchBy(searchText, sort);
+    }
+
+    @Override
+    public List<Permission> findAll(Class<? extends GenericModel<?>> clzz, Sort sort) {
+        return mongoPermissionRepository.findAll(sort);
+    }
+
+    @Override
+    public List<Permission> findAll(Class<? extends GenericModel<?>> clzz) {
+        return mongoPermissionRepository.findAll();
     }
 
     @Override

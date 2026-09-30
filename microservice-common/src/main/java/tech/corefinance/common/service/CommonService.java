@@ -148,7 +148,6 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
     default Page<T> searchData(String searchText, int pageSize, int pageIndex, List<Sort.Order> orders) {
         var logger = LoggerFactory.getLogger(getClass());
         logger.info("Search entities");
-        var repository = getRepository();
         if (pageSize > 0 && pageIndex >= 0) {
             PageRequest pageRequest = PageRequest.of(pageIndex, pageSize, Sort.by(orders));
             if (StringUtils.hasText(searchText)) {
@@ -156,7 +155,7 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
                 return searchByTextAndPage(searchText, pageRequest);
             } else {
                 logger.info("Load by page {} and page index {} without search text.", pageSize, pageIndex);
-                return repository.findAll(pageRequest);
+                return new PageImpl<>(findAll(null));
             }
         } else {
             List<T> entities;
@@ -167,9 +166,36 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
 
             } else {
                 logger.info("Load without search text and order {}", orders);
-                entities = repository.findAll(sort);
+                entities = findAll(sort);
             }
             return new PageImpl<>(entities);
+        }
+    }
+
+    default List<T> findAll(Sort sort) {
+        var context = ApplicationContextHolder.getInstance().getApplicationContext();
+        var list = new ArrayList<>(context.getBeansOfType(SimpleSearchSupport.class).values());
+        AnnotationAwareOrderComparator.sort(list);
+        Class<?> entityType = findEntityClass();
+
+        if (sort == null) {
+            for (var searchSupport : list) {
+                //noinspection unchecked
+                if (searchSupport.isSupported(entityType)) {
+                    //noinspection unchecked
+                    return searchSupport.findAll(entityType);
+                }
+            }
+            return getRepository().findAll();
+        } else {
+            for (var searchSupport : list) {
+                //noinspection unchecked
+                if (searchSupport.isSupported(entityType)) {
+                    //noinspection unchecked
+                    return searchSupport.findAll(entityType, sort);
+                }
+            }
+            return getRepository().findAll(sort);
         }
     }
 
