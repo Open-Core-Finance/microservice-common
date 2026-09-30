@@ -19,6 +19,8 @@ public class ResourceAction implements CreateUpdateDto<String>, GenericModel<Str
     public static final String COMMON_DESCRIPTION_VIEW = "View data details";
     public static final String COMMON_ACTION_INITIAL = "initial";
     public static final String COMMON_DESCRIPTION_INITIAL = "Initial default data in database";
+    public static final String COMMON_ACTION_BULK_CHANGE = "bulk-change";
+    public static final String COMMON_DESCRIPTION_BULK_CHANGE = "Bulk change data";
 
     private String id;
     private String resourceType;

@@ -91,11 +91,11 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
      *
      * @param dto DTO object.
      * @param <D> DTO type
-     * @return Create entity.
+     * @return Created entity.
      */
     @Transactional
     default <D extends CreateUpdateDto<I>> T createOrUpdateEntity(D dto) {
-        var logger = LoggerFactory.getLogger(getClass());
+        var logger = LoggerFactory.getLogger(CommonService.class);
         logger.info("Entering createOrUpdateEntity...");
         T entity;
         var repository = getRepository();
@@ -131,8 +131,64 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
         return entity;
     }
 
+    /**
+     * Create or update database entities. Create when dto's ID is null, otherwise call update.
+     *
+     * @param dtoList List of DTO object.
+     * @param <D>     DTO type
+     * @return List of entities.
+     */
+    @Transactional
+    default <D extends CreateUpdateDto<I>> List<T> createOrUpdateEntities(List<D> dtoList) {
+        var logger = LoggerFactory.getLogger(CommonService.class);
+        logger.info("Entering createOrUpdateEntities...");
+        List<T> entities = new ArrayList<>(dtoList.size());
+        List<Object> keptDatas = new ArrayList<>(dtoList.size());
+        for (D dto : dtoList) {
+            T entity;
+            var repository = getRepository();
+            Object keptData = null;
+            if (dto.getId() != null) {
+                logger.info("Entity ID not empty! Checking if existed in DB or not...");
+                Optional<T> optional = repository.findById(dto.getId());
+                if (optional.isPresent()) {
+                    logger.info("Entity found!");
+                    entity = optional.get();
+                    keptData = beforeEditEntityAttributes(entity, dto);
+                } else {
+                    logger.info("Entity not found! Creating new entity...");
+                    entity = createEntityObject();
+                    entity.setId(dto.getId());
+                }
+            } else {
+                logger.info("Entity ID empty! Creating new entity...");
+                entity = createEntityObject();
+            }
+            // Copy matched properties
+            logger.info("Copying matched properties from DTO to entity...");
+            BeanUtils.copyProperties(dto, entity);
+            logger.info("Calling copyAdditionalPropertiesFromDtoToEntity...");
+            entity = copyAdditionalPropertiesFromDtoToEntity(dto, entity);
+            logger.info("Calling customEntityValidation...");
+            entity = customEntityValidation(dto, entity);
+            entities.add(entity);
+            keptDatas.add(keptData);
+        }
+
+        logger.info("Save entities to DB...");
+        entities = internalSaveEntitiesToDatabase(entities);
+        logger.info("Call afterEntitySaved and then response");
+        afterEntitiesSaved(entities, keptDatas);
+        // Response
+        return entities;
+    }
+
     default T internalSaveEntityToDatabase(T entity) {
         return getRepository().save(entity);
+    }
+
+    default List<T> internalSaveEntitiesToDatabase(List<T> entities) {
+        return getRepository().saveAll(entities);
     }
 
     /**
@@ -146,7 +202,7 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
      */
     @Transactional(readOnly = true)
     default Page<T> searchData(String searchText, int pageSize, int pageIndex, List<Sort.Order> orders) {
-        var logger = LoggerFactory.getLogger(getClass());
+        var logger = LoggerFactory.getLogger(CommonService.class);
         logger.info("Search entities");
         if (pageSize > 0 && pageIndex >= 0) {
             PageRequest pageRequest = PageRequest.of(pageIndex, pageSize, Sort.by(orders));
@@ -274,6 +330,15 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
     }
 
     /**
+     * This method will be called after persist list entities to database (both create and edit).<br />
+     *
+     * @param entities List Entity object
+     * @param dataList List object received from beforeEditEntityAttributes method call. This always null for create case. For edit case can be null or have custom data.
+     */
+    default void afterEntitiesSaved(List<T> entities, List<Object> dataList) {
+    }
+
+    /**
      * This method will be called when entify existing in database, and we're trying to update it in createOrUpdateEntity method.<br />
      * It runs right before copying attributes. <br/>
      *
@@ -305,7 +370,7 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
     }
 
     @Transactional(readOnly = true)
-    default List<T> loadEAllByIds(List<I> ids) {
+    default List<T> loadAllByIds(List<I> ids) {
         return getRepository().findAllById(ids);
     }
 }

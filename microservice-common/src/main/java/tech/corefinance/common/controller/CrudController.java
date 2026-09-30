@@ -107,6 +107,18 @@ public interface CrudController<I extends Serializable, T extends GenericModel<I
     }
 
     /**
+     * Bulk update entity
+     *
+     * @param entities Entity Object
+     * @return Updated result.
+     */
+    @PutMapping(value = "/bulk-update")
+    @PermissionAction(action = ResourceAction.COMMON_ACTION_BULK_CHANGE)
+    default GeneralApiResponse<?> bulkUpdateEntity(@RequestBody List<D> entities) {
+        return GeneralApiResponse.createSuccessResponse(getHandlingService().createOrUpdateEntities(entities));
+    }
+
+    /**
      * Delete entity by ID.
      *
      * @param entityId Entity ID
@@ -130,14 +142,15 @@ public interface CrudController<I extends Serializable, T extends GenericModel<I
     @PermissionAction(action = "find-by-ids", description = "Find by ID")
     @PostMapping(value = "/find-by-ids")
     default GeneralApiResponse<Map<I, ?>> findByIds(@RequestParam(name = "id") List<I> ids) {
-        var users = getHandlingService().loadEAllByIds(ids).stream().collect(Collectors.toMap(GenericModel::getId, (t) -> {
-            var converter = getDetalsOutputConverter(t);
+        var entitiesList = getHandlingService().loadAllByIds(ids);
+        Converter<T, ?> converter = getListOutputConverter(entitiesList);
+        var outputList = entitiesList.stream().collect(Collectors.toMap(GenericModel::getId, (t) -> {
             if (converter == null) {
                 return t;
             }
             var convertedVal = converter.convert(t);
             return Objects.requireNonNullElse(convertedVal, t);
         }));
-        return GeneralApiResponse.createSuccessResponse(users);
+        return GeneralApiResponse.createSuccessResponse(outputList);
     }
 }
