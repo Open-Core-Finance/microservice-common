@@ -1,12 +1,22 @@
 package tech.corefinance.common.service;
 
+import jakarta.validation.ConstraintViolationException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import tech.corefinance.common.context.ApplicationContextHolder;
+import tech.corefinance.common.dto.BulkUpdateResponse;
+import tech.corefinance.common.dto.BulkUpdateResponseItem;
+import tech.corefinance.common.dto.SimpleBulkUpdateResponse;
+import tech.corefinance.common.dto.SimpleBulkUpdateResponseItem;
+import tech.corefinance.common.ex.CustomConstraintViolation;
+import tech.corefinance.common.ex.CustomConstraintViolationException;
 import tech.corefinance.common.ex.ResourceNotFound;
 import tech.corefinance.common.ex.ServiceProcessingException;
 import tech.corefinance.common.model.CreateUpdateDto;
@@ -17,8 +27,10 @@ import tech.corefinance.common.util.CoreFinanceUtil;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public interface CommonService<I extends Serializable, T extends GenericModel<I>, R extends CommonResourceRepository<T, I>> {
 
@@ -139,11 +151,14 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
      * @return List of entities.
      */
     @Transactional
-    default <D extends CreateUpdateDto<I>> List<T> createOrUpdateEntities(List<D> dtoList) {
+    default <D extends CreateUpdateDto<I>> BulkUpdateResponse createOrUpdateEntities(List<D> dtoList) {
         var logger = LoggerFactory.getLogger(CommonService.class);
         logger.info("Entering createOrUpdateEntities...");
         List<T> entities = new ArrayList<>(dtoList.size());
         List<Object> keptDatas = new ArrayList<>(dtoList.size());
+        List<BulkUpdateResponseItem> items = new ArrayList<>();
+        BulkUpdateResponse response = new SimpleBulkUpdateResponse(items);
+        int errorCount = 0;
         for (D dto : dtoList) {
             T entity;
             var repository = getRepository();
@@ -164,31 +179,52 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
                 logger.info("Entity ID empty! Creating new entity...");
                 entity = createEntityObject();
             }
-            // Copy matched properties
-            logger.info("Copying matched properties from DTO to entity...");
-            BeanUtils.copyProperties(dto, entity);
-            logger.info("Calling copyAdditionalPropertiesFromDtoToEntity...");
-            entity = copyAdditionalPropertiesFromDtoToEntity(dto, entity);
-            logger.info("Calling customEntityValidation...");
-            entity = customEntityValidation(dto, entity);
-            entities.add(entity);
-            keptDatas.add(keptData);
+            SimpleBulkUpdateResponseItem item = new SimpleBulkUpdateResponseItem();
+            item.setEntity(entity);
+            item.setId(entity.getId());
+            try {
+                // Copy matched properties
+                logger.info("Copying matched properties from DTO to entity...");
+                BeanUtils.copyProperties(dto, entity);
+                logger.info("Calling copyAdditionalPropertiesFromDtoToEntity...");
+                entity = copyAdditionalPropertiesFromDtoToEntity(dto, entity);
+                logger.info("Calling customEntityValidation...");
+                entity = customEntityValidation(dto, entity);
+                entities.add(entity);
+                keptDatas.add(keptData);
+                item.setEntity(entity);
+            } catch (CustomConstraintViolationException e) {
+                var set = e.getConstraintViolations();
+                item.setConstraintViolations(set);
+                item.setStatus(BulkUpdateResponseItem.STATUS_ERROR);
+                errorCount++;
+            } catch (ConstraintViolationException e) {
+                var stream = e.getConstraintViolations().stream().map(v -> new CustomConstraintViolation(v.getMessage()));
+                var set = stream.collect(Collectors.toSet());
+                item.setConstraintViolations(set);
+                item.setStatus(BulkUpdateResponseItem.STATUS_ERROR);
+                errorCount++;
+            }
+            items.add(item);
         }
-
+        
         logger.info("Save entities to DB...");
-        entities = internalSaveEntitiesToDatabase(entities);
+        entities = internalSaveEntitiesToDatabase(entities, errorCount);
         logger.info("Call afterEntitySaved and then response");
         afterEntitiesSaved(entities, keptDatas);
         // Response
-        return entities;
+        return response;
     }
 
     default T internalSaveEntityToDatabase(T entity) {
         return getRepository().save(entity);
     }
 
-    default List<T> internalSaveEntitiesToDatabase(List<T> entities) {
-        return getRepository().saveAll(entities);
+    default List<T> internalSaveEntitiesToDatabase(List<T> entities, int errorCount) {
+        if (errorCount <= 0) {
+            return getRepository().saveAll(entities);
+        }
+        return new LinkedList<>();
     }
 
     /**
@@ -204,55 +240,39 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
     default Page<T> searchData(String searchText, int pageSize, int pageIndex, List<Sort.Order> orders) {
         var logger = LoggerFactory.getLogger(CommonService.class);
         logger.info("Search entities");
+        if (orders == null) {
+            orders = new LinkedList<>();
+        }
+        Pageable pageable;
+        var sort = Sort.by(orders);
         if (pageSize > 0 && pageIndex >= 0) {
-            PageRequest pageRequest = PageRequest.of(pageIndex, pageSize, Sort.by(orders));
-            if (StringUtils.hasText(searchText)) {
-                logger.info("Search by page {} and page index {} and search text [{}]", pageSize, pageIndex, searchText);
-                return searchByTextAndPage(searchText, pageRequest);
-            } else {
-                logger.info("Load by page {} and page index {} without search text.", pageSize, pageIndex);
-                return new PageImpl<>(findAll(null));
-            }
+            pageable = PageRequest.of(pageIndex, pageSize, sort);
         } else {
-            List<T> entities;
-            Sort sort = Sort.by(orders);
-            if (StringUtils.hasText(searchText)) {
-                logger.info("Search by search text [{}] and order {}", searchText, orders);
-                entities = searchByTextAndSort(searchText, sort);
-
-            } else {
-                logger.info("Load without search text and order {}", orders);
-                entities = findAll(sort);
-            }
-            return new PageImpl<>(entities);
+            pageable = Pageable.unpaged(sort);
+        }
+        if (StringUtils.hasText(searchText)) {
+            logger.info("Search by page {} and page index {} and search text [{}]", pageSize, pageIndex, searchText);
+            return searchByTextAndPage(searchText, pageable);
+        } else {
+            logger.info("Load by page {} and page index {} without search text.", pageSize, pageIndex);
+            return findAll(pageable);
         }
     }
 
-    default List<T> findAll(Sort sort) {
+    default Page<T> findAll(Pageable pageable) {
         var context = ApplicationContextHolder.getInstance().getApplicationContext();
         var list = new ArrayList<>(context.getBeansOfType(SimpleSearchSupport.class).values());
         AnnotationAwareOrderComparator.sort(list);
         Class<?> entityType = findEntityClass();
 
-        if (sort == null) {
-            for (var searchSupport : list) {
+        for (var searchSupport : list) {
+            //noinspection unchecked
+            if (searchSupport.isSupported(entityType)) {
                 //noinspection unchecked
-                if (searchSupport.isSupported(entityType)) {
-                    //noinspection unchecked
-                    return searchSupport.findAll(entityType);
-                }
+                return searchSupport.findAll(entityType, pageable);
             }
-            return getRepository().findAll();
-        } else {
-            for (var searchSupport : list) {
-                //noinspection unchecked
-                if (searchSupport.isSupported(entityType)) {
-                    //noinspection unchecked
-                    return searchSupport.findAll(entityType, sort);
-                }
-            }
-            return getRepository().findAll(sort);
         }
+        return getRepository().findAll(pageable);
     }
 
     /**
@@ -274,30 +294,6 @@ public interface CommonService<I extends Serializable, T extends GenericModel<I>
             if (searchSupport.isSupported(entityType)) {
                 //noinspection unchecked
                 return searchSupport.searchByTextAndPage(entityType, searchText, pageable);
-            }
-        }
-        throw new UnsupportedOperationException("Not support search by text! Please override searchByTextAndPage and searchByTextAndSort");
-    }
-
-    /**
-     * Search by text and Pageable.
-     *
-     * @param searchText Search text for internal use. Do not need to check empty for this case.
-     * @param sort       Sort info for internal use. Do not need to check null for this case.
-     * @return List of items.
-     * @throws UnsupportedOperationException if the service does not support search by text (Mean subclasses does not override this method).
-     */
-    @Transactional
-    default List<T> searchByTextAndSort(String searchText, Sort sort) {
-        var context = ApplicationContextHolder.getInstance().getApplicationContext();
-        var map = context.getBeansOfType(SimpleSearchSupport.class);
-        Class<?> entityType = findEntityClass();
-        for (var entry : map.entrySet()) {
-            var searchSupport = entry.getValue();
-            //noinspection unchecked
-            if (searchSupport.isSupported(entityType)) {
-                //noinspection unchecked
-                return searchSupport.searchByTextAndSort(entityType, searchText, sort);
             }
         }
         throw new UnsupportedOperationException("Not support search by text! Please override searchByTextAndPage and searchByTextAndSort");

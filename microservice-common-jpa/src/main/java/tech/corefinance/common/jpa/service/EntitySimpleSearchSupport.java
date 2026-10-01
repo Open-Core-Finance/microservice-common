@@ -79,46 +79,54 @@ public class EntitySimpleSearchSupport implements SimpleSearchSupport<GenericMod
         Map<String, Object> paramMap = buildMapParam(searchText);
         var criteriaSql = buildCriteriaClause(clzz, paramMap);
         var sql = buildSelectPrefix(clzz, paramMap) + " " + criteriaSql;
-        var countSql = buildCountPrefix(clzz, paramMap) + " " + criteriaSql;
-        sql = appendSortToSql(sql, pageable.getSort());
-        var countQuery = entityManager.createQuery(countSql, Long.class);
-        setQueryParams(countQuery, searchText, paramMap);
-        long count = countQuery.getSingleResult();
 
-        var query = entityManager.createQuery(sql, clzz);
-        query.setFirstResult((int) pageable.getOffset());
-        query.setMaxResults(pageable.getPageSize());
-        setQueryParams(query, searchText, paramMap);
-        var list = (List<GenericModel<?>>) query.getResultList();
-        return new PageImpl<>(list, pageable, count);
+        TypedQuery<? extends GenericModel<?>> query;
+        if (pageable.isPaged()) {
+            var countSql = buildCountPrefix(clzz, paramMap) + " " + criteriaSql;
+            sql = appendSortToSql(sql, pageable.getSort());
+            var countQuery = entityManager.createQuery(countSql, Long.class);
+            setQueryParams(countQuery, searchText, paramMap);
+            long count = countQuery.getSingleResult();
+
+            query = entityManager.createQuery(sql, clzz);
+            query.setFirstResult((int) pageable.getOffset());
+            query.setMaxResults(pageable.getPageSize());
+            setQueryParams(query, searchText, paramMap);
+            var list = (List<GenericModel<?>>) query.getResultList();
+            return new PageImpl<>(list, pageable, count);
+        } else {
+            query = entityManager.createQuery(sql, clzz);
+            setQueryParams(query, searchText, paramMap);
+            var list = (List<GenericModel<?>>) query.getResultList();
+            return new PageImpl<>(list);
+        }
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public List<GenericModel<?>> searchByTextAndSort(Class<? extends GenericModel<?>> clzz, String searchText, Sort sort) {
-        Map<String, Object> paramMap = buildMapParam(searchText);
-        var sql = buildSelectPrefix(clzz, paramMap) + " " + buildCriteriaClause(clzz, paramMap);
-        sql = appendSortToSql(sql, sort);
-        var query = entityManager.createQuery(sql, clzz);
-        setQueryParams(query, searchText, paramMap);
-        return (List<GenericModel<?>>) query.getResultList();
-    }
-
-    @Override
-    public List<GenericModel<?>> findAll(Class<? extends GenericModel<?>> clzz, Sort sort) {
+    public Page<GenericModel<?>> findAll(Class<? extends GenericModel<?>> clzz, Pageable pageable) {
         Map<String, Object> paramMap = new HashMap<>();
         var sql = buildSelectPrefix(clzz, paramMap);
         // Add sort
-        sql = appendSortToSql(sql, sort);
-        // Create query
-        var query = entityManager.createQuery(sql, clzz);
-        //noinspection unchecked
-        return (List<GenericModel<?>>) query.getResultList();
-    }
-
-    @Override
-    public List<GenericModel<?>> findAll(Class<? extends GenericModel<?>> clzz) {
-        return findAll(clzz, Sort.unsorted());
+        sql = appendSortToSql(sql, pageable.getSort());
+        TypedQuery<? extends GenericModel<?>> query;
+        if (pageable.isPaged()) {
+            // Count
+            var countSql = buildCountPrefix(clzz, paramMap);
+            var countQuery = entityManager.createQuery(countSql, Long.class);
+            long count = countQuery.getSingleResult();
+            // Create query
+            query = entityManager.createQuery(sql, clzz);
+            query.setFirstResult((int) pageable.getOffset());
+            query.setMaxResults(pageable.getPageSize());
+            //noinspection unchecked
+            var list = (List<GenericModel<?>>) query.getResultList();
+            return new PageImpl<>(list, pageable, count);
+        } else {
+            query = entityManager.createQuery(sql, clzz);
+            //noinspection unchecked
+            var list = (List<GenericModel<?>>) query.getResultList();
+            return new PageImpl<>(list);
+        }
     }
 
     protected String buildCountPrefix(Class<? extends GenericModel<?>> clzz, Map<String, Object> paramMap) {

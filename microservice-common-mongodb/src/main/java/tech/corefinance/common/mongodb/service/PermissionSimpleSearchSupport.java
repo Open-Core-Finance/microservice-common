@@ -4,14 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import tech.corefinance.common.entity_author.Permission;
 import tech.corefinance.common.model.GenericModel;
 import tech.corefinance.common.mongodb.repository.MongoPermissionRepository;
 import tech.corefinance.common.service.SimpleSearchSupport;
-
-import java.util.List;
 
 @Service
 @ConditionalOnProperty(prefix = "tech.corefinance.security", name = "authorize-check", havingValue = "true", matchIfMissing = true)
@@ -26,18 +23,8 @@ public class PermissionSimpleSearchSupport implements SimpleSearchSupport<Permis
     }
 
     @Override
-    public List<Permission> searchByTextAndSort(Class<? extends Permission> clzz, String searchText, Sort sort) {
-        return mongoPermissionRepository.searchBy(searchText, sort);
-    }
-
-    @Override
-    public List<Permission> findAll(Class<? extends GenericModel<?>> clzz, Sort sort) {
-        return mongoPermissionRepository.findAll(sort);
-    }
-
-    @Override
-    public List<Permission> findAll(Class<? extends GenericModel<?>> clzz) {
-        return mongoPermissionRepository.findAll();
+    public Page<Permission> findAll(Class<? extends GenericModel<?>> clzz, Pageable pageable) {
+        return mongoPermissionRepository.findAll(pageable);
     }
 
     @Override

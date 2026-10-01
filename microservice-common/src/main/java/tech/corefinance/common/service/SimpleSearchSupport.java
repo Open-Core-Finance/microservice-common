@@ -4,11 +4,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import tech.corefinance.common.model.GenericModel;
 
 import java.lang.reflect.ParameterizedType;
-import java.util.List;
 
 public interface SimpleSearchSupport<T> extends Ordered {
 
@@ -37,29 +35,11 @@ public interface SimpleSearchSupport<T> extends Ordered {
     Page<T> searchByTextAndPage(Class<? extends T> clzz, String searchText, Pageable pageable);
 
     /**
-     * Search by text and Pageable.
-     *
-     * @param searchText Search text for internal use. Do not need to check empty for this case.
-     * @param sort       Sort info for internal use. Do not need to check null for this case.
-     * @return List of items.
-     * @throws UnsupportedOperationException if the service does not support search by text (Mean subclasses does not override this method).
-     */
-    List<T> searchByTextAndSort(Class<? extends T> clzz, String searchText, Sort sort);
-
-    /**
      * Load all data
      *
-     * @param sort Sort info for internal use.
+     * @param pageable Paging.
      * @return List of items.
      * @throws UnsupportedOperationException if the service does not support search by text (Mean subclasses does not override this method).
      */
-    List<T> findAll(Class<? extends GenericModel<?>> clzz, Sort sort);
-
-    /**
-     * Load all data
-     *
-     * @return List of items.
-     * @throws UnsupportedOperationException if the service does not support search by text (Mean subclasses does not override this method).
-     */
-    List<T> findAll(Class<? extends GenericModel<?>> clzz);
+    Page<T> findAll(Class<? extends GenericModel<?>> clzz, Pageable pageable);
 }

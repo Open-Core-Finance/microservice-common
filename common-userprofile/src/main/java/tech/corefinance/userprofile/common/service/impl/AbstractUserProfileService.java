@@ -48,6 +48,7 @@ public abstract class AbstractUserProfileService<T extends CommonUserProfile<?>>
         var encodedPassword = passwordEncoder.encode(newPassword);
         log.debug("Setting new encoded password [{}]", encodedPassword);
         userProfile.setPassword(encodedPassword);
+        getRepository().save(userProfile);
         return 0;
     }
 
